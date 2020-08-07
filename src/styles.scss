@@ -1,0 +1,11 @@
+$primary-color: black;
+$background-color: whitesmoke;
+$title-font: 'B612 Mono';
+
+html, body, #root {
+    background-color: $background-color;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+

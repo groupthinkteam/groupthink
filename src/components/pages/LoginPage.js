@@ -1,11 +1,12 @@
 import React from "react"
 import firebase from "firebase/app"
 import "firebase/auth"
-import auth from "../../firebaseAPI/firebaseAPI"
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
+import "./LoginPage.scss"
+
 // props:
-// callback
+// callback function to be called when auth state changes
 export default class LoginPage extends React.Component {
     constructor(props) {
         super(props);
@@ -29,6 +30,7 @@ export default class LoginPage extends React.Component {
     // Listen to the Firebase Auth state and set the local state.
     componentDidMount() {
         this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
+            // calls callback(true) if user is logged in, callback(false) otherwise
             (user) => this.props.callback(!!user)
         );
     }
@@ -39,7 +41,27 @@ export default class LoginPage extends React.Component {
     }
 
     render() {
-        return (<StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />)
+        return (
+            <div className="welcome-container">
+                <div className="welcome-card">
+                    <div className="welcome-title">
+                        groupthink
+                    </div>
+                    <div className="welcome-subtitle">
+                        unleash your ideas like never before
+                    </div>
+                    <div className="welcome-text">
+                        <em>groupthink</em> is a real-time collaborative platform that brings the power
+                        of the web into a new type of document. You can seamlessly integrate files, videos,
+                        text, images, links, Tweets, Spotify playlists, Charts, and much more
+                        in an easy-to-use interface.
+                    </div>
+                </div>
+                <div className="login-container">
+                    <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
+                </div>
+            </div>
+        )
     }
 }
 
