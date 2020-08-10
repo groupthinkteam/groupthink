@@ -55,7 +55,7 @@ export default class LoginPage extends React.Component {
                         of the web into a new type of document. You can seamlessly integrate files, videos,
                         text, images, links, Tweets, Spotify playlists, Charts, and much more
                         in an easy-to-use interface.
-                    </div>
+                </div>
                 </div>
                 <div className="login-container">
                     <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />

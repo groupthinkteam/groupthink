@@ -1,20 +1,31 @@
 import React, { useState } from "react"
-import auth from "../firebaseAPI/firebaseAPI"
+import { Switch, Route } from "react-router"
+import { useHistory } from "react-router-dom"
+
 import LoginPage from "./pages/LoginPage"
+import DashboardPage from "./pages/DashboardPage"
 
 import "./PageManager.scss"
 
 export default function PageManager() {
-    // state is used to determine whether to redirect to login page
+    // state is used to determine which page to display
     const [isLoggedIn, setLoginState] = useState(false);
+    const history = useHistory()
 
     return (
         <div className="page">
-            {isLoggedIn
-                ? <p>You are now logged in</p>
-                : <LoginPage callback={setLoginState} />
-            }
+            <Switch>
+                {isLoggedIn
+                    ? history.push("/dashboard")
+                    : <LoginPage callback={setLoginState} />
+                }
+                <Route exact to="/dashboard" component={DashboardPage} />
+                {
+                    // add another route for document page here
+                }
+            </Switch>
         </div>
+
     )
 
 
