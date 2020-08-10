@@ -2,6 +2,7 @@ import React from "react"
 import { Button } from "antd"
 import { LogoutOutlined } from "@ant-design/icons"
 import { connect } from "react-redux"
+import firebase from "firebase/app"
 
 import "./MenuBar.scss"
 
@@ -15,7 +16,8 @@ function MenuBar(props) {
     return (
         <div className="menu-bar">
             <div className="menu-bar-panel menu-bar-panel-left">
-                Welcome
+                <img className="menu-bar-user-profile-picture" src={firebase.auth().currentUser.photoURL} />
+                {firebase.auth().currentUser.displayName}
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 <div className="menu-bar-site-title">
@@ -23,8 +25,8 @@ function MenuBar(props) {
                 </div>
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">
-                <Button onClick={() => props.dispatch({ type: "LOGOUT" })} icon={<LogoutOutlined />}>
-                    Log out
+                <Button className="logout-button" onClick={() => props.dispatch({ type: "LOGOUT" })} >
+                    log out <LogoutOutlined />
                 </Button>
             </div>
         </div>
