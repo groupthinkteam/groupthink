@@ -1,5 +1,5 @@
 import React from "react"
-import PageManager from "./components/PageManager"
+import PageManager from "./components/PageManager/PageManager"
 import { HashRouter } from "react-router-dom"
 
 import "./styles.scss"

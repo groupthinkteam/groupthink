@@ -1,0 +1,25 @@
+.menu-bar {
+    display: flex;
+    flex-direction: row;
+    z-index: 10000;
+    min-height: 50px;
+    height: 50px;
+    max-height: 50px;
+    background-color: whitesmoke;
+    align-items: center;
+    justify-content: center;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.site-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 33%;
+    user-select: none;
+    font-family: 'B612 Mono', monospace;
+    font-size: 24px;
+}

@@ -2,8 +2,8 @@ import React, { useState } from "react"
 import { Switch, Route } from "react-router"
 import { useHistory } from "react-router-dom"
 
-import LoginPage from "./pages/LoginPage"
-import DashboardPage from "./pages/DashboardPage"
+import LoginPage from "../pages/Login/LoginPage"
+import DashboardPage from "../pages/Dashboard/DashboardPage"
 
 import "./PageManager.scss"
 
