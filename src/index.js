@@ -22,7 +22,29 @@ const firebaseConfig = {
 // only needs to be done once
 firebase.initializeApp(firebaseConfig)
 
+import { createStore } from "redux"
+import { Provider } from "react-redux"
+
+const defaultState = {
+    isLoggedIn: false
+}
+
+const reducer = (state = defaultState, action) => {
+    switch (action.type) {
+        case "LOGIN":
+            return { ...state, isLoggedIn: true }
+        case "LOGOUT":
+            firebase.auth().signOut()
+            return { ...state, isLoggedIn: false }
+    }
+    return state;
+}
+
+const store = createStore(reducer)
+
 ReactDOM.render(
-    <App />,
+    <Provider store={store}>
+        <App />
+    </Provider>,
     document.getElementById("root")
 )

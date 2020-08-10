@@ -1,13 +1,17 @@
 import React from "react"
 import { Button } from "antd"
 import { LogoutOutlined } from "@ant-design/icons"
-
-import firebase from "firebase/app"
+import { connect } from "react-redux"
 
 import "./MenuBar.scss"
 
-export default function MenuBar(props) {
-    console.log("menubar")
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: state.isLoggedIn
+    };
+}
+
+function MenuBar(props) {
     return (
         <div className="menu-bar">
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -19,11 +23,13 @@ export default function MenuBar(props) {
                 </div>
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">
-                <Button onClick={props.onLogout} icon={<LogoutOutlined />}>
+                <Button onClick={() => props.dispatch({ type: "LOGOUT" })} icon={<LogoutOutlined />}>
                     Log out
                 </Button>
             </div>
         </div>
-    )
+    );
 }
+
+export default connect(mapStateToProps)(MenuBar);
 
