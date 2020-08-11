@@ -12,6 +12,7 @@ export default function ProjectCard(props) {
     const database = firebase.database();
     const refURL = 'users/' + firebase.auth().currentUser.uid +'/'
     let [text , setText] = useState({});
+    let key_id = props.key_id;
     const writeToDB = (evt) =>
     {
         evt.preventDefault();
@@ -19,6 +20,12 @@ export default function ProjectCard(props) {
         //console.log("TEXT BEFORE :-",text);
         database.ref(refURL).push(text);
         //---- Reload Window --------
+        window.location.reload(false);
+    }
+    const deleteFromDB = event =>
+    {
+        alert(`Do You Want to Delete ${props.title}`);
+        database.ref(refURL + key_id).remove();
         window.location.reload(false);
     }
     if (props.type === "add") {
@@ -38,7 +45,7 @@ export default function ProjectCard(props) {
                 <div className="project-card-title">
                     {props.title}
                     <span>
-                        <i class="fa fa-trash" aria-hidden="true"  ></i>
+                        <i className="fa fa-trash" aria-hidden="true" onClick={deleteFromDB} ></i>
                     </span>
                 </div>
             </div>
