@@ -29,7 +29,7 @@ export default function DashboardPage(props) {
 
     return (
         <div>
-            <MenuBar onLogout={props.onLogout} />
+            <MenuBar />
             <div className="dashboard-card-container">
                 <ProjectCard type="add" />
                 {Object.values(projectCards).map((title) => <ProjectCard title={title} />)}

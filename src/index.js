@@ -5,6 +5,8 @@ import firebase from "firebase/app"
 
 import App from "./App"
 
+import { createStore } from "redux"
+import { Provider } from "react-redux"
 
 // it is completely fine to expose these keys publicly
 // https://stackoverflow.com/questions/37482366/is-it-safe-to-expose-firebase-apikey-to-the-public
@@ -21,9 +23,6 @@ const firebaseConfig = {
 
 // only needs to be done once
 firebase.initializeApp(firebaseConfig)
-
-import { createStore } from "redux"
-import { Provider } from "react-redux"
 
 const defaultState = {
     isLoggedIn: false
