@@ -3,14 +3,17 @@ import firebase from "firebase/app"
 import "firebase/database"
 import "firebase/auth"
 import MenuBar from "../../UI/MenuBar/MenuBar"
+//import {readFromDB} from "../CRUDopr";
 import ProjectCard from "../../UI/ProjectCard/ProjectCard"
 
 import "./DashboardPage.scss"
+
 
 export default function DashboardPage(props) {
     const database = firebase.database();
     const refURL = 'users/' + firebase.auth().currentUser.uid +'/'
     let [projectCards, setProjectCards] = useState({});
+   // console.log("Call CRUD",readFromDB(database,refURL));
     function readFromDB() {
         // database.ref(refURL).on('value', (snapshot) => setProjectCards(snapshot.val()));
         database.ref(`${refURL}`).once('value')
@@ -19,7 +22,7 @@ export default function DashboardPage(props) {
                 setProjectCards(snapshot.val());
             });
     }
-
+   
     useEffect(() => readFromDB(), [])
 
     return (
@@ -31,7 +34,7 @@ export default function DashboardPage(props) {
                 
                 {
                     Object.entries(projectCards)
-                    .map(([project_key,project_name])=> <ProjectCard title={project_name} key={project_key} key_id={project_key}  /> )
+                    .map(([project_key,project_name])=> <ProjectCard title={project_name} key={project_key} key_id={project_key}   /> )
                 }
                 
             </div>
