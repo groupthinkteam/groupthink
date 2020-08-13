@@ -17,6 +17,7 @@
     "react": "16.x",
     "react-dom": ">=16.9.0",
     "react-firebaseui": "^4.1.0",
+    "react-konva": "^16.13.0-6",
     "react-redux": "^7.2.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",

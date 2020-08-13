@@ -9,10 +9,10 @@ import "./styles.scss"
 export default function App() {
     // entry point to the app
     return (
-        // <Provider store={appstore}>
-            <HashRouter>
-                <PageManager />
-            </HashRouter>
-        // </Provider>
+        /* <Provider store={appstore}>
+        // </Provider> */
+        <HashRouter>
+            <PageManager />
+        </HashRouter>
     )
 }
