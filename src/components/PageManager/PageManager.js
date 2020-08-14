@@ -3,7 +3,6 @@ import { connect } from "react-redux"
 
 import LoginPage from "../pages/Login/LoginPage"
 import DashboardPage from "../pages/Dashboard/DashboardPage"
-
 import "./PageManager.scss"
 
 const mapStateToProps = (state) => {

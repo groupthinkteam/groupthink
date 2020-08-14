@@ -2,10 +2,8 @@ import React,{useState}from "react"
 import firebase from "firebase/app"
 import "firebase/database"
 import "firebase/auth"
-
 import "./ProjectCard.scss"
-
-
+import { Rnd } from "react-rnd"
 
 export default function ProjectCard(props) {
     
@@ -15,6 +13,8 @@ export default function ProjectCard(props) {
     let [pro_text , setProText] = useState({});
     let [flag , setFlag] = useState(false);
     let key_id = props.key_id;
+    let [hgt , setHeight] = useState({});
+    let [wdt , setWidth] = useState({});
     const writeToDB = (evt) =>
     {
         evt.preventDefault();
@@ -55,6 +55,7 @@ export default function ProjectCard(props) {
     }
     if (props.type === "add") {
         return (
+            <>
             <div className="project-card">
                 <div className="project-card-title">
                     <form onSubmit={writeToDB}>
@@ -62,11 +63,27 @@ export default function ProjectCard(props) {
                         <button  type="submit">Send</button>
                     </form>
                 </div>
-            </div>)
+            </div>
+            
+            </>
+        )
     }
     else {
         return (
-            <div className="project-card">
+            <Rnd
+            default={{
+                x: 150,
+                y: 505
+              }}
+              style={{backgroundColor:"blue" , borderBlockColor:"red"}}
+              onResize={(e, direction, ref, delta, position) => {setHeight(ref.offsetHeight),setWidth(ref.offsetWidth)}}
+              minWidth={300}
+              minHeight={200}
+            >
+                {
+                // To change size as by streching ---->> style={{width:`${wdt}px` , height:`${hgt}px`}}
+                }
+            <div className="project-card" >    
                 <div className="project-card-title">
                     {props.title}
                     <span>
@@ -77,6 +94,7 @@ export default function ProjectCard(props) {
                     </span>
                 </div>
             </div>
+            </Rnd>
         )
     }
 }
