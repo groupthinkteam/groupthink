@@ -8,7 +8,7 @@ const Dashboard = () => {
   const appContext = useContext(AppContext)
   const history = useHistory()
   const logout = () => {
-    auth.signout(() => {
+    auth.signOut(() => {
       history.push('/login')
     })
   }

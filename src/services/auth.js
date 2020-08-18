@@ -8,7 +8,7 @@ import { APP_CONSTANTS } from "../constants/appConstants"
 //      uiConfig        : config for StyledFirebaseAuth component
 export const auth = {
     get: () => firebaseAuth(),
-    signOut: () => firebaseAuth().signOut(),
+    signOut: (promise) => firebaseAuth().signOut().then(promise),
     checkSignedIn: () => firebaseAuth().currentUser === null,
     uiConfig: {
         signInFlow: 'popup',
