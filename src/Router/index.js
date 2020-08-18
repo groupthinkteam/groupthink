@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import LoginPage from "../Pages/Login/Login";
 import PrivateRoute from "./PrivateRoute";
-import auth from "../Auth/auth";
+import { auth } from "../services/auth"
 import Dashboard from "../Pages/Dashboard/Dashboard";
 
 const AppRoutes = () => {

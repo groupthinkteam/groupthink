@@ -1,5 +1,5 @@
 import React from 'react'
-import auth from "../Auth/auth";
+import { auth } from "../services/auth";
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,6 +9,7 @@ import {
   useHistory,
   useLocation
 } from "react-router-dom";
+
 const PrivateRoute = ({ children, ...rest }) => {
   return (
     <Route
@@ -17,13 +18,13 @@ const PrivateRoute = ({ children, ...rest }) => {
         auth.isAuthenticated ? (
           children
         ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: location }
-            }}
-          />
-        )
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: location }
+              }}
+            />
+          )
       }
     />
   );
