@@ -1,6 +1,7 @@
 {
-  "name": "grouplink",
+  "name": "groupthink",
   "version": "0.1.0",
+  "license": "UNLICENSED",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
