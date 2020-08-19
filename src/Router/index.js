@@ -11,16 +11,17 @@ import {
 } from "react-router-dom";
 import LoginPage from "../Pages/Login/Login";
 import PrivateRoute from "./PrivateRoute";
-import { auth } from "../services/auth"
+import { useAuth } from "../services/auth"
 import Dashboard from "../Pages/Dashboard/Dashboard";
 
 const AppRoutes = () => {
+  const { authState } = useAuth();
   return (
     <Router>
       <Switch>
         <Route path="/login" component={LoginPage} />
         <PrivateRoute path="/dashboard" component={Dashboard} />
-        <Redirect to={auth.isAuthenticated ? '/dashboard' : '/login'} />
+        <Redirect to={authState.isSignedIn ? '/dashboard' : '/login'} />
       </Switch>
     </Router>
   );

@@ -1,6 +1,3 @@
-import { firebaseAuth } from "./firebase"
-import { APP_CONSTANTS } from "../constants/appConstants"
-
 // auth API: 
 //      get()           : returns the firebase.auth() Auth object
 //      auth.signOut()  : sign out
@@ -9,18 +6,32 @@ import { APP_CONSTANTS } from "../constants/appConstants"
 //  Note: redirects automatically to dashboard on sign-in, but sign-out redirection
 //        logic must be manually supplied as an arg to signOut()
 
-export const auth = {
-    get: () => firebaseAuth(),
-    signOut: (onSignOut) => firebaseAuth().signOut().then(onSignOut),
-    checkSignedIn: () => firebaseAuth().currentUser === null,
-    uiConfig: {
-        signInFlow: 'popup',
-        signInSuccessUrl: APP_CONSTANTS.URLS.DASHBOARD_URL,
-        signInOptions: [
-            firebaseAuth.GoogleAuthProvider.PROVIDER_ID,
-            firebaseAuth.FacebookAuthProvider.PROVIDER_ID,
-            firebaseAuth.EmailAuthProvider.PROVIDER_ID,
-            firebaseAuth.PhoneAuthProvider.PROVIDER_ID
-        ]
-    }
+// export const auth = {
+//     get: () => firebaseAuth(),
+//     getUserName: () => firebaseAuth().currentUser.displayName,
+//     signOut: (onSignOut) => firebaseAuth().signOut().then(onSignOut),
+//     checkSignedIn: () => firebaseAuth().currentUser === null,
+// }
+
+import { useState, useEffect } from 'react'
+import { firebaseAuth } from "./firebase"
+import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
+
+export function useAuth() {
+    const auth = firebaseAuth;
+    const uiConfig = FIREBASE_CONSTANTS.UI_CONFIG;
+    const [authState, setAuthState] = useState({
+        isSignedIn: false,
+        pendingAuth: true,
+        user: null,
+    });
+
+    useEffect(() => {
+        const unregisterAuthObserver = firebaseAuth().onAuthStateChanged(user =>
+            setAuthState({ user, pending: false, isSignedIn: !!user })
+        )
+        return () => unregisterAuthObserver()
+    }, [])
+
+    return { auth, uiConfig, authState };
 }

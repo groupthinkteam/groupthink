@@ -1,5 +1,5 @@
 import React from 'react'
-import { auth } from "../services/auth";
+import { useAuth } from "../services/auth";
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,11 +11,12 @@ import {
 } from "react-router-dom";
 
 const PrivateRoute = ({ children, ...rest }) => {
+  const { authState } = useAuth();
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        auth.isAuthenticated ? (
+        authState.isSignedIn ? (
           children
         ) : (
             <Redirect
