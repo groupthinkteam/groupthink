@@ -2,7 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 
 import firebase from "firebase/app"
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import App from "./App"
 
 
