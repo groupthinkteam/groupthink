@@ -20,7 +20,7 @@ const AppRoutes = () => {
     <Router>
       <Switch>
         <Route path="/login" component={LoginPage} />
-        <PrivateRoute path="/dashboard" component={Dashboard} />
+        <PrivateRoute path="/dashboard" />
         <Redirect to={authState.isSignedIn ? '/dashboard' : '/login'} />
       </Switch>
     </Router>
