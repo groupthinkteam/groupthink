@@ -11,6 +11,7 @@ export const APP_CONSTANTS = {
     measurementId: "G-94X9F74RYY"
   },
   URLS: {
-    DASHBOARD_URL: '/dashboard'
+    DASHBOARD_URL: '/dashboard',
+    LOGIN_URL: '/login',
   }
 };
