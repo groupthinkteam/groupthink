@@ -21,6 +21,7 @@ const AppRoutes = () => {
       <Switch>
         <Route path="/login" component={LoginPage} />
         <PrivateRoute path="/dashboard" component={Dashboard}/>
+        <PrivateRoute path="/document/:id" component={Document}/>
         <Redirect to={authState.isSignedIn ? '/dashboard' : '/login'} />
       </Switch>
     </Router>

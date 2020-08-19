@@ -14,10 +14,8 @@
 // }
 
 import { useState, useEffect } from "react"
-import { useHistory } from "react-router-dom"
 import { firebaseAuth } from "./firebase"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
-import { APP_CONSTANTS } from "../constants/appConstants"
 
 export function useAuth() {
     const auth = firebaseAuth;
@@ -27,16 +25,14 @@ export function useAuth() {
         pendingAuth: true,
         user: null,
     });
-    const history = useHistory()
     useEffect(() => {
         const unregisterAuthObserver = firebaseAuth().onAuthStateChanged(
             user => {
                 setAuthState({ user, pending: false, isSignedIn: !!user });
-                if (user) { history.push(APP_CONSTANTS.URLS.DASHBOARD_URL) };
             }
         )
         return () => unregisterAuthObserver()
-    }, [history])
+    }, [])
 
     return { auth, uiConfig, authState };
 }
