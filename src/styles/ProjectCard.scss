@@ -1,10 +1,21 @@
 .project-card {
     margin: 10px;
     width: 200px;
-    height: 150px;
+    height: 300px;
     border: 1px dashed black;
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
+    font-family: monospace;
+}
+
+.inline-input {
+    margin: 10px;
+    font-family: 'Oxygen Mono', monospace;
+}
+
+img {
+    width: 200px;
+    height: 200px;
 }

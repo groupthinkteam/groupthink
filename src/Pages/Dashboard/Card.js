@@ -5,11 +5,21 @@ import InlineTextEdit from "../../components/InlineTextEdit/InlineTextEdit"
 import "../../styles/ProjectCard.scss"
 
 export default function Card(props) {
-    return (
+    if (props.addNew) {
+        return (
+            <div className="project-card">
+                <Button handleClick={props.onAddNew}>
+                    Add New Card
+                </Button>
+            </div>
+        )
+    }
+    else return (
         <div className="project-card">
+            <img src={props.card.thumbnailURL} alt="project thumbnail" />
             <InlineTextEdit
                 className="project-card-item"
-                text={props.card}
+                text={props.card.name}
                 onSave={(text) => props.onSave(props.id, text)}
             />
             <Button

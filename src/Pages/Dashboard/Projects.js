@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { firebaseDB } from "../../services/firebase"
 import Card from "./Card"
-import AddNew from "./AddNew"
 
 import "../../styles/Projects.scss"
 
@@ -17,7 +16,13 @@ export default function Projects(props) {
 
     var onAddNew = () => {
         console.log("clicked add new")
-        firebaseDB.ref("users/" + props.getUserID() + "/projects/").push().set("New Project")
+        firebaseDB.ref("users/" + props.getUserID() + "/projects/")
+            .push()
+            .set(
+                {
+                    name: "New Project",
+                    thumbnailURL: "https://picsum.photos/200?random=" + Math.floor(Math.random() * 100)
+                })
     }
 
     var onDelete = (id) => {
@@ -30,11 +35,12 @@ export default function Projects(props) {
 
     var onRename = (id, text) => {
         console.log("about to rename project", id, ", changing title from", cards[id], "to", text);
+        firebaseDB.ref("users/" + props.getUserID() + "/projects/" + id + "/").update({ name: text })
     }
 
     return (
         <div id="project-card-container">
-            <AddNew onAddNew={onAddNew} />
+            <Card addNew onAddNew={onAddNew} />
             {cards ?
                 Object.entries(cards).map(
                     ([id, card]) => <Card key={id} id={id} card={card} onSave={onRename} onDelete={onDelete} />

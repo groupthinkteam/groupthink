@@ -7,7 +7,7 @@ export default function InlineTextEdit(props) {
     return (
         <input
             className="inline-input"
-            style={{width: text.length + 'ch'}}
+            style={{ width: text.length + 'ch' }}
             placeholder="Enter Project Name"
             value={text}
             onChange={(event) => setText(event.target.value)}
