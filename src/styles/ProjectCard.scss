@@ -1,0 +1,10 @@
+.project-card {
+    margin: 10px;
+    width: 200px;
+    height: 150px;
+    border: 1px dashed black;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+}

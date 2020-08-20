@@ -3,6 +3,8 @@ import { firebaseDB } from "../../services/firebase"
 import Card from "./Card"
 import AddNew from "./AddNew"
 
+import "../../styles/Projects.scss"
+
 export default function Projects(props) {
     let [cards, setCards] = useState(null);
     useEffect(
@@ -15,7 +17,7 @@ export default function Projects(props) {
 
     var onAddNew = () => {
         console.log("clicked add new")
-        firebaseDB.ref("users/" + props.getUserID() + "/projects/").push("rw").set("new node")
+        firebaseDB.ref("users/" + props.getUserID() + "/projects/").push().set("New Project")
     }
 
     var onDelete = (id) => {
@@ -26,12 +28,16 @@ export default function Projects(props) {
             .catch((error) => console.log("Remove failed for id:", id, ". Reason: " + error.message));
     }
 
+    var onRename = (id, text) => {
+        console.log("about to rename project", id, ", changing title from", cards[id], "to", text);
+    }
+
     return (
         <div id="project-card-container">
             <AddNew onAddNew={onAddNew} />
             {cards ?
                 Object.entries(cards).map(
-                    ([id, card]) => <Card key={id} id={id} card={card} onDelete={onDelete} />
+                    ([id, card]) => <Card key={id} id={id} card={card} onSave={onRename} onDelete={onDelete} />
                 )
                 : null
             }
