@@ -19,7 +19,7 @@ export default function AppRoutes() {
           <LoginPage auth={auth} uiConfig={uiConfig} authState={authState} />
         </Route>
         <PrivateRoute isAuth={authState.isSignedIn} path="/dashboard">
-          <Dashboard signOut={() => auth().signOut()} />
+          <Dashboard getUserID={() => auth().currentUser.uid} signOut={() => auth().signOut()} />
         </PrivateRoute>
         <Route path="/">
           <SplashPage pendingAuth={authState.pendingAuth} isAuth={authState.isSignedIn} />

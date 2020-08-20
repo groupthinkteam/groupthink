@@ -18,6 +18,5 @@ export function useAuth() {
         )
         return () => unregisterAuthObserver()
     }, [])
-
     return { auth, uiConfig, authState };
 }
