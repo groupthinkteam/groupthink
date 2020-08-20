@@ -7,15 +7,23 @@ export default function Projects(props) {
     let [cards, setCards] = useState(null);
     useEffect(
         () => {
-            firebaseDB.ref("users/" + props.getUserID() + "/projects/")
-                .on('value', (snapshot) => { console.log(snapshot.val()); setCards(snapshot.val()) })
-            return () => firebaseDB.ref("users/" + props.getUserID() + "/projects/").off('value')
+            let ref = firebaseDB.ref("users/" + props.getUserID() + "/projects/");
+            ref.on('value', (snapshot) => { console.log(snapshot.val()); setCards(snapshot.val()) })
+            return () => ref.off('value')
         }
         , [props])
 
-    var onAddNew = (event) => {
+    var onAddNew = () => {
         console.log("clicked add new")
         firebaseDB.ref("users/" + props.getUserID() + "/projects/").push("rw").set("new node")
+    }
+
+    var onDelete = (id) => {
+        console.log("about to delete project", id);
+        firebaseDB.ref("users/" + props.getUserID() + "/projects/" + id + "/")
+            .remove()
+            .then(() => console.log("Remove succeeded for id: ", id))
+            .catch((error) => console.log("Remove failed for id:", id, ". Reason: " + error.message));
     }
 
     return (
@@ -23,7 +31,7 @@ export default function Projects(props) {
             <AddNew onAddNew={onAddNew} />
             {cards ?
                 Object.entries(cards).map(
-                    ([id, card]) => <Card key={id} card={card} />
+                    ([id, card]) => <Card key={id} id={id} card={card} onDelete={onDelete} />
                 )
                 : null
             }
