@@ -16,16 +16,17 @@ export default function Card(props) {
     }
     else return (
         <div className="project-card">
-            <img src={props.card.thumbnailURL} alt="project thumbnail" />
+            <img
+                onClick={() => props.onOpen(props.id)}
+                src={props.card.thumbnailURL}
+                alt="project thumbnail" />
             <InlineTextEdit
                 className="project-card-item"
                 text={props.card.name}
-                onSave={(text) => props.onSave(props.id, text)}
-            />
+                onSave={(text) => props.onSave(props.id, text)} />
             <Button
                 className="project-card-item"
-                handleClick={() => props.onDelete(props.id)}
-            >
+                handleClick={() => props.onDelete(props.id)}>
                 Delete
             </Button>
         </div>

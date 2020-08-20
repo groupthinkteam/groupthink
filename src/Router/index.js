@@ -8,6 +8,7 @@ import SplashPage from "../Pages/Splash/Splash"
 import LoginPage from "../Pages/Login/Login";
 import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Pages/Dashboard/Dashboard";
+import Document from "../Pages/Document/Document";
 import { useAuth } from "../services/auth";
 
 export default function AppRoutes() {
@@ -21,6 +22,9 @@ export default function AppRoutes() {
         <PrivateRoute isAuth={authState.isSignedIn} path="/dashboard">
           <Dashboard getUserID={() => auth().currentUser.uid} signOut={() => auth().signOut()} />
         </PrivateRoute>
+        <Route path="/project/:projectID">
+          <Document />
+        </Route>
         <Route path="/">
           <SplashPage pendingAuth={authState.pendingAuth} isAuth={authState.isSignedIn} />
         </Route>

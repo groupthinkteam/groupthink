@@ -2,12 +2,14 @@
     margin: 10px;
     width: 200px;
     height: 300px;
-    border: 1px dashed black;
+    border: 0px dashed black;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
     font-family: monospace;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
 }
 
 .inline-input {
@@ -18,4 +20,5 @@
 img {
     width: 200px;
     height: 200px;
+    cursor: pointer;
 }
