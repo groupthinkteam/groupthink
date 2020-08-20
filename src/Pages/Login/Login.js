@@ -1,18 +1,21 @@
 import React from 'react'
+import { Redirect, useLocation } from "react-router-dom"
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
-import { useAuth } from '../../services/auth'
-
-export default function LoginPage() {
-  const { auth, uiConfig, authState } = useAuth()
-  if (authState.pending) {
-    return <h1>waiting...</h1>
-  }
-
+export default function LoginPage(props) {
+  const location = useLocation()
   return (
-    <div>
-      <h1>Welcome to groupthink</h1>
-      <p>Please sign-in:</p>
-      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth()} />
-    </div>
+    props.authState.isSignedIn ?
+      <Redirect
+        to={{
+          pathname: "/dashboard",
+          state: { from: location }
+        }}
+      />
+      :
+      <div>
+        <h1>Welcome to groupthink</h1>
+        <p>Please sign-in:</p>
+        <StyledFirebaseAuth uiConfig={props.uiConfig} firebaseAuth={props.auth()} />
+      </div>
   )
 }
