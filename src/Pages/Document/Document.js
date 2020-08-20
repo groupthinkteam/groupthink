@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useHistory , Redirect} from 'react-router-dom';
 import { useAuth } from '../../services/auth';
 import { APP_CONSTANTS } from '../../constants/appConstants';
 import * as Crud from '../../Helpers/crudOpr';
@@ -8,6 +8,16 @@ import { Link } from 'react-router-dom';
 
 const Document = (props) =>{
     const location = useLocation();
+    const logout = () => {
+        props.signOut()
+        return (
+          <Redirect to={{
+            pathname: "/login",
+            state: { from: location }
+          }}
+          />
+        )
+    }
     const history = useHistory();
     const {auth,authState} = useAuth();
     const projectDetail = {

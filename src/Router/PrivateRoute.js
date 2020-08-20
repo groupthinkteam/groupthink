@@ -1,22 +1,15 @@
 import React from 'react'
-import { useAuth } from "../services/auth";
 import {
-  BrowserRouter as Router,
-  Switch,
   Route,
-  Link,
   Redirect,
-  useHistory,
-  useLocation
 } from "react-router-dom";
 
-const PrivateRoute = ({ children, ...rest }) => {
-  const { authState } = useAuth();
+const PrivateRoute = ({ children, isAuth, ...rest }) => {
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        authState.isSignedIn ? (
+        isAuth ? (
           children
         ) : (
             <Redirect

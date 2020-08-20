@@ -6,20 +6,30 @@ import Button from '../../components/Button'
 import AppContext from '../../contexts/AppContext'
 import * as Crud from '../../Helpers/crudOpr';
 import ProjectCard from '../../components/ProjectCard/ProjectCard';
+import { Redirect, useLocation } from 'react-router-dom'
 
-const Dashboard = () => {
+const Dashboard = (props) => {
   const appContext = useContext(AppContext)
   //console.log("Global UID",appContext.uid);
   const history = useHistory()
   const { auth, authState } = useAuth();
+
+  const location = useLocation()
   const logout = () => {
-    auth().signOut().then(() => history.push(APP_CONSTANTS.URLS.LOGIN_URL))
+    props.signOut()
+    return (
+      <Redirect to={{
+        pathname: "/login",
+        state: { from: location }
+      }}
+      />
+    )
   }
   let flag = false; 
   let refURL =''  //'users/'+ auth().currentUser.uid +'/';
   if(auth().currentUser != null)
   {
-    refURL='users/'+ authState.user.uid +'/projects';
+    refURL='users/'+ authState.user?.uid +'/projects';
     //console.log("URL With Condition",refURL);
     flag=true;
   }
@@ -59,9 +69,6 @@ const Dashboard = () => {
   
   return (
     <div>
-      {/* get data from context can be used as global state */}
-      Welcome to <h3>{appContext.appname}</h3>
-      Dashboard, {authState.user ? authState.user.displayName : "waiting"}. <br />
       <Button handleClick={logout}>
         Logout
       </Button>
@@ -85,5 +92,4 @@ const Dashboard = () => {
     </div>
   )
 }
-
 export default Dashboard

@@ -1,33 +1,35 @@
 import React from "react";
-
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link,
-  Redirect,
-  useHistory,
-  useLocation
+  Route
 } from "react-router-dom";
+import SplashPage from "../Pages/Splash/Splash"
 import LoginPage from "../Pages/Login/Login";
 import PrivateRoute from "./PrivateRoute";
-import { useAuth } from "../services/auth"
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import ProjectDetail from "../Pages/ProjectDetail/ProjectDetail";
 import Document from "../Pages/Document/Document";
+import { useAuth } from "../services/auth";
 
-const AppRoutes = () => {
-  const { authState } = useAuth();
+export default function AppRoutes() {
+  const { auth, uiConfig, authState } = useAuth();
   return (
     <Router>
       <Switch>
-        <Route path="/login" component={LoginPage} />
-        <PrivateRoute path="/dashboard" component={Dashboard}/>
-        <PrivateRoute path="/document/:id" component={Document}/>
-        <Redirect to={authState.isSignedIn ? '/dashboard' : '/login'} />
+        <Route path="/login" >
+          <LoginPage auth={auth} uiConfig={uiConfig} authState={authState} />
+        </Route>
+        <PrivateRoute isAuth={authState.isSignedIn} path="/dashboard">
+          <Dashboard signOut={() => auth().signOut()} />
+        </PrivateRoute>
+        <PrivateRoute isAuth={authState.isSignedIn} path="/document/:id">
+          <Document signOut={() => auth().signOut()} />
+        </PrivateRoute>
+        <Route path="/">
+          <SplashPage pendingAuth={authState.pendingAuth} isAuth={authState.isSignedIn} />
+        </Route>
       </Switch>
     </Router>
   );
 }
-
-export default AppRoutes;
