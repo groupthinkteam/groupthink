@@ -1,0 +1,48 @@
+$primary-color: #0577B1;
+
+.welcome-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: space-evenly;
+    background-image: linear-gradient(45deg, #0577B1, #0577B1);
+}
+
+.welcome-card {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    width: min(max(300px, 80px), 400px);
+    border-radius: 20px;
+    // background-color: white;
+    background-color: white;
+    padding: 20px;
+}
+
+.welcome-title {
+    font-family: 'B612 mono', monospace;
+    color: $primary-color;
+   // font-size: min(50px, 10vmin);
+}
+
+.welcome-subtitle {
+    font-family: 'B612', sans-serif;
+    font-style: italic;
+    color: $primary-color;
+   // font-size: min(16px, 10vmin);
+}
+
+.welcome-text {
+    padding-top: 15px;
+    font-family: 'B612', sans-serif;
+    color: $primary-color;
+   // font-size: min(14px, 7vmin);
+}
+
+.login-container {
+    padding: 3px;
+}

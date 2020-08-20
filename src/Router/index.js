@@ -13,6 +13,8 @@ import LoginPage from "../Pages/Login/Login";
 import PrivateRoute from "./PrivateRoute";
 import { useAuth } from "../services/auth"
 import Dashboard from "../Pages/Dashboard/Dashboard";
+import ProjectDetail from "../Pages/ProjectDetail/ProjectDetail";
+import Document from "../Pages/Document/Document";
 
 const AppRoutes = () => {
   const { authState } = useAuth();
