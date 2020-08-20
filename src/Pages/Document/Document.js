@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory , Redirect} from 'react-router-dom';
-import { useAuth } from '../../services/auth';
-import { APP_CONSTANTS } from '../../constants/appConstants';
 import * as Crud from '../../Helpers/crudOpr';
 import DocumentCard from '../../components/DocumentCard/DocumentCard';
 import { Link } from 'react-router-dom';
@@ -18,8 +16,6 @@ const Document = (props) =>{
           />
         )
     }
-    const history = useHistory();
-    const {auth,authState} = useAuth();
     const projectDetail = {
         title : location.state.projectTitle,
         projectID : location.state.projectID,
@@ -27,7 +23,7 @@ const Document = (props) =>{
     }
     let [state,setState] = useState();
     const refURL = {
-        projectNodes :   'documents/'+projectDetail.projectID+'/nodes/',
+        projectNodes :   'documents/'+projectDetail.projectID+'/nodes',
         projectMetadata : 'documents/'+projectDetail.projectID+'/metadata',
         permitUser : 'documents/'+projectDetail.projectID+'/users'
     };
@@ -43,7 +39,7 @@ const Document = (props) =>{
           console.log("Called dash Delete")
     }
     const sendUpdateToDB = (refURL,id,text) => {
-        if(refURL != null && text != '')
+        if(refURL != undefined && text != '')
         {
           Crud.updateTheDB(refURL,id,text,false);
           console.log("Called dash write")
@@ -54,29 +50,22 @@ const Document = (props) =>{
             setState(data);
         })
     },[])
-    //const bf = () => 
-    let flag = false;
-    if(state!=null)
-    {
-        Object.entries(state)
-        .map((childKey , val) => {
-            console.log("Tried",childKey[1]?.title)
-        })
-        
-        flag=true;
-    }
+    
     return (
         <div>
             <Link to="/dashboard">Go Back </Link>
-            <DocumentCard type='parent' title={projectDetail.title} sendWriteToDB={sendWriteToDB.bind(this)} />
+            <DocumentCard type='parent' projectTitle={projectDetail.title} nodePath = {refURL.projectNodes} sendWriteToDB={sendWriteToDB.bind(this)} />
             {
-                flag ? Object.entries(state)
+                state!=null ? Object.entries(state)
                 .map((childKey , val) => {
                     //console.log("Tried",childKey[1]?.title)
                    return <DocumentCard 
-                        title={childKey[1]?.title}
+                        childTitle={childKey[1]?.title}
+                        key={childKey[0]}
+                        key_id={childKey[0]}
                         content ={childKey[1]?.content}
                         nodePath = {refURL.projectNodes}
+                        metadataPath = {refURL.projectMetadata}
                         sendDeleteToDB={sendDeleteToDB.bind(this)}
                         sendUpdateToDB={sendUpdateToDB.bind(this)}
                     />

@@ -15,7 +15,8 @@ export const readFROMDB = (refURL , callback  ) => {
 }
 export const writeToDB = (path,text,re_load) =>
 {
-        //console.log("path",path)
+        //alert.log("Write",path,text)
+        console.log("path",path,text)
         firebaseDB.ref(path).push(text);
         //---- Reload Window --------
        
