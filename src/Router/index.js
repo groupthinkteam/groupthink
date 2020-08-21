@@ -22,9 +22,10 @@ export default function AppRoutes() {
         <PrivateRoute isAuth={authState.isSignedIn} path="/dashboard">
           <Dashboard getUserID={() => auth().currentUser.uid} signOut={() => auth().signOut()} />
         </PrivateRoute>
-        <Route path="/project/:projectID">
-          <Document />
-        </Route>
+        <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
+          <Document getUserID={() => auth().currentUser.uid} signOut={() => auth().signOut()} />
+        </PrivateRoute>
+        
         <Route path="/">
           <SplashPage pendingAuth={authState.pendingAuth} isAuth={authState.isSignedIn} />
         </Route>
@@ -32,3 +33,8 @@ export default function AppRoutes() {
     </Router>
   );
 }
+/**
+ * <Route path="/project/:projectID">
+          <Document />
+        </Route>
+*/
