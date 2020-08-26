@@ -1,4 +1,13 @@
-.project-card {
+.document{
+    width: 100px;
+    height: 100px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    background-size: 50px 50px;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.5) 1px, rgba(0, 0, 0, 0) 1px);
+    background-color: whitesmoke;
+}
+.child-card {
     margin: 10px;
     width: 200px;
     height: 300px;
@@ -12,15 +21,5 @@
     border-radius: 4px;
     background-size: 50px 50px;
     align-self: start;
-}
-
-.inline-input {
-    margin: 10px;
-    font-family: 'Oxygen Mono', monospace;
-}
-
-img {
-    width: 200px;
-    height: 200px;
-    cursor: pointer;
+    background-color : white;
 }

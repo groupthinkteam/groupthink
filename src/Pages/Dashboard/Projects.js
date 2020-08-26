@@ -27,13 +27,14 @@ export default function Projects(props) {
         let projectID = firebaseDB.ref().child(userRef).push().key;
 
         let updates = {};
-
+        const thumbnail = "https://picsum.photos/200?random=" + Math.floor(Math.random() * 100) ;
         updates[userRef + projectID] = {
             name: "New Project",
-            thumbnailURL: "https://picsum.photos/200?random=" + Math.floor(Math.random() * 100)
+            thumbnailURL: thumbnail
         };
         updates['documents/' + projectID] = {
             metadata: {
+                thumbnailURL : thumbnail,
                 name: "New Project",
                 datecreated: firebaseTIME
             },
@@ -58,9 +59,9 @@ export default function Projects(props) {
         firebaseDB.ref().update(updates).then(console.log("successfully renamed project", id, "to", text))
     }
 
-    var onOpen = (id) => {
+    var onOpen = (id,thumbnailURL) => {
         console.log("attempting to open project", id);
-        history.push("/project/" + id)
+        history.push(`/project/${id}`,thumbnailURL)
     }
 
     return (
