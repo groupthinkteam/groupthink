@@ -15,3 +15,16 @@ export default function InlineTextEdit(props) {
         />
     )
 }
+export  function InlineContentEdit(props) {
+    let [content, setContent] = useState(props.text)
+    return (
+        <input
+            className="inline-input"
+            style={{ width: content.length + 'ch' }}
+            placeholder="Enter Content"
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            onBlur={() => props.onSave(content)}
+        />
+    )
+}

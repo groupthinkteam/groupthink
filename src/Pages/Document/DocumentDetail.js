@@ -1,5 +1,5 @@
 import React , {useState} from 'react';
-import {Card} from "react-bootstrap";
+import {Card, Button} from "react-bootstrap";
 import { Rnd } from 'react-rnd';
 import "../../styles/Document.scss"
 const DocumentCard = (props) => {
@@ -12,6 +12,10 @@ const DocumentCard = (props) => {
             y:10,
           }
     );
+    const onAddChild = () =>
+    {
+        props.addChild();
+    }
     const onStop = (d_x,d_y) =>
     {
       setState({ x:  d_x  , y: d_y, width: state.width,  height: state.height })
@@ -61,14 +65,12 @@ const DocumentCard = (props) => {
                         position:'absolute', 
                         width:state.width,
                         height:state.height,
-                      //  left:`${state.x}px`,
-                       // top:`${state.y}px` ,
-                       // transform : ` translate(-10px,-10px)`,
                         boxShadow : `grey 12px 12px 4px`,
                     }}>
                     <Card.Img src={props.thumbnailURL}/>
                     <Card.Body>
                         <Card.Title>{props.projecTitle}</Card.Title>
+                        <Button variant="outline-dark" size="sm" onClick={onAddChild}>Add Child</Button>
                         <footer className="blockquote-footer">Created On {props.date}</footer>    
                     </Card.Body> 
                 </Card>
@@ -76,7 +78,11 @@ const DocumentCard = (props) => {
             </>
         )
     }
-    else
+    
+}
+export default DocumentCard;
+/**
+ * else
     {
         return(
             <Rnd
@@ -128,9 +134,6 @@ const DocumentCard = (props) => {
         )
         
     }
-}
-export default DocumentCard;
-/**
  * size={{ width: state.width,  height: state.height }}
             //position={{ x: state.x, y: state.y }}
             onResize = {(e,d,ref,delta,pose)=>{

@@ -6,22 +6,22 @@ export const readFROMDB = (refURL , callback  ) => {
                 callback(snap.val())
         });         
 }
-export const writeToDB = (path,text) =>
+export const writeToDB = (path) =>
 {
-        //console.log("path",path)
-        firebaseDB.ref(path).push(text).then(console.log("Succes to Write"));
-        //---- Reload Window --------
+        console.log("clicked add new")
+        let projectID = firebaseDB.ref().child(path).push().key;
+        let updates = {};
+        //const thumbnail = "https://picsum.photos/200?random=" + Math.floor(Math.random() * 100) ;
+        updates[path+projectID]={
+                title:"New Child Node",
+                content : "Content ..."
+        }
+        firebaseDB.ref().update(updates).then(console.log("successfully added a new project with id", projectID))
 }
-export const deleteFromDB = (path,title , id) =>
-{
-        console.log("DELETE METHOD", path , title ,id)
-        alert(`Do You Want to Delete ${title}`);
-        firebaseDB.ref(path+'/'+id).remove();
+export const onRename = (path,nodeId, text) => {
+        console.log("about to rename project,  changing title from to", text);
+        let updates = {};
+        updates[path] = text;
+        firebaseDB.ref().update(updates).then(console.log("successfully renamed project", nodeId, "to", text))
 }
-export const updateTheDB = (path,id,text) => 
-{
-        var up = {};
-        console.log("Update METHOD",path,id,text);
-        up[id]=text;
-        firebaseDB.ref(path).update(up);
-}  
+ 

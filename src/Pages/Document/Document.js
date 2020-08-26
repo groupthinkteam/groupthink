@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import * as Crud from "./crudOpr";
 import DocumentCard from "./DocumentDetail";
 import '../../styles/Document.scss'
+import ChildNode from "../ChildNode/ChildNode";
 export default function Document(props) {
     const { projectID } = useParams();
     let [state,setState] = useState(
@@ -39,15 +40,20 @@ export default function Document(props) {
             flag=false;
         }
     }
+    const createChild = () =>{
+        const refURL = 'documents/'+projectID+'/nodes/'
+        Crud.writeToDB(refURL);
+    }
+    const onRename = (nodeId,text,endpoint) => {
+        const refURL = 'documents/'+projectID+'/nodes/'+nodeId+'/'+endpoint;
+        Crud.onRename(refURL,nodeId,text)
+    }
     const onStop = (data) => 
     {
         setState({data:state.data,cardInfo:data , initialHeight:state.initialHeight , initialWidth:state.initialWidth});
         console.log("State On Stop",state)
-        //var docCenter = {xCenter : state.data.innerX , yCenter : state.data.innerY};
-        //var distanceFromCenter = state.data.distance;
-        //console.log("Center Coordinate , Distance",docCenter,distanceFromCenter)
     }
-    console.log("Inner H W ",window.innerHeight,window.innerWidth)
+    //console.log("Inner H W ",window.innerHeight,window.innerWidth)
     return (
         <>
             <div className="document" ref={(el)=>{
@@ -75,18 +81,19 @@ export default function Document(props) {
                       el.style.width = `${window.innerWidth}px`;
                       //console.log("Runned Else Condition ",window.innerHeight,window.innerWidth)
                     }
-                    
-                    if(window.innerHeight >state.initialHeight && state.cardInfo.old_y > state.cardInfo.y) 
+                    if(state.cardInfo!=null)
                     {
-                        window.innerHeight = window.innerHeight - state.cardInfo.height;
-                        el.style.height = `${window.innerHeight}px`
+                        if(window.innerHeight >state.initialHeight && state.cardInfo.old_y > state.cardInfo.y) 
+                        {
+                            window.innerHeight = window.innerHeight - state.cardInfo.height;
+                            el.style.height = `${window.innerHeight}px`
+                        }
+                        if(window.innerWidth >state.initialWidth && state.cardInfo.old_x > state.cardInfo.x)
+                        {
+                            window.innerWidth = window.innerWidth - state.cardInfo.width;
+                            el.style.width = `${window.innerWidth}px`  ;
+                        }
                     }
-                    if(window.innerWidth >state.initialWidth && state.cardInfo.old_x > state.cardInfo.x)
-                    {
-                        window.innerWidth = window.innerWidth - state.cardInfo.width;
-                        el.style.width = `${window.innerWidth}px`  ;
-                    }
-                     
                       
                     //console.log("Scrolled Up ",window.innerHeight,window.innerWidth,state.cardInfo)    
                 }}
@@ -99,6 +106,7 @@ export default function Document(props) {
                         thumbnailURL={state.data.metadata.thumbnailURL} 
                         date={new Date(state.data.metadata.datecreated ).toLocaleDateString("en-IN")}
                         coordinate={onStop.bind(this)}
+                        addChild={createChild.bind(this)}
                     />
                 : <div>Loading</div>
             }
@@ -107,12 +115,14 @@ export default function Document(props) {
                 Object.entries(state.data.nodes)
                 .map((childKey,val)=>
                 {
-                    return <DocumentCard 
+                    return <ChildNode 
                         childTitle={childKey[1]?.title}
                         key={childKey[0]}
                         key_id={childKey[0]}
+                        projectID = {projectID}
                         content ={childKey[1]?.content}
                         coordinate={onStop.bind(this)}
+                        onRename={onRename.bind(this)}
                     />
                 })
                 : <div>No State</div>
