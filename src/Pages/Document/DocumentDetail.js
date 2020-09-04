@@ -1,4 +1,4 @@
-import React , {useState} from 'react';
+import React , {useState,useRef} from 'react';
 import {Card, Button} from "react-bootstrap";
 import { Rnd } from 'react-rnd';
 import "../../styles/Document.scss"
@@ -31,6 +31,7 @@ const DocumentCard = (props) => {
       })
       
     }
+    const box1Ref = useRef(null);
     if(props.type === 'parent')
     {
         return(
@@ -59,6 +60,8 @@ const DocumentCard = (props) => {
                 ...position
             });
             }}
+            ref={props.refs}
+            id="parent"
             >
                 <Card 
                     style={{

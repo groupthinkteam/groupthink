@@ -1,26 +1,33 @@
-import React , {useState} from 'react';
+import React , {useState, useRef} from 'react';
 import { Rnd } from 'react-rnd';
 import "../../styles/Document.scss"
 import * as NodeOperation from './NodeOperation';
 import { Card, Button } from 'react-bootstrap';
 import InlineTextEdit, { InlineContentEdit } from '../../components/InlineTextEdit/InlineTextEdit';
+import { writeToDB } from '../Document/crudOpr';
+import SubNodeReturn from './SubNodes';
+import Xarrow from 'react-xarrows/lib';
 
 const ChildNode = (props) =>
 {
+    const box1Ref = useRef(props.key_id);
+
     const nodeId = props.key_id;
     const propjectId = props.projectID;
-    console.log("Child Node",propjectId,nodeId)
+    //console.log("Child Node",propjectId,nodeId)
     let [state ,setState] = useState(
         {
             width:'220px',
             height:'320px',
             x:10,
             y:10,
+            subNodeCount : 0
           }
     );
+    
     const onStop = (d_x,d_y) =>
     {
-      setState({ x:  d_x  , y: d_y, width: state.width,  height: state.height })
+      setState({ x:  d_x  , y: d_y, width: state.width,  height: state.height , subNodeCount : state.subNodeCount})
       var heightInPX = state.height.match(/\d+/g);
       var widthInPX = state.width.match(/\d+/g);
       props.coordinate({
@@ -44,7 +51,8 @@ const ChildNode = (props) =>
         setState({
             width: width,
             height: height,
-            x: state.x, y: state.y
+            x: state.x, y: state.y,
+            subNodeCount:state.subNodeCount
         });
         const newSize = {width:width,height:height};
         NodeOperation.onResize(propjectId,nodeId,newSize);
@@ -52,12 +60,19 @@ const ChildNode = (props) =>
     const onDeleteNode = ()  =>{
         NodeOperation.onDelete(propjectId,nodeId);
     }
-    //--------Inline used Instead------
-    /*const onContentChange = (text) => ()=> 
+    const addChildNode = ()  => 
     {
-        NodeOperation.onContentChange(propjectId,nodeId,text);
+        const cnt=0;
+       
+            //console.log("SubNOde COunt",state.subNodeCount)
+        const path = 'documents/'+propjectId+'/nodes/'+nodeId+'/subnodes/';
+        writeToDB(path,propjectId,nodeId);
+       // props.depthNode(props.childDetail,state.subNodeCount);
     }
-    */
+    const sendPath = () =>
+    {
+        props.sendPath(props.pathForReparent)
+    }
     return(
         <>
             <Rnd
@@ -68,22 +83,22 @@ const ChildNode = (props) =>
             }}
             minHeight={320}
             minWidth={220}
-            // style={{backgroundColor:"blue" , borderBlockColor:"red"}}
             //onDrag={(e,d)=>{onStop(d.x,d.y)}}
             onResize={(e, direction, ref, delta, position) => {
             setState({
                 width: ref.style.width,
                 height: ref.style.height,
                 x: state.x, y: state.y,
-                ...position
+                ...position,
+                subNodeCount:state.subNodeCount
             });
             }}
             size={{ width: state.width,  height: state.height }}
             //position={{ x: state.x, y: state.y }}
             onDragStop={(e, d) => { onStop(d.x,d.y) }}
             onResizeStop={(e, direction, ref, delta, position) => {onResizeNode(ref.style.width,ref.style.height)}}
-            
-            
+            //ref={box1Ref}
+            id={`${props.key_id}`}
             >
                
             <div className="child-card"  style={{width:state.width,height:state.height , left:`${state.x}px` , top:`${state.y}px` , transform : ` translate(-10px,-10px)`}}>    
@@ -105,11 +120,20 @@ const ChildNode = (props) =>
                             />
                             
                         </Card.Text>
-                        <Button variant="outline-danger" onClick={onDeleteNode}>Delete</Button>
+                        <Card.Text>Parent: {props.parent}</Card.Text>
+                        <Card.Text>ID: {props.key_id}</Card.Text>
+                        <Button variant="outline-danger" size="sm" onClick={onDeleteNode}>Delete</Button>
+                        <Button variant="outline-dark" size="sm" onClick={addChildNode}>Add Child</Button>
+                        <Button varaint="outline-primary" size="sm" onClick={sendPath}>Send Path</Button>
                     </Card.Body>
                 </Card>
             </div>
             </Rnd>
+            <Xarrow
+                start="parent"
+                end={`${props.key_id}`}
+                passProps={{onClick: ()=> {console.log("Arrow clicked Start \n",`${props.key_id} And End \n Parent`)}}}
+                />
         </>
     )
 }

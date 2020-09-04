@@ -9582,6 +9582,13 @@ react-transition-group@^4.4.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-xarrows@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/react-xarrows/-/react-xarrows-1.4.4.tgz#a3e903022f9c6eb65ebabc5a19b3aada28a6e02b"
+  integrity sha512-kyVzAAbYf9HgqqMHmik4zwBNdaLfbeKFZ1zUXT8F/2gcauc5wUXwp/4R89+qggo63fBT/7+rK9XZNmvFxwPbEw==
+  dependencies:
+    lodash "^4.17.15"
+
 react@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"

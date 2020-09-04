@@ -23,3 +23,7 @@
     align-self: start;
     background-color : white;
 }
+.tippy-popper[x-placement^=right] .tippy-tooltip.mytheme-theme .tippy-arrow { border-right: 7px solid #ff0000; }
+.tippy-popper[x-placement^=left] .tippy-tooltip.mytheme-theme .tippy-arrow { border-left: 7px solid #ff0000; }
+.tippy-popper[x-placement^=top] .tippy-tooltip.mytheme-theme .tippy-arrow { border-top: 7px solid #ff0000; }
+.tippy-popper[x-placement^=bottom] .tippy-tooltip.mytheme-theme .tippy-arrow { border-bottom: 7px solid #ff0000; }
