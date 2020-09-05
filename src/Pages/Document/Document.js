@@ -5,19 +5,14 @@ import DocumentCard from "./DocumentDetail";
 import '../../styles/Document.scss'
 import ChildNode from "../ChildNode/ChildNode";
 import  {resizableWindow as Rezzyy } from "./ResizeWindowCard";
-import searchSubNodes from "./SearchSubnode";
-import SubNodeReturn from "../ChildNode/SubNodes";
-import Xarrow from "react-xarrows";
 
 export default function Document(props) {
     const { projectID } = useParams();
-    const box1Ref = useRef(null);
     let [state,setState] = useState(
         {
             data:{} , 
             cardInfo:null ,
-            pathFrom : null,
-            dataReparent:null
+            requestId:null
         });
     const wholeDocument = 'documents/'+projectID+'/'
      useEffect(()=>{
@@ -26,8 +21,7 @@ export default function Document(props) {
             ({
                 data:data,
                 cardInfo:state.cardInfo,
-                pathFrom : state.pathFrom,
-                dataReparent:state.dataReparent
+                requestId:state.requestId
             });
         });
         console.log("Whole Document",wholeDocument)
@@ -56,25 +50,88 @@ export default function Document(props) {
     }
     const onStop = (data) => 
     {
-        setState({data:state.data,cardInfo:data , pathFrom : state.pathFrom,
-            dataReparent:state.dataReparent });
+        setState({data:state.data,cardInfo:data ,requestId:state.requestId });
         //console.log("State On Stop",state)
     }
-    const acquirePath =(path) =>
+    const acquireId =(acquiredId) =>
     {
-        console.log("Acquire Called",path,state)
-        if( state.pathFrom!= undefined || state.pathFrom!=null )
+        console.log("Acquire Called",acquiredId,state)
+        if( state?.requestId!= undefined || state?.requestId!=null )
         {
-            console.log("Reparent",state.pathFrom,state.dataReparent,path);
-            Crud.onReparenting(state.pathFrom,state.dataReparent,path)
+            console.log("Reparent",state.requestId);
+            Crud.onReparenting(projectID,state.requestId,acquiredId)
         }
     }
-    const reparentNodesT = (pathFrom , data ) => 
+    const reparentNodesT = (requestId) => 
     {
-       console.log("Rreparent CAlled",pathFrom,data)
-        setState({data:state.data,cardInfo:data ,pathFrom : pathFrom,dataReparent:data})
+       console.log("Rreparent CAlled",requestId)
+        setState({data:state.data,cardInfo:state.cardInfo ,requestId:requestId})
     }
-    const subTrailNodes = (data)=>
+    
+    return (
+        <>
+            <div className="document" ref={(el)=>{
+                if (!el) return;
+                    //-----Resizable Window---
+                    Rezzyy(el,state)   
+                }}
+            >
+            <Link to='/dashboard'>
+            I was given this project ID: {projectID}.
+            </Link>
+            {
+                flag ?
+                    <DocumentCard type='parent' 
+                        projecTitle={state.data.metadata.name}
+                        thumbnailURL={state.data.metadata.thumbnailURL} 
+                        date={new Date(state.data.metadata.datecreated ).toLocaleDateString("en-IN")}
+                        coordinate={onStop.bind(this)}
+                        addChild={createChild.bind(this)}
+                        pathForReparent = {`documents/${projectID}/nodes/`}
+                        sendPath={acquireId.bind(this)}
+                        reparentPath={reparentNodesT.bind(this)}
+                        //refs={box1Ref}
+                        key_id={projectID}
+                        
+                    />
+                : <div>Loading</div>
+            }
+            {
+                flag && flag_nodes ? 
+                Object.entries(state.data.nodes)
+                .map((childKey,val)=>
+                {
+                   // console.log(childKey[1].subnodes )
+                    return <ChildNode 
+                        childTitle={childKey[1]?.title}
+                        key={childKey[0]}
+                        key_id={childKey[0]}
+                        projectID = {projectID}
+                        content ={childKey[1]?.content}
+                        coordinate={onStop.bind(this)}
+                        onRename={onRename.bind(this)}
+                        parent={childKey[1]?.parent}
+                        subNode={childKey[1]?.subnodes}
+                       // depthNode ={depthNode.bind(this)}
+                        childDetail={childKey}
+                        pathForReparent = {`documents/${projectID}/nodes/${childKey[0]}/subnodes`}
+                        sendPath={acquireId.bind(this)}
+                        reparentPath={reparentNodesT.bind(this)}
+                        //refs={box1Ref}
+                    />
+                    
+                })
+                : <div>No State</div>
+            }
+            
+            
+            </div>
+
+        </>
+    )
+}
+/**
+ * const subTrailNodes = (data)=>
     {
         return Object.entries(data)
                         .map((subChildKey,val)=>{
@@ -123,60 +180,7 @@ export default function Document(props) {
      };
 
     console.log("PREORDER TRAVERSAL ",preorderTraversal(0,[1,2]))
-    return (
-        <>
-            <div className="document" ref={(el)=>{
-                if (!el) return;
-                    //-----Resizable Window---
-                    Rezzyy(el,state)   
-                }}
-            >
-            <Link to='/dashboard'>
-            I was given this project ID: {projectID}.
-            </Link>
-            {
-                flag ?
-                    <DocumentCard type='parent' 
-                        projecTitle={state.data.metadata.name}
-                        thumbnailURL={state.data.metadata.thumbnailURL} 
-                        date={new Date(state.data.metadata.datecreated ).toLocaleDateString("en-IN")}
-                        coordinate={onStop.bind(this)}
-                        addChild={createChild.bind(this)}
-                        pathForReparent = {`documents/${projectID}/nodes/`}
-                        sendPath={acquirePath.bind(this)}
-                        refs={box1Ref}
-                        
-                    />
-                : <div>Loading</div>
-            }
-            {
-                flag && flag_nodes ? 
-                Object.entries(state.data.nodes)
-                .map((childKey,val)=>
-                {
-                   // console.log(childKey[1].subnodes )
-                    return <ChildNode 
-                        childTitle={childKey[1]?.title}
-                        key={childKey[0]}
-                        key_id={childKey[0]}
-                        projectID = {projectID}
-                        content ={childKey[1]?.content}
-                        coordinate={onStop.bind(this)}
-                        onRename={onRename.bind(this)}
-                        parent={childKey[1]?.parent}
-                        subNode={childKey[1]?.subnodes}
-                       // depthNode ={depthNode.bind(this)}
-                        childDetail={childKey}
-                        pathForReparent = {`documents/${projectID}/nodes/${childKey[0]}/subnodes`}
-                        sendPath={acquirePath.bind(this)}
-                        refs={box1Ref}
-                    />
-                    
-                })
-                : <div>No State</div>
-            }
-            
-            {
+ * {
                flag && flag_nodes ? trailNodes(state.data.nodes) :<div>No New Subnodes</div>
 
             }
@@ -185,12 +189,6 @@ export default function Document(props) {
                 <div>OK</div>
                 :<div>Nothing</div>
             }
-            </div>
-
-        </>
-    )
-}
-/**
  * let subNodesContain = null;
     const depthNode = (childState,depthValue)=>
     {

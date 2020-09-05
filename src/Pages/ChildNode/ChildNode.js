@@ -20,14 +20,13 @@ const ChildNode = (props) =>
             width:'220px',
             height:'320px',
             x:10,
-            y:10,
-            subNodeCount : 0
+            y:10
           }
     );
     
     const onStop = (d_x,d_y) =>
     {
-      setState({ x:  d_x  , y: d_y, width: state.width,  height: state.height , subNodeCount : state.subNodeCount})
+      setState({ x:  d_x  , y: d_y, width: state.width,  height: state.height })
       var heightInPX = state.height.match(/\d+/g);
       var widthInPX = state.width.match(/\d+/g);
       props.coordinate({
@@ -51,27 +50,27 @@ const ChildNode = (props) =>
         setState({
             width: width,
             height: height,
-            x: state.x, y: state.y,
-            subNodeCount:state.subNodeCount
+            x: state.x, y: state.y
         });
         const newSize = {width:width,height:height};
         NodeOperation.onResize(propjectId,nodeId,newSize);
     }
     const onDeleteNode = ()  =>{
-        NodeOperation.onDelete(propjectId,nodeId);
+        NodeOperation.onDelete(propjectId,nodeId,props.parent,props.childDetail[1]?.children);
     }
     const addChildNode = ()  => 
     {
-        const cnt=0;
-       
-            //console.log("SubNOde COunt",state.subNodeCount)
         const path = 'documents/'+propjectId+'/nodes/'+nodeId+'/subnodes/';
         writeToDB(path,propjectId,nodeId);
-       // props.depthNode(props.childDetail,state.subNodeCount);
     }
     const sendPath = () =>
     {
-        props.sendPath(props.pathForReparent)
+        props.sendPath(props.key_id)
+    }
+    const reparentNode = () => 
+    {
+        //const path = 'documents/'+props.projectId+'/nodes/'+props.parent+'/subnodes/'
+        props.reparentPath(props.key_id);
     }
     return(
         <>
@@ -89,8 +88,7 @@ const ChildNode = (props) =>
                 width: ref.style.width,
                 height: ref.style.height,
                 x: state.x, y: state.y,
-                ...position,
-                subNodeCount:state.subNodeCount
+                ...position
             });
             }}
             size={{ width: state.width,  height: state.height }}
@@ -125,12 +123,13 @@ const ChildNode = (props) =>
                         <Button variant="outline-danger" size="sm" onClick={onDeleteNode}>Delete</Button>
                         <Button variant="outline-dark" size="sm" onClick={addChildNode}>Add Child</Button>
                         <Button varaint="outline-primary" size="sm" onClick={sendPath}>Send Path</Button>
+                        <Button varaint="outline-success" size="sm" onClick={reparentNode}>Reparent</Button>
                     </Card.Body>
                 </Card>
             </div>
             </Rnd>
             <Xarrow
-                start="parent"
+                start={`${props.parent}`}
                 end={`${props.key_id}`}
                 passProps={{onClick: ()=> {console.log("Arrow clicked Start \n",`${props.key_id} And End \n Parent`)}}}
                 />
@@ -139,6 +138,7 @@ const ChildNode = (props) =>
 }
 export default ChildNode;
 /**
+ * 
  * <div className="project-card-title">
                     Title : {props.childTitle}
                     <span>

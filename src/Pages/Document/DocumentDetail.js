@@ -60,8 +60,8 @@ const DocumentCard = (props) => {
                 ...position
             });
             }}
-            ref={props.refs}
-            id="parent"
+            //ref={props.refs}
+            id={`${props.key_id}`}
             >
                 <Card 
                     style={{
