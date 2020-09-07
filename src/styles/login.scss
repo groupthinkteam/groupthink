@@ -2,7 +2,7 @@
 #login{
     width: 100vw;
     height: 100vh;
-    background-color: rgba(255, 255, 255, 0.904);
+    background-color: rgba(230, 227, 227, 0.925);
     margin: 0;
 }
 #title{
@@ -13,7 +13,7 @@
 .landing-subtitle {
     padding-bottom: 15px;
     font-family: 'Lora', serif;
-    font-size: 25px;
+    font-size: 23px;
 }
 
 .landing-text {
@@ -21,7 +21,9 @@
     padding-right: 7vw;
     text-align: justify;
     font-family: 'Lora', serif;
-    font-size: 20px;
+    font-size: 16px;
+    display: inline-block;
+
 }
 #sign{
     margin-top: 1rem;

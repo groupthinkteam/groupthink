@@ -11,7 +11,7 @@ export default function Dashboard(props) {
     props.signOut()
     return (
       <Redirect to={{
-        pathname: "/login",
+        pathname: "/dashboard",
         state: { from: location }
       }}
       />

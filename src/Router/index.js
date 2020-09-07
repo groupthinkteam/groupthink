@@ -2,7 +2,8 @@ import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 import SplashPage from "../Pages/Splash/Splash"
 import LoginPage from "../Pages/Login/Login";

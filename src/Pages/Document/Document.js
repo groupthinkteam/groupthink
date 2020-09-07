@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useLocation, Redirect } from "react-router-dom";
+import { useParams, useLocation, Redirect, Link } from "react-router-dom";
 import MenuBar from "../../components/MenuBar/MenuBar";
 import CardManager from "../../components/DocumentCanvas/CardManager";
 
@@ -22,6 +22,7 @@ export default function Document(props) {
   return (
     <div>
       <MenuBar onLogOut={logout} currentUser={props.currentUser} />
+      <Link to="/dashboard">Back</Link>
       <CardManager
         projectID={projectID}
       />
