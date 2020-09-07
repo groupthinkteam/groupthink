@@ -1,12 +1,13 @@
 import React from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
-import Button from '../../components/Button'
 import Projects from './Projects'
+import MenuBar from '../../components/MenuBar/MenuBar'
 
 export default function Dashboard(props) {
   const location = useLocation()
 
   const logout = () => {
+    console.log("logout was triggered")
     props.signOut()
     return (
       <Redirect to={{
@@ -19,10 +20,8 @@ export default function Dashboard(props) {
 
   return (
     <div>
-      <Button handleClick={logout}>
-        Logout
-      </Button>
-      <Projects getUserID={props.getUserID}/>
+      <MenuBar onLogOut={logout} currentUser={props.currentUser} />
+      <Projects currentUser={props.currentUser} />
     </div>
   )
 }

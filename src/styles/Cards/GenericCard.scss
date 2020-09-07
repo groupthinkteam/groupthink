@@ -1,0 +1,17 @@
+.card {
+    width: inherit;
+    height: inherit;
+    border: 2px solid black;
+}
+
+.card-handle {
+    height: 30px;
+    max-height: 30px;
+    min-height: 30px;
+    cursor: move;
+    background-color: goldenrod;
+}
+
+.inline-input {
+    background-color: blue;
+}

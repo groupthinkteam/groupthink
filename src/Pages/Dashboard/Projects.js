@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { firebaseDB, firebaseTIME } from "../../services/firebase"
-import Card from "./Card"
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { firebaseDB, firebaseTIME } from "../../services/firebase";
+import projectTemplates from "../../constants/projectTemplates";
 
-import "../../styles/Projects.scss"
+import Card from "./Card";
+
+import "../../styles/Projects.scss";
 
 export default function Projects(props) {
     const history = useHistory();
     let [cards, setCards] = useState(null);
 
-    let userRef = "users/" + props.getUserID() + "/projects/";
+    let userRef = "users/" + props.currentUser().uid + "/projects/";
 
     useEffect(
         () => {
-            let ref = firebaseDB.ref("users/" + props.getUserID() + "/projects/");
+            let ref = firebaseDB.ref("users/" + props.currentUser().uid + "/projects/");
             ref.on('value', (snapshot) => {
-                console.log("triggered listener and updated state, snapshot value was", snapshot.val());
-                setCards(snapshot.val())
+                console.log("triggered listener and updated project list state, snapshot value was", snapshot.val());
+                setCards(snapshot.val());
             })
-            return () => ref.off('value')
+            return () => ref.off('value');
         }
         , [props])
 
@@ -37,7 +39,8 @@ export default function Projects(props) {
                 name: "New Project",
                 datecreated: firebaseTIME
             },
-            users: { [props.getUserID()]: "rw" }
+            users: { [props.currentUser().uid]: "rw" },
+            ...projectTemplates.tester
         }
 
         firebaseDB.ref().update(updates).then(console.log("successfully added a new project with id", projectID))
@@ -45,13 +48,14 @@ export default function Projects(props) {
     var onDelete = (id) => {
         console.log("about to delete project", id);
         let updates = {};
-        updates["users/" + props.getUserID() + "/projects/" + id + "/"] = null;
+        updates["users/" + props.currentUser().uid + "/projects/" + id + "/"] = null;
         updates["documents/" + id + "/"] = null;
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
     }
 
-    var onRename = (id, text) => {
-        console.log("about to rename project", id, ", changing title from", cards[id].name, "to", text);
+    var onRename = (id) => {
+        let text = cards[id].name;
+        console.log("about to rename project", id, ", changing title to", text);
         let updates = {};
         updates[userRef + id + "/name"] = text;
         updates["documents/" + id + "/metadata/name"] = text;
@@ -63,20 +67,28 @@ export default function Projects(props) {
         history.push("/project/" + id)
     }
 
+    var onChange = (id, text) => {
+        console.log("un-finalized text change in", id, ". new text:", text);
+        console.log({ ...cards, [id]: { ...cards[id], name: text } })
+        setCards({ ...cards, [id]: { ...cards[id], name: text } });
+    }
+
     return (
         <div id="project-card-container">
             <Card addNew onAddNew={onAddNew} />
             {cards ?
                 Object.entries(cards).map(
-                    ([id, card]) =>
-                        <Card
+                    ([id, card]) => {
+                        return <Card
                             key={id}
                             id={id}
                             card={card}
+                            onChange={onChange}
                             onSave={onRename}
                             onDelete={onDelete}
                             onOpen={onOpen}
                         />
+                    }
                 )
                 : null
             }

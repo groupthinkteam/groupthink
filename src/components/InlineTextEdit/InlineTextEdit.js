@@ -1,17 +1,16 @@
-import React, { useState } from "react"
-
+import React from "react"
+import TextareaAutosize from  "react-textarea-autosize"
 import "../../styles/InlineTextEdit.scss"
 
 export default function InlineTextEdit(props) {
-    let [text, setText] = useState(props.text)
     return (
-        <input
+        <TextareaAutosize
             className="inline-input"
-            style={{ width: text.length + 'ch' }}
+            style={{width: props.lwidth || 160, resize: "none"}}
             placeholder="Enter Project Name"
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-            onBlur={() => props.onSave(text)}
+            value={props.text}
+            onChange={props.onChange}
+            onBlur={props.onSave}
         />
     )
 }

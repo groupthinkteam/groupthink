@@ -1,12 +1,30 @@
 import React from "react";
-import { useParams } from "react-router-dom"
+import { useParams, useLocation, Redirect } from "react-router-dom";
+import MenuBar from "../../components/MenuBar/MenuBar";
+import CardManager from "../../components/DocumentCanvas/CardManager";
 
 export default function Document(props) {
-    const { projectID } = useParams();
-    console.log(projectID)
+  const location = useLocation();
+  const { projectID } = useParams();
+  console.log(projectID);
+
+  const logout = () => {
+    props.signOut()
     return (
-        <p>
-            I was given this project ID: {projectID}.
-        </p>
+      <Redirect to={{
+        pathname: "/login",
+        state: { from: location }
+      }}
+      />
     )
+  }
+
+  return (
+    <div>
+      <MenuBar onLogOut={logout} currentUser={props.currentUser} />
+      <CardManager
+        projectID={projectID}
+      />
+    </div>
+  );
 }

@@ -1,0 +1,31 @@
+@import "~bootstrap/scss/bootstrap"; 
+#login{
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.904);
+    margin: 0;
+}
+#title{
+    color: deeppink;
+    font-family: system-ui;
+
+}
+.landing-subtitle {
+    padding-bottom: 15px;
+    font-family: 'Lora', serif;
+    font-size: 25px;
+}
+
+.landing-text {
+    padding-left: 7vw;
+    padding-right: 7vw;
+    text-align: justify;
+    font-family: 'Lora', serif;
+    font-size: 20px;
+}
+#sign{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 20px;
+
+}

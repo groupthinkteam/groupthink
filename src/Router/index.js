@@ -16,11 +16,18 @@ export default function AppRoutes() {
   return (
     <Router>
       <Switch>
+        <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
+          <Document
+            currentUser={() => auth().currentUser}
+            signOut={() => auth().signOut()} />
+        </PrivateRoute>
         <Route path="/login" >
           <LoginPage auth={auth} uiConfig={uiConfig} authState={authState} />
         </Route>
         <PrivateRoute isAuth={authState.isSignedIn} path="/dashboard">
-          <Dashboard getUserID={() => auth().currentUser.uid} signOut={() => auth().signOut()} />
+          <Dashboard
+            currentUser={() => auth().currentUser}
+            signOut={() => auth().signOut()} />
         </PrivateRoute>
         <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
           <Document getUserID={() => auth().currentUser.uid} signOut={() => auth().signOut()} />
