@@ -184,6 +184,7 @@ export default function CardManager(props) {
         {
             console.log("Reparent",state.requestId);
             reparentChild(state.requestId,acquiredId)
+            setState(null);
         }
     }
     const reparentNodesT = (requestId) => 
