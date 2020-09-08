@@ -16,7 +16,7 @@ export default function SplashPage(props) {
     {
         page = location.state.from.pathname;
         isChild(page.split("/")[2],callback => {
-            console.log("Callback",callback)
+            //console.log("Callback",callback)
             if(!callback)
             page="/dashboard";
         })

@@ -12,6 +12,9 @@ export default function CardManager(props) {
     // position of the document center in the frame of local coords
     let [docCenter, setDocCenter] = useState({ x: 1000, y: 5000 })
 
+    //State for Reparenting
+    let [state,setState] = useState({})
+
     // project reference in firebase db
     let projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
 
@@ -38,10 +41,51 @@ export default function CardManager(props) {
         }
     }, [props.projectID])
 
-    // card operations
-    let onDelete = (id) => {
+    //----Container Resize----
+    let containeResize = (size) =>{
+        //----- format    size:{width : 11 , height:12 } ----
+        let updates = {};
+        updates["documents/"+props.projectID+"/container/size"] = size
+        firebaseDB.ref().update(updates).then(console.log("Resized to param ", size)).catch(err=>err)
+    }
+    //-------Card operations------------
+    let onDelete = (id,parentId,children) => {
+        let updates = {};
+        console.log("OnDelete Params", id , parentId , children)
+        if(props.projectID == parentId)
+        {
+            updates["documents/" + props.projectID + "/nodes/"+id] = null;
+        }
+        else
+        {
+            updates["documents/" + props.projectID + "/nodes/"+parentId+"/children/"+id] = null;
+            updates["documents/" + props.projectID + "/nodes/"+id] = null;
+        }
+        //---Childrens Should be deleted---
+        const ChildrenDelete = (children) => 
+        {
+            Object.entries(children)
+            .map((key,val)=>{
+                //console.log("Children Key",key[0])
+                updates["documents/"+props.projectID+"/nodes/"+key[0]] = null;
+                FirebaseSearchPath(key[0])
+            })
+        }
+        const FirebaseSearchPath = (id) =>
+        {
+            firebaseDB.ref("documents/" + props.projectID + "/nodes/"+id+"/").on('value',snap=>{
+                //console.log("Snapshot",snap.val()?.children)
+                if(snap.val()?.children != null || snap.val()?.children != undefined)
+                ChildrenDelete(snap.val().children)
+            })
+        }
+        if(children != null || children !=undefined)
+        {
+            ChildrenDelete(children)
+        }
         setCards({ ...cards, [id]: undefined });
-        projectRef.child(id).remove().then(console.log("removed", id));
+        firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
+        //projectRef.child(id).remove().then(console.log("removed", id));
     }
 
     // update local state during card drag
@@ -62,20 +106,21 @@ export default function CardManager(props) {
     }
 
     // initially adds a blank card, type is inferred later
-    let addCard = () => {
+    let addCard = ()=> {
         let blankCard = {
             type: "blank",
             size: { width: 200, height: 300 },
             position: { x: 300, y: 300 },
             content: {
                 text: "add some content here, this is a blank node"
-            }
+            },
+            parent: `${props.projectID}`
         }
         let newCardKey = projectRef.push().key;
         setCards({ ...cards, [newCardKey]: blankCard });
         projectRef.child(newCardKey).set(blankCard).then(console.log("added new card with key", newCardKey));
     }
-
+    
     let changeType = (id, newType) => {
         setCards({ ...cards, [id]: { ...cards[id], type: newType } });
         projectRef.child(id).child("type").set(newType).then(console.log("set new type for", id, "to", newType));
@@ -94,7 +139,58 @@ export default function CardManager(props) {
         projectRef.child(id).child("content").set(cards[id]["content"])
             .then(console.log("saved new content for", id));
     }
-
+    //-------Subnodes Operation------
+    let addSubNodes = (parentId) =>{
+        let blankCard = {
+            type: "blank",
+            size: { width: 200, height: 300 },
+            position: { x: 300, y: 300 },
+            content: {
+                text: "add some content here, this is a blank node"
+            },
+            parent: parentId
+        }
+        let newCardKey = projectRef.push().key;
+        let childpath = "documents/"+props.projectID+"/nodes/"+parentId+"/children/"+newCardKey;
+        let update={};
+        update[childpath] = 1;
+        firebaseDB.ref().update(update).then(console.log("successfully added a new Child in Parent"))
+        setCards({ ...cards, [newCardKey]: blankCard });
+        projectRef.child(newCardKey).set(blankCard).then(console.log("added new card with key", newCardKey));
+    }
+    //--------------Reparenting-----------
+    let reparentChild=(requestId, acquiredId)=>{
+        let updates = {};
+        let pastParentId;
+        //---------add to new Parent and it's properties ------
+        updates["documents/"+props.projectID+"/nodes/"+acquiredId+"/children/"+requestId] = 1
+        updates["documents/"+props.projectID+"/nodes/"+requestId+"/parent"] = acquiredId
+        firebaseDB.ref("documents/"+props.projectID+"/nodes/"+requestId+"/parent").once('value',snap=>{
+                pastParentId=snap.val();
+                console.log("Parent ID",pastParentId)
+                updates["documents/"+props.projectID+"/nodes/"+pastParentId+"/children/"+requestId] = null
+        });
+        //------ Pat Parent Id should be null ------
+        
+        console.log("UPDATES",updates)
+        firebaseDB.ref().update(updates)
+        .then(console.log("successfully Changed Location of ",requestId, " To ", acquiredId))
+        .catch(err=>{return err})
+    }
+    const acquireId =(acquiredId) =>
+    {
+        console.log("Acquire Called",acquiredId,state)
+        if( state?.requestId!= undefined || state?.requestId!=null )
+        {
+            console.log("Reparent",state.requestId);
+            reparentChild(state.requestId,acquiredId)
+        }
+    }
+    const reparentNodesT = (requestId) => 
+    {
+       console.log("Rreparent CAlled",requestId)
+        setState({requestId:requestId})
+    }
     // bundling card api methods for ease of transmission
     let cardAPI = {
         add: addCard,
@@ -104,7 +200,10 @@ export default function CardManager(props) {
         resize: onResize,
         type: changeType,
         change: changeContent,
-        save: saveContent
+        save: saveContent,
+        addChild : addSubNodes,
+        requestReparent:reparentNodesT,
+        sendPath : acquireId
     }
 
     return (
@@ -112,6 +211,7 @@ export default function CardManager(props) {
             container={container}
             cards={cards}
             cardAPI={cardAPI}
+            projectID={props.projectID}
         />
     )
 }

@@ -10,7 +10,14 @@ const projectTemplates = {
                 width: 800
             }
         },
-        nodes: {
+        
+    }
+    // TODO: add more templates
+}
+
+export default projectTemplates;
+/**
+ * nodes: {
             "-MGEjZhWSAjhPd_ZWu4a": {
                 "content": {
                     "text": "add some content here, this is a blank node"
@@ -23,7 +30,8 @@ const projectTemplates = {
                     "height": 300,
                     "width": 200
                 },
-                "type": "blank"
+                "type": "blank",
+                "parent":"-jjksjiIS454" 
             },
             "-MGEjbe8zZmSCQYtj23e": {
                 "content": {
@@ -37,7 +45,8 @@ const projectTemplates = {
                     "height": 300,
                     "width": 200
                 },
-                "type": "blank"
+                "type": "blank",
+                "parent":"-jjksjiIS454"
             },
             "-MGNcsTbV4eY41n3BOY4": {
                 "content": {
@@ -51,11 +60,8 @@ const projectTemplates = {
                     "height": 300,
                     "width": 200
                 },
-                "type": "blank"
+                "type": "blank",
+                "parent":"-jjksjiIS454"
             },
         }
-    }
-    // TODO: add more templates
-}
-
-export default projectTemplates;
+ */
