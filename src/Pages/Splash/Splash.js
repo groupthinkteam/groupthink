@@ -6,22 +6,22 @@ import { isChild } from "./SearchChild"
 export default function SplashPage(props) {
     const location = useLocation()
     console.log("splashpage says: I was consulted",location)
-    let page;
-    if(location.state == undefined)
-    {
-        page = `/dashboard`
-    }
+    let page,flag=null;
     //---------Check for Only Project Detail---------
-    else
+    if(location.state != undefined)
     {
+       // page = `/dashboard`
         page = location.state.from.pathname;
-        isChild(page.split("/")[2],callback => {
-            //console.log("Callback",callback)
-            if(!callback)
-            page="/dashboard";
+        //----- ToDO :- Check isChild  ------
+        isChild(page.split("/")[2],(data) => {
+            flag=data;
         })
     }
-    
+    if(!flag && flag != null)
+    {
+        page="/dashboard";
+        
+    }
     return (
         props.pendingAuth ?
             <div id="splash">

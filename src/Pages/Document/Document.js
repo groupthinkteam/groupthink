@@ -6,7 +6,7 @@ import CardManager from "../../components/DocumentCanvas/CardManager";
 export default function Document(props) {
   const location = useLocation();
   const { projectID } = useParams();
-  console.log(projectID);
+  //console.log(projectID);
 
   const logout = () => {
     props.signOut()

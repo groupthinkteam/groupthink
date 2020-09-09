@@ -2,6 +2,8 @@ import React from "react";
 import { Rnd } from "react-rnd";
 import GenericCard from "./Cards/GenericCard"
 import Button from "../Button/Button"
+import YoutubeCard from "./Cards/types/YoutubeCard";
+import { Card } from "react-bootstrap";
 
 // props:
 // 1. cards: an object containing cardID: card_info entries
@@ -10,13 +12,16 @@ import Button from "../Button/Button"
 // 3. //TODO: container resizing
 export default function CardContainer(props) {
     let cardAPI = props.cardAPI; // for brevity
-    //console.log("Card API \n ",props.container);
+    //console.log("Card API \n ",url);
     return (
         <>
             <div className="card-container" style={{...props.container?.size,
                 border: "2px solid black" ,
                 }}>
-                <Button handleClick={cardAPI.add}>Add new node</Button>
+                <Button handleClick={cardAPI.add('PDF')}>Add PDF</Button>
+                <Button handleClick={cardAPI.add('link')}>Add Youtube</Button>
+                <Button handleClick={cardAPI.add()}>Add new node</Button>
+                <Button handleClick={cardAPI.add('image')}>Add Images</Button> 
                 {props.cards ? Object.entries(props.cards).filter(([id, card]) => id != null).map(
                     ([id, card]) => {
                         return (
@@ -40,6 +45,7 @@ export default function CardContainer(props) {
                                 }}
                                 id={`${id}`}
                             >
+                              
                                 <GenericCard
                                     id={id}
                                     cardDetail={card}

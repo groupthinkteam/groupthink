@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import TextCard from "./types/TextCard";
 import Button from "../../Button/Button";
 import "../../../styles/Cards/GenericCard.scss";
 import { Button as BootButton } from "react-bootstrap";
 import Xarrow from 'react-xarrows/lib';
+import YoutubeCard from "./types/YoutubeCard";
+import PDFCard from "./types/PDFCard";
+import ImagesCard from "./types/ImagesCard";
 
 // props
 // --------
@@ -11,18 +14,23 @@ import Xarrow from 'react-xarrows/lib';
 // type:
 // content: 
 // cardAPI:
+// parent:
+// Types Of Card
 // --------
 
 export default function GenericCard(props) {
-
-    let onContentChange = (content) => props.cardAPI.change(props.id, content);
-    let onSave = (content) => props.cardAPI.save(props.id, content);
-    let addChild=() => props.cardAPI.addChild(props.id);
-    let sendPath=() =>props.cardAPI.sendPath(props.id);
-    let reparent=() => props.cardAPI.requestReparent(props.id)
+    const CardDetail = props.cardDetail;
+    const onContentChange = (content) => props.cardAPI.change(props.id, content);
+    const onSave = (content) => {
+        props.cardAPI.save(props.id, content);
+    }
+    const addChild=() => props.cardAPI.addChild(props.id,CardDetail.type);
+    const sendPath=() =>props.cardAPI.sendPath(props.id);
+    const reparent=() => props.cardAPI.requestReparent(props.id)
     let flag=true
     if(props.cardDetail.parent === props.projectID)
-    {flag=false}   
+    {flag=false}
+
     return (
         <>
         <div className="card">
@@ -36,11 +44,18 @@ export default function GenericCard(props) {
                 onContentChange={(text) => onContentChange(text)}
                 onSave={(text) => onSave(text)}
             />
-            Parent Id : {props.cardDetail.parent}
-            Own Id : {props.id}
             <BootButton variant="outline-dark" size="sm" onClick={addChild}>Add Child</BootButton>
             <BootButton variant="outline-info" size="sm" onClick={sendPath}>Send Path</BootButton>
             <BootButton variant="outline-warning" size="sm" onClick={reparent}>Reparent</BootButton>
+            {
+                CardDetail.type === 'link' ? <YoutubeCard CardDetail={CardDetail}/> : <div></div>
+            }
+            {
+                CardDetail.type === 'PDF' ? <PDFCard/> : <div></div>
+            }
+            {
+                CardDetail.type === 'image' ? <ImagesCard/> : <div></div>
+            }
         </div>
         {
             flag ? 

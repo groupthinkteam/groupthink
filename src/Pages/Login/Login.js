@@ -4,7 +4,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 import "../../styles/login.scss"
 export default function LoginPage(props) {
   const location = useLocation()
-  console.log("Login PAge CAllled")
+  //console.log("Login PAge CAllled")
   return (
     props.authState.isSignedIn ?
       <Redirect

@@ -7,7 +7,7 @@ export default function Dashboard(props) {
   const location = useLocation()
 
   const logout = () => {
-    console.log("logout was triggered")
+    //console.log("logout was triggered")
     props.signOut()
     return (
       <Redirect to={{

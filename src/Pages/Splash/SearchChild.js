@@ -5,6 +5,6 @@ export const isChild = (child,callback)=>{
     if(child!=undefined)
     firebaseDB.ref(`users/${auth().currentUser?.uid}/projects`).once('value',snap=>{
         //if(! snap.hasChild(child))
-        callback(snap.hasChild(child))//page="/dashboard"
+        callback(snap.hasChild(child).valueOf())//page="/dashboard"
     });
 }
