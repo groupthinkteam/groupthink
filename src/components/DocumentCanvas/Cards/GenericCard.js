@@ -7,6 +7,9 @@ import Xarrow from 'react-xarrows/lib';
 import YoutubeCard from "./types/YoutubeCard";
 import PDFCard from "./types/PDFCard";
 import ImagesCard from "./types/ImagesCard";
+import FilesCard from "./types/FilesCard";
+import VideosCard from "./types/VideoCard";
+import AudiosCard from "./types/AudioCard";
 
 // props
 // --------
@@ -56,6 +59,15 @@ export default function GenericCard(props) {
             {
                 CardDetail.type === 'image' ? <ImagesCard/> : <div></div>
             }
+            {
+                CardDetail.type === 'files' ? <FilesCard/> : <div></div>
+            }
+            {
+                CardDetail.type === 'videos' ? <VideosCard/> : <div></div>
+            }
+            {
+                CardDetail.type === 'audios' ? <AudiosCard/> : <div></div>
+            }
         </div>
         {
             flag ? 
@@ -72,10 +84,3 @@ export default function GenericCard(props) {
         </>
     )
 }
-/**
- * <Xarrow
-                start={`${props.cardDetail.parent}`}
-                end={`${props.id}`}
-                passProps={{onClick: ()=> {console.log("Arrow clicked Start \n",`${props.key_id} And End \n Parent`)}}}
-            />
- */

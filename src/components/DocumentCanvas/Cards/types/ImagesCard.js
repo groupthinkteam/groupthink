@@ -40,7 +40,7 @@ const ImageRender = (props) =>{
 const ImagesCard = () =>{
     const [state , setState]= useState()
     //console.log(state)
-    
+    const listOfExtension= "image/*"
     const OnSelectFile = (e) =>
     {
         console.log(e.target.files[0])
@@ -59,7 +59,7 @@ const ImagesCard = () =>{
             <div>
                 <input
                     type="file"
-                    accept="image/x-png,image/gif,image/jpeg,image/svg"
+                    accept={`image/x-png,image/gif,image/jpeg,image/svg,${listOfExtension}`}
                     onChange={(e)=>OnSelectFile(e)}
                 />
                 {state?.src != undefined ? <ImageRender src={state}/> : <div></div>}
