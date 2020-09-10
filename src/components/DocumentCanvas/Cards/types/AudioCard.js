@@ -7,8 +7,8 @@ const ShowFileUploaded = (props) =>{
         Audio is Uploaded
         <ReactAudioPlayer
             src={props.src.src}
-            autoPlay
-            controls
+            autoPlay={true}
+            controls={true}
         />
       </div>
     )
@@ -20,7 +20,7 @@ const AudiosCard = () =>{
     const OnSelectFile = (e) =>
     {
         console.log(e.target.files[0])
-        setState({src:e.target.files[0].name })
+        setState({src:e.target.files[0].name})
        /* if(e.target.files && e.target.files.length > 0)
         {
             const reader = new FileReader();
