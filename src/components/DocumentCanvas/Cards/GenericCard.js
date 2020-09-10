@@ -29,7 +29,9 @@ export default function GenericCard(props) {
     }
     const addChild=() => props.cardAPI.addChild(props.id,CardDetail.type);
     const sendPath=() =>props.cardAPI.sendPath(props.id);
-    const reparent=() => props.cardAPI.requestReparent(props.id)
+    const reparent=() =>{ 
+        props.cardAPI.requestReparent(props.id,CardDetail)
+    }
     let flag=true
     if(props.cardDetail.parent === props.projectID)
     {flag=false}
@@ -38,7 +40,7 @@ export default function GenericCard(props) {
         <>
         <div className="card">
             <div className="card-handle card-title-bar">
-                <Button handleClick={() => props.cardAPI.remove(props.id,props.cardDetail.parent,props.cardDetail.children)}>
+                <Button handleClick={() => props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children)}>
                     X
                 </Button>
             </div>
@@ -60,7 +62,7 @@ export default function GenericCard(props) {
                 CardDetail.type === 'image' ? <ImagesCard/> : <div></div>
             }
             {
-                CardDetail.type === 'files' ? <FilesCard/> : <div></div>
+                CardDetail.type === 'files' ? <FilesCard projectID={props.projectID} id={props.id} /> : <div></div>
             }
             {
                 CardDetail.type === 'videos' ? <VideosCard/> : <div></div>
@@ -76,7 +78,7 @@ export default function GenericCard(props) {
                 end={`${props.id}`}
                 lineColor="black"
                 path="grid"
-                label ={{start:"child"}}
+                label ={{start:"parent",end:"child"}}
                 passProps={{onClick: ()=> {console.log("Arrow clicked Start \n",`${props.key_id} And End \n Parent`)}}}
             /> 
             :<div></div>

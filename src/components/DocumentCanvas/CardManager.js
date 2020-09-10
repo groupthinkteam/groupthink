@@ -152,7 +152,7 @@ export default function CardManager(props) {
         }
         const blankCard = {
             type: type,
-            size: { width: 200, height: 300 },
+            size: { width: 275, height: 375 },
             position: { x: 300, y: 300 },
             content: {
                 text: `This is a ${type} card`
@@ -189,17 +189,32 @@ export default function CardManager(props) {
     const acquireId =(acquiredId) =>
     {
         console.log("Acquire Called",acquiredId,state)
+        let flag=0;
+        
         if( (state?.requestId!= undefined || state?.requestId!= null  ) && state?.requestId != acquiredId)
         {
+            if(state.cardDetail?.children != null)
+            {
+                console.log("Childrent",state.cardDetail?.children)
+                Object.entries(state.cardDetail?.children)
+                .map((key,val)=>{
+                    console.log(key[0])
+                    if(state.cardDetail.parent == key[0])
+                    flag=1;
+                })
+            }
+             if(flag==0)
+            {
             console.log("Reparent",state.requestId);
             reparentChild(state.requestId,acquiredId)
             setState(null);
+            }
         }
     }
-    const reparentNodesT = (requestId) => 
+    const reparentNodesT = (requestId,cardDetail) => 
     {
        console.log("Rreparent CAlled",requestId)
-        setState({requestId:requestId})
+        setState({requestId:requestId , cardDetail:cardDetail})
     }
     // bundling card api methods for ease of transmission
     let cardAPI = {
