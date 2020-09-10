@@ -14,6 +14,10 @@ import { useAuth } from "../services/auth";
 
 export default function AppRoutes() {
   const { auth, uiConfig, authState } = useAuth();
+  // console.log("authState", authState.pendingAuth)
+  if(authState.pendingAuth){
+    return false;
+  }
   return (
     <Router>
       <Switch>
@@ -30,9 +34,9 @@ export default function AppRoutes() {
             currentUser={() => auth().currentUser}
             signOut={() => auth().signOut()} />
         </PrivateRoute>
-        <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
+        {/* <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
           <Document getUserID={() => auth().currentUser.uid} signOut={() => auth().signOut()} />
-        </PrivateRoute>
+        </PrivateRoute> */}
         
         <Route path="/">
           <SplashPage pendingAuth={authState.pendingAuth} isAuth={authState.isSignedIn} />
@@ -43,6 +47,5 @@ export default function AppRoutes() {
 }
 /**
  * <Route path="/project/:projectID">
-          <Document />
-        </Route>
-*/
+   <Document />
+</Route>*/
