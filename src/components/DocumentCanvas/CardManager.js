@@ -114,7 +114,7 @@ export default function CardManager(props) {
         }
         const blankCard = {
             type: type,
-            size: { width: 200, height: 300 },
+            size: { width: 275, height: 375 },
             position: { x: 300, y: 300 },
             content: {
                 text: `This is a ${type} Card`

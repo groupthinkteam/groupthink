@@ -2,8 +2,6 @@ import React from "react";
 import { Rnd } from "react-rnd";
 import GenericCard from "./Cards/GenericCard"
 import Button from "../Button/Button"
-import YoutubeCard from "./Cards/types/YoutubeCard";
-import { Card } from "react-bootstrap";
 
 // props:
 // 1. cards: an object containing cardID: card_info entries
@@ -11,7 +9,7 @@ import { Card } from "react-bootstrap";
 // 3. projectID: firebase id of the current project
 // 3. //TODO: container resizing
 export default function CardContainer(props) {
-    let cardAPI = props.cardAPI; // for brevity
+    const cardAPI = props.cardAPI; // for brevity
     //console.log("Card API \n ",url);
     return (
         <>
@@ -33,8 +31,8 @@ export default function CardContainer(props) {
                                 style={{ backgroundColor: "green" }}
                                 dragHandleClassName="card-handle"
                                 size={card.size}
-                                minHeight={300}
-                                minWidth={200}
+                                minHeight={375}
+                                minWidth={275}
                                 position={card.position}
                                 //bounds="card-container"
                                 onResizeStop = {(e,dir,ref,delta)=>{
@@ -58,7 +56,7 @@ export default function CardContainer(props) {
                             </Rnd>
                         )
                     }
-                ) : <p>hi this is dev</p>}
+                ) : <p>Container is Empty!!</p>}
             </div>
             
         </>

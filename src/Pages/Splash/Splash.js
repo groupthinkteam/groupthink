@@ -5,7 +5,6 @@ import "../../styles/Splash.scss"
 export default function SplashPage(props) {
     const location = useLocation()
     console.log("splashpage says: I was consulted", location)
-    let page, flag = null;
     return (
         props.pendingAuth ?
             <div id="splash">
@@ -20,5 +19,4 @@ export default function SplashPage(props) {
             />
 
     );
-    //---------Check for Only Project Detail---------
 }

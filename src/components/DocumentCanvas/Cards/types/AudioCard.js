@@ -7,29 +7,22 @@ const ShowFileUploaded = (props) =>{
         Audio is Uploaded
         <ReactAudioPlayer
             src={props.src.src}
-            autoPlay={true}
+            autoPlay={false}
             controls={true}
+            style={{width:`${props.width}`}}
         />
+        
       </div>
     )
  }
-const AudiosCard = () =>{
+const AudiosCard = (props) =>{
     const [state , setState]= useState()
     //console.log(state)
-    const listOfExtension= "audio/* , .mp3"
+    const listOfExtension= "audio/* "
     const OnSelectFile = (e) =>
     {
         console.log(e.target.files[0])
-        setState({src:e.target.files[0].name})
-       /* if(e.target.files && e.target.files.length > 0)
-        {
-            const reader = new FileReader();
-            reader.addEventListener("load",()=>{
-                setState({src:reader.result , name:e.target.files[0] })
-            })
-            reader.readAsDataURL(e.target.files[0])
-            console.log("Reader Log \n",state?.src)
-        }*/
+        setState({src:URL.createObjectURL(e.target.files[0])})
     }
     return(
        
@@ -40,7 +33,7 @@ const AudiosCard = () =>{
                     onChange={(e)=>OnSelectFile(e)}
                 />
                 {
-                    state?.src != undefined ? <ShowFileUploaded src={state}/> : <div></div>
+                    state?.src != undefined ? <ShowFileUploaded src={state} width={props.CardDetail?.size.width}/> : <div></div>
                 }
             </div>
        

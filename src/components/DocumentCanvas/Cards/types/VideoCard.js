@@ -1,9 +1,13 @@
 import React,{useState} from 'react';
+import ReactPlayer from 'react-player/lazy';
 const ShowFileUploaded = (props) =>{
    
     return(
       <div>
-        Video is Uploaded
+       <ReactPlayer
+       controls={true}
+       url={props.src.src}
+       />
       </div>
     )
  }
@@ -14,15 +18,7 @@ const VideosCard = () =>{
     const OnSelectFile = (e) =>
     {
         console.log(e.target.files[0])
-        if(e.target.files && e.target.files.length > 0)
-        {
-            const reader = new FileReader();
-            reader.addEventListener("load",()=>{
-                setState({src:reader.result  })
-            })
-            reader.readAsDataURL(e.target.files[0])
-            console.log("Reader Log \n",state?.src)
-        }
+        setState({src:URL.createObjectURL(e.target.files[0])})
     }
     return(
        

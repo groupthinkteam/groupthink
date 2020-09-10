@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import ReactPlayer from 'react-player/lazy'
-import { Rnd } from 'react-rnd';
-import { Card } from 'react-bootstrap';
 const YoutubeCard = (props) =>{
     const [state,setState] = useState();
     const validURL = (str) => {
