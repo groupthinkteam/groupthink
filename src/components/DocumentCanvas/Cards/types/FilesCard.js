@@ -14,7 +14,44 @@ const ShowFileUploaded = (props) => {
   // Listen for state changes, errors, and completion of the upload.
   useEffect(() => {
     var spaceRef = firbaseStorage().ref(refURL).put(file, metadata);
-    spaceRef.on(firbaseStorage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+    spaceRef.on(firbaseStorage.TaskEvent.STATE_CHANGED,
+        function(snapshot)
+      {
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state)
+        {
+           case firbaseStorage.TaskState.SUCCESS:
+           console.log("Upload is Success")
+           url=1;
+              break;
+           case firbaseStorage.TaskState.PAUSED: // or 'paused'
+           console.log('Upload is paused');
+           break;
+           case firbaseStorage.TaskState.RUNNING: // or 'running'
+           console.log('Upload is running');
+           break;
+
+        }
+      },
+      function(error)
+      {
+        switch (error.code) {
+        case 'storage/unauthorized':
+           // User doesn't have permission to access the object
+           break;
+
+        case 'storage/canceled':
+           // User canceled the upload
+           break;
+
+
+        case 'storage/unknown':
+           // Unknown error occurred, inspect error.serverResponse
+           break;
+        }
+      }, // or 'state_changed'
       () => {
         spaceRef.snapshot.ref.getDownloadURL()
           .then((url) =>
@@ -97,7 +134,7 @@ const FilesCard = (props) => {
         )
       })
   }
-  console.log("Filestate", fileState)
+  //console.log("Filestate", fileState)
   return (
 
     <div style={{ display: "grid" }}>
@@ -112,7 +149,7 @@ const FilesCard = (props) => {
           <div>
             {
               fileState
-                .map((item) => (<div>
+                .map((item) => (<div key={item.metadata.name}>
                   <a href={item.url} target="_blank">{item.metadata.name}</a>
                 </div>))
             }

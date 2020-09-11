@@ -51,17 +51,20 @@ export default function Projects(props) {
         updates["users/" + props.currentUser().uid + "/projects/" + id + "/"] = null;
         updates["documents/" + id + "/"] = null;
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
-        const path = props.currentUser().uid+"/"+id+"/";
+        //--------------------Storage Deletion ------------
+        const path = props.currentUser().uid+"/";
             const deleteFile = (pathToFile , fileName) => {
                 const ref = firbaseStorage().ref(pathToFile);
                 const childRef = ref.child(fileName);
                 childRef.delete().then(console.log("File Deleted"))
             }
             const deleteFolderContents = (path) =>{
+                console.log("Path TO Delete",path)
                 var storageRef = firbaseStorage().ref(path);
                 storageRef.listAll()
                 .then((dir)=>{
                     //-------Files Exist-------
+                    console.log(dir,storageRef.fullPath)
                     if(dir.items.length > 0)
                     {
                         dir.items.forEach((fileRef)=>{
