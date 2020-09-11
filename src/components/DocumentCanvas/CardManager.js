@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CardContainer from "./CardContainer";
-import { firebaseDB } from "../../services/firebase";
+import { firebaseDB, firebaseStoreRef, firbaseStorage } from "../../services/firebase";
+import { auth } from "firebase";
 
 export default function CardManager(props) {
     // store container-related state
@@ -49,9 +50,9 @@ export default function CardManager(props) {
         firebaseDB.ref().update(updates).then(console.log("Resized to param ", size)).catch(err=>err)
     }
     //-------Card operations------------
-    const onDelete = (id,parentId,children) => {
+    const onDelete = (id,parentId,children,type) => {
         let updates = {};
-        console.log("OnDelete Params", id , parentId , children)
+        console.log("OnDelete Params", id , parentId , children , type)
         if(props.projectID === parentId)
         {
             updates["documents/" + props.projectID + "/nodes/"+id] = null;
@@ -86,7 +87,42 @@ export default function CardManager(props) {
         }
         setCards({ ...cards, [id]: undefined });
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
-        //projectRef.child(id).remove().then(console.log("removed", id));
+        //-----------If File is Uploaded -----------
+        if(type === 'files')
+        {
+            const path = auth().currentUser?.uid+"/"+props.projectID+"/"+id+"/"+"files/";
+            const deleteFile = (pathToFile , fileName) => {
+                const ref = firbaseStorage().ref(pathToFile);
+                const childRef = ref.child(fileName);
+                childRef.delete().then(console.log("File Deleted"))
+            }
+            const deleteFolderContents = (path) =>{
+                var storageRef = firbaseStorage().ref(path);
+                storageRef.listAll()
+                .then((dir)=>{
+                    //-------Files Exist-------
+                    if(dir.items.length > 0)
+                    {
+                        dir.items.forEach((fileRef)=>{
+                          deleteFile(storageRef.fullPath , fileRef.name)
+                        })
+                        dir.prefixes.forEach(folderRef => {
+                            deleteFolderContents(folderRef.fullPath);
+                        })
+                    }
+                    else
+                    {
+                        console.log("No Files Exist")
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+
+            deleteFolderContents(path)
+            //storageRef.delete().then(console.log("File Deleted Successfully")).catch((err)=>console.log(err))
+        }
     }
 
     // update local state during card drag

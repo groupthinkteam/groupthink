@@ -40,7 +40,7 @@ export default function GenericCard(props) {
         <>
         <div className="card">
             <div className="card-handle card-title-bar">
-                <Button handleClick={() => props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children)}>
+                <Button handleClick={() => props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children,CardDetail.type)}>
                     X
                 </Button>
             </div>
