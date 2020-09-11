@@ -203,7 +203,7 @@ export default function CardManager(props) {
         setCards({ ...cards, [newCardKey]: blankCard });
         projectRef.child(newCardKey).set(blankCard).then(console.log("added new card with key", newCardKey));
     }
-    //--------------Reparenting-----------
+    //--------------Reparenting On DB-----------
     const reparentChild=(requestId, acquiredId)=>{
         let updates = {};
         let pastParentId;
@@ -224,22 +224,44 @@ export default function CardManager(props) {
     }
     const acquireId =(acquiredId) =>
     {
-        console.log("Acquire Called",acquiredId,state)
         let flag=0;
+        const CheckSubNodes = (id) =>
+        {
+            var path = "documents/"+props.projectID+"/nodes/"+id+"/";
+                    firebaseDB.ref(path).on('value',snap=>{
+                        const nodeCardDetail = snap.val();
+                        if(nodeCardDetail?.children != undefined || nodeCardDetail?.children != null)
+                        {
+                            CheckReparenting(nodeCardDetail.children)
+                        }
+                    })
+        }
+        const CheckReparenting = (data) => {
+            Object.entries(data)
+            .map((key,val)=>{
+                if(acquiredId == key[0])
+                {flag=flag + 1;}
+                else
+                { 
+                    //----------------Should Not Reparent the subnodes(No Cycles should be Formed)  ---------
+                    CheckSubNodes(key[0])   
+                }
+            })
+        }
+        console.log("Acquire Called",acquiredId,state)
         
+        //---------------- Reparent Should not Call itself Check------------------
         if( (state?.requestId!= undefined || state?.requestId!= null  ) && state?.requestId != acquiredId)
         {
-            if(state.cardDetail?.children != null)
+            //----------Parent Shouldn't Reparent It's Own Child------------
+            if(state.cardDetail?.children != null || state.cardDetail?.children != undefined)
             {
-                console.log("Childrent",state.cardDetail?.children)
-                Object.entries(state.cardDetail?.children)
-                .map((key,val)=>{
-                    console.log(key[0])
-                    if(state.cardDetail.parent == key[0])
-                    flag=1;
-                })
+                console.log("Parent Shouldn't Reparent It's Own Child")
+                
+                CheckReparenting(state.cardDetail?.children)
+                
             }
-             if(flag==0)
+            if(flag==0)
             {
             console.log("Reparent",state.requestId);
             reparentChild(state.requestId,acquiredId)

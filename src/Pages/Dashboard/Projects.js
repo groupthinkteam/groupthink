@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { firebaseDB, firebaseTIME } from "../../services/firebase";
+import { firebaseDB, firebaseTIME, firbaseStorage } from "../../services/firebase";
 import projectTemplates from "../../constants/projectTemplates";
 
 import Card from "./Card";
@@ -51,6 +51,37 @@ export default function Projects(props) {
         updates["users/" + props.currentUser().uid + "/projects/" + id + "/"] = null;
         updates["documents/" + id + "/"] = null;
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
+        const path = props.currentUser().uid+"/"+id+"/";
+            const deleteFile = (pathToFile , fileName) => {
+                const ref = firbaseStorage().ref(pathToFile);
+                const childRef = ref.child(fileName);
+                childRef.delete().then(console.log("File Deleted"))
+            }
+            const deleteFolderContents = (path) =>{
+                var storageRef = firbaseStorage().ref(path);
+                storageRef.listAll()
+                .then((dir)=>{
+                    //-------Files Exist-------
+                    if(dir.items.length > 0)
+                    {
+                        dir.items.forEach((fileRef)=>{
+                          deleteFile(storageRef.fullPath , fileRef.name)
+                        })
+                        dir.prefixes.forEach(folderRef => {
+                            deleteFolderContents(folderRef.fullPath);
+                        })
+                    }
+                    else
+                    {
+                        console.log("No Files Exist")
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+
+            deleteFolderContents(path)
     }
 
     var onRename = (id) => {
