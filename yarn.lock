@@ -4994,6 +4994,11 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
+eventemitter3@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.0.tgz#090b4d6cdbd645ed10bf750d4b5407942d7ba163"
+  integrity sha512-ivIvhpq/Y0uSjcHDcOIccjmYjGLcP09MFGE7ysAwkAvkXfpZlC985pH2/ui64DKazbTW/4kN3yqozUxlXzI6cA==
+
 eventemitter3@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.0.tgz#d65176163887ee59f386d64c82610b696a4a74eb"
@@ -5912,6 +5917,14 @@ history@^4.9.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
     value-equal "^1.0.1"
+
+hls.js@^0.12.4:
+  version "0.12.4"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-0.12.4.tgz#c155b7b2825a11117c111b781973c0ffa759006b"
+  integrity sha512-e8OPxQ60dBVsdkv4atdxR21KzC1mgwspM41qpozpj3Uv1Fz4CaeQy3FWoaV2O+QKKbNRvV5hW+/LipCWdrwnMQ==
+  dependencies:
+    eventemitter3 "3.1.0"
+    url-toolkit "^2.1.6"
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
@@ -10050,6 +10063,13 @@ react-full-screen@^0.2.4:
   dependencies:
     "@types/react" "*"
     fscreen "^1.0.1"
+
+react-hls-player@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-hls-player/-/react-hls-player-1.1.0.tgz#f04c3b43832f9e09f05ef7a445ccdaadff462d29"
+  integrity sha512-SVGgescU/4vu4GmYM6YLy1KtFEIHTWl6vGFs7IiYQcN7coD6Y/m5cSK30iJ2bWLST5xnZr003PEI0O950Oiz7A==
+  dependencies:
+    hls.js "^0.12.4"
 
 react-images-viewer@^1.6.2:
   version "1.6.2"

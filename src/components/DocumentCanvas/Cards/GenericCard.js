@@ -65,7 +65,7 @@ export default function GenericCard(props) {
                 CardDetail.type === 'files' ? <FilesCard projectID={props.projectID} id={props.id} /> : <div></div>
             }
             {
-                CardDetail.type === 'videos' ? <VideosCard/> : <div></div>
+                CardDetail.type === 'videos' ? <VideosCard projectID={props.projectID} id={props.id}/> : <div></div>
             }
             {
                 CardDetail.type === 'audios' ? <AudiosCard CardDetail={CardDetail}/> : <div></div>

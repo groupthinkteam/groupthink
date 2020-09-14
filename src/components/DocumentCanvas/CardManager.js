@@ -88,9 +88,9 @@ export default function CardManager(props) {
         setCards({ ...cards, [id]: undefined });
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
         //-----------If File is Uploaded -----------
-        if(type === 'files')
+        if(type === 'files' || type === 'videos')
         {
-            const path = auth().currentUser?.uid+"/"+props.projectID+"/"+id+"/"+"files/";
+            const path = auth().currentUser?.uid+"/"+props.projectID+"/"+id+"/"+type+"/";
             const deleteFile = (pathToFile , fileName) => {
                 const ref = firbaseStorage().ref(pathToFile);
                 const childRef = ref.child(fileName);

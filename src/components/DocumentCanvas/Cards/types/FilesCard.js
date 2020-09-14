@@ -15,7 +15,7 @@ const ShowFileUploaded = (props) => {
   useEffect(() => {
     var spaceRef = firbaseStorage().ref(refURL).put(file, metadata);
     spaceRef.on(firbaseStorage.TaskEvent.STATE_CHANGED,
-        function(snapshot)
+      function(snapshot)
       {
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
