@@ -10,6 +10,7 @@ import ImagesCard from "./types/ImagesCard";
 import FilesCard from "./types/FilesCard";
 import VideosCard from "./types/VideoCard";
 import AudiosCard from "./types/AudioCard";
+import LinkCard from "./types/LinkCard";
 
 // props
 // --------
@@ -53,7 +54,7 @@ export default function GenericCard(props) {
             <BootButton variant="outline-info" size="sm" onClick={sendPath}>Send Path</BootButton>
             <BootButton variant="outline-warning" size="sm" onClick={reparent}>Reparent</BootButton>
             {
-                CardDetail.type === 'link' ? <YoutubeCard CardDetail={CardDetail}/> : <div></div>
+                CardDetail.type === 'youtube' ? <YoutubeCard CardDetail={CardDetail}/> : <div></div>
             }
             {
                 CardDetail.type === 'PDF' ? <PDFCard projectID={props.projectID} id={props.id}/> : <div></div>
@@ -69,6 +70,9 @@ export default function GenericCard(props) {
             }
             {
                 CardDetail.type === 'audios' ? <AudiosCard CardDetail={CardDetail} projectID={props.projectID} id={props.id}/> : <div></div>
+            }
+            {
+                CardDetail.type === 'link' ? <LinkCard CardDetail={CardDetail} /> : <div></div>
             }
         </div>
         {

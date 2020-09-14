@@ -17,12 +17,13 @@ export default function CardContainer(props) {
                 border: "2px solid black" ,
                 }}>
                 <Button handleClick={cardAPI.add('PDF')}>Add PDF</Button>
-                <Button handleClick={cardAPI.add('link')}>Add Youtube</Button>
+                <Button handleClick={cardAPI.add('youtube')}>Add Youtube</Button>
                 <Button handleClick={cardAPI.add()}>Add new node</Button>
                 <Button handleClick={cardAPI.add('image')}>Add Images</Button>
                 <Button handleClick={cardAPI.add('files')}>Add files</Button>
                 <Button handleClick={cardAPI.add('videos')}>Add Videos</Button>
                 <Button handleClick={cardAPI.add('audios')}>Add Audio</Button> 
+                <Button handleClick={cardAPI.add('link')}>Add Link</Button> 
                 {props.cards ? Object.entries(props.cards).filter(([id, card]) => id != null).map(
                     ([id, card]) => {
                         return (

@@ -10313,6 +10313,11 @@ react-textarea-autosize@^8.2.0:
     use-composed-ref "^1.0.0"
     use-latest "^1.0.0"
 
+react-tiny-link@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/react-tiny-link/-/react-tiny-link-3.6.0.tgz#4b2d1bc36a48fbc5d5af2eed83034e05472b628a"
+  integrity sha512-uixE/1+IDKVcobnjZQpMafkBT/JQjdgt6kvBZ8AG4uSZ46ECi2HFT5R/TLokQoBJipU4dDs4Mph2AN4BGQMvkQ==
+
 react-transition-group@^2.4.0, react-transition-group@^2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.9.0.tgz#df9cdb025796211151a436c69a8f3b97b5b07c8d"
