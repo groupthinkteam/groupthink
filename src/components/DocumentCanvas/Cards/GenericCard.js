@@ -56,10 +56,10 @@ export default function GenericCard(props) {
                 CardDetail.type === 'link' ? <YoutubeCard CardDetail={CardDetail}/> : <div></div>
             }
             {
-                CardDetail.type === 'PDF' ? <PDFCard/> : <div></div>
+                CardDetail.type === 'PDF' ? <PDFCard projectID={props.projectID} id={props.id}/> : <div></div>
             }
             {
-                CardDetail.type === 'image' ? <ImagesCard/> : <div></div>
+                CardDetail.type === 'image' ? <ImagesCard  projectID={props.projectID} id={props.id}/> : <div></div>
             }
             {
                 CardDetail.type === 'files' ? <FilesCard projectID={props.projectID} id={props.id} /> : <div></div>
@@ -68,7 +68,7 @@ export default function GenericCard(props) {
                 CardDetail.type === 'videos' ? <VideosCard projectID={props.projectID} id={props.id}/> : <div></div>
             }
             {
-                CardDetail.type === 'audios' ? <AudiosCard CardDetail={CardDetail}/> : <div></div>
+                CardDetail.type === 'audios' ? <AudiosCard CardDetail={CardDetail} projectID={props.projectID} id={props.id}/> : <div></div>
             }
         </div>
         {

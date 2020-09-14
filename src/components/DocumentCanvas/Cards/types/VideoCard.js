@@ -1,11 +1,9 @@
 import React,{useState, useEffect} from 'react';
 import ReactPlayer from 'react-player/lazy';
-import { firbaseStorage } from '../../../../services/firebase';
 import { auth } from 'firebase';
-import Loading from '../../../Loading';
-import { Button } from 'react-bootstrap';
+import { StoreFileToStorage, GetFileFromStorage } from '../../../../services/storage';
 const ShowFileUploaded = (props) =>{
-    let [videoState , setVideoState] = useState();
+    const [videoState , setVideoState] = useState();
     var file = props.src.src;
     let url = 0;
     const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "videos/" + file.name
@@ -13,57 +11,9 @@ const ShowFileUploaded = (props) =>{
         contentType: `${props.src.src.type}`
     };
     useEffect(()=>{
-        var spaceRef = firbaseStorage().ref(refURL).put(file, metadata);
-        spaceRef.on(firbaseStorage.TaskEvent.STATE_CHANGED,
-        function(snapshot)
-        {
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state)
-            {
-            case firbaseStorage.TaskState.SUCCESS:
-            console.log("Upload is Success")
-            url=1;
-                break;
-            case firbaseStorage.TaskState.PAUSED: // or 'paused'
-            console.log('Upload is paused');
-            break;
-            case firbaseStorage.TaskState.RUNNING: // or 'running'
-            console.log('Upload is running');
-            break;
-
-            }
-        },
-        function(error)
-        {
-            switch (error.code) {
-            case 'storage/unauthorized':
-            // User doesn't have permission to access the object
-            break;
-
-            case 'storage/canceled':
-            // User canceled the upload
-            break;
-
-
-            case 'storage/unknown':
-            // Unknown error occurred, inspect error.serverResponse
-            break;
-            }
-        }, // or 'state_changed'
-        () => {
-            spaceRef.snapshot.ref.getDownloadURL()
-            .then((url) =>
-                spaceRef.snapshot.ref.getMetadata()
-                .then((data) => {
-                    setVideoState({ url: url, metadata: data })
-                })
-                .catch((err) => console.log("Error in Metadata", err))
-            )
-            .catch((err) => console.log("Error in DownLoadURL", err))
-        }
-        );
+        StoreFileToStorage(refURL,file, metadata , data => {
+            setVideoState(data)
+        })
     },[url])
     
     return( 
@@ -92,31 +42,9 @@ const VideosCard = (props) =>{
     }
     const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "videos/"
     useEffect(()=>{
-        var spaceRef = firbaseStorage().ref(refURL)
-        spaceRef.listAll()
-        .then((dir) => {
-            //-------Files Exist-------
-            if (dir.items.length > 0) {
-            dir.items.forEach((fileRef, index) => {
-                fileRef.getMetadata()
-                .then((data) => {
-                    fileRef.getDownloadURL()
-                    .then((url) => {
-                        setVideo(prev => ([
-                        ...prev,
-                        { metadata: data, url: url }]
-                        ))
-                    })
-                })
-            })
-            }
-            else {
-            console.log("No Files Exist")
-            }
+        GetFileFromStorage(refURL,data=>{
+            setVideo(data)
         })
-        .catch(error => {
-            console.log(error);
-        });
     },[])
     return(
        

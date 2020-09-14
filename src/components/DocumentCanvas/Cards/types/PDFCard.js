@@ -1,8 +1,23 @@
-import React,{useState,useCallback} from 'react';
+import React,{useState,useEffect} from 'react';
 import { Document, Page ,pdfjs} from 'react-pdf';
+import { firbaseStorage } from '../../../../services/firebase';
+import { auth } from 'firebase';
+import { StoreFileToStorage, GetFileFromStorage } from '../../../../services/storage';
 const ThumbnailPDF = (props) =>{
-    const [numPages, setNumPages] = useState(null);
+  const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+  const [pdfState , setPDFState] = useState();
+  var file = props.src.src;
+  let url = 0;
+  const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "PDF/" + file.name
+  var metadata = {
+      contentType: `${props.src.src.type}`
+  };
+  useEffect(()=>{
+      StoreFileToStorage(refURL,file,metadata,data=>{
+        setPDFState(data)
+      })
+  },[url])
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
@@ -13,41 +28,58 @@ const ThumbnailPDF = (props) =>{
   const goToNextPage = () =>
   {
       setPageNumber( pageNumber + 1 );
-  }//console.log(props.src.src)
-    return(
+  }
+
+  return(
       <div>
-       <nav>
-          <button onClick={goToPrevPage}>Prev</button>
-          <button onClick={goToNextPage}>Next</button>
-        </nav>
-              <Document
-                file={props.src.src}
-                onLoadSuccess={onDocumentLoadSuccess}
-                  
-              >
-                <Page pageNumber={pageNumber} />
-              </Document>
-              <p>Page {pageNumber} of {numPages}</p>
-            
+        {
+          pdfState != undefined ?
+          <div>
+            <nav>
+              <button onClick={goToPrevPage}>Prev</button>
+              <button onClick={goToNextPage}>Next</button>
+            </nav>
+            <Document
+              file={pdfState.url}
+              onLoadSuccess={onDocumentLoadSuccess}
+            >
+              <Page pageNumber={pageNumber} />
+            </Document>
+            <p>Page {pageNumber} of {numPages}</p>
+          </div>
+          :<div>Uploading</div>
+        }
       </div>
-    )
+  )
  }
-const PDFCard = () =>{
+const PDFCard = (props) =>{
     const [state , setState]= useState()
+    const [pdfState , setPDFState] = useState([]);
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
     //console.log(state)
     
     const OnSelectFile = (e) =>
     {
         console.log(e.target.files[0])
-        if(e.target.files && e.target.files.length > 0)
-        {
-            const reader = new FileReader();
-            reader.addEventListener("load",()=>{
-                setState({src:reader.result  })
-            })
-            reader.readAsDataURL(e.target.files[0])
-            console.log("Reader Log \n",state?.src)
-        }
+        setState({src:e.target.files[0]})
+    }
+    const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "PDF/"
+    useEffect(()=>{
+        GetFileFromStorage(refURL,data=>{
+          setPDFState(data)
+        })
+    },[])
+    pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+    function onDocumentLoadSuccess({ numPages }) {
+      setNumPages(numPages);
+    }
+    const goToPrevPage = () =>
+    {  setPageNumber(pageNumber - 1 );
+    }
+    const goToNextPage = () =>
+    {
+        setPageNumber( pageNumber + 1 );
     }
     return(
        
@@ -57,7 +89,32 @@ const PDFCard = () =>{
                     accept="application/pdf,application/vnd.ms-excel"
                     onChange={(e)=>OnSelectFile(e)}
                 />
-                {state?.src != undefined ? <ThumbnailPDF src={state}/> : <div></div>}
+                {
+                  (pdfState!=undefined || pdfState != null) ?
+                  <div>
+                    Previously Updated Docs
+                    {
+                      pdfState
+                      .map((item)=>(
+                        <div key={item}>
+                          <nav>
+                            <button onClick={goToPrevPage}>Prev</button>
+                            <button onClick={goToNextPage}>Next</button>
+                          </nav>
+                          <Document
+                            file={item.url}
+                            onLoadSuccess={onDocumentLoadSuccess}
+                          >
+                            <Page pageNumber={pageNumber} />
+                          </Document>
+                          <p>Page {pageNumber} of {numPages}</p>
+                        </div>
+                      ))
+                    }
+                  </div>
+                  :<div></div>
+                }
+                {state?.src != undefined ? <ThumbnailPDF src={state} projectID={props.projectID} id={props.id}/> : <div></div>}
             </div>
        
     )
