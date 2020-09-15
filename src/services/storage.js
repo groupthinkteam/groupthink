@@ -1,6 +1,4 @@
-import React from 'react'
 import { firbaseStorage } from './firebase'
-import { auth } from 'firebase'
 
 export const StoreFileToStorage = (path , file , metadata , callback) => 
 {
@@ -15,8 +13,7 @@ export const StoreFileToStorage = (path , file , metadata , callback) =>
           {
           case firbaseStorage.TaskState.SUCCESS:
           console.log("Upload is Success")
-          
-              break;
+          break;
           case firbaseStorage.TaskState.PAUSED: // or 'paused'
           console.log('Upload is paused');
           break;
@@ -30,16 +27,16 @@ export const StoreFileToStorage = (path , file , metadata , callback) =>
       {
           switch (error.code) {
           case 'storage/unauthorized':
-          // User doesn't have permission to access the object
+          console.log(" User doesn't have permission to access the object")
           break;
 
           case 'storage/canceled':
-          // User canceled the upload
+          console.log("Storage Cancelled")
           break;
 
 
           case 'storage/unknown':
-          // Unknown error occurred, inspect error.serverResponse
+          console.log(" Unknown error occurred, inspect \n", error.serverResponse)
           break;
           }
       }, // or 'state_changed'

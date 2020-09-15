@@ -48,21 +48,6 @@ const FilesCard = (props) => {
       setFile(data)
     })
   }, [])
-
-  const ReturnFileInfo = () => {
-    return Object.entries(fileState)
-      .map((key, val) => {
-        console.log(key[1].metadata)
-        return (
-          <div style={{ display: "grid" }} key={key[0]} >
-            Uploaded File
-            <b>Name : {key[1].metadata.name} </b>
-            <a href={key[1].url}>Click Here To Download</a>
-          </div>
-        )
-      })
-  }
-  //console.log("Filestate", fileState)
   return (
 
     <div style={{ display: "grid" }}>
@@ -92,40 +77,3 @@ const FilesCard = (props) => {
   )
 }
 export default FilesCard;
-/*function(snapshot)
-      {
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        switch (snapshot.state)
-        {
-           case firbaseStorage.TaskState.SUCCESS:
-           console.log("Upload is Success")
-           url=1;
-              break;
-           case firbaseStorage.TaskState.PAUSED: // or 'paused'
-           console.log('Upload is paused');
-           break;
-           case firbaseStorage.TaskState.RUNNING: // or 'running'
-           console.log('Upload is running');
-           break;
-
-        }
-      },
-      function(error)
-      {
-        switch (error.code) {
-        case 'storage/unauthorized':
-           // User doesn't have permission to access the object
-           break;
-
-        case 'storage/canceled':
-           // User canceled the upload
-           break;
-
-
-        case 'storage/unknown':
-           // Unknown error occurred, inspect error.serverResponse
-           break;
-        }
-      },*/

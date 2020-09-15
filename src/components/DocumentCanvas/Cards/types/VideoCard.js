@@ -81,14 +81,3 @@ const VideosCard = (props) =>{
     )
 }
 export default VideosCard;
-/**
- * <Button variant="outline-success" onClick={setPlayerState(true)}>Play</Button>
-                                    {
-                                        playerState ?
-                                        <div>
-                                        <Button variant="outline-danger" onClick={setPlayerState(false)}>Stop</Button>
-                                        dd
-                                        </div>
-                                        : <div></div>
-                                    }
- */

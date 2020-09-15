@@ -1,6 +1,5 @@
 import React,{useState,useEffect} from 'react';
 import { Document, Page ,pdfjs} from 'react-pdf';
-import { firbaseStorage } from '../../../../services/firebase';
 import { auth } from 'firebase';
 import { StoreFileToStorage, GetFileFromStorage } from '../../../../services/storage';
 const ThumbnailPDF = (props) =>{
@@ -23,7 +22,11 @@ const ThumbnailPDF = (props) =>{
     setNumPages(numPages);
   }
   const goToPrevPage = () =>
-  {  setPageNumber(pageNumber - 1 );
+  {  
+    if(pageNumber > 1)
+      setPageNumber(pageNumber - 1 );
+    else
+      setPageNumber(numPages - 1)
   }
   const goToNextPage = () =>
   {
@@ -75,7 +78,11 @@ const PDFCard = (props) =>{
       setNumPages(numPages);
     }
     const goToPrevPage = () =>
-    {  setPageNumber(pageNumber - 1 );
+    {
+        if(pageNumber > 1)
+        setPageNumber(pageNumber - 1 );
+        else
+        setPageNumber(numPages - 1)
     }
     const goToNextPage = () =>
     {
@@ -120,26 +127,3 @@ const PDFCard = (props) =>{
     )
 }
 export default PDFCard;
-/**
- * // const { uri, width, height } =  PdfThumbnail.generate(state?.src, 0).then(console.log("ok"));
-    const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
- 
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
- *  <PDFViewer 
-                document={{
-                    url:`${props.src.src}`,
-                    base64:`${props.src.src}`
-                }}
-            />
-        <Document
-          file={props.src.src}
-          onLoadSuccess={onDocumentLoadSuccess}
-            
-        >
-          <Page pageNumber={pageNumber} />
-        </Document>
-        <p>Page {pageNumber} of {numPages}</p>
- */

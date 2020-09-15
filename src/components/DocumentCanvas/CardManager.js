@@ -263,7 +263,7 @@ export default function CardManager(props) {
             }
             if(flag==0)
             {
-            console.log("Reparent",state.requestId);
+            console.log("Reparent Requested to DB",state.requestId);
             reparentChild(state.requestId,acquiredId)
             setState(null);
             }

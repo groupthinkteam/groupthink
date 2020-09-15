@@ -2,7 +2,9 @@ import React from "react";
 import { Rnd } from "react-rnd";
 import GenericCard from "./Cards/GenericCard"
 import Button from "../Button/Button"
-
+import { DndProvider } from 'react-dnd'
+import {Container} from './Cards/Example/Example'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 // props:
 // 1. cards: an object containing cardID: card_info entries
 // 2. cardAPI: methods that set card params/other card stuff
@@ -27,6 +29,7 @@ export default function CardContainer(props) {
                 {props.cards ? Object.entries(props.cards).filter(([id, card]) => id != null).map(
                     ([id, card]) => {
                         return (
+                            
                             <Rnd
                                 key={id}
                                 style={{ backgroundColor: "green" }}
@@ -47,19 +50,20 @@ export default function CardContainer(props) {
                                 }}
                                 id={`${id}`}
                             >
-                              
+                              <DndProvider backend={HTML5Backend}>
                                 <GenericCard
                                     id={id}
                                     cardDetail={card}
                                     cardAPI={cardAPI}
                                     projectID={props.projectID}
                                 />
+                                </DndProvider>
                             </Rnd>
+                            
                         )
                     }
                 ) : <p>Container is Empty!!</p>}
             </div>
-            
         </>
     )
 }
