@@ -11,10 +11,8 @@ import FilesCard from "./types/FilesCard";
 import VideosCard from "./types/VideoCard";
 import AudiosCard from "./types/AudioCard";
 import LinkCard from "./types/LinkCard";
-import { Rnd } from "react-rnd";
 import { useDrop } from 'react-dnd';
 import { useDrag } from 'react-dnd';
-
 // props
 // --------
 // id:
@@ -29,6 +27,7 @@ import { useDrag } from 'react-dnd';
 const ItemTypes = {
     BOX: 'box',
   } 
+//-----Drop BOX-----
 const DropBoxCard = (props) =>
 {
     const style = {
@@ -45,7 +44,7 @@ const DropBoxCard = (props) =>
       }
     const [{ canDrop, isOver }, drop] = useDrop({
         accept: ItemTypes.BOX,
-        drop: () => ({ name: props.id ,details:props.CardDetail}),
+        drop: () => ({ name: props.id }),
         collect: (monitor) => ({
           isOver: monitor.isOver(),
           canDrop: monitor.canDrop(),
@@ -66,6 +65,7 @@ const DropBoxCard = (props) =>
         </div>
     )
 }
+//------Drag Box-----
 export default function GenericCard(props) {
     const CardDetail = props.cardDetail;
     const CardId = props.id;
@@ -115,7 +115,7 @@ export default function GenericCard(props) {
             />
             <BootButton variant="outline-dark" size="sm" onClick={addChild}>Add Child</BootButton>
             <div style={{ overflow: 'hidden', clear: 'both' }}>
-                <DropBoxCard CardDetail={CardDetail} reqReparent={reparent.bind(this)} id={props.id}/>
+                <DropBoxCard CardDetail={CardDetail}  id={props.id}/>
             </div>
             {
                 CardDetail.type === 'youtube' ? <YoutubeCard CardDetail={CardDetail}/> : <div></div>
@@ -140,9 +140,7 @@ export default function GenericCard(props) {
             }
             </div>
         </div>
-        <Rnd
-        style={{backgroundColor:'green'}}
-        >
+        
         {
             flag ? 
             <Xarrow
@@ -151,16 +149,38 @@ export default function GenericCard(props) {
                 lineColor="black"
                 path="grid"
                 label ={{start:"parent",end:"child"}}
-                passProps={{onClick: ()=> {console.log("Arrow clicked Start \n",`${props.id} And End \n Parent \n`,`${props.cardDetail.parent}`)}}}
+                monitorDOMchanges={true}
+                //passProps={{onDrag:(e)=>{console.log("Dragged",e)},onClick: (e)=> {console.log("Arrow clicked Start \n",`${props.id} And End \n Parent \n`,`${props.cardDetail.parent}`,e)}}}
+                advanced = {{
+                    passProps : { 
+                        arrowBody : {
+                            onDragStart : () =>{console.log("Drag Start")},
+                            onClick : () => {console.log("Arrow Body Clicked!")}
+                        }, 
+                        arrowHead : {
+                            onClick : () => {
+                                console.log("Head Clicked")
+                            }
+                        } 
+                    }
+                }}
             /> 
             :<div></div>
         }
-        </Rnd>
-        
         </>
     )
 }
 /**
+ * <div>
+                                <svg>
+                                <defs>
+                                    <marker id="markerArrow1" markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
+                                    <path d="M2,2 L2,11 L10,6 L2,2" />
+                                    </marker>
+                                </defs>
+                                <line x1="10" y1="10" x2="100" y2="100" style={{stroke:"#006600", markerEnd: "url(#markerArrow1)" }}/>
+                                </svg>
+                            </div>
  * <BootButton variant="outline-info" size="sm" onClick={sendPath(props.id)}>Send Path</BootButton>
             <BootButton variant="outline-warning" size="sm" onClick={reparent(props.id)}>Reparent</BootButton>
             
