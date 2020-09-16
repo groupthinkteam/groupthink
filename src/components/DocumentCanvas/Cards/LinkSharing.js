@@ -6,12 +6,14 @@ import {
     LinkedinShareButton,
     WhatsappShareButton,
     PinterestShareButton,
+    EmailShareButton,
   
     FacebookIcon,
     TwitterIcon,
     LinkedinIcon,
     WhatsappIcon,
-    PinterestIcon
+    PinterestIcon,
+    EmailIcon
 } from "react-share";
 
 const LinkSharing = (props) => 
@@ -75,6 +77,13 @@ const LinkSharing = (props) =>
                 >
                     <PinterestIcon size={size} />
                 </PinterestShareButton>
+
+                <EmailShareButton 
+                    subject="Groupthink Web Link"
+                    body={`Here is the link ${url}`}
+                >
+                    <EmailIcon size={size}/>
+                </EmailShareButton>
 
             </ShareList>
         </div>
