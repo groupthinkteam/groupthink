@@ -9,13 +9,17 @@ export default function Document(props) {
   const history = useHistory();
   const { projectID } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
+  const [permission , setPermission] = useState(null);
   //console.log(projectID);
   useEffect(() => {
     (async () => {
-      const isValid = await isChild(projectID);
+      const  isChildPermission= await isChild(projectID);
       setIsLoaded(true);
-      if (!isValid) {
+      if (isChildPermission == null) {
         history.push('/dashboard')
+      }
+      else{
+        setPermission(isChildPermission);
       }
     })()
   }, [])
@@ -35,11 +39,17 @@ export default function Document(props) {
   }
   return (
     <div>
-      <MenuBar onLogOut={logout} currentUser={props.currentUser} />
+      <MenuBar onLogOut={logout} currentUser={props.currentUser} document={true} projectID={projectID}/>
       <Link to="/dashboard">Back</Link>
-      <CardManager
-        projectID={projectID}
-      />
+      {
+        permission != null ?
+        <CardManager
+          projectID={projectID}
+          permission={permission}
+        />
+        :<div></div>
+      }
+      
     </div>
   );
 }

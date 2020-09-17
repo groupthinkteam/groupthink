@@ -295,6 +295,7 @@ export default function CardManager(props) {
             cards={cards}
             cardAPI={cardAPI}
             projectID={props.projectID}
+            permission = {props.permission}
         />
     )
 }

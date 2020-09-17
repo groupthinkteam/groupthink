@@ -15,9 +15,10 @@ export default function CardContainer(props) {
     //console.log("Card API \n ",url);
     return (
         <>
-            <div className="card-container" style={{...props.container?.size,
-                border: "2px solid black" ,
-                }}>
+            <div className="card-container" 
+                style={{...props.container?.size, border: "2px solid black" }}
+            >
+            
                 <Button handleClick={cardAPI.add('PDF')}>Add PDF</Button>
                 <Button handleClick={cardAPI.add('youtube')}>Add Youtube</Button>
                 <Button handleClick={cardAPI.add()}>Add new node</Button>
@@ -28,42 +29,44 @@ export default function CardContainer(props) {
                 <Button handleClick={cardAPI.add('link')}>Add Link</Button> 
                 {props.cards ? Object.entries(props.cards).filter(([id, card]) => id != null).map(
                     ([id, card]) => {
-                        return (
-                            
-                            <Rnd
-                                key={id}
-                                style={{ backgroundColor: "green" }}
-                                dragHandleClassName="card-handle"
-                                size={card.size}
-                                minHeight={375}
-                                minWidth={275}
-                                position={card.position}
-                                //bounds="card-container"
-                                onResizeStop = {(e,dir,ref,delta)=>{
-                                    cardAPI.resize(id,{width:ref.style.width , height:ref.style.height})
-                                }}
-                                onDrag={(e, data) => {
-                                    cardAPI.localMove(id, { x: data.x, y: data.y }, card.size);
-                                }}
-                                onDragStop={(e, data) => {
-                                    cardAPI.saveMove(id, { x: data.x, y: data.y });
-                                }}
-                                id={`${id}`}
-                            >
-                              <DndProvider backend={HTML5Backend}>
-                                <GenericCard
-                                    id={id}
-                                    cardDetail={card}
-                                    cardAPI={cardAPI}
-                                    projectID={props.projectID}
-                                />
-                                </DndProvider>
-                            </Rnd>
-                            
-                        )
-                    }
-                ) : <p>Container is Empty!!</p>}
+                            return (
+                                
+                                <Rnd
+                                    key={id}
+                                    style={{ backgroundColor: "green" }}
+                                    dragHandleClassName="card-handle"
+                                    size={card.size}
+                                    minHeight={375}
+                                    minWidth={275}
+                                    position={card.position}
+                                    //bounds="card-container"
+                                    onResizeStop = {(e,dir,ref,delta)=>{
+                                        cardAPI.resize(id,{width:ref.style.width , height:ref.style.height})
+                                    }}
+                                    onDrag={(e, data) => {
+                                        cardAPI.localMove(id, { x: data.x, y: data.y }, card.size);
+                                    }}
+                                    onDragStop={(e, data) => {
+                                        cardAPI.saveMove(id, { x: data.x, y: data.y });
+                                    }}
+                                    id={`${id}`}
+                                >
+                                <DndProvider backend={HTML5Backend}>
+                                    <GenericCard
+                                        id={id}
+                                        cardDetail={card}
+                                        cardAPI={cardAPI}
+                                        projectID={props.projectID}
+                                    />
+                                    </DndProvider>
+                                </Rnd>
+                                
+                            )
+                        }
+                    ) : <p>Container is Empty!!</p>
+                }
                 <LinkSharing/>
+                
             </div>
             
         </>
