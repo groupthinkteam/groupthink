@@ -15,8 +15,8 @@ export default function CardContainer(props) {
     //console.log("Card API \n ",url);
     return (
         <>
-            <div className="card-container" 
-                style={{...props.container?.size, border: "2px solid black" }}
+            <div className="card-container w-100 main_card" 
+                style={{border: "2px solid black" }}
             >
             
                 <Button handleClick={cardAPI.add('PDF')}>Add PDF</Button>
@@ -33,7 +33,7 @@ export default function CardContainer(props) {
                                 
                                 <Rnd
                                     key={id}
-                                    style={{ backgroundColor: "green" }}
+                                    style={{ backgroundColor: "#fff" }}
                                     dragHandleClassName="card-handle"
                                     size={card.size}
                                     minHeight={375}
