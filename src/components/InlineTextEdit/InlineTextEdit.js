@@ -6,8 +6,7 @@ export default function InlineTextEdit(props) {
     return (
         <TextareaAutosize
             className="inline-input"
-            style={{width: props.lwidth || 160, resize: "none"}}
-            placeholder="Enter Project Name"
+            placeholder="Add a caption..."
             value={props.text}
             onChange={props.onChange}
             onBlur={props.onSave}

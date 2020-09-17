@@ -71,7 +71,7 @@ const ShareLink = (props) =>
 export default function MenuBar(props) {
     const currentUser = props.currentUser()
     return (
-        <div className="menu-bar">
+        <div className="menu-bar topheader">
             <div className="menu-bar-panel menu-bar-panel-left">
                 <img alt="user avatar" className="menu-bar-user-profile-picture" src={currentUser.photoURL} />
                 {currentUser.displayName}
