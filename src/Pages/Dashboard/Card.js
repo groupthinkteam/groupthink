@@ -10,7 +10,7 @@ export default function Card(props) {
     if (props.addNew) {
         return (
             <div className="project-card text_card">
-                <Button handleClick={props.onAddNew}>
+                <Button className="sadsa" handleClick={props.onAddNew}>
                     Add New Card
                 </Button>
             </div>

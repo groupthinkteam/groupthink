@@ -7,7 +7,12 @@
 }
 /******dashboard mid section starts here************/
 .project-card.text_card {
-    min-height:45px;height:auto;
+    min-height: 45px;
+    height: 66px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    button {border:none;background-color:transparent;font-size: 18px;}
 }
 .project-card.img_card {
     background: #FFFFFF;height:auto;min-height:280px;overflow: hidden;
@@ -24,3 +29,6 @@
         &:focus {outline: none;}
     }
 }
+
+
+/*******Common************/
