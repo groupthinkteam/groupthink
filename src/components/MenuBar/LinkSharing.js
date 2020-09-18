@@ -18,12 +18,7 @@ import {
 
 const LinkSharing = (props) => 
 {
-    const {
-        url = String(window.location),
-        title = "GroupThink Website",
-        shareImage = "https://www.steadylearner.com/static/images/brand/prop-passer.png",
-        size = "2.5rem",
-    } =props
+    const { url ,title , size } = props
     const ShareList = Passers({
         url,
         className: "network__share-button",
@@ -71,7 +66,6 @@ const LinkSharing = (props) =>
 
                 <PinterestShareButton
                     url={String(window.location)}
-                    media={`${shareImage}`}
                     windowWidth={1000}
                     windowHeight={730}
                 >

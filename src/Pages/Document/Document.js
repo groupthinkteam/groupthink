@@ -7,17 +7,25 @@ import Loading from "../../components/Loading";
 export default function Document(props) {
   const location = useLocation();
   const history = useHistory();
-  const { projectID } = useParams();
+  const { projectID ,senderID,linkID ,permissionID} = useParams();
   const [isloaded, setIsLoaded] = useState(false);
   const [permission , setPermission] = useState(null);
   //console.log(projectID);
   useEffect(() => {
     (async () => {
-      const  isChildPermission= await isChild(projectID);
+      const  [isChildPermission,checkInvite]= await isChild(projectID,senderID,permissionID);
       setIsLoaded(true);
-      if (isChildPermission == null) {
+      //----Check For Invitation Link---- 
+      if(checkInvite)
+      {
+        setPermission(permissionID)
+        history.push(`/project/${projectID}`)
+      }
+      //---Check For Child Validation--
+      else if(isChildPermission == null) {
         history.push('/dashboard')
       }
+      //---Permission Associated -----
       else{
         setPermission(isChildPermission);
       }
@@ -39,7 +47,7 @@ export default function Document(props) {
   }
   return (
     <div>
-      <MenuBar onLogOut={logout} currentUser={props.currentUser} document={true} projectID={projectID}/>
+      <MenuBar onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID}/>
       <Link to="/dashboard">Back</Link>
       {
         permission != null ?

@@ -21,6 +21,11 @@ export default function AppRoutes() {
   return (
     <Router>
       <Switch>
+        <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID/:senderID/:linkID/:permissionID">
+          <Document
+            currentUser={() => auth().currentUser}
+            signOut={() => auth().signOut()} />
+        </PrivateRoute>
         <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
           <Document
             currentUser={() => auth().currentUser}

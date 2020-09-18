@@ -14,7 +14,7 @@ export default function CardManager(props) {
     const [docCenter, setDocCenter] = useState({ x: 1000, y: 5000 })
 
     //State for Reparenting
-    const [state,setState] = useState({})
+    const [reparentState,setReparentState] = useState({})
 
     // project reference in firebase db
     const projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
@@ -248,31 +248,31 @@ export default function CardManager(props) {
                 }
             })
         }
-        console.log("Acquire Called",acquiredId,state)
+        console.log("Acquire Called",acquiredId,reparentState)
         
         //---------------- Reparent Should not Call itself Check------------------
-        if( (state?.requestId!= undefined || state?.requestId!= null  ) && state?.requestId != acquiredId)
+        if( (reparentState?.requestId!= undefined || reparentState?.requestId!= null  ) && reparentState?.requestId != acquiredId)
         {
             //----------Parent Shouldn't Reparent It's Own Child------------
-            if(state.cardDetail?.children != null || state.cardDetail?.children != undefined)
+            if(reparentState.cardDetail?.children != null || reparentState.cardDetail?.children != undefined)
             {
                 console.log("Parent Shouldn't Reparent It's Own Child")
                 
-                CheckReparenting(state.cardDetail?.children)
+                CheckReparenting(reparentState.cardDetail?.children)
                 
             }
             if(flag==0)
             {
-            console.log("Reparent Requested to DB",state.requestId);
-            reparentChild(state.requestId,acquiredId)
-            setState(null);
+            console.log("Reparent Requested to DB",reparentState.requestId);
+            reparentChild(reparentState.requestId,acquiredId)
+            setReparentState(null);
             }
         }
     }
     const reparentNodesT = (requestId,cardDetail) => 
     {
        console.log("Rreparent CAlled",requestId)
-        setState({requestId:requestId , cardDetail:cardDetail})
+        setReparentState({requestId:requestId , cardDetail:cardDetail})
     }
     // bundling card api methods for ease of transmission
     let cardAPI = {
