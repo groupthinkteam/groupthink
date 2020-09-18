@@ -101,11 +101,14 @@ export default function GenericCard(props) {
 
     return (
         <>
-        <div className="card" >
+        <div className="card custom_card border-0">
             <div className="card-handle card-title-bar">
-                <Button handleClick={() => props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children,CardDetail.type)}>
+                <button className="absolute delete_btn wh-20p rounded-circle" handleClick={() => props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children,CardDetail.type)}>
                     X
-                </Button>
+                </button>
+                <button className="absolute lock_btn wh-20p rounded-circle">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                </button>
             </div>
             <div ref={drag} style={{opacity}}>
             <TextCard
@@ -113,7 +116,7 @@ export default function GenericCard(props) {
                 onContentChange={(text) => onContentChange(text)}
                 onSave={(text) => onSave(text)}
             />
-            <BootButton variant="outline-dark" size="sm" onClick={addChild}>Add Child</BootButton>
+            <BootButton variant="outline-dark" size="sm" className="absolute add_btn wh-20p" onClick={addChild}> <span className="rounded-circle">+</span></BootButton>
             <div style={{ overflow: 'hidden', clear: 'both' }}>
                 <DropBoxCard CardDetail={CardDetail}  id={props.id}/>
             </div>

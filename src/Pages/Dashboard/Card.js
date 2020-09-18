@@ -3,13 +3,14 @@ import Button from "../../components/Button/Button"
 import InlineTextEdit from "../../components/InlineTextEdit/InlineTextEdit"
 
 import "../../styles/ProjectCard.scss"
+import "../../styles/custom.scss"
 
 export default function Card(props) {
 
     if (props.addNew) {
         return (
-            <div className="project-card">
-                <Button handleClick={props.onAddNew}>
+            <div className="project-card text_card">
+                <Button className="" handleClick={props.onAddNew}>
                     Add New Card
                 </Button>
             </div>
@@ -17,7 +18,7 @@ export default function Card(props) {
     }
     else {
         return (
-            <div className="project-card">
+            <div className="project-card img_card">
                 <img
                     onClick={() => props.onOpen(props.id)}
                     src={props.card.thumbnailURL}

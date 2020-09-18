@@ -1,0 +1,145 @@
+/******top header section starts here************/
+.menu-bar.topheader.topheader {
+    background: #FFFFFF;
+    box-shadow: 0px 4px 10px rgba(181, 181, 181, 0.19);
+    border-radius: 0px;
+    height:60px;
+    button {
+        background: #2E85F7;height: 38px;min-width:100px;
+        border-radius: 10px;color:#fff;margin-right:12px;
+        font-weight: 500;font-size: 18px;line-height: 21px;border: none;
+        &:focus {box-shadow: none;outline: none;}
+    }
+}
+/******dashboard mid section starts here************/
+.project-card.text_card {
+    min-height: 45px;
+    height: 66px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    button {
+        border:none;background-color:transparent;font-size: 18px;
+        &:focus {outline: none;}
+    }
+}
+.project-card.img_card {
+    background: #FFFFFF;height:auto;min-height:280px;overflow: hidden;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;min-height:275px;
+    textarea {
+        resize: none !important;
+        border: none;
+        font-size: 14px;
+        color: #919191;
+        width: 95%;
+        margin: 15px auto;
+        min-height: 24px;
+        &:focus {outline: none;}
+    }
+}
+.card-container.main_card {
+    height: calc(100vh - 85px);
+    .card-handle {
+        button.delete_btn {
+            top: -25px;
+            border: 1px solid #FF0000;
+            color: #FF0000;
+            // border-radius: 50%;
+            font-size: 10px;
+            text-align: center;
+            right: 10px;
+            &:focus{outline: none;}
+        }
+        button.lock_btn {
+            top:-25px;right:40px;font-size: 17px;color: #333;
+            border-color: #333;
+            line-height: 7px;
+            padding: 4px 4px 6px 3px;
+            &:hover {background:transparent;outline: none;box-shadow:none !important;}
+        }
+        &:before {
+            position: absolute;
+            background: #fff;
+            width: 100px;
+            height: 29px;
+            content: '';
+            top: -30px;
+            right: 0px;
+            border-radius: 6px 6px 0px 0px;
+        }
+    }
+    button.add_btn {
+        top: -31px;
+        right: 70px;
+        border: none;
+        padding: 10px 12px 22px 18px;
+        background: #DCDADA;
+        border-radius: 6px 0px 0px 0px;
+        &:hover, &:active {outline: none;box-shadow:none !important;background: #DCDADA;}
+        span {
+            font-size: 16px;
+            color: #333;
+            border: 1px solid #333;
+            padding: 1px 0px 10px 0px;
+            margin: -3px 0 0 -13px;
+            position: inherit;
+            width: 20px;
+            height: 20px;
+            line-height: 14px;
+        }
+    }
+    .button_link {flex: 0 0 50%;padding: 20px 90px;}
+    .button_link, .social_link {
+        background: #FFFFFF;
+        box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
+        border-radius: 6px;
+        height: 110px;
+        margin:0 0 0 20px;        
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        button {
+            margin: 0 8px 20px 0px;border:none;background:transparent;
+            
+        }
+    }
+    .social_link {flex: 0 0 30%;flex: 0 0 30%;padding: 20px 10px;}
+}
+
+    textarea.inline-input {
+        resize: none;
+        color: #919191;
+        font-size: 14px;
+        width: 95%;
+        margin: 15px auto;
+        min-height: 24px;
+        &:focus {outline: none;}
+    }
+    button.custom_btn {
+        background: #2E85F7;height: 38px;min-width:100px;
+        border-radius: 10px;color:#fff;margin-right:12px;padding:0 10px;
+        font-weight: 500;font-size: 18px;line-height: 21px;border: none;
+        &:focus {box-shadow: none;outline: none;}
+    }
+    a.back_btn {
+        position: absolute;
+        left: 0;
+        padding: 10px;
+    }
+    a {
+        text-decoration: none;
+        background-color: transparent;
+        color: #333;font-weight: 600;
+    }
+
+
+/*******Common************/
+.relative {position: relative;}
+.absolute {position: absolute;}
+
+
+.wh-20p {width: 20px;height: 20px;}
+
+.btn.focus, .btn:focus {box-shadow: none;outline:none;}

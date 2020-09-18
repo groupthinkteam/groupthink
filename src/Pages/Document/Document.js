@@ -47,8 +47,8 @@ export default function Document(props) {
   }
   return (
     <div>
-      <MenuBar onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID}/>
-      <Link to="/dashboard">Back</Link>
+      <MenuBar onLogOut={logout} currentUser={props.currentUser} document={true} projectID={projectID}/>
+      <Link to="/dashboard" class="back_btn">Back</Link>
       {
         permission != null ?
         <CardManager

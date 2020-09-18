@@ -5,6 +5,8 @@ import { firebaseDB } from "../../services/firebase"
 import { auth } from "firebase"
 import LinkSharing from "./LinkSharing"
 
+import "../../styles/MenuBar.scss"
+
 //----Create "Public" in Database ----
 const createPublic = (id,permission) =>
 {
@@ -78,7 +80,7 @@ const ShareLink = (props) =>
                     <input type="radio" name="options" value="rw" onChange={e=>ChangeRadio(e)} required={true}/>
                     <label htmlFor="male">Read and Write </label>
                     <br/>
-                    <Button handleClick={openLink}>Generate Link</Button>
+                    <button className="custom_btn" handleClick={openLink}>Generate Link</button>
                     {
                         link ?
                         <div>
@@ -93,12 +95,12 @@ const ShareLink = (props) =>
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                <Button  handleClick={handleClose}>
+                <button  className="custom_btn" handleClick={handleClose}>
                     Close
-                </Button>
-                <Button  handleClick={handleClose}>
+                </button>
+                <button className="custom_btn" handleClick={handleClose}>
                     Save Changes
-                </Button>
+                </button>
                 </Modal.Footer>
             </Modal>
         </>
