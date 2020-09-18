@@ -69,27 +69,44 @@
             border-radius: 6px 6px 0px 0px;
         }
     }
-        button.add_btn {
-            top: -31px;
-            right: 70px;
-            border: none;
-            padding: 10px 12px 22px 18px;
-            background: #DCDADA;
-            border-radius: 6px 0px 0px 0px;
-            &:hover, &:active {outline: none;box-shadow:none !important;background: #DCDADA;}
-            span {
-                font-size: 16px;
-                color: #333;
-                border: 1px solid #333;
-                padding: 1px 0px 10px 0px;
-                margin: -3px 0 0 -13px;
-                position: inherit;
-                width: 20px;
-                height: 20px;
-                line-height: 14px;
-            }
+    button.add_btn {
+        top: -31px;
+        right: 70px;
+        border: none;
+        padding: 10px 12px 22px 18px;
+        background: #DCDADA;
+        border-radius: 6px 0px 0px 0px;
+        &:hover, &:active {outline: none;box-shadow:none !important;background: #DCDADA;}
+        span {
+            font-size: 16px;
+            color: #333;
+            border: 1px solid #333;
+            padding: 1px 0px 10px 0px;
+            margin: -3px 0 0 -13px;
+            position: inherit;
+            width: 20px;
+            height: 20px;
+            line-height: 14px;
         }
     }
+    .button_link {flex: 0 0 50%;padding: 20px 90px;}
+    .button_link, .social_link {
+        background: #FFFFFF;
+        box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
+        border-radius: 6px;
+        height: 110px;
+        margin:0 0 0 20px;        
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        button {
+            margin: 0 8px 20px 0px;border:none;background:transparent;
+            
+        }
+    }
+    .social_link {flex: 0 0 30%;flex: 0 0 30%;padding: 20px 10px;}
+}
 
     textarea.inline-input {
         resize: none;
@@ -105,6 +122,16 @@
         border-radius: 10px;color:#fff;margin-right:12px;padding:0 10px;
         font-weight: 500;font-size: 18px;line-height: 21px;border: none;
         &:focus {box-shadow: none;outline: none;}
+    }
+    a.back_btn {
+        position: absolute;
+        left: 0;
+        padding: 10px;
+    }
+    a {
+        text-decoration: none;
+        background-color: transparent;
+        color: #333;font-weight: 600;
     }
 
 
