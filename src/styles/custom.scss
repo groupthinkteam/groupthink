@@ -101,11 +101,13 @@
         align-items: center;
         justify-content: center;
         button {
-            margin: 0 8px 20px 0px;border:none;background:transparent;
-            
+            margin: 0 8px 20px 0px;border:none;background:transparent;            
         }
     }
-    .social_link {flex: 0 0 30%;flex: 0 0 30%;padding: 20px 10px;}
+    .social_link {
+        flex: 0 0 30%;padding: 20px 10px;
+        button {margin-bottom: 0px;}
+    }
 }
 
     textarea.inline-input {
@@ -124,15 +126,21 @@
         &:focus {box-shadow: none;outline: none;}
     }
     a.back_btn {
-        position: absolute;
-        left: 0;
-        padding: 10px;
+        position: absolute;left: 0;padding: 10px;
+        color: #333;font-weight: 600;
     }
     a {
         text-decoration: none;
         background-color: transparent;
-        color: #333;font-weight: 600;
     }
+    // .top_btn {
+    //     position: absolute;
+    //     right: 0;
+    //     background: #fff;
+    //     height: 40px;
+    //     width: 100px;
+    //     top: -40px;
+    // }
 
 
 /*******Common************/

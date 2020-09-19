@@ -31,7 +31,7 @@ const ItemTypes = {
 const DropBoxCard = (props) =>
 {
     const style = {
-        height: "80px",
+        height: "50px",
         width: props.CardDetail.size.width,
         marginRight: '1.5rem',
         marginBottom: '1.5rem',
