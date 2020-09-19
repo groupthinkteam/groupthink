@@ -28,7 +28,7 @@ const LinkSharing = (props) =>
         title: `Share ${url}`,
     })("li");
     return(
-        <div style={{display: "inline-flex"}}>
+        <div className="social_link" >
             <ShareList>
                 <FacebookShareButton
                     quote={title}

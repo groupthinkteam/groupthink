@@ -2,6 +2,8 @@ import React,{useState,useEffect} from 'react';
 import { Document, Page ,pdfjs} from 'react-pdf';
 import { auth } from 'firebase';
 import { StoreFileToStorage, GetFileFromStorage } from '../../../../services/storage';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/umd/Page/AnnotationLayer.css';
 const ThumbnailPDF = (props) =>{
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -37,7 +39,10 @@ const ThumbnailPDF = (props) =>{
       <div>
         {
           pdfState != undefined ?
-          <div>
+          <div style={{
+            width : props.CardDetail.size.width,
+            height : props.CardDetail.size.height
+          }}>
             <nav>
               <button onClick={goToPrevPage}>Prev</button>
               <button onClick={goToNextPage}>Next</button>
@@ -45,6 +50,7 @@ const ThumbnailPDF = (props) =>{
             <Document
               file={pdfState.url}
               onLoadSuccess={onDocumentLoadSuccess}
+              
             >
               <Page pageNumber={pageNumber} />
             </Document>
@@ -88,16 +94,17 @@ const PDFCard = (props) =>{
     {
         setPageNumber( pageNumber + 1 );
     }
+    
     return(
        
-            <div>
+            <div >
                 <input
                     type="file"
                     accept="application/pdf,application/vnd.ms-excel"
                     onChange={(e)=>OnSelectFile(e)}
                 />
                 {
-                  (pdfState!=undefined || pdfState != null) ?
+                  (pdfState!=undefined || pdfState != null) && pdfState.length>0 ?
                   <div>
                     Previously Updated Docs
                     {
@@ -121,7 +128,7 @@ const PDFCard = (props) =>{
                   </div>
                   :<div></div>
                 }
-                {state?.src != undefined ? <ThumbnailPDF src={state} projectID={props.projectID} id={props.id}/> : <div></div>}
+                {state?.src != undefined ? <ThumbnailPDF src={state} CardDetail={props.CardDetail} projectID={props.projectID} id={props.id}/> : <div></div>}
             </div>
        
     )

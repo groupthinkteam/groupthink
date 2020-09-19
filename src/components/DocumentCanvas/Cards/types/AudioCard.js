@@ -15,7 +15,6 @@ const ShowFileUploaded = (props) =>{
             setAudioState(data)
         })
     },[url])
-
     return(
       <div>
         Audio is Uploaded
@@ -26,7 +25,7 @@ const ShowFileUploaded = (props) =>{
                     src={audioState.url}
                     autoPlay={false}
                     controls={true}
-                    style={{width:`${props.width}`}}
+                    style={{width:`${props.width}px`}}
                 />
             </div>
             :<div>Audio Uploading</div>
@@ -59,7 +58,7 @@ const AudiosCard = (props) =>{
                     onChange={(e)=>OnSelectFile(e)}
                 />
                 {
-                    (audioState != null || audioState != undefined) ?
+                    (audioState != null || audioState != undefined) && audioState.length>0?
                     <div>
                         Previously Uploaded Audios
                         {
@@ -71,13 +70,13 @@ const AudiosCard = (props) =>{
                                         src={item.url}
                                         autoPlay={false}
                                         controls={true}
-                                        style={{width:`${props.width}`}}
+                                        style={{width:`${props.CardDetail?.size.width}px`}}
                                     />
                                 </div>
                             ))
                         }
                     </div>
-                    :<div>Loading Data If Present</div>
+                    :<div></div>
                 }
                 {
                     state?.src != undefined ? <ShowFileUploaded src={state} width={props.CardDetail?.size.width}  projectID={props.projectID} id={props.id}/> : <div></div>

@@ -91,7 +91,7 @@ const ImagesCard = (props) =>{
                 />
                 {state?.src != undefined ? <ImageRender src={state} projectID={props.projectID} id={props.id}/> : <div></div>}
               {
-                (imageState != null || imageState != undefined) ?
+                (imageState != null || imageState != undefined) && imageState.length>0 ?
                 <div>
                     Previously Uploaded Audios
                     {
@@ -118,7 +118,7 @@ const ImagesCard = (props) =>{
                         ))
                     }
                 </div>
-                :<div>Loading Data If Present</div>
+                :<div></div>
               }
             </div>
        

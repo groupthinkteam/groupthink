@@ -10,18 +10,25 @@ const YoutubeCard = (props) =>{
           '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
         return !!pattern.test(str);
       }
+      
     if(validURL(props.CardDetail.content.text))
-    return(
-        <ReactPlayer 
-            url={props.CardDetail.content.text}
-            width={props.CardDetail.size.width}
-            height={props.CardDetail.size.height}  
-            controls={true}  
-        />
-    )
+    {
+        const heigth = Math.floor(parseInt( props.CardDetail.size.height)/1.8);
+        return(
+            <>
+            <ReactPlayer 
+                url={props.CardDetail.content.text}
+                width={props.CardDetail.size.width}
+                height={`${heigth}px`}  
+                controls={true}  
+            />
+            {props.children}
+            </>
+        )
+    }
     else
     {
-        return (<div></div>)
+        return (<div>{props.children}</div>)
     }
     
 }

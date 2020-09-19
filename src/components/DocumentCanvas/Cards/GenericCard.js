@@ -1,8 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import TextCard from "./types/TextCard";
-import Button from "../../Button/Button";
-import "../../../styles/Cards/GenericCard.scss";
-import { Button as BootButton } from "react-bootstrap";
 import Xarrow from 'react-xarrows/lib';
 import YoutubeCard from "./types/YoutubeCard";
 import PDFCard from "./types/PDFCard";
@@ -13,6 +10,9 @@ import AudiosCard from "./types/AudioCard";
 import LinkCard from "./types/LinkCard";
 import { useDrop } from 'react-dnd';
 import { useDrag } from 'react-dnd';
+
+
+import "../../../styles/Cards/GenericCard.scss";
 // props
 // --------
 // id:
@@ -65,14 +65,24 @@ const DropBoxCard = (props) =>
         </div>
     )
 }
-//------Drag Box-----
-export default function GenericCard(props) {
-    const CardDetail = props.cardDetail;
-    const CardId = props.id;
+const DisplayTextCard = (props)=>
+{
     const onContentChange = (content) => props.cardAPI.change(props.id, content);
     const onSave = (content) => {
         props.cardAPI.save(props.id, content);
     }
+    return(
+        <TextCard
+                content={props.cardDetail.content}
+                onContentChange={(text) => onContentChange(text)}
+                onSave={(text) => onSave(text)}
+            />
+    )
+}
+//------Drag Box-----
+export default function GenericCard(props) {
+    const CardDetail = props.cardDetail;
+    const CardId = props.id;
     const addChild=() => props.cardAPI.addChild(props.id,CardDetail.type);
     const sendPath=(id) =>props.cardAPI.sendPath(id);
     const reparent=(id,detail) =>{ 
@@ -101,30 +111,40 @@ export default function GenericCard(props) {
 
     return (
         <>
-        <div className="card custom_card border-0">
+        <div className="card custom_card border-0" >
             <div className="card-handle card-title-bar">
-                <button className="absolute delete_btn wh-20p rounded-circle" handleClick={() => props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children,CardDetail.type)}>
+                <button className="absolute delete_btn wh-20p rounded-circle" onClick={() => props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children,CardDetail.type)}>
                     X
                 </button>
                 <button className="absolute lock_btn wh-20p rounded-circle">
-                    <i class="fa fa-lock" aria-hidden="true"></i>
+                    <i className="fa fa-lock" aria-hidden="true"></i>
+                </button>
+                <button className="absolute add_btn wh-20p" onClick={addChild}>
+                    <span className="rounded-circle">+</span>
                 </button>
             </div>
             <div ref={drag} style={{opacity}}>
-            <TextCard
-                content={props.cardDetail.content}
-                onContentChange={(text) => onContentChange(text)}
-                onSave={(text) => onSave(text)}
-            />
-            <BootButton variant="outline-dark" size="sm" className="absolute add_btn wh-20p" onClick={addChild}> <span className="rounded-circle">+</span></BootButton>
-            <div style={{ overflow: 'hidden', clear: 'both' }}>
-                <DropBoxCard CardDetail={CardDetail}  id={props.id}/>
-            </div>
             {
-                CardDetail.type === 'youtube' ? <YoutubeCard CardDetail={CardDetail}/> : <div></div>
+                CardDetail.type === 'blank' ?
+                <DisplayTextCard id={props.id} cardAPI={props.cardAPI} cardDetail={CardDetail}/>
+                :<div/>
             }
             {
-                CardDetail.type === 'PDF' ? <PDFCard projectID={props.projectID} id={props.id}/> : <div></div>
+                CardDetail.type === 'youtube' ? 
+                <YoutubeCard CardDetail={CardDetail}>
+                    <DisplayTextCard id={props.id} cardAPI={props.cardAPI} cardDetail={CardDetail}/>
+                </YoutubeCard> : <div></div>
+            }
+            {
+                CardDetail.type === 'link' ? 
+                <LinkCard CardDetail={CardDetail}>
+                    <DisplayTextCard id={props.id} cardAPI={props.cardAPI} cardDetail={CardDetail}/>
+                </LinkCard> : <div></div>
+            }
+            
+            
+            {
+                CardDetail.type === 'PDF' ? <PDFCard projectID={props.projectID} id={props.id} CardDetail={CardDetail}/> : <div></div>
             }
             {
                 CardDetail.type === 'image' ? <ImagesCard  projectID={props.projectID} id={props.id}/> : <div></div>
@@ -138,9 +158,10 @@ export default function GenericCard(props) {
             {
                 CardDetail.type === 'audios' ? <AudiosCard CardDetail={CardDetail} projectID={props.projectID} id={props.id}/> : <div></div>
             }
-            {
-                CardDetail.type === 'link' ? <LinkCard CardDetail={CardDetail} /> : <div></div>
-            }
+            
+            </div>
+            <div style={{ overflow: 'hidden', clear: 'both' ,marginTop:"16px" }}>
+                <DropBoxCard CardDetail={CardDetail}  id={props.id}/>
             </div>
         </div>
         

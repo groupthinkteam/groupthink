@@ -55,7 +55,7 @@ const VideosCard = (props) =>{
                     onChange={(e)=>OnSelectFile(e)}
                 />
                 {
-                    (videoState != null || videoState != undefined) ?
+                    (videoState != null || videoState != undefined) && videoState.length>0?
                     <div>
                         Uploaded Files
                         {
@@ -71,7 +71,7 @@ const VideosCard = (props) =>{
                             ))
                         }
                     </div>
-                    :<div>Loading Data If Present</div>
+                    :<div/>
                 }
                 {
                     state?.src != undefined ? <ShowFileUploaded src={state} projectID={props.projectID} id={props.id}/> : <div></div>

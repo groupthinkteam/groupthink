@@ -24,11 +24,12 @@ const LinkCard = (props) =>
                 width={props.CardDetail.size.width}
                 height={props.CardDetail.size.height}
             />
+            {props.children}
         </div>
     )
     else
     {
-        return(<div></div>)
+        return(<div>{props.children}</div>)
     }
 }
 export default LinkCard;

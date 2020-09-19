@@ -57,7 +57,7 @@ const ShareLink = (props) =>
         setLinkType(null);
         setPermission(null);
     }
-    console.log("Link",link , "\n linkType ", linkType,"\n Permission",permission,"\n URL",url)
+    //console.log("Link",link , "\n linkType ", linkType,"\n Permission",permission,"\n URL",url)
     return(
         <>
             <Button  handleClick={handleShow}>
@@ -80,7 +80,7 @@ const ShareLink = (props) =>
                     <input type="radio" name="options" value="rw" onChange={e=>ChangeRadio(e)} required={true}/>
                     <label htmlFor="male">Read and Write </label>
                     <br/>
-                    <button className="custom_btn" handleClick={openLink}>Generate Link</button>
+                    <Button className="custom_btn" handleClick={openLink}>Generate Link</Button>
                     {
                         link ?
                         <div>
@@ -95,12 +95,8 @@ const ShareLink = (props) =>
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                <button  className="custom_btn" handleClick={handleClose}>
-                    Close
-                </button>
-                <button className="custom_btn" handleClick={handleClose}>
-                    Save Changes
-                </button>
+                <Button className="custom_btn" handleClick={handleClose}>Close</Button>
+                <Button className="custom_btn" handleClick={handleClose}>Save Changes</Button>
                 </Modal.Footer>
             </Modal>
         </>

@@ -40,7 +40,12 @@
 }
 .card-container.main_card {
     height: calc(100vh - 85px);
+    .card.custom_card:hover  .card-handle.card-title-bar{
+        visibility: visible;
+        
+    }
     .card-handle {
+        //visibility: hidden;
         button.delete_btn {
             top: -25px;
             border: 1px solid #FF0000;
@@ -52,10 +57,12 @@
             &:focus{outline: none;}
         }
         button.lock_btn {
-            top:-25px;right:40px;font-size: 17px;color: #333;
+            top:-25px;right:40px;
+            font-size: 14px;
+            color: #333;
             border-color: #333;
             line-height: 7px;
-            padding: 4px 4px 6px 3px;
+            padding: 0px 0px 0px 0px;
             &:hover {background:transparent;outline: none;box-shadow:none !important;}
         }
         &:before {
@@ -81,7 +88,7 @@
             font-size: 16px;
             color: #333;
             border: 1px solid #333;
-            padding: 1px 0px 10px 0px;
+            padding: 2px 0px 10px 0px;
             margin: -3px 0 0 -13px;
             position: inherit;
             width: 20px;
@@ -141,8 +148,18 @@
     //     width: 100px;
     //     top: -40px;
     // }
-
-
+    //-----------------Social Links in LinkSharing.js-----------
+    .button_link {flex: 0 0 50%;padding: 20px 90px;}
+    .button_link, .social_link {
+        button {
+            margin: 0 8px 20px 0px;border:none;background:transparent;            
+        }
+    }
+    .social_link {
+        display: inline-flex;
+        flex: 0 0 30%;padding: 20px 0px;
+        button {margin-bottom: 0px;}
+    }
 /*******Common************/
 .relative {position: relative;}
 .absolute {position: absolute;}
