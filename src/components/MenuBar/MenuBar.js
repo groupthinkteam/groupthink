@@ -3,7 +3,6 @@ import Button from "../Button/Button"
 import ShareLink from "./ShareLink"
 
 import "../../styles/MenuBar.scss"
-
 export default function MenuBar(props) {
     const currentUser = props.currentUser()
     return (
