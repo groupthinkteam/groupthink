@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap"
 import { firebaseDB } from "../../services/firebase"
 import { auth } from "firebase"
 import LinkSharing from "./LinkSharing"
-
+import * as Crypto from 'crypto-js/aes';
 import "../../styles/MenuBar.scss"
 
 //----Create "Public" in Database ----
@@ -29,7 +29,12 @@ const ShareLink = (props) =>
             setLink(true) 
             if(linkType === "private")
             {
-                setURL(String(window.location)+"/"+auth().currentUser?.uid+"/"+linkType+"/"+permission)
+                //-----Encryption-------
+                //const encryptUID = Crypto.encrypt(auth().currentUser?.uid,"grpthink12!").toString();
+                //const encryptLinkType = Crypto.encrypt(linkType,"grpthink12!").toString();
+                const encryptPermission = Crypto.encrypt(permission,"grpthink12!").toString();
+                console.log(encryptPermission)
+                setURL(String(window.location)+"/"+encryptPermission)
                 
             }
             else
@@ -57,7 +62,6 @@ const ShareLink = (props) =>
         setLinkType(null);
         setPermission(null);
     }
-    //console.log("Link",link , "\n linkType ", linkType,"\n Permission",permission,"\n URL",url)
     return(
         <>
             <Button  handleClick={handleShow}>

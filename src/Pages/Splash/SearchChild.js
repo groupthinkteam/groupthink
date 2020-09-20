@@ -7,16 +7,20 @@ import { auth } from "firebase"
 const createUserForProject =async(path,child,permission)=>{ 
     const updates = {}
     updates[path+child]=permission
-    const updatePrivate = await firebaseDB.ref().update(updates).then(()=>{return true}).catch(()=>{return false});
-    return updatePrivate;
+    if(permission === "r" || permission === "rw")
+    {
+        const updatePrivate = await firebaseDB.ref().update(updates).then(()=>{return true}).catch(()=>{return false});
+        return updatePrivate;
+    }
+    else
+    return false;    
 }
-const isChild = async (child,senderID,permissionID) => {
+const isChild = async (child,permissionID) => {
     let flag = false;
     const uid = auth().currentUser?.uid
     const ischild = await firebaseDB.ref(`documents/${child}/`).once('value').then(snap => snap.exists())
     const Path = `documents/${child}/users/`;
     const isChildInUsers = await firebaseDB.ref(Path).once('value').then((snap)=>{ 
-        console.log()
         //---False Project Id
         if(!ischild)
         {
@@ -40,13 +44,14 @@ const isChild = async (child,senderID,permissionID) => {
     })
     
     //------Privately Send Invitation Params---
-    if(senderID != undefined)
+    if(permissionID != undefined)
     {
         //-----Create This To Access Project-----
+        console.log(permissionID)
         flag = await createUserForProject(Path,uid,permissionID)
-        return  [isChildInUsers , flag];
+        return   flag;
     }
     else
-    return  [isChildInUsers , flag];
+    return  isChildInUsers ;
 }
 export default isChild; 

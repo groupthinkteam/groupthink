@@ -22,7 +22,7 @@ export default function MenuBar(props) {
                 </Button>
             </div>
             {
-                props.document != undefined ?
+                props.document != undefined && props.document === "rw"?
                 <ShareLink projectID ={props.projectID} className="custom_btn"/>
                 :<div/>
             }

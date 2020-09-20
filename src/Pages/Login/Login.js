@@ -1,15 +1,18 @@
 import React from 'react'
 import { Redirect, useLocation, useParams } from "react-router-dom"
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
-import "../../styles/login.scss"
+import "../../styles/login.scss";
 export default function LoginPage(props) {
   const location = useLocation()
-  //console.log("Login PAge CAllled")
+  let path = "/dashboard"
+  //----Check if Inivitation Link is there then Redirect to it once Sign IN---
+  if(location.state?.from != undefined)
+  path = location.state.from.pathname
   return (
     props.authState.isSignedIn ?
       <Redirect
         to={{
-          pathname: "/dashboard",
+          pathname: path,// "/dashboard",
           state: { from: location }
         }}
       />

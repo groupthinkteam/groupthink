@@ -11,6 +11,9 @@ import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import Document from "../Pages/Document/Document";
 import { useAuth } from "../services/auth";
+import InvitationCheck from "../Pages/Document/InvitationCheck";
+import ErrorsPage from "../Pages/Errors/ErrorsPage";
+import InivitationRoute from "./InvitationRoute";
 
 export default function AppRoutes() {
   const { auth, uiConfig, authState } = useAuth();
@@ -21,11 +24,9 @@ export default function AppRoutes() {
   return (
     <Router>
       <Switch>
-        <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID/:senderID/:linkID/:permissionID">
-          <Document
-            currentUser={() => auth().currentUser}
-            signOut={() => auth().signOut()} />
-        </PrivateRoute>
+        <InivitationRoute isAuth={authState.isSignedIn} path="/project/:projectID/:permissionID">
+          <InvitationCheck/>  
+        </InivitationRoute>
         <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
           <Document
             currentUser={() => auth().currentUser}
@@ -39,10 +40,9 @@ export default function AppRoutes() {
             currentUser={() => auth().currentUser}
             signOut={() => auth().signOut()} />
         </PrivateRoute>
-        {/* <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
-          <Document getUserID={() => auth().currentUser.uid} signOut={() => auth().signOut()} />
-        </PrivateRoute> */}
-        
+        <Route path="/error">
+          <ErrorsPage/>
+        </Route>
         <Route path="/">
           <SplashPage pendingAuth={authState.pendingAuth} isAuth={authState.isSignedIn} />
         </Route>
