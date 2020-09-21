@@ -1,9 +1,9 @@
 import React,{useState, useEffect} from 'react';
 import ReactPlayer from 'react-player/lazy';
 import { auth } from 'firebase';
-import { StoreFileToStorage, GetFileFromStorage } from '../../../../services/storage';
 const ShowFileUploaded = (props) =>{
     const [videoState , setVideoState] = useState();
+    const cardAPI = props.cardAPI; 
     var file = props.src.src;
     let url = 0;
     const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "videos/" + file.name
@@ -11,7 +11,7 @@ const ShowFileUploaded = (props) =>{
         contentType: `${props.src.src.type}`
     };
     useEffect(()=>{
-        StoreFileToStorage(refURL,file, metadata , data => {
+        cardAPI.storeFile(refURL,file, metadata , data => {
             setVideoState(data)
         })
     },[url])
@@ -34,6 +34,7 @@ const VideosCard = (props) =>{
     const [videoState, setVideo] = useState([])
     const [playerState , setPlayerState] = useState(false);
     //console.log(state)
+    const cardAPI = props.cardAPI; 
     const listOfExtension= "video/*"
     const OnSelectFile = (e) =>
     {
@@ -42,7 +43,7 @@ const VideosCard = (props) =>{
     }
     const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "videos/"
     useEffect(()=>{
-        GetFileFromStorage(refURL,data=>{
+        cardAPI.displayFile(refURL,data=>{
             setVideo(data)
         })
     },[])
@@ -74,7 +75,7 @@ const VideosCard = (props) =>{
                     :<div/>
                 }
                 {
-                    state?.src != undefined ? <ShowFileUploaded src={state} projectID={props.projectID} id={props.id}/> : <div></div>
+                    state?.src != undefined ? <ShowFileUploaded cardAPI={props.cardAPI} src={state} projectID={props.projectID} id={props.id}/> : <div></div>
                 }
             </div>
        

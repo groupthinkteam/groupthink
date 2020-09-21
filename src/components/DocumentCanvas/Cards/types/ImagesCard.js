@@ -2,12 +2,13 @@ import React,{useState,useCallback,useEffect} from 'react';
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
 import { auth } from 'firebase';
-import { StoreFileToStorage, GetFileFromStorage } from '../../../../services/storage';
 
 const ImageRender = (props) =>{
   const [currentImage, setCurrentImage] = useState(0);
   const [viewerIsOpen, setViewerIsOpen] = useState(false);
   const [imageState , setImageState] = useState();
+  const cardAPI = props.cardAPI;
+
     var file = props.src.src;
     let url = 0;
     const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "image/" + file.name
@@ -15,7 +16,7 @@ const ImageRender = (props) =>{
         contentType: `${props.src.src.type}`
     };
     useEffect(()=>{
-      StoreFileToStorage(refURL,file ,metadata,data=>{
+      cardAPI.storeFile(refURL,file ,metadata,data=>{
         setImageState(data)
       })
   },[url])
@@ -61,6 +62,8 @@ const ImagesCard = (props) =>{
     const [currentImage, setCurrentImage] = useState(0);
     const [viewerIsOpen, setViewerIsOpen] = useState(false);
     const listOfExtension= "image/*"
+    const cardAPI = props.cardAPI;
+
     const OnSelectFile = (e) =>
     {
         console.log(e.target.files[0])
@@ -68,7 +71,7 @@ const ImagesCard = (props) =>{
     }
     const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "image/"
     useEffect(()=>{
-        GetFileFromStorage(refURL,data=>{
+        cardAPI.displayFile(refURL,data=>{
           setImageState(data)
         })
     },[])
@@ -89,7 +92,7 @@ const ImagesCard = (props) =>{
                     accept={`image/x-png,image/gif,image/jpeg,image/svg,${listOfExtension}`}
                     onChange={(e)=>OnSelectFile(e)}
                 />
-                {state?.src != undefined ? <ImageRender src={state} projectID={props.projectID} id={props.id}/> : <div></div>}
+                {state?.src != undefined ? <ImageRender src={state} cardAPI={props.cardAPI} projectID={props.projectID} id={props.id}/> : <div></div>}
               {
                 (imageState != null || imageState != undefined) && imageState.length>0 ?
                 <div>

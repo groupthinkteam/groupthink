@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation, Redirect, Link, useHistory } from "react-router-dom";
+import { useParams, useLocation, useHistory } from "react-router-dom";
 import Loading from "../../components/Loading";
 import isChild from "../Splash/SearchChild";
 import * as Crypto from 'crypto-js';

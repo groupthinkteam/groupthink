@@ -52,7 +52,7 @@ export default function Projects(props) {
         updates["documents/" + id + "/"] = null;
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
         //--------------------Storage Deletion ------------
-        const path = props.currentUser().uid+"/";
+        const path = props.currentUser().uid+"/"+id+"/";
             const deleteFile = (pathToFile , fileName) => {
                 const ref = firbaseStorage().ref(pathToFile);
                 const childRef = ref.child(fileName);
@@ -61,16 +61,22 @@ export default function Projects(props) {
             const deleteFolderContents = (path) =>{
                 console.log("Path TO Delete",path)
                 var storageRef = firbaseStorage().ref(path);
+                //firbaseStorage().ref(path).delete().then(console.log("File Deleted")).catch(err=>console.log(err))
                 storageRef.listAll()
                 .then((dir)=>{
                     //-------Files Exist-------
-                    console.log(dir,storageRef.fullPath)
-                    if(dir.items.length > 0)
+                   // console.log(dir,storageRef.fullPath)
+                    
+                    if(dir.prefixes.length > 0 || dir.items.length>0)
                     {
-                        dir.items.forEach((fileRef)=>{
-                          deleteFile(storageRef.fullPath , fileRef.name)
-                        })
+                        if(dir.items.length>0)
+                        {
+                            dir.items.forEach((fileRef)=>{
+                                deleteFile(storageRef.fullPath , fileRef.name)
+                            })
+                        }
                         dir.prefixes.forEach(folderRef => {
+                            console.log(folderRef.fullPath)
                             deleteFolderContents(folderRef.fullPath);
                         })
                     }

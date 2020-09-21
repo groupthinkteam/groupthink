@@ -1,9 +1,9 @@
 import React,{useState,useEffect} from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import { auth } from 'firebase';
-import { GetFileFromStorage , StoreFileToStorage} from '../../../../services/storage';
 const ShowFileUploaded = (props) =>{
     const [audioState , setAudioState] = useState();
+    const cardAPI = props.cardAPI;
     var file = props.src.src;
     let url = 0;
     const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "audios/" + file.name
@@ -11,7 +11,7 @@ const ShowFileUploaded = (props) =>{
         contentType: `${props.src.src.type}`
     };
     useEffect(()=>{
-        StoreFileToStorage(refURL,file,metadata,data=>{
+        cardAPI.storeFile(refURL,file,metadata,data=>{
             setAudioState(data)
         })
     },[url])
@@ -38,6 +38,8 @@ const AudiosCard = (props) =>{
     //console.log(state)
     const [audioState , setAudioState] = useState([]);
     const listOfExtension= "audio/* "
+    const cardAPI = props.cardAPI;
+
     const OnSelectFile = (e) =>
     {
         console.log(e.target.files[0])
@@ -45,7 +47,7 @@ const AudiosCard = (props) =>{
     }
     const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "audios/"
     useEffect(()=>{
-        GetFileFromStorage(refURL ,data =>{
+        cardAPI.displayFile(refURL ,data =>{
             setAudioState(data)
         })
     },[])
@@ -79,7 +81,7 @@ const AudiosCard = (props) =>{
                     :<div></div>
                 }
                 {
-                    state?.src != undefined ? <ShowFileUploaded src={state} width={props.CardDetail?.size.width}  projectID={props.projectID} id={props.id}/> : <div></div>
+                    state?.src != undefined ? <ShowFileUploaded src={state} cardAPI={props.cardAPI} width={props.CardDetail?.size.width}  projectID={props.projectID} id={props.id}/> : <div></div>
                 }
             </div>
        

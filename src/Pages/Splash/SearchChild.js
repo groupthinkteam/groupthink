@@ -16,7 +16,6 @@ const createUserForProject =async(path,child,permission)=>{
     return false;    
 }
 const isChild = async (child,permissionID) => {
-    let flag = false;
     const uid = auth().currentUser?.uid
     const ischild = await firebaseDB.ref(`documents/${child}/`).once('value').then(snap => snap.exists())
     const Path = `documents/${child}/users/`;
@@ -48,7 +47,7 @@ const isChild = async (child,permissionID) => {
     {
         //-----Create This To Access Project-----
         console.log(permissionID)
-        flag = await createUserForProject(Path,uid,permissionID)
+        const flag = await createUserForProject(Path,uid,permissionID)
         return   flag;
     }
     else
