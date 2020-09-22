@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from 'firebase';
 const ShowFileUploaded = (props) => {
-  let [state, setState] = useState()
+  const [state, setState] = useState()
   var file = props.src.src;
-  let url = 0;
-  const cardAPI = props.cardAPI;
-
-  const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "files/" + file.name
   var metadata = {
     contentType: `${props.src.src.type}`
   };
   // Listen for state changes, errors, and completion of the upload.
   useEffect(() => {
-      cardAPI.storeFile(refURL,file, metadata,data=>{
+      props.uploadFile(file, metadata,data=>{
         setState(data)
       })
-  }, [url])
+  }, [])
 
 
   return (
@@ -37,16 +32,15 @@ const FilesCard = (props) => {
   const [state, setState] = useState()
   const [fileState, setFile] = useState([])
   const listOfExtension = ".odt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  const cardAPI = props.cardAPI;
-
+  
   const OnSelectFile = (e) => {
     setState({ src: e.target.files[0] })
     console.log(e.target.files[0])
 
   }
-  const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "files/"
+  
   useEffect(() => {
-    cardAPI.displayFile(refURL,data=>{
+    props.fetchFile(data=>{
       setFile(data)
     })
   }, [])
@@ -72,7 +66,7 @@ const FilesCard = (props) => {
           : <div></div>
       }
       {
-        state?.src != undefined ? <ShowFileUploaded src={state} cardAPI={props.cardAPI} projectID={props.projectID} id={props.id} /> : <div></div>
+        state?.src != undefined ? <ShowFileUploaded src={state} uploadFile={props.uploadFile.bind(this)} /> : <div></div>
       }
     </div>
 

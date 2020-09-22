@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TextCard from "./types/TextCard";
 import Xarrow from 'react-xarrows/lib';
 import YoutubeCard from "./types/YoutubeCard";
@@ -88,6 +88,14 @@ export default function GenericCard(props) {
     const reparent=(id,detail) =>{ 
         props.cardAPI.requestReparent(id,detail)
     }
+    const uploadFile = (file , metadata,callback) =>{ 
+        props.cardAPI.storeFile(CardId,file,metadata,data=>{
+            callback(data);
+        })
+    }
+    const fetchFile = (callback) => {
+        props.cardAPI.displayFile(CardId,data=>{callback(data)})
+    }
     const [{ isDragging }, drag] = useDrag({
         item: { CardId, type: ItemTypes.BOX ,detail:CardDetail },
         begin :(monitor)=>{
@@ -144,19 +152,19 @@ export default function GenericCard(props) {
             
             
             {
-                CardDetail.type === 'PDF' ? <PDFCard projectID={props.projectID} id={props.id} CardDetail={CardDetail} cardAPI={props.cardAPI}/> : <div></div>
+                CardDetail.type === 'PDF' ? <PDFCard fetchFile={fetchFile.bind(this)} uploadFile={uploadFile.bind(this)} CardDetail={CardDetail} /> : <div></div>
             }
             {
-                CardDetail.type === 'image' ? <ImagesCard  projectID={props.projectID} id={props.id} cardAPI={props.cardAPI}/> : <div></div>
+                CardDetail.type === 'image' ? <ImagesCard fetchFile={fetchFile.bind(this)} uploadFile={uploadFile.bind(this)} /> : <div></div>
             }
             {
-                CardDetail.type === 'files' ? <FilesCard projectID={props.projectID} id={props.id} cardAPI={props.cardAPI}/> : <div></div>
+                CardDetail.type === 'files' ? <FilesCard fetchFile={fetchFile.bind(this)} uploadFile={uploadFile.bind(this)}/> : <div></div>
             }
             {
-                CardDetail.type === 'videos' ? <VideosCard projectID={props.projectID} id={props.id} cardAPI={props.cardAPI}/> : <div></div>
+                CardDetail.type === 'videos' ? <VideosCard fetchFile={fetchFile.bind(this)} uploadFile={uploadFile.bind(this)}/> : <div></div>
             }
             {
-                CardDetail.type === 'audios' ? <AudiosCard CardDetail={CardDetail} projectID={props.projectID} id={props.id} cardAPI={props.cardAPI}/> : <div></div>
+                CardDetail.type === 'audios' ? <AudiosCard CardDetail={CardDetail} fetchFile={fetchFile.bind(this)} uploadFile={uploadFile.bind(this)} /> : <div></div>
             }
             
             </div>

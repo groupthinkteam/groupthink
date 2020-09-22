@@ -106,9 +106,6 @@ export default function CardManager(props) {
                         dir.items.forEach((fileRef)=>{
                           deleteFile(storageRef.fullPath , fileRef.name)
                         })
-                        dir.prefixes.forEach(folderRef => {
-                            deleteFolderContents(folderRef.fullPath);
-                        })
                     }
                     else
                     {
@@ -203,28 +200,29 @@ export default function CardManager(props) {
         setCards({ ...cards, [newCardKey]: blankCard });
         projectRef.child(newCardKey).set(blankCard).then(console.log("added new card with key", newCardKey));
     }
-    //--------------Reparenting On DB-----------
-    const reparentChild=(requestId, acquiredId)=>{
-        let updates = {};
-        let pastParentId;
-        //---------add to new Parent and it's properties ------
-        updates["documents/"+props.projectID+"/nodes/"+acquiredId+"/children/"+requestId] = 1
-        updates["documents/"+props.projectID+"/nodes/"+requestId+"/parent"] = acquiredId
-        firebaseDB.ref("documents/"+props.projectID+"/nodes/"+requestId+"/parent").once('value',snap=>{
-                pastParentId=snap.val();
-                console.log("Parent ID",pastParentId)
-                updates["documents/"+props.projectID+"/nodes/"+pastParentId+"/children/"+requestId] = null
-        });
-        //------ Pat Parent Id should be null ------
-        
-        console.log("UPDATES",updates)
-        firebaseDB.ref().update(updates)
-        .then(console.log("successfully Changed Location of ",requestId, " To ", acquiredId))
-        .catch(err=>{return err})
-    }
+    
     const acquireId =(acquiredId) =>
     {
         let flag=0;
+        //--------------Reparenting On DB-----------
+        const reparentChild=(requestId, acquiredId)=>{
+            let updates = {};
+            let pastParentId;
+            //---------add to new Parent and it's properties ------
+            updates["documents/"+props.projectID+"/nodes/"+acquiredId+"/children/"+requestId] = 1
+            updates["documents/"+props.projectID+"/nodes/"+requestId+"/parent"] = acquiredId
+            firebaseDB.ref("documents/"+props.projectID+"/nodes/"+requestId+"/parent").once('value',snap=>{
+                    pastParentId=snap.val();
+                    console.log("Parent ID",pastParentId)
+                    updates["documents/"+props.projectID+"/nodes/"+pastParentId+"/children/"+requestId] = null
+            });
+            //------ Pat Parent Id should be null ------
+            
+            console.log("UPDATES",updates)
+            firebaseDB.ref().update(updates)
+            .then(console.log("successfully Changed Location of ",requestId, " To ", acquiredId))
+            .catch(err=>{return err})
+        }
         const CheckSubNodes = (id) =>
         {
             var path = "documents/"+props.projectID+"/nodes/"+id+"/";
@@ -276,8 +274,10 @@ export default function CardManager(props) {
     }
     /**
      * --------------- Storage Operation Function ---------------*/
-    const StoreFileToStorage = (path, file, metadata, callback) => {
-        
+    
+    const StoreFileToStorage = (id, file, metadata, callback) => {
+        const type = cards[id].type;
+        const path = auth().currentUser?.uid + "/" + props.projectID + "/" + id + "/" +type+ "/" + file.name
         var spaceRef = firbaseStorage().ref(path).put(file, metadata);
         spaceRef.on(firbaseStorage.TaskEvent.STATE_CHANGED,
             function (snapshot) {
@@ -328,7 +328,9 @@ export default function CardManager(props) {
         );
     }
     /**Shows the list of Files in given path */
-    const GetFileFromStorage = (path, callback) => {
+    const GetFileFromStorage = (id, callback) => {
+        const type = cards[id].type;
+        const path = auth().currentUser?.uid + "/" + props.projectID + "/" + id + "/" +type+ "/" 
         var spaceRef = firbaseStorage().ref(path)
         spaceRef.listAll()
             .then((dir) => {

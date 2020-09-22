@@ -1,23 +1,21 @@
 import React,{useState,useEffect} from 'react';
 import { Document, Page ,pdfjs} from 'react-pdf';
-import { auth } from 'firebase';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/umd/Page/AnnotationLayer.css';
+
 const ThumbnailPDF = (props) =>{
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [pdfState , setPDFState] = useState();
-  const cardAPI = props.cardAPI;
   var file = props.src.src;
   let url = 0;
-  const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "PDF/" + file.name
   var metadata = {
       contentType: `${props.src.src.type}`
   };
   useEffect(()=>{
-    cardAPI.storeFile(refURL,file,metadata,data=>{
+    props.uploadFile(file,metadata,data =>{
       setPDFState(data)
-    })
+    });
   },[url])
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
   function onDocumentLoadSuccess({ numPages }) {
@@ -67,15 +65,14 @@ const PDFCard = (props) =>{
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
     //console.log(state)
-    const cardAPI = props.cardAPI;
     const OnSelectFile = (e) =>
     {
         console.log(e.target.files[0])
         setState({src:e.target.files[0]})
     }
-    const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "PDF/"
+   
     useEffect(()=>{
-      cardAPI.displayFile(refURL,data=>{
+      props.fetchFile(data=>{
         setPDFState(data)
       })
     },[])
@@ -128,7 +125,7 @@ const PDFCard = (props) =>{
                   </div>
                   :<div></div>
                 }
-                {state?.src != undefined ? <ThumbnailPDF cardAPI={props.cardAPI} src={state} CardDetail={props.CardDetail} projectID={props.projectID} id={props.id}/> : <div></div>}
+                {state?.src != undefined ? <ThumbnailPDF uploadFile={props.uploadFile.bind(this)}  src={state} CardDetail={props.CardDetail}/> : <div></div>}
             </div>
        
     )

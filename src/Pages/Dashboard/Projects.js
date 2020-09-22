@@ -61,11 +61,9 @@ export default function Projects(props) {
             const deleteFolderContents = (path) =>{
                 console.log("Path TO Delete",path)
                 var storageRef = firbaseStorage().ref(path);
-                //firbaseStorage().ref(path).delete().then(console.log("File Deleted")).catch(err=>console.log(err))
                 storageRef.listAll()
                 .then((dir)=>{
                     //-------Files Exist-------
-                   // console.log(dir,storageRef.fullPath)
                     
                     if(dir.prefixes.length > 0 || dir.items.length>0)
                     {
@@ -76,7 +74,6 @@ export default function Projects(props) {
                             })
                         }
                         dir.prefixes.forEach(folderRef => {
-                            console.log(folderRef.fullPath)
                             deleteFolderContents(folderRef.fullPath);
                         })
                     }
