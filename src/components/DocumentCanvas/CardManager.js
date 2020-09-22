@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CardContainer from "./CardContainer";
 import { firebaseDB, firbaseStorage } from "../../services/firebase";
 import { auth } from "firebase";
@@ -6,7 +6,8 @@ import { auth } from "firebase";
 export default function CardManager(props) {
     // store container-related state
     const [container, setContainer] = useState({ width: 600, height: 800 });
-
+    const containerRef = useRef({});
+    containerRef.current = container;
     // everything to do with cards
     const [cards, setCards] = useState({});
 
@@ -118,17 +119,17 @@ export default function CardManager(props) {
         setCards({ ...cards, [id]: { ...cards[id], position: newPos } });
     }
 
-    function savePosition(id, newPos) {
+    let savePosition = (id, newPos) => {
         let updates = {};
-        let newContainer = { width: container.width, height: container.height }
+        let newContainer = { width: containerRef.current.width, height: containerRef.current.height }
 
         let projectRef = firebaseDB.ref("documents/" + props.projectID);
-        if (newPos.x > container.width) {
-            console.log("x", newPos.x, "was greater than width", container)
+        if (newPos.x > containerRef.current.width) {
+            console.log("x", newPos.x, "was greater than width", containerRef.current)
             newContainer.width = newPos.x + 300;
         }
-        if (newPos.y > container.height) {
-            console.log("y", newPos.y, "was greater than height", container)
+        if (newPos.y > containerRef.current.height) {
+            console.log("y", newPos.y, "was greater than height", container.current)
             newContainer.height = newPos.y + 300;
         }
         updates["nodes/" + id + "/position/"] = newPos;
@@ -136,7 +137,7 @@ export default function CardManager(props) {
             updates["container/"] = newContainer
         }
 
-        console.log("newcontainer: ", newContainer, "old container: ", container)
+        console.log("newcontainer: ", newContainer, "old container: ", containerRef.current)
 
         projectRef.update(updates)
             .then(console.log("set new position for", id, "to", newPos, "\nresized container to", newContainer));
@@ -148,19 +149,23 @@ export default function CardManager(props) {
     }
 
     // initially adds a blank card, type is inferred later
-    let addCard = (type) => () => {
+    let addCard = (type, position) => {
         if (type === undefined || type === null) {
             type = "blank"
         }
+
+        // schema for blank card
         const blankCard = {
             type: type,
             size: { width: 275, height: 375 },
-            position: { x: 300, y: 300 },
+            position: position,
             content: {
                 text: `This is a ${type} Card`
             },
             parent: `${props.projectID}`
         }
+
+        // create new key in firebase, push schema to key and update local state
         let newCardKey = projectRef.push().key;
         setCards({ ...cards, [newCardKey]: blankCard });
         projectRef.child(newCardKey).set(blankCard).then(console.log("added new card with key", newCardKey));

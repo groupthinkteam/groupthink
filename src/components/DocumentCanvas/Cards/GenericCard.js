@@ -32,20 +32,20 @@ export default function GenericCard(props) {
     )
 
     return (
-        <div className="card custom_card border-0" >
+        <div className="card custom_card border-0" style={{ width: 350, height: 200, position: "absolute" }}>
             <div className="card-handle card-title-bar">
-                {/* <button className="absolute delete_btn wh-20p rounded-circle" onClick={() => props.cardAPI.remove(props.id, card.parent, card.children, card.type)}>
+                <button className="absolute delete_btn wh-20p rounded-circle"
+                    onClick={() => props.cardAPI.remove(props.id, props.card.parent, props.card.children, props.type)}>
                     X
                 </button>
                 <button className="absolute lock_btn wh-20p rounded-circle">
                     <i className="fa fa-lock" aria-hidden="true"></i>
                 </button>
-                <button className="absolute add_btn wh-20p" onClick={addChild}>
+                <button className="absolute add_btn wh-20p" onClick={() => props.addChild()}>
                     <span className="rounded-circle">+</span>
-                </button> */}
+                </button>
             </div>
-            Hi this is dev
-            {/* <CardType /> */}
+            <CardType cardAPI={props.cardAPI} content={props.content} />
         </div>
     )
 }

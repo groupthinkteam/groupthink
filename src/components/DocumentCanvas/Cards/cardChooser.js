@@ -6,10 +6,13 @@ import VideosCard from "./types/VideoCard";
 import AudiosCard from "./types/AudioCard";
 import LinkCard from "./types/LinkCard";
 import TextCard from "./types/TextCard";
+import BlankCard from "./types/BlankCard";
 
 // returns a CardType component based on "type"
 export default function cardChooser(type) {
     switch (type) {
+        case "blank":
+            return BlankCard;
         case "text":
             return TextCard;
         case "onlineVideo":
