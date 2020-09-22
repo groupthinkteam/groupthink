@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import CardContainer from "./CardContainer";
-import { firebaseDB, firebaseStoreRef, firbaseStorage } from "../../services/firebase";
+import { firebaseDB, firbaseStorage } from "../../services/firebase";
 import { auth } from "firebase";
 
 export default function CardManager(props) {
     // store container-related state
-    const [container, setContainer] = useState({ size: { width: 600, height: 800 }, cardOffset: {} });
+    const [container, setContainer] = useState({ width: 600, height: 800 });
 
     // everything to do with cards
     const [cards, setCards] = useState({});
@@ -14,7 +14,7 @@ export default function CardManager(props) {
     const [docCenter, setDocCenter] = useState({ x: 1000, y: 5000 })
 
     //State for Reparenting
-    const [reparentState,setReparentState] = useState({})
+    const [reparentState, setReparentState] = useState({})
 
     // project reference in firebase db
     const projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
@@ -40,84 +40,70 @@ export default function CardManager(props) {
             projectRef.child("center").off();
             projectRef.child("container").off();
         }
-    }, [props.projectID])
+    }, [])
 
-    //----Container Resize----
-    const containeResize = (size) =>{
-        //----- format    size:{width : 11 , height:12 } ----
-        let updates = {};
-        updates["documents/"+props.projectID+"/container/size"] = size
-        firebaseDB.ref().update(updates).then(console.log("Resized to param ", size)).catch(err=>err)
-    }
     //-------Card operations------------
-    const onDelete = (id,parentId,children,type) => {
+    const onDelete = (id, parentId, children, type) => {
         let updates = {};
-        console.log("OnDelete Params", id , parentId , children , type)
-        if(props.projectID === parentId)
-        {
-            updates["documents/" + props.projectID + "/nodes/"+id] = null;
+        console.log("OnDelete Params", id, parentId, children, type)
+        if (props.projectID === parentId) {
+            updates["documents/" + props.projectID + "/nodes/" + id] = null;
         }
-        else
-        {
-            updates["documents/" + props.projectID + "/nodes/"+parentId+"/children/"+id] = null;
-            updates["documents/" + props.projectID + "/nodes/"+id] = null;
+        else {
+            updates["documents/" + props.projectID + "/nodes/" + parentId + "/children/" + id] = null;
+            updates["documents/" + props.projectID + "/nodes/" + id] = null;
         }
         //---Childrens Should be deleted---
-        const ChildrenDelete = (children) => 
-        {
-            if(children!=null || children!=undefined)
-            {Object.entries(children)
-            .map((key,val)=>{
-                //console.log("Children Key",key[0])
-                updates["documents/"+props.projectID+"/nodes/"+key[0]] = null;
-                FirebaseSearchPath(key[0])
-            })}
+        const ChildrenDelete = (children) => {
+            if (children != null || children != undefined) {
+                Object.entries(children)
+                    .map((key, val) => {
+                        //console.log("Children Key",key[0])
+                        updates["documents/" + props.projectID + "/nodes/" + key[0]] = null;
+                        FirebaseSearchPath(key[0])
+                    })
+            }
         }
-        const FirebaseSearchPath = (id) =>
-        {
-            firebaseDB.ref("documents/" + props.projectID + "/nodes/"+id+"/").on('value',snap=>{
+        const FirebaseSearchPath = (id) => {
+            firebaseDB.ref("documents/" + props.projectID + "/nodes/" + id + "/").on('value', snap => {
                 //console.log("Snapshot",snap.val()?.children)
-                if(snap.val()?.children != null || snap.val()?.children != undefined)
-                ChildrenDelete(snap.val().children)
+                if (snap.val()?.children != null || snap.val()?.children != undefined)
+                    ChildrenDelete(snap.val().children)
             })
         }
-        if(children != null || children !=undefined)
-        {
+        if (children != null || children != undefined) {
             ChildrenDelete(children)
         }
         setCards({ ...cards, [id]: undefined });
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
         //-----------If File is Uploaded -----------
-        if(! (type === 'link' || type === 'blank')  )
-        {
-            const path = auth().currentUser?.uid+"/"+props.projectID+"/"+id+"/"+type+"/";
-            const deleteFile = (pathToFile , fileName) => {
+        if (!(type === 'link' || type === 'blank')) {
+            const path = auth().currentUser?.uid + "/" + props.projectID + "/" + id + "/" + type + "/";
+            const deleteFile = (pathToFile, fileName) => {
                 const ref = firbaseStorage().ref(pathToFile);
                 const childRef = ref.child(fileName);
                 childRef.delete().then(console.log("File Deleted"))
             }
-            const deleteFolderContents = (path) =>{
+            const deleteFolderContents = (path) => {
                 var storageRef = firbaseStorage().ref(path);
                 storageRef.listAll()
-                .then((dir)=>{
-                    //-------Files Exist-------
-                    if(dir.items.length > 0)
-                    {
-                        dir.items.forEach((fileRef)=>{
-                          deleteFile(storageRef.fullPath , fileRef.name)
-                        })
-                        dir.prefixes.forEach(folderRef => {
-                            deleteFolderContents(folderRef.fullPath);
-                        })
-                    }
-                    else
-                    {
-                        console.log("No Files Exist")
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+                    .then((dir) => {
+                        //-------Files Exist-------
+                        if (dir.items.length > 0) {
+                            dir.items.forEach((fileRef) => {
+                                deleteFile(storageRef.fullPath, fileRef.name)
+                            })
+                            dir.prefixes.forEach(folderRef => {
+                                deleteFolderContents(folderRef.fullPath);
+                            })
+                        }
+                        else {
+                            console.log("No Files Exist")
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             }
 
             deleteFolderContents(path)
@@ -129,12 +115,31 @@ export default function CardManager(props) {
     // if card crosses tripwires on any side, expand ccontainer
     // and adjust document center
     const localMove = (id, newPos, cardSize) => {
-
         setCards({ ...cards, [id]: { ...cards[id], position: newPos } });
     }
 
-    const savePosition = (id, newPos) => {
-        projectRef.child(id).child("position").set(newPos).then(console.log("set new position for", id, "to", newPos));
+    function savePosition(id, newPos) {
+        let updates = {};
+        let newContainer = { width: container.width, height: container.height }
+
+        let projectRef = firebaseDB.ref("documents/" + props.projectID);
+        if (newPos.x > container.width) {
+            console.log("x", newPos.x, "was greater than width", container)
+            newContainer.width = newPos.x + 300;
+        }
+        if (newPos.y > container.height) {
+            console.log("y", newPos.y, "was greater than height", container)
+            newContainer.height = newPos.y + 300;
+        }
+        updates["nodes/" + id + "/position/"] = newPos;
+        if (newContainer) {
+            updates["container/"] = newContainer
+        }
+
+        console.log("newcontainer: ", newContainer, "old container: ", container)
+
+        projectRef.update(updates)
+            .then(console.log("set new position for", id, "to", newPos, "\nresized container to", newContainer));
     }
 
     const onResize = (id, newSize) => {
@@ -143,9 +148,8 @@ export default function CardManager(props) {
     }
 
     // initially adds a blank card, type is inferred later
-    let addCard = (type) => ()=> {
-        if(type === undefined || type === null)
-        {
+    let addCard = (type) => () => {
+        if (type === undefined || type === null) {
             type = "blank"
         }
         const blankCard = {
@@ -161,7 +165,7 @@ export default function CardManager(props) {
         setCards({ ...cards, [newCardKey]: blankCard });
         projectRef.child(newCardKey).set(blankCard).then(console.log("added new card with key", newCardKey));
     }
-    
+
     const changeType = (id, newType) => {
         setCards({ ...cards, [id]: { ...cards[id], type: newType } });
         projectRef.child(id).child("type").set(newType).then(console.log("set new type for", id, "to", newType));
@@ -181,9 +185,8 @@ export default function CardManager(props) {
             .then(console.log("saved new content for", id));
     }
     //-------Subnodes Operation------
-    const addSubNodes = (parentId,type) =>{
-        if(type === undefined || type === null)
-        {
+    const addSubNodes = (parentId, type) => {
+        if (type === undefined || type === null) {
             type = "blank"
         }
         const blankCard = {
@@ -196,88 +199,79 @@ export default function CardManager(props) {
             parent: parentId
         }
         const newCardKey = projectRef.push().key;
-        const childpath = "documents/"+props.projectID+"/nodes/"+parentId+"/children/"+newCardKey;
-        let update={};
+        const childpath = "documents/" + props.projectID + "/nodes/" + parentId + "/children/" + newCardKey;
+        let update = {};
         update[childpath] = 1;
         firebaseDB.ref().update(update).then(console.log("successfully added a new Child in Parent"))
         setCards({ ...cards, [newCardKey]: blankCard });
         projectRef.child(newCardKey).set(blankCard).then(console.log("added new card with key", newCardKey));
     }
     //--------------Reparenting On DB-----------
-    const reparentChild=(requestId, acquiredId)=>{
+    const reparentChild = (requestId, acquiredId) => {
         let updates = {};
         let pastParentId;
         //---------add to new Parent and it's properties ------
-        updates["documents/"+props.projectID+"/nodes/"+acquiredId+"/children/"+requestId] = 1
-        updates["documents/"+props.projectID+"/nodes/"+requestId+"/parent"] = acquiredId
-        firebaseDB.ref("documents/"+props.projectID+"/nodes/"+requestId+"/parent").once('value',snap=>{
-                pastParentId=snap.val();
-                console.log("Parent ID",pastParentId)
-                updates["documents/"+props.projectID+"/nodes/"+pastParentId+"/children/"+requestId] = null
+        updates["documents/" + props.projectID + "/nodes/" + acquiredId + "/children/" + requestId] = 1
+        updates["documents/" + props.projectID + "/nodes/" + requestId + "/parent"] = acquiredId
+        firebaseDB.ref("documents/" + props.projectID + "/nodes/" + requestId + "/parent").once('value', snap => {
+            pastParentId = snap.val();
+            console.log("Parent ID", pastParentId)
+            updates["documents/" + props.projectID + "/nodes/" + pastParentId + "/children/" + requestId] = null
         });
         //------ Pat Parent Id should be null ------
-        
-        console.log("UPDATES",updates)
+
+        console.log("UPDATES", updates)
         firebaseDB.ref().update(updates)
-        .then(console.log("successfully Changed Location of ",requestId, " To ", acquiredId))
-        .catch(err=>{return err})
+            .then(console.log("successfully Changed Location of ", requestId, " To ", acquiredId))
+            .catch(err => { return err })
     }
-    const acquireId =(acquiredId) =>
-    {
-        let flag=0;
-        const CheckSubNodes = (id) =>
-        {
-            var path = "documents/"+props.projectID+"/nodes/"+id+"/";
-                    firebaseDB.ref(path).on('value',snap=>{
-                        const nodeCardDetail = snap.val();
-                        if(nodeCardDetail?.children != undefined || nodeCardDetail?.children != null)
-                        {
-                            CheckReparenting(nodeCardDetail.children)
-                        }
-                    })
-        }
-        const CheckReparenting = (data) => {
-            Object.entries(data)
-            .map((key,val)=>{
-                if(acquiredId == key[0])
-                {flag=flag + 1;}
-                else
-                { 
-                    //----------------Should Not Reparent the subnodes(No Cycles should be Formed)  ---------
-                    CheckSubNodes(key[0])   
+    const acquireId = (acquiredId) => {
+        let flag = 0;
+        const CheckSubNodes = (id) => {
+            var path = "documents/" + props.projectID + "/nodes/" + id + "/";
+            firebaseDB.ref(path).on('value', snap => {
+                const nodeCardDetail = snap.val();
+                if (nodeCardDetail?.children != undefined || nodeCardDetail?.children != null) {
+                    CheckReparenting(nodeCardDetail.children)
                 }
             })
         }
-        console.log("Acquire Called",acquiredId,reparentState)
-        
+        const CheckReparenting = (data) => {
+            Object.entries(data)
+                .map((key, val) => {
+                    if (acquiredId == key[0]) { flag = flag + 1; }
+                    else {
+                        //----------------Should Not Reparent the subnodes(No Cycles should be Formed)  ---------
+                        CheckSubNodes(key[0])
+                    }
+                })
+        }
+        console.log("Acquire Called", acquiredId, reparentState)
+
         //---------------- Reparent Should not Call itself Check------------------
-        if( (reparentState?.requestId!= undefined || reparentState?.requestId!= null  ) && reparentState?.requestId != acquiredId)
-        {
+        if ((reparentState?.requestId != undefined || reparentState?.requestId != null) && reparentState?.requestId != acquiredId) {
             //----------Parent Shouldn't Reparent It's Own Child------------
-            if(reparentState.cardDetail?.children != null || reparentState.cardDetail?.children != undefined)
-            {
+            if (reparentState.cardDetail?.children != null || reparentState.cardDetail?.children != undefined) {
                 console.log("Parent Shouldn't Reparent It's Own Child")
-                
+
                 CheckReparenting(reparentState.cardDetail?.children)
-                
+
             }
-            if(flag==0)
-            {
-            console.log("Reparent Requested to DB",reparentState.requestId);
-            reparentChild(reparentState.requestId,acquiredId)
-            setReparentState(null);
+            if (flag == 0) {
+                console.log("Reparent Requested to DB", reparentState.requestId);
+                reparentChild(reparentState.requestId, acquiredId)
+                setReparentState(null);
             }
         }
     }
-    const reparentNodesT = (requestId,cardDetail) => 
-    {
-       console.log("Rreparent CAlled",requestId)
-        setReparentState({requestId:requestId , cardDetail:cardDetail})
+    const reparentNodesT = (requestId, cardDetail) => {
+        console.log("Rreparent CAlled", requestId)
+        setReparentState({ requestId: requestId, cardDetail: cardDetail })
     }
     /**
      * --------------- Storage Operation Function ---------------*/
     const StoreFileToStorage = (path, file, metadata, callback) => {
-        
+
         var spaceRef = firbaseStorage().ref(path).put(file, metadata);
         spaceRef.on(firbaseStorage.TaskEvent.STATE_CHANGED,
             function (snapshot) {
@@ -303,14 +297,16 @@ export default function CardManager(props) {
                     case 'storage/unauthorized':
                         console.log(" User doesn't have permission to access the object")
                         break;
-    
+
                     case 'storage/canceled':
                         console.log("Storage Cancelled")
                         break;
-    
-    
+
+
                     case 'storage/unknown':
                         console.log(" Unknown error occurred, inspect \n", error.serverResponse)
+                        break;
+                    default:
                         break;
                 }
             }, // or 'state_changed'
@@ -355,7 +351,8 @@ export default function CardManager(props) {
                 console.log(error);
             });
     }
-    /**bundling card api methods for ease of transmission */ 
+
+    /**bundling card api methods for ease of transmission */
     let cardAPI = {
         add: addCard,
         remove: onDelete,
@@ -365,11 +362,11 @@ export default function CardManager(props) {
         type: changeType,
         change: changeContent,
         save: saveContent,
-        addChild : addSubNodes,
-        requestReparent:reparentNodesT,
-        sendPath : acquireId,
-        storeFile : StoreFileToStorage,
-        displayFile : GetFileFromStorage
+        addChild: addSubNodes,
+        requestReparent: reparentNodesT,
+        sendPath: acquireId,
+        storeFile: StoreFileToStorage,
+        displayFile: GetFileFromStorage
     }
 
     return (
@@ -378,7 +375,7 @@ export default function CardManager(props) {
             cards={cards}
             cardAPI={cardAPI}
             projectID={props.projectID}
-            permission = {props.permission}
+            permission={props.permission}
         />
     )
 }

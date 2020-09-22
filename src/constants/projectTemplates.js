@@ -5,12 +5,10 @@ const projectTemplates = {
             y: 300
         },
         container: {
-            size: {
-                height: 600,
-                width: 800
-            }
+            height: 600,
+            width: 800
         },
-        
+
     }
     // TODO: add more templates
 }
@@ -31,7 +29,7 @@ export default projectTemplates;
                     "width": 200
                 },
                 "type": "blank",
-                "parent":"-jjksjiIS454" 
+                "parent":"-jjksjiIS454"
             },
             "-MGEjbe8zZmSCQYtj23e": {
                 "content": {
