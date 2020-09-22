@@ -49,10 +49,10 @@ export default function CardManager(props) {
         updates["documents/"+props.projectID+"/container/size"] = size
         firebaseDB.ref().update(updates).then(console.log("Resized to param ", size)).catch(err=>err)
     }
-    //-------Card operations------------
-    const onDelete = (id,parentId,children,type) => {
+    /**-------Card operations------------*/
+    const onDelete = (id,parentId,children,type,operation) => {
         let updates = {};
-        console.log("OnDelete Params", id , parentId , children , type)
+        console.log("OnDelete Params", id , parentId , children , type , operation)
         if(props.projectID === parentId)
         {
             updates["documents/" + props.projectID + "/nodes/"+id] = null;
@@ -63,15 +63,25 @@ export default function CardManager(props) {
             updates["documents/" + props.projectID + "/nodes/"+id] = null;
         }
         //---Childrens Should be deleted---
-        const ChildrenDelete = (children) => 
+        const ChildrenDelete = (children,operationID) => 
         {
             if(children!=null || children!=undefined)
-            {Object.entries(children)
-            .map((key,val)=>{
-                //console.log("Children Key",key[0])
-                updates["documents/"+props.projectID+"/nodes/"+key[0]] = null;
-                FirebaseSearchPath(key[0])
-            })}
+            {
+                Object.entries(children)
+                .map((key,val)=>{
+                    //console.log("Children Key",key[0])
+                    if(operationID === 1)
+                    {
+                        updates["documents/"+props.projectID+"/nodes/"+key[0]] = null;
+                        
+                    }
+                    else if(operationID === 2)
+                    {
+                        updates["documents/"+props.projectID+"/nodes/"+key[0]+"/parent/"] = props.projectID;
+                    }
+                    FirebaseSearchPath(key[0])
+                })
+            }
         }
         const FirebaseSearchPath = (id) =>
         {
@@ -81,9 +91,13 @@ export default function CardManager(props) {
                 ChildrenDelete(snap.val().children)
             })
         }
-        if(children != null || children !=undefined)
+        if(operation === 'delete with child')
         {
-            ChildrenDelete(children)
+            ChildrenDelete(children,1)
+        }
+        else if(operation === 'delete and Reparent Root')
+        {
+            ChildrenDelete(children,2)
         }
         setCards({ ...cards, [id]: undefined });
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))

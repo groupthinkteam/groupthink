@@ -13,6 +13,8 @@ import { useDrag } from 'react-dnd';
 
 
 import "../../../styles/Cards/GenericCard.scss";
+import DeleteCard from "./DeleteCard";
+import { Button } from "react-bootstrap";
 // props
 // --------
 // id:
@@ -81,10 +83,21 @@ const DisplayTextCard = (props)=>
 }
 //------Drag Box-----
 export default function GenericCard(props) {
+    const [showOptionsForReparent , setOptionsForReparent] = useState(false);
     const CardDetail = props.cardDetail;
     const CardId = props.id;
     const addChild=() => props.cardAPI.addChild(props.id,CardDetail.type);
     const sendPath=(id) =>props.cardAPI.sendPath(id);
+    const deleteCard=(operation)=> props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children,CardDetail.type,operation)
+    const showRadioForReparent = () => {
+        setOptionsForReparent(true);
+        reparent(props.id,CardDetail);
+    }
+    const closeDelete = () =>
+    {
+        sendPath(CardId);
+        deleteCard()
+    }
     const reparent=(id,detail) =>{ 
         props.cardAPI.requestReparent(id,detail)
     }
@@ -121,9 +134,21 @@ export default function GenericCard(props) {
         <>
         <div className="card custom_card border-0" >
             <div className="card-handle card-title-bar">
-                <button className="absolute delete_btn wh-20p rounded-circle" onClick={() => props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children,CardDetail.type)}>
-                    X
-                </button>
+                <DeleteCard 
+                    className="absolute delete_btn wh-20p rounded-circle" 
+                    deleteCard={deleteCard.bind(this)}
+                    CardDetail={CardDetail}
+                   
+                    showOption={showRadioForReparent.bind(this)}
+                />
+                {
+                    showOptionsForReparent ?
+                    <button className="absolute wh-20p rounded-circle" onClick={closeDelete}>
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                    </button>
+                    :<div/>
+                }
+                
                 <button className="absolute lock_btn wh-20p rounded-circle">
                     <i className="fa fa-lock" aria-hidden="true"></i>
                 </button>
@@ -202,18 +227,4 @@ export default function GenericCard(props) {
         </>
     )
 }
-/**
- * <div>
-                                <svg>
-                                <defs>
-                                    <marker id="markerArrow1" markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
-                                    <path d="M2,2 L2,11 L10,6 L2,2" />
-                                    </marker>
-                                </defs>
-                                <line x1="10" y1="10" x2="100" y2="100" style={{stroke:"#006600", markerEnd: "url(#markerArrow1)" }}/>
-                                </svg>
-                            </div>
- * <BootButton variant="outline-info" size="sm" onClick={sendPath(props.id)}>Send Path</BootButton>
-            <BootButton variant="outline-warning" size="sm" onClick={reparent(props.id)}>Reparent</BootButton>
-            
- */
+

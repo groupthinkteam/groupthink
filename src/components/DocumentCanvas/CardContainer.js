@@ -37,7 +37,6 @@ export default function CardContainer(props) {
                                         minHeight={375}
                                         minWidth={275}
                                         position={card.position}
-                                        //bounds="card-container"
                                         onResizeStop = {(e,dir,ref,delta)=>{
                                             cardAPI.resize(id,{width:ref.style.width , height:ref.style.height})
                                         }}
