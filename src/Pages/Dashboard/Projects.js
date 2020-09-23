@@ -26,11 +26,21 @@ export default function Projects(props) {
 
     var onAddNew = () => {
         console.log("clicked add new")
-        let projectID = firebaseDB.ref().child(userRef).push().key;
-
+        const refUsers = firebaseDB.ref().child(userRef);
+        const projectID = refUsers.push().key;
+        //const projectName = '12bsahj23';
+        //firebaseDB.ref().update({["creator/"+projectName]:props.currentUser().uid}).then(console.log("Added Creator"));
+        
+        //firebaseDB.ref().update({[userRef+projectName]:{access : 'rw'}}).then(console.log("Added project"))
+        
+        
+        //firebaseDB.ref().update({['documents/'+projectName]:{users:{[props.currentUser().uid] : 'rw'}}}).then(console.log("Added project"))
+        
         let updates = {};
-
+        const test = {}
+        updates['creator/'+projectID] = props.currentUser().uid;
         updates[userRef + projectID] = {
+            access:'rw',
             name: "New Project",
             thumbnailURL: "https://picsum.photos/200?random=" + Math.floor(Math.random() * 100)
         };
@@ -42,8 +52,10 @@ export default function Projects(props) {
             users: { [props.currentUser().uid]: "rw" },
             ...projectTemplates.tester
         }
-
-        firebaseDB.ref().update(updates).then(console.log("successfully added a new project with id", projectID))
+        //firebaseDB.ref().update({['creator/'+projectID]:props.currentUser().uid}).then(console.log("Added Creator \n"+'creator/'+projectID))
+        firebaseDB.ref().update(updates)
+        .then(console.log("successfully added a new project with id", projectID,updates))
+        .catch(err=> err)
     }
     var onDelete = (id) => {
         console.log("about to delete project", id);

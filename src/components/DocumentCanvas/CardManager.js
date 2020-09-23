@@ -10,13 +10,13 @@ export default function CardManager(props) {
     // everything to do with cards
     const [cards, setCards] = useState({});
 
-    // position of the document center in the frame of local coords
+    /**  position of the document center in the frame of local coords*/
     const [docCenter, setDocCenter] = useState({ x: 1000, y: 5000 })
 
-    //State for Reparenting
+    /** Stores State for Reparenting*/
     const [reparentState,setReparentState] = useState({})
 
-    // project reference in firebase db
+    /**project reference in firebase db */
     const projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
 
     useEffect(() => {
@@ -50,8 +50,11 @@ export default function CardManager(props) {
         firebaseDB.ref().update(updates).then(console.log("Resized to param ", size)).catch(err=>err)
     }
     /**-------Card operations------------*/
-    const onDelete = (id,parentId,children,type,operation) => {
-        let updates = {};
+    const onDelete = (id,operation) => {
+        const parentId = cards[id].parent;
+        const children = cards[id].children;
+        const type = cards[id].type;
+        let updates = {} , flag=true;
         console.log("OnDelete Params", id , parentId , children , type , operation)
         if(props.projectID === parentId)
         {
@@ -79,16 +82,17 @@ export default function CardManager(props) {
                     {
                         updates["documents/"+props.projectID+"/nodes/"+key[0]+"/parent/"] = props.projectID;
                     }
-                    FirebaseSearchPath(key[0])
+                        
+                    FirebaseSearchPath(key[0],operationID)
                 })
             }
         }
-        const FirebaseSearchPath = (id) =>
+        const FirebaseSearchPath = (id,operationID) =>
         {
             firebaseDB.ref("documents/" + props.projectID + "/nodes/"+id+"/").on('value',snap=>{
                 //console.log("Snapshot",snap.val()?.children)
                 if(snap.val()?.children != null || snap.val()?.children != undefined)
-                ChildrenDelete(snap.val().children)
+                ChildrenDelete(snap.val().children , operationID)
             })
         }
         if(operation === 'delete with child')
@@ -98,9 +102,16 @@ export default function CardManager(props) {
         else if(operation === 'delete and Reparent Root')
         {
             ChildrenDelete(children,2)
+            
+        }
+        else
+        {
+            //reparentNodes(id);
+            console.log('Reparention Operation Before Deletion')
         }
         setCards({ ...cards, [id]: undefined });
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
+        
         //-----------If File is Uploaded -----------
         if(! (type === 'link' || type === 'blank')  )
         {
@@ -192,7 +203,8 @@ export default function CardManager(props) {
             .then(console.log("saved new content for", id));
     }
     //-------Subnodes Operation------
-    const addSubNodes = (parentId,type) =>{
+    const addSubNodes = (parentId) =>{
+        const type = cards[parentId].type;
         if(type === undefined || type === null)
         {
             type = "blank"
@@ -215,7 +227,7 @@ export default function CardManager(props) {
         projectRef.child(newCardKey).set(blankCard).then(console.log("added new card with key", newCardKey));
     }
     
-    const acquireId =(acquiredId) =>
+    const acquireId =(acquiredId,operation) =>
     {
         let flag=0;
         //--------------Reparenting On DB-----------
@@ -260,10 +272,30 @@ export default function CardManager(props) {
                 }
             })
         }
+        /**Appending Acquired to Given id's parent and Appending Childrens to AcquiredID Within Database */
+        const reparentWhenDelete = (id) =>
+        {
+            let updates = {};
+            updates["documents/"+props.projectID+"/nodes/"+id+"/parent/"] = acquiredId;
+            updates["documents/"+props.projectID+"/nodes/"+acquiredId+"/children/"+id] =1 
+            firebaseDB.ref().update(updates).
+            then(console.log("Reparent When Delete",id ,"\n to \n",acquiredId ))//onDelete(reparentState.requestId))
+        }
         console.log("Acquire Called",acquiredId,reparentState)
-        
+        //----------When Reparent Is Called Before Delete Operation------------
+        if(operation != undefined)
+        {
+            const children = cards[reparentState.requestId].children;
+            console.log("childere",children.length)
+            if(children != undefined || children != null)
+            Object.keys(children)
+            .map((keys)=>{
+                reparentWhenDelete(keys)
+            })
+            onDelete(reparentState.requestId);
+        }
         //---------------- Reparent Should not Call itself Check------------------
-        if( (reparentState?.requestId!= undefined || reparentState?.requestId!= null  ) && reparentState?.requestId != acquiredId)
+        else if( (reparentState?.requestId!= undefined || reparentState?.requestId!= null  ) && reparentState?.requestId != acquiredId)
         {
             //----------Parent Shouldn't Reparent It's Own Child------------
             if(reparentState.cardDetail?.children != null || reparentState.cardDetail?.children != undefined)
@@ -275,15 +307,20 @@ export default function CardManager(props) {
             }
             if(flag==0)
             {
-            console.log("Reparent Requested to DB",reparentState.requestId);
-            reparentChild(reparentState.requestId,acquiredId)
-            setReparentState(null);
+                console.log("Reparent Requested to DB",reparentState.requestId);
+                reparentChild(reparentState.requestId,acquiredId);
+                //if(operation)
+                //onDelete(reparentState.requestId);
+                setReparentState(null);
             }
         }
+        
     }
-    const reparentNodesT = (requestId,cardDetail) => 
+    /**The RequestId Params is Updated to ReparentState for the use in Reparenting Operation in AcquireId Method */
+    const reparentNodes = (requestId) => 
     {
-       console.log("Rreparent CAlled",requestId)
+        const cardDetail = cards[requestId];
+        console.log("Rreparent CAlled",requestId,cardDetail)
         setReparentState({requestId:requestId , cardDetail:cardDetail})
     }
     /**
@@ -382,7 +419,7 @@ export default function CardManager(props) {
         change: changeContent,
         save: saveContent,
         addChild : addSubNodes,
-        requestReparent:reparentNodesT,
+        requestReparent:reparentNodes,
         sendPath : acquireId,
         storeFile : StoreFileToStorage,
         displayFile : GetFileFromStorage

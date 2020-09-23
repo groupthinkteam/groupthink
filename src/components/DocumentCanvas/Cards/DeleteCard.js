@@ -6,6 +6,7 @@ const DeleteCard = (props) =>
 {
     const [show, setShow] = useState(false);
     const [option , setOption] = useState();
+    const [select,setSelect] =useState(false)
     const handleShow = () =>  setShow(true);
     const handleClose = () => {
         setShow(false);
@@ -27,6 +28,8 @@ const DeleteCard = (props) =>
         {
             console.log('select_other_parent');
             props.showOption();
+            setSelect(true);
+            props.reparent(props.id);
             handleClose();
         }
     }
@@ -61,6 +64,7 @@ const DeleteCard = (props) =>
                             }
                         </Modal.Footer>
                     </Modal>  
+                
             </div>
         
         </>

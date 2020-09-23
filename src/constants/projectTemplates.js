@@ -9,7 +9,7 @@ const projectTemplates = {
                 height: 600,
                 width: 800
             }
-        },
+        }
         
     }
     // TODO: add more templates

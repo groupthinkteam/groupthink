@@ -83,23 +83,22 @@ const DisplayTextCard = (props)=>
 }
 //------Drag Box-----
 export default function GenericCard(props) {
-    const [showOptionsForReparent , setOptionsForReparent] = useState(false);
+    const [showOptionsForReparent , setOptionsForReparent] = useState(true);
     const CardDetail = props.cardDetail;
     const CardId = props.id;
-    const addChild=() => props.cardAPI.addChild(props.id,CardDetail.type);
-    const sendPath=(id) =>props.cardAPI.sendPath(id);
-    const deleteCard=(operation)=> props.cardAPI.remove(props.id,CardDetail.parent,CardDetail.children,CardDetail.type,operation)
+    const addChild=() => props.cardAPI.addChild(CardId);
+    const sendPath=(id,operation) =>props.cardAPI.sendPath(id,operation);
+    const deleteCard=(operation)=> props.cardAPI.remove(CardId,operation)
     const showRadioForReparent = () => {
-        setOptionsForReparent(true);
-        reparent(props.id,CardDetail);
+        setOptionsForReparent(false);
+        reparent(CardId);
     }
     const closeDelete = () =>
     {
-        sendPath(CardId);
-        deleteCard()
+        sendPath(CardId,true);
     }
-    const reparent=(id,detail) =>{ 
-        props.cardAPI.requestReparent(id,detail)
+    const reparent=(id) =>{ 
+        props.cardAPI.requestReparent(id)
     }
     const uploadFile = (file , metadata,callback) =>{ 
         props.cardAPI.storeFile(CardId,file,metadata,data=>{
@@ -112,7 +111,7 @@ export default function GenericCard(props) {
     const [{ isDragging }, drag] = useDrag({
         item: { CardId, type: ItemTypes.BOX ,detail:CardDetail },
         begin :(monitor)=>{
-            reparent(props.id,CardDetail)
+            reparent(CardId)
         },
         end: (item, monitor) => {
           const dropResult = monitor.getDropResult()
@@ -129,7 +128,7 @@ export default function GenericCard(props) {
     let flag=true
     if(props.cardDetail.parent === props.projectID)
     {flag=false}
-
+    //console.log(showOptionsForReparent , CardDetail.children)
     return (
         <>
         <div className="card custom_card border-0" >
@@ -138,11 +137,12 @@ export default function GenericCard(props) {
                     className="absolute delete_btn wh-20p rounded-circle" 
                     deleteCard={deleteCard.bind(this)}
                     CardDetail={CardDetail}
-                   
+                    id={CardId}
+                    reparent={reparent.bind(this)}
                     showOption={showRadioForReparent.bind(this)}
                 />
                 {
-                    showOptionsForReparent ?
+                    showOptionsForReparent && !flag?
                     <button className="absolute wh-20p rounded-circle" onClick={closeDelete}>
                         <i class="fa fa-check" aria-hidden="true"></i>
                     </button>
@@ -201,8 +201,8 @@ export default function GenericCard(props) {
         {
             flag ? 
             <Xarrow
-                start={`${props.cardDetail.parent}`}
-                end={`${props.id}`}
+                start={`${CardDetail.parent}`}
+                end={`${CardId}`}
                 lineColor="black"
                 path="grid"
                 label ={{start:"parent",end:"child"}}
