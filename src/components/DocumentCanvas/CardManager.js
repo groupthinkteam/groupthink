@@ -42,14 +42,23 @@ export default function CardManager(props) {
         }
     }, [props.projectID])
 
-    //----Container Resize----
+    /**
+     * Function Updates the Size of Container Size to Database.
+     * @param {*} size The Params Contains the updated Size of Container
+     */
     const containeResize = (size) =>{
         //----- format    size:{width : 11 , height:12 } ----
         let updates = {};
         updates["documents/"+props.projectID+"/container/size"] = size
         firebaseDB.ref().update(updates).then(console.log("Resized to param ", size)).catch(err=>err)
     }
-    /**-------Card operations------------*/
+    /**
+     * This Function Deletes the Given Id And Romove From:-
+     * Storage ,
+     * Database.
+     * @param {*} id Id of Node That Has To be Delete 
+     * @param {*} operation Operation is Optional Argument Which Contains the type of Operation is Going to Perform
+     */
     const onDelete = (id,operation) => {
         const parentId = cards[id].parent;
         const children = cards[id].children;
@@ -65,7 +74,13 @@ export default function CardManager(props) {
             updates["documents/" + props.projectID + "/nodes/"+parentId+"/children/"+id] = null;
             updates["documents/" + props.projectID + "/nodes/"+id] = null;
         }
-        //---Childrens Should be deleted---
+        /**
+         * Function Separated The Children ID from Children Argument And 
+         * Internally Calls the Database Function to Search Childs and Perform 
+         * Operation According to Operation ID
+         * @param {*} children 
+         * @param {*} operationID 
+         */
         const ChildrenDelete = (children,operationID) => 
         {
             if(children!=null || children!=undefined)
@@ -87,10 +102,15 @@ export default function CardManager(props) {
                 })
             }
         }
+        /**
+         * Search Child Nodes Path in Database And If Child Is present 
+         * Then Recursive Call to The method whose invoke it.
+         * @param {*} id 
+         * @param {*} operationID 
+         */
         const FirebaseSearchPath = (id,operationID) =>
         {
             firebaseDB.ref("documents/" + props.projectID + "/nodes/"+id+"/").on('value',snap=>{
-                //console.log("Snapshot",snap.val()?.children)
                 if(snap.val()?.children != null || snap.val()?.children != undefined)
                 ChildrenDelete(snap.val().children , operationID)
             })
@@ -112,15 +132,25 @@ export default function CardManager(props) {
         setCards({ ...cards, [id]: undefined });
         firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
         
-        //-----------If File is Uploaded -----------
+        //-----------If Type Contains Storage -----------
         if(! (type === 'link' || type === 'blank')  )
         {
             const path = auth().currentUser?.uid+"/"+props.projectID+"/"+id+"/"+type+"/";
+            /**
+             * This Function Delete A Particular File From Firebase Storage to given Path
+             * @param {*} pathToFile The Path To Which Contents Should be delete
+             * @param {*} fileName The FileName Which Has To be Delete
+             */ 
             const deleteFile = (pathToFile , fileName) => {
                 const ref = firbaseStorage().ref(pathToFile);
                 const childRef = ref.child(fileName);
                 childRef.delete().then(console.log("File Deleted"))
             }
+            /**
+             * This Function Calls to Storage and List All Files Acc. to given Path .
+             * And Then once a file is Got then Delete File Else No Files Exists.
+             * @param {*} path The Path To Which Contents Should be delete
+             */
             const deleteFolderContents = (path) =>{
                 var storageRef = firbaseStorage().ref(path);
                 storageRef.listAll()
@@ -141,37 +171,49 @@ export default function CardManager(props) {
                     console.log(error);
                 });
             }
-
+            //----Calls to Delete Folder Contents----
             deleteFolderContents(path)
-            //storageRef.delete().then(console.log("File Deleted Successfully")).catch((err)=>console.log(err))
         }
     }
 
-    // update local state during card drag
-    // if card crosses tripwires on any side, expand ccontainer
-    // and adjust document center
+    /**
+     *  update local state during card drag
+     * if card crosses tripwires on any side, expand ccontainer
+     * and adjust document center
+     * @param {*} id The ID to which operation is going to work
+     * @param {*} newPos Contains New Position of given ID
+     * @param {*} cardSize Contains the size of ID
+     */
     const localMove = (id, newPos, cardSize) => {
 
         setCards({ ...cards, [id]: { ...cards[id], position: newPos } });
     }
-
+    /**
+     * This Function Saves the Position Of Card Id to Database
+     * @param {*} id The ID to which operation is going to work
+     * @param {*} newPos Contains New Position of given ID
+     */
     const savePosition = (id, newPos) => {
         projectRef.child(id).child("position").set(newPos).then(console.log("set new position for", id, "to", newPos));
     }
-
+    /**
+     * This Function Updates the Size of Given Id to Database
+     * @param {*} id The ID to which operation is going to work
+     * @param {*} newSize Contains New Position of given ID
+     */
     const onResize = (id, newSize) => {
         setCards({ ...cards, [id]: { ...cards[id], size: newSize } });
         projectRef.child(id).child("size").set(newSize).then(console.log("set new size for", id, "to", newSize));
     }
 
-    // initially adds a blank card, type is inferred later
+    /**
+     * Initially adds a blank card, type is inferred later
+     * @param {*} type The Type of Card Which has to be Add
+     */
     let addCard = (type) => ()=> {
-        if(type === undefined || type === null)
-        {
-            type = "blank"
-        }
+        
         const blankCard = {
-            type: type,
+            type: type || 'blank',
             size: { width: 275, height: 375 },
             position: { x: 300, y: 300 },
             content: {
@@ -189,28 +231,36 @@ export default function CardManager(props) {
         projectRef.child(id).child("type").set(newType).then(console.log("set new type for", id, "to", newType));
     }
 
-    // update card content locally for controlled rendering purposes
+    /**
+     * update card content locally for controlled rendering purposes
+     * @param {*} id The ID to which we have to save the updated content
+     * @param {*} newContent The Content that has to be Save locally
+     */ 
     const changeContent = (id, newContent) => {
         console.log("triggered content change on", id)
         setCards({ ...cards, [id]: { ...cards[id], content: newContent } });
     }
 
-    // push card content to firebase
+    /**
+     * This Operation Updates he content to Database
+     * @param {*} id The ID to which we have to save the content
+     * @param {*} newContent The Content that has to be Save
+     */ 
     const saveContent = (id, newContent) => {
         changeContent(id, newContent);
         console.log("hello")
         projectRef.child(id).child("content").set(cards[id]["content"])
             .then(console.log("saved new content for", id));
     }
-    //-------Subnodes Operation------
+    /**
+     * This Function Add The Child Under it's Parent ID in Database 
+     * @param {*} parentId 
+     * The Parent Id is what , whose type of card is going to build and under this ID
+     */
     const addSubNodes = (parentId) =>{
         const type = cards[parentId].type;
-        if(type === undefined || type === null)
-        {
-            type = "blank"
-        }
         const blankCard = {
-            type: type,
+            type: type || 'blank',
             size: { width: 275, height: 375 },
             position: { x: 300, y: 300 },
             content: {
@@ -231,6 +281,14 @@ export default function CardManager(props) {
     {
         let flag=0;
         //--------------Reparenting On DB-----------
+        /**
+         * This Function Takes The Below 2 Arguments & 
+         * Perform Reparent and Updates to the Database
+         * @param {*} requestId 
+         * The Id that want's to reparent it's current parent 
+         * @param {*} acquiredId 
+         * The Id to which RequestID want's to be Parent of.
+         */
         const reparentChild=(requestId, acquiredId)=>{
             let updates = {};
             let pastParentId;
@@ -249,6 +307,8 @@ export default function CardManager(props) {
             .then(console.log("successfully Changed Location of ",requestId, " To ", acquiredId))
             .catch(err=>{return err})
         }
+        /**This Function Checks in Database the CHildren's of given ID 
+         * And if There is Children Found then Recursive Call's  to method that invoke it.*/
         const CheckSubNodes = (id) =>
         {
             var path = "documents/"+props.projectID+"/nodes/"+id+"/";
@@ -260,6 +320,9 @@ export default function CardManager(props) {
                         }
                     })
         }
+        /**Function Checks that Parent Shouldn't Reparent It's Own Child
+         * By Checking The Acquired Id to the Given Data With it's Children
+         */
         const CheckReparenting = (data) => {
             Object.entries(data)
             .map((key,val)=>{
@@ -267,7 +330,6 @@ export default function CardManager(props) {
                 {flag=flag + 1;}
                 else
                 { 
-                    //----------------Should Not Reparent the subnodes(No Cycles should be Formed)  ---------
                     CheckSubNodes(key[0])   
                 }
             })
@@ -300,17 +362,15 @@ export default function CardManager(props) {
             //----------Parent Shouldn't Reparent It's Own Child------------
             if(reparentState.cardDetail?.children != null || reparentState.cardDetail?.children != undefined)
             {
-                console.log("Parent Shouldn't Reparent It's Own Child")
-                
+                //----Pass The Requested Id's Children Which is Stored in Reparent State ----------
                 CheckReparenting(reparentState.cardDetail?.children)
                 
             }
+            //---- If Everything is fine then it Calls to DB Method for Reparenting Operation-----
             if(flag==0)
             {
                 console.log("Reparent Requested to DB",reparentState.requestId);
                 reparentChild(reparentState.requestId,acquiredId);
-                //if(operation)
-                //onDelete(reparentState.requestId);
                 setReparentState(null);
             }
         }
@@ -324,7 +384,12 @@ export default function CardManager(props) {
         setReparentState({requestId:requestId , cardDetail:cardDetail})
     }
     /**
-     * --------------- Storage Operation Function ---------------*/
+     * Function Uploads File to Firebase Storage 
+     * @param {*} id The Id Under Which File is Stored
+     * @param {*} file File Which is going to be store.
+     * @param {*} metadata Metadata 0f File 
+     * @param {*} callback Callbacks the URL when File is Uploaded 
+     */
     
     const StoreFileToStorage = (id, file, metadata, callback) => {
         const type = cards[id].type;
@@ -378,7 +443,11 @@ export default function CardManager(props) {
             }
         );
     }
-    /**Shows the list of Files in given path */
+    /**
+     * Returns the list of Files & Download URL Associated to its path
+     * @param {*} id The ID of Files in Storage that we want
+     * @param {*} callback Stores The File , URL  , Metadata
+     */
     const GetFileFromStorage = (id, callback) => {
         const type = cards[id].type;
         const path = auth().currentUser?.uid + "/" + props.projectID + "/" + id + "/" +type+ "/" 
