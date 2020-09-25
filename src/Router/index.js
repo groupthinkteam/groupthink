@@ -15,9 +15,12 @@ import InvitationCheck from "../Pages/Document/InvitationCheck";
 import ErrorsPage from "../Pages/Errors/ErrorsPage";
 import InivitationRoute from "./InvitationRoute";
 
+/**
+ * This File Contains Whole Project's Routes i.e. Component is Mapped according to it's Path 
+ * @component
+ */
 export default function AppRoutes() {
   const { auth, uiConfig, authState } = useAuth();
-  // console.log("authState", authState.pendingAuth)
   if(authState.pendingAuth){
     return false;
   }
@@ -50,7 +53,3 @@ export default function AppRoutes() {
     </Router>
   );
 }
-/**
- * <Route path="/project/:projectID">
-   <Document />
-</Route>*/
