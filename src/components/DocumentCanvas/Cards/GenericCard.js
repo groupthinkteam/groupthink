@@ -12,6 +12,9 @@ gsap.registerPlugin(Draggable);
 export default function GenericCard(props) {
     let CardType = cardChooser(props.card.type);
     useEffect(
+        () => gsap.set("#".concat(props.id), props.card.position)
+        , [props.card.position])
+    useEffect(
         () => {
             // warning: can't use arrow functions here since that messes up the "this" binding
             function drag() {
