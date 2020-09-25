@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import CardContainer from "./CardContainer";
 import { firebaseDB, firebaseStorage } from "../../services/firebase";
-
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
  * @property {state} cards - stores the local state information for all the cards
@@ -48,8 +47,8 @@ export default function CardManager(props) {
 
     /**
      * add a new card with the specified type, position, and parent
-     * @param {{width: number, height: number}} position - the initial position of the card
-     * @param {{x: number, y: number}} size - the initial size of the card
+     * @param {{x: number, y: number}} position - the initial position of the card
+     * @param {{width: number, height: number}} size - the initial size of the card
      * @param {string} parent - (optional) the id of the parent card. default: "root"
      * @param {string} type - (optional) the card type (e.g. "audio", "image", "text"). default: "blank"
      */
@@ -106,13 +105,13 @@ export default function CardManager(props) {
         /**
          * do a depth-first traversal of the subtree rooted at `id` and add
          * every element to updates{} for removal
-         * @param {Array} queue 
+         * @param {Array} stack 
          */
-        const depthFirstTraversal = (queue) => {
-            while (queue.length > 0) {
-                let poppedID = queue.pop();
+        const depthFirstTraversal = (stack) => {
+            while (stack.length > 0) {
+                let poppedID = stack.pop();
                 updates[poppedID] = null;
-                queue.concat(Object.keys(cards[poppedID]["children"]))
+                stack.concat(Object.keys(cards[poppedID]["children"]))
             }
         }
 
@@ -227,8 +226,16 @@ export default function CardManager(props) {
      * @param {function(number)} statusCallback - a callback that receives a number [0, 100] indicating upload progress
      */
     const requestUpload = (file, metadata, path, statusCallback) => {
+        let custom = {
+            ...metadata,
+            customMetadata: {
+                permissions: {
+                    [props.currentUser.uid]: props.permission
+                }
+            }
+        }
         let requestedPathRef = firebaseStorage().ref(props.projectID + path);
-        let unsubscribe = requestedPathRef.put(file, metadata)
+        let unsubscribe = requestedPathRef.put(file, custom)
             .on(firebaseStorage.TaskEvent.STATE_CHANGED,
                 (snapshot) => {
                     let progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
@@ -282,7 +289,6 @@ export default function CardManager(props) {
     }
 
     let typeAPI = {
-        meta: ["id", "type", "parent", "children[]", "content{}", "size", "position"],
         saveContent: saveContent,
         changeContent: changeContent,
         requestUpload: requestUpload,
@@ -295,7 +301,6 @@ export default function CardManager(props) {
             cards={cards}
             genericAPI={genericAPI}
             typeAPI={typeAPI}
-            projectID={props.projectID}
             permission={props.permission}
         />
     )

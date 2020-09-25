@@ -42,12 +42,13 @@ export default function Document(props) {
   }
   return (
     <div>
-      <MenuBar style={{ position: "absolute", zIndex: 0}}
+      <MenuBar style={{ position: "absolute", zIndex: 0 }}
         onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID} />
       {
         permission != null ?
           <CardManager
             projectID={projectID}
+            currentUser={props.currentUser}
             permission={permission}
           />
           : <div></div>
