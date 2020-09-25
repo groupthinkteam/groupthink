@@ -5,7 +5,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 /**
- * props layout:
+ * props:
  * 
  * @param {*} props 
  * 
@@ -21,9 +21,9 @@ export default function CardContainer(props) {
     //console.log("Card API \n ",url);
     return (
         <div className="card-container w-100 main_card"
-            style={{ overflow: "scroll", position: "absolute" }}>
+            style={{ overflow: "scroll", position: "absolute", zIndex: 1 }}>
             <div className="container-filler"
-                style={{ ...props.container, position: "absolute", backgroundColor: "grey", zIndex: 0 }}
+                style={{ ...props.container, position: "absolute", backgroundColor: "grey", zIndex: -1 }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
                     var rect = e.target.getBoundingClientRect();

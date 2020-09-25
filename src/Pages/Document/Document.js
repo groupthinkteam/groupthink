@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import { useParams, useLocation, Redirect, Link, useHistory } from "react-router-dom";
 import MenuBar from "../../components/MenuBar/MenuBar";
 import CardManager from "../../components/DocumentCanvas/CardManager";
@@ -9,19 +9,19 @@ export default function Document(props) {
   const history = useHistory();
   const { projectID } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
-  const [permission , setPermission] = useState(null);
+  const [permission, setPermission] = useState(null);
   //console.log(projectID);
   useEffect(() => {
     (async () => {
-      const  isChildPermission= await isChild(projectID);
+      const isChildPermission = await isChild(projectID);
       setIsLoaded(true);
-      
+
       //---Check For Child Validation--
-      if(isChildPermission == null) {
+      if (isChildPermission == null) {
         history.push('/dashboard')
       }
       //---Permission Associated -----
-      else{
+      else {
         setPermission(isChildPermission);
       }
     })()
@@ -37,19 +37,20 @@ export default function Document(props) {
       />
     )
   }
-  if(!isloaded){
+  if (!isloaded) {
     return <Loading />
   }
   return (
     <div>
-      <MenuBar onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID}/>
+      <MenuBar style={{ position: "absolute", zIndex: 0}}
+        onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID} />
       {
         permission != null ?
-        <CardManager
-          projectID={projectID}
-          permission={permission}
-        />
-        :<div></div>
+          <CardManager
+            projectID={projectID}
+            permission={permission}
+          />
+          : <div></div>
       }
     </div>
   );

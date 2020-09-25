@@ -21,18 +21,20 @@ export default function GenericCard(props) {
             function dragStop() {
                 props.cardAPI.saveMove(props.id, { x: this.x, y: this.y });
             }
-            Draggable.create(
-                ".card",
+            let y = Draggable.create(
+                "#".concat(props.id),
                 {
                     autoScroll: 1,
                     onDrag: drag,
                     onDragEnd: dragStop
                 })
+            console.log(y)
+            return () => y[0].kill()
         }, []
     )
 
     return (
-        <div className="card custom_card border-0" style={{ width: 350, height: 200, position: "absolute" }}>
+        <div id={props.id} className="card custom_card border-0" style={{ width: 350, height: 200, position: "absolute" }}>
             <div className="card-handle card-title-bar">
                 <button className="absolute delete_btn wh-20p rounded-circle"
                     onClick={() => props.cardAPI.remove(props.id, props.card.parent, props.card.children, props.type)}>
