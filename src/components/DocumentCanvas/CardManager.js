@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import CardContainer from "./CardContainer";
-import { firebaseDB, firbaseStorage } from "../../services/firebase";
-import { auth } from "firebase";
+import { firebaseDB, firebaseStorage } from "../../services/firebase";
 
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
@@ -44,6 +43,7 @@ export default function CardManager(props) {
             projectRef.child("center").off();
             projectRef.child("container").off();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     /**
@@ -90,72 +90,45 @@ export default function CardManager(props) {
         });
     }
 
-    const removeCard = (id, parentId, children, type) => {
+    /**
+     * remove a card or a subtree from the document
+     * @param {string} id - the card on which to perform the operaiton
+     * @param {string} strategy - the deletion strategy "recursive" or "reparent"
+     * @param {string} newParent - !only used with the `reparent` strategy! the card 
+     * that will now become the parent of the immediate descendents of the deleted card
+     * @todo remove all storage files associated with the deleted cards
+     */
+    const removeCard = (id, strategy, newParent) => {
         let updates = {};
-        console.log("removeCard Params", id, parentId, children, type)
-        if (props.projectID === parentId) {
-            updates["documents/" + props.projectID + "/nodes/" + id] = null;
-        }
-        else {
-            updates["documents/" + props.projectID + "/nodes/" + parentId + "/children/" + id] = null;
-            updates["documents/" + props.projectID + "/nodes/" + id] = null;
-        }
-        //---Childrens Should be deleted---
-        const ChildrenDelete = (children) => {
-            if (children != null || children != undefined) {
-                Object.entries(children)
-                    .map((key, val) => {
-                        //console.log("Children Key",key[0])
-                        updates["documents/" + props.projectID + "/nodes/" + key[0]] = null;
-                        FirebaseSearchPath(key[0])
-                    })
-            }
-        }
-        const FirebaseSearchPath = (id) => {
-            firebaseDB.ref("documents/" + props.projectID + "/nodes/" + id + "/").on('value', snap => {
-                //console.log("Snapshot",snap.val()?.children)
-                if (snap.val()?.children != null || snap.val()?.children != undefined)
-                    ChildrenDelete(snap.val().children)
-            })
-        }
-        if (children != null || children != undefined) {
-            ChildrenDelete(children)
-        }
-        setCards({ ...cards, [id]: undefined });
-        firebaseDB.ref().update(updates).then(console.log("deleted", id, "successfully"))
-        //-----------If File is Uploaded -----------
-        if (!(type === 'link' || type === 'blank')) {
-            const path = auth().currentUser?.uid + "/" + props.projectID + "/" + id + "/" + type + "/";
-            const deleteFile = (pathToFile, fileName) => {
-                const ref = firbaseStorage().ref(pathToFile);
-                const childRef = ref.child(fileName);
-                childRef.delete().then(console.log("File Deleted"))
-            }
-            const deleteFolderContents = (path) => {
-                var storageRef = firbaseStorage().ref(path);
-                storageRef.listAll()
-                    .then((dir) => {
-                        //-------Files Exist-------
-                        if (dir.items.length > 0) {
-                            dir.items.forEach((fileRef) => {
-                                deleteFile(storageRef.fullPath, fileRef.name)
-                            })
-                            dir.prefixes.forEach(folderRef => {
-                                deleteFolderContents(folderRef.fullPath);
-                            })
-                        }
-                        else {
-                            console.log("No Files Exist")
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            }
+        updates[id] = null;
+        updates[cards[id]["parent"] + "/children/" + id] = null;
 
-            deleteFolderContents(path)
-            //storageRef.delete().then(console.log("File Deleted Successfully")).catch((err)=>console.log(err))
+        /**
+         * do a depth-first traversal of the subtree rooted at `id` and add
+         * every element to updates{} for removal
+         * @param {Array} queue 
+         */
+        const depthFirstTraversal = (queue) => {
+            while (queue.length > 0) {
+                let poppedID = queue.pop();
+                updates[poppedID] = null;
+                queue.concat(Object.keys(cards[poppedID]["children"]))
+            }
         }
+
+        switch (strategy) {
+            case "recursive":
+                depthFirstTraversal(Object.keys(cards[id]["children"]));
+                break;
+            case "reparent":
+                Object.keys(cards[id]["children"])
+                    .forEach(child => updates[child + "/parent"] = newParent);
+                break;
+            default:
+                break;
+        }
+
+        projectRef.update(updates).then(console.log("deleted", id, "successfully"))
     }
 
     /**
@@ -247,128 +220,81 @@ export default function CardManager(props) {
     }
 
     /**
-     * --------------- Storage Operation Function ---------------*/
-    const StoreFileToStorage = (path, file, metadata, callback) => {
-        var spaceRef = firbaseStorage().ref(path).put(file, metadata);
-        spaceRef.on(firbaseStorage.TaskEvent.STATE_CHANGED,
-            function (snapshot) {
-                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
-                switch (snapshot.state) {
-                    case firbaseStorage.TaskState.SUCCESS:
-                        console.log("Upload is Success")
-                        break;
-                    case firbaseStorage.TaskState.PAUSED: // or 'paused'
-                        console.log('Upload is paused');
-                        break;
-                    case firbaseStorage.TaskState.RUNNING: // or 'running'
-                        console.log('Upload is running');
-                        break;
-                    default:
-                        break;
-                }
-            },
-            function (error) {
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                        console.log(" User doesn't have permission to access the object")
-                        break;
-
-                    case 'storage/canceled':
-                        console.log("Storage Cancelled")
-                        break;
-
-
-                    case 'storage/unknown':
-                        console.log(" Unknown error occurred, inspect \n", error.serverResponse)
-                        break;
-                    default:
-                        break;
-                }
-            }, // or 'state_changed'
-            () => {
-                spaceRef.snapshot.ref.getDownloadURL()
-                    .then((url) =>
-                        spaceRef.snapshot.ref.getMetadata()
-                            .then((data) => {
-                                callback({ url: url, metadata: data })
-                            })
-                            .catch((err) => console.log("Error in Metadata", err))
-                    )
-                    .catch((err) => console.log("Error in DownLoadURL", err))
-            }
-        );
+     * uploads `file` to `path` in the storage bucket
+     * @param {blob} file - the file to be uploaded
+     * @param {object} metadata - the metadata object associated with the file
+     * @param {string} path - a path relative to project_id
+     * @param {function(number)} statusCallback - a callback that receives a number [0, 100] indicating upload progress
+     */
+    const requestUpload = (file, metadata, path, statusCallback) => {
+        let requestedPathRef = firebaseStorage().ref(props.projectID + path);
+        let unsubscribe = requestedPathRef.put(file, metadata)
+            .on(firebaseStorage.TaskEvent.STATE_CHANGED,
+                (snapshot) => {
+                    let progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+                    switch (snapshot.state) {
+                        case firebaseStorage.TaskState.SUCCESS:
+                            statusCallback(100);
+                            unsubscribe();
+                            break;
+                        case firebaseStorage.TaskState.RUNNING:
+                            statusCallback(progress);
+                            break;
+                        default:
+                            console.log("error uploading")
+                            break;
+                    }
+                })
     }
 
     /**
-     * used to get a file and associated metadata from the storage bucket
+     * get a file and associated metadata (sans permissions) from the storage bucket
      * @param {string} path - the relative path of the requested file (starting from card id)
-     * @param {function} callback - a function that takes (file, metadata) as arguments
+     * @param {function(string, object)} callback - a function that takes (`downloadURL`, `metadata`) as arguments
      */
     const requestDownload = (path, callback) => {
-        var spaceRef = firbaseStorage().ref().child(props.projectID)
-        spaceRef.listAll()
-            .then((dir) => {
-                //-------Files Exist-------
-                if (dir.items.length > 0) {
-                    dir.items.forEach((fileRef, index) => {
-                        fileRef.getMetadata()
-                            .then((data) => {
-                                fileRef.getDownloadURL()
-                                    .then((url) => {
-                                        callback(prev => ([
-                                            ...prev,
-                                            { metadata: data, url: url }]
-                                        ))
-                                    })
-                            })
-                    })
-                }
-                else {
-                    console.log("No Files Exist")
-                }
+        let requestedPathRef = firebaseStorage().ref(props.projectID + path)
+        requestedPathRef.getDownloadURL()
+            .then((url) => {
+                requestedPathRef.getMetadata()
+                    .then((metadata) =>
+                        // remove permissions from metadata sent to callback    
+                        callback(url, {
+                            ...metadata, customMetadata: {
+                                ...metadata["customMetadata"], permissions: undefined
+                            }
+                        }))
+                    .catch((reason) => console.log("failed to fetch metadata for", path, "because", "reason"))
             })
-            .catch(error => {
-                console.log(error);
-            });
+            .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     }
 
-    /**bundling card api methods for ease of transmission */
-    let cardAPI = {
-        add: addCard,
-        remove: removeCard,
-        changePosition: changePosition,
-        savePosition: savePosition,
-        resize: resize,
-        change: changeContent,
-        save: saveContent,
-        storeFile: StoreFileToStorage,
-        displayFile: GetFileFromStorage
-    }
-
+    /**
+     * bundling card api methods for ease of transmission 
+     */
     let genericAPI = {
-        savePosition: changePosition,
-        changePosition: savePosition,
-        reparent: "todo",
-        remove: removeCard,
-        addChild: "todo"
+        savePosition: savePosition,
+        changePosition: changePosition,
+        reparentCard: reparentCard,
+        removeCard: removeCard,
+        addChild: addCard,
+        resize: resize
     }
 
     let typeAPI = {
         meta: ["id", "type", "parent", "children[]", "content{}", "size", "position"],
-        saveContent: "todo",
-        changeContent: "todo",
-        requestFilePick: "todo",
-        requestUpload: "todo",
-        requestDownload: "todo"
+        saveContent: saveContent,
+        changeContent: changeContent,
+        requestUpload: requestUpload,
+        requestDownload: requestDownload
     }
 
     return (
         <CardContainer
             container={container}
             cards={cards}
-            cardAPI={cardAPI}
+            genericAPI={genericAPI}
+            typeAPI={typeAPI}
             projectID={props.projectID}
             permission={props.permission}
         />

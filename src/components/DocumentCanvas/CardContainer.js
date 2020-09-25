@@ -1,8 +1,5 @@
 import React from "react";
 import GenericCard from "./Cards/GenericCard"
-import Button from "../Button/Button"
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 
 /**
  * props:
@@ -10,15 +7,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
  * @param {*} props 
  * 
  */
-
-// props:
-// 1. cards: an object containing cardID: card_info entries
-// 2. cardAPI: methods that set card params/other card stuff
-// 3. projectID: firebase id of the current project
-// 3. //TODO: container resizing
 export default function CardContainer(props) {
     const cardAPI = props.cardAPI; // for brevity
-    //console.log("Card API \n ",url);
     return (
         <div className="card-container w-100 main_card"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1 }}>

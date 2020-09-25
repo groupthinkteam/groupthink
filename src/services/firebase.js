@@ -18,5 +18,5 @@ firebase.initializeApp(FIREBASE_CONFIG);
 export const firebaseAuth = firebase.auth;
 export const firebaseDB = firebase.database();
 export const firebaseTIME = firebase.database.ServerValue.TIMESTAMP;
-export const firbaseStorage = firebase.storage;
+export const firebaseStorage = firebase.storage;
 export const firebaseStoreRef = firebase.storage().ref();
