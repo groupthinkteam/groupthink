@@ -10,26 +10,28 @@ import BlankCard from "./types/BlankCard";
 
 // returns a CardType component based on "type"
 export default function cardChooser(type) {
-    switch (type) {
-        case "blank":
-            return BlankCard;
-        case "text":
-            return TextCard;
-        case "onlineVideo":
-            return YoutubeCard;
-        case "offlineVideo":
-            return VideosCard;
-        case "image":
-            return ImagesCard;
-        case "audio":
-            return AudiosCard;
-        case "link":
-            return LinkCard;
-        case "pdf":
-            return PDFCard;
-        case "file":
-            return FilesCard;
-        default:
-            break;
-    }
+    console.log(type)
+    return AudiosCard
+    // switch (type) {
+    //     case "blank":
+    //         return BlankCard;
+    //     case "text":
+    //         return TextCard;
+    //     case "onlineVideo":
+    //         return YoutubeCard;
+    //     case "offlineVideo":
+    //         return VideosCard;
+    //     case "image":
+    //         return ImagesCard;
+    //     case "audio":
+    //         return AudiosCard;
+    //     case "link":
+    //         return LinkCard;
+    //     case "pdf":
+    //         return PDFCard;
+    //     case "file":
+    //         return FilesCard;
+    //     default:
+    //         return BlankCard;
+    // }
 }
