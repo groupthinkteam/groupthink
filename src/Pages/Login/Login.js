@@ -2,6 +2,15 @@ import React from 'react'
 import { Redirect, useLocation, useParams } from "react-router-dom"
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 import "../../styles/login.scss";
+/**
+ * This Is Login Component Provide Option to Sign-IN 
+ * Opens When User Logout or NOt Signed in .
+ * When Invitation Link is Given For New User It will Redirect To Invitation Page
+ * @param {*} props Following are the props
+ * @constant {firebase.auth} auth Firebase Auth Function
+ * @constant {StyledFirebaseAuth} uiConfig StyledFirebaseAuth Configuration
+ * @constant authState Containes Authentication State
+ */
 export default function LoginPage(props) {
   const location = useLocation()
   let path = "/dashboard"

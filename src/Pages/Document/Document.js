@@ -4,12 +4,27 @@ import MenuBar from "../../components/MenuBar/MenuBar";
 import CardManager from "../../components/DocumentCanvas/CardManager";
 import isChild from "../Splash/SearchChild";
 import Loading from "../../components/Loading";
+
+/**
+ * This File Opens The Project Detail Page At Path :- `/projects/"projectID"`
+ * @component
+ * @param {*} props Following Are The Props :
+ * @constant ` CurrentUser` :- Contains UID And USer's Info 
+ * @function `signOut()` :- This Function Sign Out from Project
+ * @returns  `JSX Element Consists of Menu Bar &  Card Manager`
+ */
+
 export default function Document(props) {
   const location = useLocation();
   const history = useHistory();
   const { projectID } = useParams();
+  
+  /**State Store Boolean If Loaded or Not */
   const [isloaded, setIsLoaded] = useState(false);
+
+  /**State Stores Permission of Project */
   const [permission , setPermission] = useState(null);
+
   //console.log(projectID);
   useEffect(() => {
     (async () => {

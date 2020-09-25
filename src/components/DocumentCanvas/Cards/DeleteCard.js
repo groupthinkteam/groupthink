@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import Button from '../../Button/Button';
-
+/**
+ * This File Display Delete Button Associated With Modal That
+ * Displays The Options TO delete card .
+ * @param {*} props 
+ * The Props Consist of :
+ * @property ClassName
+ * @property id 
+ * @constant CardDetail
+ * @function deleteCard(operation)
+ * @function reparent(id)
+ * @function showOption()
+ */
 const DeleteCard = (props) =>
 {
     const [show, setShow] = useState(false);
@@ -33,8 +44,6 @@ const DeleteCard = (props) =>
             handleClose();
         }
     }
-    //---TODO Check this Log---
-    //console.log(props.CardDetail?.children)
     return(
         <>
             <div>            

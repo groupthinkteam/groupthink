@@ -11,76 +11,23 @@ import LinkCard from "./types/LinkCard";
 import { useDrop } from 'react-dnd';
 import { useDrag } from 'react-dnd';
 
-
 import "../../../styles/Cards/GenericCard.scss";
 import DeleteCard from "./DeleteCard";
 import { Button } from "react-bootstrap";
-// props
-// --------
-// id:
-// type:
-// content: 
-// cardAPI:
-// parent:
-// Types Of Card
-// --------
 
-//--------Common Type Box----
-const ItemTypes = {
-    BOX: 'box',
-  } 
-//-----Drop BOX-----
-const DropBoxCard = (props) =>
-{
-    const style = {
-        height: "50px",
-        width: props.CardDetail.size.width,
-        marginRight: '1.5rem',
-        marginBottom: '1.5rem',
-        color: 'white',
-        padding: '1rem',
-        textAlign: 'center',
-        fontSize: '1rem',
-        lineHeight: 'normal',
-        float: 'left',
-      }
-    const [{ canDrop, isOver }, drop] = useDrop({
-        accept: ItemTypes.BOX,
-        drop: () => ({ name: props.id }),
-        collect: (monitor) => ({
-          isOver: monitor.isOver(),
-          canDrop: monitor.canDrop(),
-        }),
-    })
-    const isActive = canDrop && isOver
-    let backgroundColor = '#222'
-    if (isActive) 
-    {
-      backgroundColor = 'darkgreen'
-      
-    }else if (canDrop) {
-      backgroundColor = 'darkkhaki'
-    }
-    return(
-        <div ref={drop} style={{ ...style, backgroundColor }}>
-            {isActive ? 'Release to drop' : 'Drop To Reparent'}
-        </div>
-    )
-}
-const DisplayTextCard = (props)=>
-{
-    const onContentChange = (content) => props.cardAPI.change(props.id, content);
-    const onSave = (content) => {
-        props.cardAPI.save(props.id, content);
-    }
-    return(
-        <TextCard
-                content={props.cardDetail.content}
-                onContentChange={(text) => onContentChange(text)}
-                onSave={(text) => onSave(text)}
-            />
-    )
-}
+/**
+ * @component
+ * Generic Card
+ * 
+ * Following are the Props.
+ * @constant ProjectID
+ * @property type:
+ * @property content: 
+ * @function cardAPI:
+ * @property parent:
+ * @property Types Of Card
+ */
+
 //------Drag Box-----
 export default function GenericCard(props) {
     const [showOptionsForReparent , setOptionsForReparent] = useState(true);
@@ -128,7 +75,6 @@ export default function GenericCard(props) {
     let flag=true
     if(props.cardDetail.parent === props.projectID)
     {flag=false}
-    //console.log(showOptionsForReparent , CardDetail.children)
     return (
         <>
         <div className="card custom_card border-0" >
@@ -227,4 +173,59 @@ export default function GenericCard(props) {
         </>
     )
 }
-
+//--------Common Type Box----
+const ItemTypes = {
+    BOX: 'box',
+  } 
+//-----Drop BOX-----
+const DropBoxCard = (props) =>
+{
+    const style = {
+        height: "50px",
+        width: props.CardDetail.size.width,
+        marginRight: '1.5rem',
+        marginBottom: '1.5rem',
+        color: 'white',
+        padding: '1rem',
+        textAlign: 'center',
+        fontSize: '1rem',
+        lineHeight: 'normal',
+        float: 'left',
+      }
+    const [{ canDrop, isOver }, drop] = useDrop({
+        accept: ItemTypes.BOX,
+        drop: () => ({ name: props.id }),
+        collect: (monitor) => ({
+          isOver: monitor.isOver(),
+          canDrop: monitor.canDrop(),
+        }),
+    })
+    const isActive = canDrop && isOver
+    let backgroundColor = '#222'
+    if (isActive) 
+    {
+      backgroundColor = 'darkgreen'
+      
+    }else if (canDrop) {
+      backgroundColor = 'darkkhaki'
+    }
+    return(
+        <div ref={drop} style={{ ...style, backgroundColor }}>
+            {isActive ? 'Release to drop' : 'Drop To Reparent'}
+        </div>
+    )
+}
+const DisplayTextCard = (props)=>
+{
+    const onContentChange = (content) => props.cardAPI.change(props.id, content);
+    const onSave = (content) => {
+        props.cardAPI.save(props.id, content);
+    }
+    return(
+        <TextCard
+                content={props.cardDetail.content}
+                onContentChange={(text) => onContentChange(text)}
+                onSave={(text) => onSave(text)}
+            />
+    )
+}

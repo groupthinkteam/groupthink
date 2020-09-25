@@ -19,6 +19,11 @@ export default function CardManager(props) {
     /**project reference in firebase db */
     const projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
 
+    /**Project Path In Storage 
+     * 
+     * `root/projectID/` To concate the Id*/
+    const storageRef = "root/"+props.projectID+"/";
+
     useEffect(() => {
         // TODO: split the nodes listener into separate ones for "child_added", 
         // "child_removed" and so on reduce size of snapshot received
@@ -276,7 +281,19 @@ export default function CardManager(props) {
         setCards({ ...cards, [newCardKey]: blankCard });
         projectRef.child(newCardKey).set(blankCard).then(console.log("added new card with key", newCardKey));
     }
-    
+    /**
+     * This Function Perform Reparent With the Following Checks :
+     * 
+     * 1. Requested Id and Acquired ID are Not Same .
+     * 
+     * 2. Acquired Id Should Not be the Children of Requested Id
+     * 
+     * 3. In Case of Any Operation Only Childrens of Requested ID Should be Reparent To Acquired ID 
+     * Not the SubChildrens. 
+     * @param {*} acquiredId It is the Id on which reparent is going to perform 
+     * @param {*} operation Optional Param When Any Specific Operation Needs to perform
+     *  @customfunction
+     */
     const acquireId =(acquiredId,operation) =>
     {
         let flag=0;
@@ -393,8 +410,15 @@ export default function CardManager(props) {
     
     const StoreFileToStorage = (id, file, metadata, callback) => {
         const type = cards[id].type;
-        const path = auth().currentUser?.uid + "/" + props.projectID + "/" + id + "/" +type+ "/" + file.name
-        var spaceRef = firbaseStorage().ref(path).put(file, metadata);
+        const path = storageRef + id + "/"  + file.name
+        const customizedData = {
+            contentType: metadata.contentType,
+            customMetadata:{
+                [auth().currentUser.uid] : props.permission
+            }
+        } 
+        console.log('Metadata Got',customizedData)
+        var spaceRef = firbaseStorage().ref(path).put(file, customizedData);
         spaceRef.on(firbaseStorage.TaskEvent.STATE_CHANGED,
             function (snapshot) {
                 // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
@@ -450,7 +474,7 @@ export default function CardManager(props) {
      */
     const GetFileFromStorage = (id, callback) => {
         const type = cards[id].type;
-        const path = auth().currentUser?.uid + "/" + props.projectID + "/" + id + "/" +type+ "/" 
+        const path = storageRef + id + "/" 
         var spaceRef = firbaseStorage().ref(path)
         spaceRef.listAll()
             .then((dir) => {
@@ -477,7 +501,9 @@ export default function CardManager(props) {
                 console.log(error);
             });
     }
-    /**bundling card api methods for ease of transmission */ 
+    /**
+     * @exports bundling card api methods for ease of transmission
+     */ 
     let cardAPI = {
         add: addCard,
         remove: onDelete,

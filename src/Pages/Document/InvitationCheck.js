@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import Loading from "../../components/Loading";
 import isChild from "../Splash/SearchChild";
 import * as Crypto from 'crypto-js';
-export default function InvitationCheck(props) 
+
+/**
+ * This File Validates The URL `project/projectID/:permission`
+ * If Valid Then Redirects to `projects/:projectid`
+ * If Not then Redirect to Error Containing in Link
+ * And Till That Time Loader is Rendered
+ */
+export default function InvitationCheck() 
 {
   const location = useLocation() 
   const history = useHistory();
   const { projectID ,permissionID} = useParams();
-  React.useEffect(() => {
+  useEffect(() => {
     (async () => {
       var  decryptPermissionID ;
       //----------Decrypt Credentials-----
