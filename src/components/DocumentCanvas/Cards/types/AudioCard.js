@@ -1,53 +1,54 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
-import { auth } from 'firebase';
 
-const AudiosCard = (props) =>{
-    
-    console.log("PROPS",props.id,props.content)
-    const listOfExtension= "audio/* "
-    const requestUpload =  (e) =>
-    {
+const AudiosCard = (props) => {
+    console.log("PROPS", props)
+
+    let [uploading, setUploading] = useState(false);
+
+    const listOfExtension = "audio/* "
+    const requestUpload = (e) => {
         const file = e.target.files[0];
+        console.log(file)
         var metadata = {
             contentType: file.type
         };
-        props.typeAPI.requestUpload(props.id,file,metadata,(data) =>{
-            props.typeAPI.saveContent(props.id,{uploadStatus : data})
+        let uploadPath = props.id + "/" + file.lastModified
+        props.typeAPI.requestUpload(uploadPath, file, metadata, (percentProgress) => {
+            if (percentProgress === 100) {
+                setUploading("uploaded")
+                props.typeAPI.requestDownload(
+                    uploadPath,
+                    (url, metadata) => props.typeAPI.saveContent(props.id, { url: url, metadata: metadata })
+                )
+            }
+            else {
+                setUploading(percentProgress)
+            }
         })
     }
-    const requestDownload = () =>
-    {
-        props.typeAPI.requestDownload(props.id , (url,metadata) =>{
-            props.typeAPI.saveContent(props.id,{url:url || 'blank' , metadata:metadata || 'blank'})
-        })
-    }
-    const content = props.content;
-    return(
-       
-            <div>
-                
-                <input
-                    type="file"
-                    accept={listOfExtension}
-                    onChange={(e)=> requestUpload(e)}
-                />
-                {
-                    // content != undefined || content?.metadata != 'blank' ?
-                    // <div key={content.metadata.name}>
-                    //     File Name : {content.metadata.name}
-                    //     <ReactAudioPlayer
-                    //         src={content.url}
-                    //         autoPlay={false}
-                    //         controls={true}   
-                    //     />
-                    // </div>
-                    // :<div/>    
-                }
-                                                
-                <requestDownload/>
-            </div>
-       
+
+    return (
+        <div>
+            {uploading ? "upload progress: " + uploading : "not uploading"}
+            <input
+                type="file"
+                accept={listOfExtension}
+                onChange={(e) => requestUpload(e)}
+            />
+            { props.content.url ?
+                <div key={props.content.metadata.name}>
+                    File Name : {props.content.metadata.name}
+                    <ReactAudioPlayer
+                        src={props.content.url}
+                        autoPlay={false}
+                        controls={true}
+                    />
+                </div>
+                : null
+            }
+        </div>
+
     )
 }
 export default AudiosCard;

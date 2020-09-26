@@ -10,17 +10,14 @@ gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 export default function GenericCard(props) {
-    const [propsState , setProps] = useState();
     let CardType = cardChooser(props.card?.type);
-    console.log("Generic Props",props)
-    useEffect(
-        () => gsap.set("#".concat(props.id), props.card.position)
-        , [props.card.position])
+    console.log("Generic Props", props)
+    // useEffect(
+    //     () => gsap.set("#".concat(props.id), props.card.position)
+    //     , [props.id, props.card.position])
     useEffect(
         () => {
             // warning: can't use arrow functions here since that messes up the "this" binding
-            if(props.id != "undefined")
-            {setProps(props)}
             function drag() {
                 console.log("now that was a drag");
                 this.update();
@@ -35,10 +32,10 @@ export default function GenericCard(props) {
                     onDrag: drag,
                     onDragEnd: dragStop
                 })
-            console.log("Y",y)
-            
-            return () => y[0].kill()
-        }, [0]
+            console.log("Y", y)
+
+            // return () => y[0].kill()
+        }, []
     )
 
     return (
@@ -60,7 +57,7 @@ export default function GenericCard(props) {
                     <span className="rounded-circle">+</span>
                 </button>
             </div>
-            <CardType typeAPI={props.typeAPI} content={props.card.content} id={props.id}/>
+            <CardType typeAPI={props.typeAPI} content={props.card.content} id={props.id} />
         </div>
     )
 }

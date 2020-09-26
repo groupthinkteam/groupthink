@@ -8,6 +8,8 @@ import { firebaseDB, firebaseStorage } from "../../services/firebase";
  * @param {*} props 
  */
 export default function CardManager(props) {
+    const [isLoaded, setIsLoaded] = useState(false);
+
     // store container-related state
     const [container, setContainer] = useState({ width: 600, height: 800 });
     const containerRef = useRef({});
@@ -37,6 +39,7 @@ export default function CardManager(props) {
             console.log("triggered container size listener, received payload", snapshot.val());
             setContainer(snapshot.val());
         });
+        setIsLoaded(true)
         return () => {
             projectRef.child("nodes").off();
             projectRef.child("center").off();
@@ -49,21 +52,21 @@ export default function CardManager(props) {
      * add a new card with the specified type, position, and parent
      * @param {{x: number, y: number}} position - the initial position of the card
      * @param {{width: number, height: number}} size - the initial size of the card
-     * @param {string} parent - (optional) the id of the parent card. default: "root"
-     * @param {string} type - (optional) the card type (e.g. "audio", "image", "text"). default: "blank"
+     * @param {string} newparent - (optional) the id of the parent card. default: "root"
+     * @param {string} newtype - (optional) the card type (e.g. "audio", "image", "text"). default: "blank"
      */
-    const addCard = (position, size, parent, type) => {
+    const addCard = (position, size, newparent, newtype) => {
         // schema for new card
-        let parents = parent || "root"
-        let types = type || "blank"
+        let parent = newparent || "root"
+        let type = newtype || "blank"
         const newCard = {
-            type: types,
+            type: type,
             size: size,
             position: position,
             content: {
                 text: `This is a ${type} Card`
             },
-            parent: parents
+            parent: parent
         }
 
         // create new key for child in ".../nodes"
@@ -73,18 +76,18 @@ export default function CardManager(props) {
         // a) push the new card schema 
         // b) update the "children" property of parent
         let updates = {};
-        updates[parents + "/children/" + newCardKey] = 1;
+        updates[parent + "/children/" + newCardKey] = 1;
         updates[newCardKey] = newCard;
-        projectRef.update(updates).then(console.log("Added a new child", newCardKey, "under", parents));
+        projectRef.update(updates).then(console.log("Added a new child", newCardKey, "under", parent));
 
         // update local state
         setCards({
             ...cards,
             [newCardKey]: newCard,
-            [parents]: {
-                ...cards[parents],
+            [parent]: {
+                ...cards[parent],
                 children: {
-                    ...cards[parents]["children"],
+                    ...cards[parent]["children"],
                     [newCardKey]: 1
                 }
             }
@@ -222,13 +225,12 @@ export default function CardManager(props) {
 
     /**
      * uploads `file` to `path` in the storage bucket
+     * @param {string} uploadPath - a path relative to projectID/
      * @param {blob} file - the file to be uploaded
      * @param {object} metadata - the metadata object associated with the file
-     * @param {string} id - The Card Id Who requested to Upload
      * @param {function(number)} statusCallback - a callback that receives a number [0, 100] indicating upload progress
      */
-    const requestUpload = (id,file, metadata,  statusCallback) => {
-        const path = "root/"+props.projectID+"/"+id;
+    const requestUpload = (uploadPath, file, metadata, statusCallback) => {
         let custom = {
             ...metadata,
             customMetadata: {
@@ -237,6 +239,7 @@ export default function CardManager(props) {
                 }
             }
         }
+        const path = "root/" + props.projectID + "/" + uploadPath;
         let requestedPathRef = firebaseStorage().ref(path);
         let unsubscribe = requestedPathRef.put(file, custom)
             .on(firebaseStorage.TaskEvent.STATE_CHANGED,
@@ -259,11 +262,11 @@ export default function CardManager(props) {
 
     /**
      * get a file and associated metadata (sans permissions) from the storage bucket
-     * @param {string} id - the Card Id for the requested file (starting from card id)
+     * @param {string} downloadPath - - a path relative to projectID/
      * @param {function(string, object)} callback - a function that takes (`downloadURL`, `metadata`) as arguments
      */
-    const requestDownload = (id, callback) => {
-        const path = "root/"+props.projectID+"/"+id;
+    const requestDownload = (downloadPath, callback) => {
+        const path = "root/" + props.projectID + "/" + downloadPath;
         let requestedPathRef = firebaseStorage().ref(path)
         requestedPathRef.getDownloadURL()
             .then((url) => {
@@ -300,12 +303,18 @@ export default function CardManager(props) {
     }
 
     return (
-        <CardContainer
-            container={container}
-            cards={cards}
-            genericAPI={genericAPI}
-            typeAPI={typeAPI}
-            permission={props.permission}
-        />
+        isLoaded ?
+            <CardContainer
+                container={container}
+                cards={cards}
+                genericAPI={genericAPI}
+                typeAPI={typeAPI}
+                permission={props.permission}
+            />
+            :
+            <div>
+                Loading...
+            </div>
+
     )
 }

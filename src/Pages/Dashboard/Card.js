@@ -5,7 +5,7 @@ import InlineTextEdit from "../../components/InlineTextEdit/InlineTextEdit"
 import "../../styles/ProjectCard.scss"
 import "../../styles/custom.scss"
 
-export default function Card(props) {
+function Card(props) {
 
     if (props.addNew) {
         return (
@@ -37,3 +37,5 @@ export default function Card(props) {
         )
     }
 }
+
+export default React.memo(Card)

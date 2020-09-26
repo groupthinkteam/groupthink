@@ -23,10 +23,9 @@ export default function CardContainer(props) {
                 }} />
 
             {
-                props.cards ? Object.entries(props.cards).filter(([id, card]) => id != "undefined" ).map(
+                props.cards ? Object.entries(props.cards).filter(([id, card]) => id && id !== "root").map(
                     ([id, card]) => {
-                        if(id != undefined )
-                        return(
+                        return (
                             <GenericCard
                                 id={id}
                                 card={card}
@@ -34,7 +33,6 @@ export default function CardContainer(props) {
                                 typeAPI={props.typeAPI}
                             />
                         )
-                        else return(<div/>)
                     }
                 ) : <p>Double Click to Add a Card</p>
             }
