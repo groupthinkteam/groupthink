@@ -3,7 +3,7 @@ import PDFCard from "./types/PDFCard";
 import ImagesCard from "./types/ImagesCard";
 import FilesCard from "./types/FilesCard";
 import VideosCard from "./types/VideoCard";
-import AudiosCard from "./types/AudioCard";
+import AudioCard from "./types/AudioCard";
 import LinkCard from "./types/LinkCard";
 import TextCard from "./types/TextCard";
 import BlankCard from "./types/BlankCard";
@@ -11,7 +11,7 @@ import BlankCard from "./types/BlankCard";
 // returns a CardType component based on "type"
 export default function cardChooser(type) {
     console.log(type)
-    return AudiosCard
+    return AudioCard
     // switch (type) {
     //     case "blank":
     //         return BlankCard;
@@ -24,7 +24,7 @@ export default function cardChooser(type) {
     //     case "image":
     //         return ImagesCard;
     //     case "audio":
-    //         return AudiosCard;
+    //         return AudioCard;
     //     case "link":
     //         return LinkCard;
     //     case "pdf":

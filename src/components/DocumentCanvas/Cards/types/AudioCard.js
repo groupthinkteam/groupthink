@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import ReactAudioPlayer from 'react-audio-player';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/src/styles.scss';
 
-const AudiosCard = (props) => {
+const AudioCard = (props) => {
     let [uploading, setUploading] = useState(false);
 
     const listOfExtension = "audio/* "
@@ -38,10 +39,10 @@ const AudiosCard = (props) => {
             { props.content.url ?
                 <div key={props.content.metadata.name}>
                     File Name : {props.content.metadata.name}
-                    <ReactAudioPlayer
+                    <AudioPlayer
                         src={props.content.url}
-                        autoPlay={false}
-                        controls={true}
+                        showDownloadProgress="false"
+                        preload="metadata"
                     />
                 </div>
                 : null
@@ -50,30 +51,4 @@ const AudiosCard = (props) => {
 
     )
 }
-export default AudiosCard;
-/**
- *  {
-                    (audioState != null || audioState != undefined) && audioState.length>0?
-                    <div>
-                        Previously Uploaded Audios
-                        {
-                            audioState
-                            .map((item)=>(
-                                <div key={item.metadata.name}>
-                                    File Name : {item.metadata.name}
-                                    <ReactAudioPlayer
-                                        src={item.url}
-                                        autoPlay={false}
-                                        controls={true}
-                                        style={{width:`${props.CardDetail?.size.width}px`}}
-                                    />
-                                </div>
-                            ))
-                        }
-                    </div>
-                    :<div></div>
-                }
-                {
-                    state?.src != undefined ? <ShowFileUploaded src={state} cardAPI={props.cardAPI} width={props.CardDetail?.size.width}  projectID={props.projectID} id={props.id}/> : <div></div>
-                }
- */
+export default AudioCard;
