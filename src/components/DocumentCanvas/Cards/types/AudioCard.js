@@ -1,65 +1,58 @@
 import React,{useState,useEffect} from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import { auth } from 'firebase';
-const ShowFileUploaded = (props) =>{
-    const [audioState , setAudioState] = useState();
-    const cardAPI = props.cardAPI;
-    var file = props.src.src;
-    let url = 0;
-    const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "audios/" + file.name
-    var metadata = {
-        contentType: `${props.src.src.type}`
-    };
-    useEffect(()=>{
-        cardAPI.storeFile(refURL,file,metadata,data=>{
-            setAudioState(data)
-        })
-    },[url])
-    return(
-      <div>
-        Audio is Uploaded
-        {
-            audioState != undefined ?
-            <div>
-                <ReactAudioPlayer
-                    src={audioState.url}
-                    autoPlay={false}
-                    controls={true}
-                    style={{width:`${props.width}px`}}
-                />
-            </div>
-            :<div>Audio Uploading</div>
-        }       
-      </div>
-    )
- }
-const AudiosCard = (props) =>{
-    const [state , setState]= useState()
-    //console.log(state)
-    const [audioState , setAudioState] = useState([]);
-    const listOfExtension= "audio/* "
-    const cardAPI = props.cardAPI;
 
-    const OnSelectFile = (e) =>
+const AudiosCard = (props) =>{
+    
+    console.log("PROPS",props.id,props.content)
+    const listOfExtension= "audio/* "
+    const requestUpload =  (e) =>
     {
-        console.log(e.target.files[0])
-        setState({src:e.target.files[0]})
-    }
-    const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "audios/"
-    useEffect(()=>{
-        cardAPI.displayFile(refURL ,data =>{
-            setAudioState(data)
+        const file = e.target.files[0];
+        var metadata = {
+            contentType: file.type
+        };
+        props.typeAPI.requestUpload(props.id,file,metadata,(data) =>{
+            props.typeAPI.saveContent(props.id,{uploadStatus : data})
         })
-    },[])
+    }
+    const requestDownload = () =>
+    {
+        props.typeAPI.requestDownload(props.id , (url,metadata) =>{
+            props.typeAPI.saveContent(props.id,{url:url || 'blank' , metadata:metadata || 'blank'})
+        })
+    }
+    const content = props.content;
     return(
        
             <div>
+                
                 <input
                     type="file"
                     accept={listOfExtension}
-                    onChange={(e)=>OnSelectFile(e)}
+                    onChange={(e)=> requestUpload(e)}
                 />
                 {
+                    // content != undefined || content?.metadata != 'blank' ?
+                    // <div key={content.metadata.name}>
+                    //     File Name : {content.metadata.name}
+                    //     <ReactAudioPlayer
+                    //         src={content.url}
+                    //         autoPlay={false}
+                    //         controls={true}   
+                    //     />
+                    // </div>
+                    // :<div/>    
+                }
+                                                
+                <requestDownload/>
+            </div>
+       
+    )
+}
+export default AudiosCard;
+/**
+ *  {
                     (audioState != null || audioState != undefined) && audioState.length>0?
                     <div>
                         Previously Uploaded Audios
@@ -83,8 +76,4 @@ const AudiosCard = (props) =>{
                 {
                     state?.src != undefined ? <ShowFileUploaded src={state} cardAPI={props.cardAPI} width={props.CardDetail?.size.width}  projectID={props.projectID} id={props.id}/> : <div></div>
                 }
-            </div>
-       
-    )
-}
-export default AudiosCard;
+ */

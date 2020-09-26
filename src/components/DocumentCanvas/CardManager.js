@@ -54,14 +54,16 @@ export default function CardManager(props) {
      */
     const addCard = (position, size, parent, type) => {
         // schema for new card
+        let parents = parent || "root"
+        let types = type || "blank"
         const newCard = {
-            type: type || "blank",
+            type: types,
             size: size,
             position: position,
             content: {
                 text: `This is a ${type} Card`
             },
-            parent: parent || "root"
+            parent: parents
         }
 
         // create new key for child in ".../nodes"
@@ -71,18 +73,18 @@ export default function CardManager(props) {
         // a) push the new card schema 
         // b) update the "children" property of parent
         let updates = {};
-        updates[parent + "/children/" + newCardKey] = 1;
+        updates[parents + "/children/" + newCardKey] = 1;
         updates[newCardKey] = newCard;
-        projectRef.update(updates).then(console.log("Added a new child", newCardKey, "under", parent));
+        projectRef.update(updates).then(console.log("Added a new child", newCardKey, "under", parents));
 
         // update local state
         setCards({
             ...cards,
             [newCardKey]: newCard,
-            [parent]: {
-                ...cards[parent],
+            [parents]: {
+                ...cards[parents],
                 children: {
-                    ...cards[parent]["children"],
+                    ...cards[parents]["children"],
                     [newCardKey]: 1
                 }
             }
@@ -222,10 +224,11 @@ export default function CardManager(props) {
      * uploads `file` to `path` in the storage bucket
      * @param {blob} file - the file to be uploaded
      * @param {object} metadata - the metadata object associated with the file
-     * @param {string} path - a path relative to project_id
+     * @param {string} id - The Card Id Who requested to Upload
      * @param {function(number)} statusCallback - a callback that receives a number [0, 100] indicating upload progress
      */
-    const requestUpload = (file, metadata, path, statusCallback) => {
+    const requestUpload = (id,file, metadata,  statusCallback) => {
+        const path = "root/"+props.projectID+"/"+id;
         let custom = {
             ...metadata,
             customMetadata: {
@@ -234,7 +237,7 @@ export default function CardManager(props) {
                 }
             }
         }
-        let requestedPathRef = firebaseStorage().ref(props.projectID + path);
+        let requestedPathRef = firebaseStorage().ref(path);
         let unsubscribe = requestedPathRef.put(file, custom)
             .on(firebaseStorage.TaskEvent.STATE_CHANGED,
                 (snapshot) => {
@@ -256,11 +259,12 @@ export default function CardManager(props) {
 
     /**
      * get a file and associated metadata (sans permissions) from the storage bucket
-     * @param {string} path - the relative path of the requested file (starting from card id)
+     * @param {string} id - the Card Id for the requested file (starting from card id)
      * @param {function(string, object)} callback - a function that takes (`downloadURL`, `metadata`) as arguments
      */
-    const requestDownload = (path, callback) => {
-        let requestedPathRef = firebaseStorage().ref(props.projectID + path)
+    const requestDownload = (id, callback) => {
+        const path = "root/"+props.projectID+"/"+id;
+        let requestedPathRef = firebaseStorage().ref(path)
         requestedPathRef.getDownloadURL()
             .then((url) => {
                 requestedPathRef.getMetadata()
@@ -271,7 +275,7 @@ export default function CardManager(props) {
                                 ...metadata["customMetadata"], permissions: undefined
                             }
                         }))
-                    .catch((reason) => console.log("failed to fetch metadata for", path, "because", "reason"))
+                    .catch((reason) => console.log("failed to fetch metadata for", path, "because", reason))
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     }

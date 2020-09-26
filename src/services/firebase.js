@@ -1,7 +1,9 @@
+
 import * as firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/database"
 import 'firebase/storage';
+import 'firebase/functions'
 const FIREBASE_CONFIG = {
     apiKey: "AIzaSyAjOQlUVvfpaPFKw_dsjVF-ZO9xAFFwLJc",
     authDomain: "groupthink-fc4b2.firebaseapp.com",
@@ -20,3 +22,4 @@ export const firebaseDB = firebase.database();
 export const firebaseTIME = firebase.database.ServerValue.TIMESTAMP;
 export const firebaseStorage = firebase.storage;
 export const firebaseStoreRef = firebase.storage().ref();
+export const firebaseFunction = firebase.functions();
