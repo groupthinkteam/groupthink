@@ -243,21 +243,10 @@ export default function CardManager(props) {
         let requestedPathRef = firebaseStorage().ref(path);
         let unsubscribe = requestedPathRef.put(file, custom)
             .on(firebaseStorage.TaskEvent.STATE_CHANGED,
-                (snapshot) => {
-                    let progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
-                    switch (snapshot.state) {
-                        case firebaseStorage.TaskState.SUCCESS:
-                            statusCallback(100);
-                            unsubscribe();
-                            break;
-                        case firebaseStorage.TaskState.RUNNING:
-                            statusCallback(progress);
-                            break;
-                        default:
-                            console.log("error uploading")
-                            break;
-                    }
-                })
+                (nextSnapshot) => statusCallback(nextSnapshot.bytesTransferred / nextSnapshot.totalBytes * 100), // on upload progress
+                null, // error handling -- nonexistent!
+                () => { statusCallback("complete"); unsubscribe(); } // on completion
+            )
     }
 
     /**

@@ -13,9 +13,9 @@ const AudiosCard = (props) => {
         var metadata = {
             contentType: file.type
         };
-        let uploadPath = props.id + "/" + file.lastModified
-        props.typeAPI.requestUpload(uploadPath, file, metadata, (percentProgress) => {
-            if (percentProgress === 100) {
+        let uploadPath = props.id + "/" + file.name
+        props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
+            if (uploadStatus === "complete") {
                 setUploading("uploaded")
                 props.typeAPI.requestDownload(
                     uploadPath,
@@ -23,7 +23,7 @@ const AudiosCard = (props) => {
                 )
             }
             else {
-                setUploading(percentProgress)
+                setUploading(uploadStatus)
             }
         })
     }
