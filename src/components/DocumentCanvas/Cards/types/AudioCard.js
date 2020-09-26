@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 
 const AudiosCard = (props) => {
-    console.log("PROPS", props)
-
     let [uploading, setUploading] = useState(false);
 
     const listOfExtension = "audio/* "
     const requestUpload = (e) => {
         const file = e.target.files[0];
-        console.log(file)
         var metadata = {
             contentType: file.type
         };
-        let uploadPath = props.id + "/" + file.name
+        let uploadPath = props.id + "/" + file.lastModified
+        console.log("path sent from audio:", uploadPath)
         props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
+            console.log(uploadStatus)
             if (uploadStatus === "complete") {
                 setUploading("uploaded")
                 props.typeAPI.requestDownload(

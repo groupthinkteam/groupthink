@@ -11,7 +11,6 @@ gsap.registerPlugin(Draggable);
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 export default function GenericCard(props) {
     let CardType = cardChooser(props.card?.type);
-    console.log("Generic Props", props)
     // useEffect(
     //     () => gsap.set("#".concat(props.id), props.card.position)
     //     , [props.id, props.card.position])

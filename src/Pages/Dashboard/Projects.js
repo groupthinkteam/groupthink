@@ -33,15 +33,15 @@ export default function Projects(props) {
             return () => ref.off('value');
         }
         , [props])
-    /**Adds New Project To Database. */    
+    /**Adds New Project To Database. */
     var onAddNew = () => {
         console.log("clicked add new")
         const refUsers = firebaseDB.ref().child(userRef);
         const projectID = refUsers.push().key;
         let updates = {};
-        updates['creator/'+projectID] = props.currentUser().uid;
+        updates['creator/' + projectID] = props.currentUser().uid;
         updates[userRef + projectID] = {
-            access:'rw',
+            access: 'rw',
             name: "New Project",
             thumbnailURL: "https://picsum.photos/200?random=" + Math.floor(Math.random() * 100)
         };
@@ -54,7 +54,7 @@ export default function Projects(props) {
             ...projectTemplates.tester
         }
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
-        addMsg(updates).then((result)=>console.log(result)).catch(err=>console.log(err))
+        addMsg(updates).then((result) => console.log(result)).catch(err => console.log(err))
     }
     /**
      * Deletes the Corresponding ID from DB & Storage(if Exists)
@@ -67,44 +67,41 @@ export default function Projects(props) {
         updates["documents/" + id + "/"] = null;
         //----Admin Update Method (Cloud Function)----
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
-        addMsg(updates).then((result)=>console.log(result)).catch(err=>console.log(err))
+        addMsg(updates).then((result) => console.log(result)).catch(err => console.log(err))
         //--------------------Storage Deletion ------------
-        const path = "root/"+id+"/";
-            const deleteFile = (pathToFile , fileName) => {
-                const ref = firebaseStorage().ref(pathToFile);
-                const childRef = ref.child(fileName);
-                childRef.delete().then(console.log("File Deleted"))
-            }
-            const deleteFolderContents = (path) =>{
-                console.log("Path TO Delete",path)
-                var storageRef = firebaseStorage().ref(path);
-                storageRef.listAll()
-                .then((dir)=>{
+        const path = "root/" + id + "/";
+        const deleteFile = (pathToFile, fileName) => {
+            const ref = firebaseStorage().ref(pathToFile);
+            const childRef = ref.child(fileName);
+            childRef.delete().then(console.log("File Deleted"))
+        }
+        const deleteFolderContents = (path) => {
+            console.log("Path TO Delete", path)
+            var storageRef = firebaseStorage().ref(path);
+            storageRef.listAll()
+                .then((dir) => {
                     //-------Files Exist-------
-                    
-                    if(dir.prefixes.length > 0 || dir.items.length>0)
-                    {
-                        if(dir.items.length>0)
-                        {
-                            dir.items.forEach((fileRef)=>{
-                                deleteFile(storageRef.fullPath , fileRef.name)
+
+                    if (dir.prefixes.length > 0 || dir.items.length > 0) {
+                        if (dir.items.length > 0) {
+                            dir.items.forEach((fileRef) => {
+                                deleteFile(storageRef.fullPath, fileRef.name)
                             })
                         }
                         dir.prefixes.forEach(folderRef => {
                             deleteFolderContents(folderRef.fullPath);
                         })
                     }
-                    else
-                    {
+                    else {
                         console.log("No Files Exist")
                     }
                 })
                 .catch(error => {
                     console.log(error);
                 });
-            }
+        }
 
-            deleteFolderContents(path)
+        deleteFolderContents(path)
     }
     /**
      * Rename The Projects of Given ID on Database .

@@ -202,7 +202,7 @@ export default function CardManager(props) {
     */
     const saveContent = (id, newContent) => {
         changeContent(id, newContent);
-        projectRef.child(id).child("content").set(cards[id]["content"])
+        projectRef.child(id).child("content").set(newContent)
             .then(console.log("saved new content for", id));
     }
 
@@ -234,18 +234,18 @@ export default function CardManager(props) {
         let custom = {
             ...metadata,
             customMetadata: {
-                permissions: {
-                    [props.currentUser.uid]: props.permission
-                }
+                [props.currentUser().uid]: props.permission
             }
         }
+
+        console.log("metadata sent was", custom)
         const path = "root/" + props.projectID + "/" + uploadPath;
         let requestedPathRef = firebaseStorage().ref(path);
         let unsubscribe = requestedPathRef.put(file, custom)
             .on(firebaseStorage.TaskEvent.STATE_CHANGED,
                 (nextSnapshot) => statusCallback(nextSnapshot.bytesTransferred / nextSnapshot.totalBytes * 100), // on upload progress
                 null, // error handling -- nonexistent!
-                () => { statusCallback("complete"); unsubscribe(); } // on completion
+                () => { console.log(); statusCallback("complete"); unsubscribe(); } // on completion
             )
     }
 
@@ -260,13 +260,7 @@ export default function CardManager(props) {
         requestedPathRef.getDownloadURL()
             .then((url) => {
                 requestedPathRef.getMetadata()
-                    .then((metadata) =>
-                        // remove permissions from metadata sent to callback    
-                        callback(url, {
-                            ...metadata, customMetadata: {
-                                ...metadata["customMetadata"], permissions: undefined
-                            }
-                        }))
+                    .then((metadata) => callback(url, JSON.parse(JSON.stringify(metadata))))
                     .catch((reason) => console.log("failed to fetch metadata for", path, "because", reason))
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
