@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import CardContainer from "./CardContainer";
 import { firebaseDB, firebaseStorage } from "../../services/firebase";
+import cardTemplate from "../../constants/cardTemplates";
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
  * @property {state} cards - stores the local state information for all the cards
@@ -205,7 +206,28 @@ export default function CardManager(props) {
         projectRef.child(id).child("content").set(newContent)
             .then(console.log("saved new content for", id));
     }
-
+    /**
+     * Changes the type of card to dzired type .  
+     * @param {String} id - the card for which to perform the operation
+     * @param {String} newType - the newType which is going to be changed.
+     */
+    const changeType = (id, newType) => {
+        const newTypeCard = cardTemplate(newType); //type,size,content
+        setCards({ ...cards, 
+            [id]: { 
+                ...cards[id], 
+                type: newTypeCard.type,
+                size: newTypeCard.size,
+                content : newTypeCard.content 
+            } 
+        });
+        const updates = {};
+        updates[id+'/type'] = newTypeCard.type;
+        updates[id+'/size'] = newTypeCard.size;
+        updates[id+'/content'] = newTypeCard.content;
+        projectRef.update(updates).then(console.log("Set new type for",id ,"to \n",newTypeCard)).catch(err=>err);
+        //projectRef.child(id).child("type").set(newType).then(console.log("set new type for", id, "to", newType));
+    }
     /** 
      * change the parent of card id to card newParent
      * @param {string} id - the card for which to perform the operation 
@@ -282,7 +304,8 @@ export default function CardManager(props) {
         saveContent: saveContent,
         changeContent: changeContent,
         requestUpload: requestUpload,
-        requestDownload: requestDownload
+        requestDownload: requestDownload,
+        changeType : changeType
     }
 
     return (

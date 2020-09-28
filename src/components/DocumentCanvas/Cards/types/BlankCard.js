@@ -14,7 +14,7 @@ export default function BlankCard(props) {
     return (
         <div className="button_link">
             {types.map((type) =>
-                <Button handleClick={() => props.cardAPI.type(props.id, type)}>
+                <Button handleClick={() => props.typeAPI.changeType(props.id, type)}>
                     {type}
                 </Button>)}
         </div>
