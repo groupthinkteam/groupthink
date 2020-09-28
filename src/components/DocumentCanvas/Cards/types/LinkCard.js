@@ -1,6 +1,11 @@
 import React from 'react';
 import { ReactTinyLink } from 'react-tiny-link'
-
+import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit"
+/**
+ * This Card Shows The Link's image description in single card
+ * @param {*} props - Property of File .
+ * @property `typeAPI` , `content` , `id` 
+ */
 const LinkCard = (props) => 
 {
     const validURL = (str) => {
@@ -12,24 +17,36 @@ const LinkCard = (props) =>
           '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
         return !!pattern.test(str);
     }
-    if(validURL(props.CardDetail.content.text))
+    const onSave = () => props.typeAPI.saveContent(props.id,{ url: props.content.url })
+    const onChange = (event) => props.typeAPI.changeContent(props.id,{url:event.target.value})
+    
     return(
-        <div style={{ boxShadow: "2px 4px 21px 9px darkgrey" , marginTop : "22px"}}>
-            <ReactTinyLink
-                cardSize="small"
-                showGraphic={true}
-                maxLine={2}
-                minLine={1}
-                url={props.CardDetail.content.text}
-                width={props.CardDetail.size.width}
-                height={props.CardDetail.size.height}
-            />
-            {props.children}
-        </div>
-    )
-    else
-    {
-        return(<div>{props.children}</div>)
-    }
+        <>
+            <div className="text-node">
+                <InlineTextEdit
+                    onChange={(e)=>onChange(e)}
+                    onSave={onSave}
+                    text={props.content?.url || props.content.text}
+                    lwidth={"100px"}
+                />
+            </div>
+            {
+                validURL(props.content?.url) ? 
+                <div style={{ boxShadow: "2px 4px 21px 9px darkgrey" , marginTop : "22px"}}>
+                    <ReactTinyLink
+                        cardSize="small"
+                        showGraphic={true}
+                        maxLine={2}
+                        minLine={1}
+                        url={props.content.url}
+                        //width={props.size.width}
+                        //height={props.size.height}
+                    />
+                </div>
+                :null
+            }
+        </>
+    )    
+    
 }
 export default LinkCard;

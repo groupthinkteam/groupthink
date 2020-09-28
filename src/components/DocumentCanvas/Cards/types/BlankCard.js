@@ -9,7 +9,7 @@ import Button from "../../../Button/Button";
  */
 export default function BlankCard(props) {
 
-    let types = ["text", "image", "onlineVideo", "personalVideo", "link", "audio", "PDF"]
+    let types = ["text", "image", "VideoLink", "VideoFile", "link", "audio", "pdf","file"]
 
     return (
         <div className="button_link">

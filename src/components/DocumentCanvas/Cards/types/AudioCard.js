@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/src/styles.scss';
 
+/**
+ * This File Shows the Input of Audio File .
+ * @param {*} props 
+ */
 const AudioCard = (props) => {
     let [uploading, setUploading] = useState(false);
 

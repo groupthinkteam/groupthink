@@ -1,136 +1,82 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import { Document, Page ,pdfjs} from 'react-pdf';
-import { auth } from 'firebase';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/umd/Page/AnnotationLayer.css';
-const ThumbnailPDF = (props) =>{
+
+/**
+ * This Card Holds PDF Documents in Project.
+ * @param {*} props - Property of File .
+ * @property `typeAPI` , `content` , `id`
+ */
+const PDFCard = (props) =>{
+  const [uploading, setUploading] = useState(false);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const [pdfState , setPDFState] = useState();
-  const cardAPI = props.cardAPI;
-  var file = props.src.src;
-  let url = 0;
-  const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "PDF/" + file.name
-  var metadata = {
-      contentType: `${props.src.src.type}`
-  };
-  useEffect(()=>{
-    cardAPI.storeFile(refURL,file,metadata,data=>{
-      setPDFState(data)
+  const listOfExtension = "video/* ";
+  const requestUpload = (e) => {
+    const file = e.target.files[0];
+    var metadata = {
+        contentType: file.type
+    };
+    let uploadPath = props.id + "/" + file.lastModified
+    console.log("path sent from audio:", uploadPath)
+    props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
+        console.log(uploadStatus)
+        if (uploadStatus === "complete") {
+            setUploading("uploaded")
+            props.typeAPI.requestDownload(
+                uploadPath,
+                (url, metadata) => props.typeAPI.saveContent(props.id, { url: url, metadata: metadata })
+            )
+        }
+        else {
+            setUploading(uploadStatus)
+        }
     })
-  },[url])
+  }
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
   const goToPrevPage = () =>
-  {  
-    if(pageNumber > 1)
+  {
+      if(pageNumber > 1)
       setPageNumber(pageNumber - 1 );
-    else
+      else
       setPageNumber(numPages - 1)
   }
   const goToNextPage = () =>
   {
       setPageNumber( pageNumber + 1 );
-  }
-
-  return(
-      <div>
-        {
-          pdfState != undefined ?
-          <div style={{
-            width : props.CardDetail.size.width,
-            height : props.CardDetail.size.height
-          }}>
-            <nav>
-              <button onClick={goToPrevPage}>Prev</button>
-              <button onClick={goToNextPage}>Next</button>
-            </nav>
-            <Document
-              file={pdfState.url}
-              onLoadSuccess={onDocumentLoadSuccess}
-              
-            >
-              <Page pageNumber={pageNumber} />
-            </Document>
-            <p>Page {pageNumber} of {numPages}</p>
+  }  
+  return (
+    <div>
+        {uploading ? "upload progress: " + uploading : "not uploading"}
+        <input
+            type="file"
+            accept="application/pdf,application/vnd.ms-excel"
+            onChange={(e) => requestUpload(e)}
+        />
+        { props.content.url ?
+          <div key={props.content.metadata.name}>
+              File Name : {props.content.metadata.name}
+              <div key={props.content.metadata.name}>
+                <nav>
+                  <button onClick={goToPrevPage}>Prev</button>              
+                  <button onClick={goToNextPage}>Next</button>              
+                </nav>
+                <Document
+                  file={props.content.url}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                >
+                  <Page pageNumber={pageNumber} />
+                </Document>
+                <p>Page {pageNumber} of {numPages}</p>
+              </div>                                   
           </div>
-          :<div>Uploading</div>
+          : null
         }
-      </div>
-  )
- }
-const PDFCard = (props) =>{
-    const [state , setState]= useState()
-    const [pdfState , setPDFState] = useState([]);
-    const [numPages, setNumPages] = useState(null);
-    const [pageNumber, setPageNumber] = useState(1);
-    //console.log(state)
-    const cardAPI = props.cardAPI;
-    const OnSelectFile = (e) =>
-    {
-        console.log(e.target.files[0])
-        setState({src:e.target.files[0]})
-    }
-    const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "PDF/"
-    useEffect(()=>{
-      cardAPI.displayFile(refURL,data=>{
-        setPDFState(data)
-      })
-    },[])
-    pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-    function onDocumentLoadSuccess({ numPages }) {
-      setNumPages(numPages);
-    }
-    const goToPrevPage = () =>
-    {
-        if(pageNumber > 1)
-        setPageNumber(pageNumber - 1 );
-        else
-        setPageNumber(numPages - 1)
-    }
-    const goToNextPage = () =>
-    {
-        setPageNumber( pageNumber + 1 );
-    }
-    
-    return(
-       
-            <div >
-                <input
-                    type="file"
-                    accept="application/pdf,application/vnd.ms-excel"
-                    onChange={(e)=>OnSelectFile(e)}
-                />
-                {
-                  (pdfState!=undefined || pdfState != null) && pdfState.length>0 ?
-                  <div>
-                    Previously Updated Docs
-                    {
-                      pdfState
-                      .map((item)=>(
-                        <div key={item}>
-                          <nav>
-                            <button onClick={goToPrevPage}>Prev</button>
-                            <button onClick={goToNextPage}>Next</button>
-                          </nav>
-                          <Document
-                            file={item.url}
-                            onLoadSuccess={onDocumentLoadSuccess}
-                          >
-                            <Page pageNumber={pageNumber} />
-                          </Document>
-                          <p>Page {pageNumber} of {numPages}</p>
-                        </div>
-                      ))
-                    }
-                  </div>
-                  :<div></div>
-                }
-                {state?.src != undefined ? <ThumbnailPDF cardAPI={props.cardAPI} src={state} CardDetail={props.CardDetail} projectID={props.projectID} id={props.id}/> : <div></div>}
-            </div>
-       
-    )
+    </div>
+  )  
 }
 export default PDFCard;

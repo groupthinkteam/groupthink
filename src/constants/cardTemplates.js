@@ -12,9 +12,9 @@ const cardTemplate = (type) =>
     switch (type) {
         case "text":
             return textCardTemplate;
-        case "onlineVideo":
+        case "VideoLink":
             return onlineVideoCardTemplate;
-        case "offlineVideo":
+        case "VideoFile":
             return offlineVideoCardTemplate;
         case "image":
             return imageCardTemplate;
@@ -42,13 +42,13 @@ const audioCardTemplate = {
     }
 }
 const onlineVideoCardTemplate = {
-    type: 'onlineVideo',
+    type: 'VideoLink',
     size: {
         height : 300,
         width : 400
     },
     content: {
-        text: `This is a onlineVideo Card`
+        text: `This is a Video Link  Card`
     }
 }
 const pdfCardTemplate = {
@@ -92,13 +92,13 @@ const imageCardTemplate = {
     }
 }
 const offlineVideoCardTemplate = {
-    type: 'offlineVideo',
+    type: 'VideoFile',
     size: {
         height : 300,
         width : 400
     },
     content: {
-        text: `This is a offlineVideo Card`
+        text: `This is a VideoFile Card`
     }
 }
 const textCardTemplate = {

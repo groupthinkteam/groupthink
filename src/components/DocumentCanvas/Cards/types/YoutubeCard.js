@@ -1,5 +1,11 @@
 import React from 'react';
 import ReactPlayer from 'react-player/lazy'
+import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit"
+/**
+ * This is an Offline Link Card Shows Videos And Audio Player .
+ * @param {*} props - Property of File .
+ * @property `typeAPI` , `content` , `id`
+ */
 const YoutubeCard = (props) =>{
     const validURL = (str) => {
         var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -10,26 +16,33 @@ const YoutubeCard = (props) =>{
           '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
         return !!pattern.test(str);
       }
-      
-    if(validURL(props.CardDetail.content.text))
-    {
-        const heigth = Math.floor(parseInt( props.CardDetail.size.height)/1.8);
-        return(
-            <>
-            <ReactPlayer 
-                url={props.CardDetail.content.text}
-                width={props.CardDetail.size.width}
-                height={`${heigth}px`}  
-                controls={true}  
-            />
-            {props.children}
-            </>
-        )
-    }
-    else
-    {
-        return (<div>{props.children}</div>)
-    }
     
+    const onSave = () => props.typeAPI.saveContent(props.id,{ url: props.content.url })
+    const onChange = (event) => props.typeAPI.changeContent(props.id,{url:event.target.value})
+    
+    return(
+        <>
+            <div className="text-node">
+                <InlineTextEdit
+                    onChange={(e)=>onChange(e)}
+                    onSave={onSave}
+                    text={props.content?.url || props.content.text}
+                    lwidth={"100px"}
+                />
+            </div>
+            {
+                validURL(props.content?.url) ? 
+                <div >
+                    <ReactPlayer 
+                        url={props.content.url}
+                        //width={props.CardDetail.size.width}
+                        //height={`${heigth}px`}  
+                        controls={true}  
+                    />
+                </div>
+                :null
+            }
+        </>
+    )   
 }
 export default YoutubeCard;

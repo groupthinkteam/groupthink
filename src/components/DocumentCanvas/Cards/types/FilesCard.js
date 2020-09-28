@@ -1,81 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { auth } from 'firebase';
-const ShowFileUploaded = (props) => {
-  let [state, setState] = useState()
-  var file = props.src.src;
-  let url = 0;
-  const cardAPI = props.cardAPI;
+import React, { useState} from 'react';
 
-  const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "files/" + file.name
-  var metadata = {
-    contentType: `${props.src.src.type}`
-  };
-  // Listen for state changes, errors, and completion of the upload.
-  useEffect(() => {
-      cardAPI.storeFile(refURL,file, metadata,data=>{
-        setState(data)
-      })
-  }, [url])
-
-
-  return (
-    <>
-      <div style={{ display: "grid" }}>
-        {
-          state?.url != undefined ?
-            <div style={{ display: "grid" }} >
-              Name :- {state.metadata.name}
-              <a href={state.url}>Download The File</a>
-            </div>
-            : <div>File is Uploading </div>
-        }
-      </div>
-    </>
-  )
-}
+/**
+ * This File Input's the Files(e.g. `.odt,.doc,.docx`) And Features to download the file .
+ * @param {*} props 
+ */
 const FilesCard = (props) => {
-  const [state, setState] = useState()
-  const [fileState, setFile] = useState([])
+  const [uploading, setUploading] = useState(false);
   const listOfExtension = ".odt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  const cardAPI = props.cardAPI;
-
-  const OnSelectFile = (e) => {
-    setState({ src: e.target.files[0] })
-    console.log(e.target.files[0])
-
-  }
-  const refURL = auth().currentUser?.uid + "/" + props.projectID + "/" + props.id + "/" + "files/"
-  useEffect(() => {
-    cardAPI.displayFile(refURL,data=>{
-      setFile(data)
+  const requestUpload = (e) => {
+    const file = e.target.files[0];
+    var metadata = {
+        contentType: file.type
+    };
+    let uploadPath = props.id + "/" + file.lastModified
+    console.log("path sent from audio:", uploadPath)
+    props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
+        console.log(uploadStatus)
+        if (uploadStatus === "complete") {
+            setUploading("uploaded")
+            props.typeAPI.requestDownload(
+                uploadPath,
+                (url, metadata) => props.typeAPI.saveContent(props.id, { url: url, metadata: metadata })
+            )
+        }
+        else {
+            setUploading(uploadStatus)
+        }
     })
-  }, [])
+  }
+  console.log("Metadat FileCard",props.content.metadata)
   return (
-
-    <div style={{ display: "grid" }}>
-      <input
-        type="file"
-        accept={listOfExtension}
-        onChange={(e) => OnSelectFile(e)}
-      />
-      {
-        (fileState != null || fileState != undefined)
-          ?
-          <div>
-            {
-              fileState
-                .map((item) => (<div key={item.metadata.name}>
-                  <a href={item.url} target="_blank">{item.metadata.name}</a>
-                </div>))
-            }
-          </div>
-          : <div></div>
-      }
-      {
-        state?.src != undefined ? <ShowFileUploaded src={state} cardAPI={props.cardAPI} projectID={props.projectID} id={props.id} /> : <div></div>
-      }
+    <div>
+        {uploading ? "upload progress: " + uploading : "not uploading"}
+        <input
+            type="file"
+            accept={listOfExtension}
+            onChange={(e) => requestUpload(e)}
+        />
+        { props.content.url ?
+            <div key={props.content.metadata.name}>
+                File Name : 
+                  <a href={props.content.url} target="_blank">{props.content.metadata.name}</a>                   
+            </div>
+            : null
+        }
     </div>
-
   )
 }
 export default FilesCard;

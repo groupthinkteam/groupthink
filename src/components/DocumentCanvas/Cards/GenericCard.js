@@ -5,6 +5,12 @@ import cardChooser from "./cardChooser";
 
 import "../../../styles/Cards/GenericCard.scss";
 
+/**
+ * TODO :-
+ * pass Size of Card So that Player or Card Stuff can be under the cards Size.
+ * Files Card Having Different Name ...Correction Needed
+ */
+
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable);
 
@@ -41,7 +47,7 @@ export default function GenericCard(props) {
         <div id={props.id} className="card custom_card border-0" style={{ width: 350, height: 200, position: "absolute" }}>
             <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                 <button className="absolute delete_btn wh-20p rounded-circle"
-                    onClick={() => props.cardAPI.removeCard(props.id, "reparent", props.card.parent)}>
+                    onClick={() => props.genericAPI.removeCard(props.id, "", props.card.parent)}>
                     X
                 </button>
                 <button className="absolute lock_btn wh-20p rounded-circle">

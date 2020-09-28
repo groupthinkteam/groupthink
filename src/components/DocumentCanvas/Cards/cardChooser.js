@@ -17,9 +17,9 @@ export default function cardChooser(type) {
             return BlankCard;
         case "text":
             return TextCard;
-        case "onlineVideo":
+        case "VideoLink":
             return YoutubeCard;
-        case "offlineVideo":
+        case "VideoFile":
             return VideosCard;
         case "image":
             return ImagesCard;

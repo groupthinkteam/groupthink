@@ -287,7 +287,7 @@ export default function CardManager(props) {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     }
-
+    
     /**
      * bundling card api methods for ease of transmission 
      */
