@@ -48,7 +48,7 @@ export default function CardContainer(props) {
                     props.room != undefined?
                     Object.entries(props.room)
                     .filter(([id, position]) => id !== props.currentUser().uid)
-                    .map(([id, position]) => <Cursor key={props.currentUser().uid} id={props.currentUser().displayName} x={position.x} y={position.y} />)
+                    .map(([id, position]) => <Cursor key={props.currentUser().uid} id={props.currentUser().uid} name={props.currentUser().displayName} x={position.x} y={position.y} />)
                     : null
                 }
           </div>

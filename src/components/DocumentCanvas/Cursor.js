@@ -16,7 +16,7 @@ export default function Cursor(props) {
         }}>
             <img alt="cursor" src={require("./jk.svg")} width="25px" height="25px" />
             <div style={{ border: "1px dashed black", height: 10, fontSize: 8 }}>
-                {props.id}
+                {props.name}
             </div>
         </div>
     )
