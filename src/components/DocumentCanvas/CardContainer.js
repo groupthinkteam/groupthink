@@ -1,6 +1,6 @@
-import React from "react";
+import React,{useState} from "react";
 import GenericCard from "./Cards/GenericCard"
-
+import Cursor from "./Cursor";
 /**
  * props:
  * 
@@ -8,6 +8,7 @@ import GenericCard from "./Cards/GenericCard"
  * 
  */
 export default function CardContainer(props) {
+    //console.log(props.currentUser().displayName)
     return (
         <div className="card-container w-100 main_card"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1 }}>
@@ -27,6 +28,7 @@ export default function CardContainer(props) {
                     ([id, card]) => {
                         return (
                             <GenericCard
+                                key={id}
                                 id={id}
                                 card={card}
                                 genericAPI={props.genericAPI}
@@ -36,6 +38,20 @@ export default function CardContainer(props) {
                     }
                 ) : <p>Double Click to Add a Card</p>
             }
+            <div className="container"
+                style={{ position: "absolute", height: "100vh", width: "100vw" }}
+                onMouseMove={(event) => {
+                    event.persist(); props.containerAPI.sendToDatabase(event);
+                }}
+            >
+                {
+                    props.room != undefined?
+                    Object.entries(props.room)
+                    .filter(([id, position]) => id !== props.currentUser().uid)
+                    .map(([id, position]) => <Cursor key={props.currentUser().uid} id={props.currentUser().displayName} x={position.x} y={position.y} />)
+                    : null
+                }
+          </div>
         </div >
     )
 }

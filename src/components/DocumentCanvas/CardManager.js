@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import CardContainer from "./CardContainer";
+import throttle from 'lodash.throttle';
 import { firebaseDB, firebaseStorage } from "../../services/firebase";
 import cardTemplate from "../../constants/cardTemplates";
 /**
@@ -16,6 +17,8 @@ export default function CardManager(props) {
     const containerRef = useRef({});
     containerRef.current = container;
 
+    //
+    const [room , setRoom] = useState();
     // store card-related state
     const [cards, setCards] = useState({});
 
@@ -40,6 +43,10 @@ export default function CardManager(props) {
             console.log("triggered container size listener, received payload", snapshot.val());
             setContainer(snapshot.val());
         });
+        projectRef.child("room").on("value",(snap)=>{
+            console.log("Room Details Triggered recieved payload", snap.val());
+            setRoom(snap.val());
+        })
         setIsLoaded(true)
         return () => {
             projectRef.child("nodes").off();
@@ -104,7 +111,7 @@ export default function CardManager(props) {
      * @todo remove all storage files associated with the deleted cards
      */
     const removeCard = (id, strategy, newParent) => {
-        let updates = {};
+        const updates = {};
         updates[id] = null;
         updates[cards[id]["parent"] + "/children/" + id] = null;
 
@@ -117,12 +124,14 @@ export default function CardManager(props) {
             while (stack.length > 0) {
                 let poppedID = stack.pop();
                 updates[poppedID] = null;
+                if(cards[poppedID]["children"])
                 stack.concat(Object.keys(cards[poppedID]["children"]))
             }
         }
 
         switch (strategy) {
             case "recursive":
+                if(cards[id]["children"])
                 depthFirstTraversal(Object.keys(cards[id]["children"]));
                 break;
             case "reparent":
@@ -287,7 +296,18 @@ export default function CardManager(props) {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     }
-    
+    /**
+     * This Function Updates Mouse X and Y Position to Database 
+     */
+    const sendToDatabase = useCallback(throttle(
+        (event) => {
+          if (room != undefined) {
+            //console.log(room[props.currentUser().uid],event.clientX , event.clientY)
+            firebaseDB.ref("documents/" + props.projectID+"/room/").child(props.currentUser().uid)
+              .set({ x: event.clientX, y: event.clientY })
+          }
+        },
+        100), [room])
     /**
      * bundling card api methods for ease of transmission 
      */
@@ -308,6 +328,9 @@ export default function CardManager(props) {
         changeType : changeType
     }
 
+    const containerAPI = {
+        sendToDatabase :  sendToDatabase
+    }
     return (
         isLoaded ?
             <CardContainer
@@ -316,6 +339,9 @@ export default function CardManager(props) {
                 genericAPI={genericAPI}
                 typeAPI={typeAPI}
                 permission={props.permission}
+                currentUser={props.currentUser}
+                containerAPI = {containerAPI}
+                room={room}
             />
             :
             <div>

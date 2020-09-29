@@ -8,12 +8,27 @@ import * as Crypto from 'crypto-js/aes';
 import "../../styles/MenuBar.scss"
 
 //----Create "Public" in Database ----
-const createPublic = (id,permission) =>
+const createPublic = (id,permission,uid) =>
 {
-    const path = `documents/${id}/users/` ;
+    
+    const path = `documents/${id}/` ;
     const updates = {};
-    updates[path + "public"] = permission
+    updates[path + "/users/public"] = permission;
+    updates[path+"/room/"+uid] =  {
+        X_POS : 0 ,
+        Y_POS : 0
+    }
     firebaseDB.ref().update(updates).then(console.log("Created Public With Permission",permission))
+}
+const createRoom = async(child,uid) =>
+{
+    const updates = {};
+    updates[`documents/${child}/room/`+uid] ={
+        X_POS : 0 ,
+        Y_POS : 0
+    } 
+    await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err=>err)
+    
 }
 const ShareLink = (props) =>
 {
@@ -24,22 +39,29 @@ const ShareLink = (props) =>
     const [url , setURL] =useState();
     const handleShow = () =>  setShow(true);
     const title = "Groupthink Website"
+    function replaceAll(str, term, replacement) {
+        return str.replace(new RegExp(escapeRegExp(term), 'g'), replacement);
+    }
+    function escapeRegExp(string){
+        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }  
     const openLink = () => {
         if(linkType != undefined && permission !=undefined){ 
             setLink(true) 
             if(linkType === "private")
             {
+                createRoom(props.projectID,props.currentUser.uid).then("Room Made").catch(err=>err)
                 //-----Encryption-------
-                //const encryptUID = Crypto.encrypt(auth().currentUser?.uid,"grpthink12!").toString();
-                //const encryptLinkType = Crypto.encrypt(linkType,"grpthink12!").toString();
                 const encryptPermission = Crypto.encrypt(permission,"grpthink12!").toString();
-                console.log(encryptPermission)
-                setURL(String(window.location)+"/"+encryptPermission)
+                // ------- Used '/' to omit "/:permissionID"
+                const custom = replaceAll(encryptPermission,'/','$')
+                console.log(encryptPermission,permission , custom)
+                setURL(String(window.location)+"/"+custom)
                 
             }
             else
             {
-                createPublic(props.projectID,permission)
+                createPublic(props.projectID,permission,props.currentUser.uid)
                 setURL(String(window.location))
             }
         }

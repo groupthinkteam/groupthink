@@ -1,8 +1,8 @@
 import React from "react"
 import Button from "../Button/Button"
 import ShareLink from "./ShareLink"
-
 import "../../styles/MenuBar.scss"
+import { Link } from "react-router-dom"
 export default function MenuBar(props) {
     const currentUser = props.currentUser()
     return (
@@ -16,6 +16,9 @@ export default function MenuBar(props) {
                     groupthink
                 </div>
             </div>
+            <div >
+            <Link to='/dashboard' >Back</Link>
+            </div>
             <div className="menu-bar-panel menu-bar-panel-right">
                 <Button className="logout-button custom_btn" handleClick={props.onLogOut}>
                     log out
@@ -23,7 +26,7 @@ export default function MenuBar(props) {
             </div>
             {
                 props.document != undefined && props.document === "rw"?
-                <ShareLink projectID ={props.projectID} className="custom_btn"/>
+                <ShareLink projectID ={props.projectID} className="custom_btn" currentUser={currentUser}/>
                 :<div/>
             }
         </div>

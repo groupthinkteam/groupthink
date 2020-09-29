@@ -13,7 +13,8 @@ export default function Document(props) {
   //console.log(projectID);
   useEffect(() => {
     (async () => {
-      const isChildPermission = await isChild(projectID);
+      const isChildPermission =await isChild(projectID);
+      console.log("Permission",isChildPermission)
       setIsLoaded(true);
 
       //---Check For Child Validation--

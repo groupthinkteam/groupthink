@@ -44,10 +44,10 @@ export default function GenericCard(props) {
     )
 
     return (
-        <div id={props.id} className="card custom_card border-0" style={{ width: 350, height: 200, position: "absolute" }}>
+        <div  id={props.id} className="card custom_card border-0" style={{ width: 350, height: 200, position: "absolute" }}>
             <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                 <button className="absolute delete_btn wh-20p rounded-circle"
-                    onClick={() => props.genericAPI.removeCard(props.id, "", props.card.parent)}>
+                    onClick={() => props.genericAPI.removeCard(props.id, "recursive", props.card.parent)}>
                     X
                 </button>
                 <button className="absolute lock_btn wh-20p rounded-circle">
