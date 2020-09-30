@@ -22,7 +22,7 @@ export default function CardContainer(props) {
                     var x = Math.floor(e.clientX - rect.left);
                     var y = Math.floor(e.clientY - rect.top);
                     console.log("double click at", x, ",", y);
-                    props.genericAPI.addChild({ x: x, y: y }, { width: 200, height: 300 })
+                    props.genericAPI.addChild({ x: x, y: y }, { width: 310, height: 360 })
                 }}
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")

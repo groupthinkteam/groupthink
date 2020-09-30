@@ -18,7 +18,12 @@ const LinkCard = (props) =>
         return !!pattern.test(str);
     }
     const onSave = () => validURL(props.content.url) ? props.typeAPI.saveContent(props.id,{ url: props.content.url }) : null
-    const onChange = (event) => props.typeAPI.changeContent(props.id,{url:event.target.value})
+    const onChange = (event) =>{
+        if(validURL(event.target.value)) 
+        props.typeAPI.changeContent(props.id, { url: event.target.value })
+        else
+        props.typeAPI.changeContent(props.id, { text: event.target.value })
+    }
     
     return(
         <>

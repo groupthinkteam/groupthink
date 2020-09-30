@@ -7,8 +7,71 @@
  * @property {{width: number, height: number}} `size` - Contains 2 property. Height and Width.
  * @property {String} `Content` - The Contant of card at initial Render.
  */
-const cardTemplate = (type) =>
+const cardTemplate = (type,size) =>
 {
+    const audioCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            text: `This is a ${type} Card`
+        }
+    }
+    const onlineVideoCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            text: `This is a ${type} Card`
+        }
+    }
+    const pdfCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            text: `This is a ${type} Card`
+        }
+    }
+    const fileCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            text: `This is a ${type} Card`
+        }
+    }
+    const linkCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            text: `This is a ${type} Card`
+        }
+    }
+    const imageCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            text: `This is a ${type} Card`
+        }
+    }
+    const offlineVideoCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            text: `This is a ${type} Card`
+        }
+    }
+    const textCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            text: `This is a ${type} Card`
+        }
+    }
+    const blankCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            text: `This is a ${type} Card`
+        }
+    }
     switch (type) {
         case "text":
             return textCardTemplate;
@@ -29,97 +92,8 @@ const cardTemplate = (type) =>
         default:
             return blankCardTemplate;
     }
-}
 
-const audioCardTemplate = {
-    type: 'audio',
-    size: {
-        height : 300,
-        width : 400
-    },
-    content: {
-        text: `This is a Audio Card`
-    }
-}
-const onlineVideoCardTemplate = {
-    type: 'VideoLink',
-    size: {
-        height : 300,
-        width : 400
-    },
-    content: {
-        text: `This is a Video Link  Card`
-    }
-}
-const pdfCardTemplate = {
-    type: 'pdf',
-    size: {
-        height : 300,
-        width : 400
-    },
-    content: {
-        text: `This is a pdf Card`
-    }
-}
-const fileCardTemplate = {
-    type: 'file',
-    size: {
-        height : 300,
-        width : 400
-    },
-    content: {
-        text: `This is a file Card`
-    }
-}
-const linkCardTemplate = {
-    type: 'link',
-    size: {
-        height : 300,
-        width : 400
-    },
-    content: {
-        text: `This is a link Card`
-    }
-}
-const imageCardTemplate = {
-    type: 'image',
-    size: {
-        height : 300,
-        width : 400
-    },
-    content: {
-        text: `This is a image Card`
-    }
-}
-const offlineVideoCardTemplate = {
-    type: 'VideoFile',
-    size: {
-        height : 300,
-        width : 400
-    },
-    content: {
-        text: `This is a VideoFile Card`
-    }
-}
-const textCardTemplate = {
-    type: 'text',
-    size: {
-        height : 300,
-        width : 400
-    },
-    content: {
-        text: `This is a text Card`
-    }
-}
-const blankCardTemplate = {
-    type: 'text',
-    size: {
-        height : 300,
-        width : 400
-    },
-    content: {
-        text: `This is a text Card`
-    }
-}
 
+
+}
 export default cardTemplate;

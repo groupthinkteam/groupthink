@@ -142,6 +142,55 @@ export default function CardManager(props) {
                 break;
         }
 
+        
+        const types = ["link","blank" , "VideoLink" , "text"];
+        console.log(cards[id].type , types.includes(cards[id].type,0))
+        //-----------If Type Contains Storage -----------
+        if(!types.includes(cards[id].type,0) )
+        {
+            const path = "root"+"/"+props.projectID+"/"+id+"/";
+            /**
+             * This Function Delete A Particular File From Firebase Storage to given Path
+             * @param {*} pathToFile The Path To Which Contents Should be delete
+             * @param {*} fileName The FileName Which Has To be Delete
+             */ 
+            const deleteFile = (pathToFile , fileName) => {
+                const ref = firebaseStorage().ref(pathToFile);
+                const childRef = ref.child(fileName);
+                childRef.delete().then(console.log("File Deleted"))
+            }
+            /**
+             * This Function Calls to Storage and List All Files Acc. to given Path .
+             * And Then once a file is Got then Delete File Else No Files Exists.
+             * @param {*} path The Path To Which Contents Should be delete
+             */
+            const deleteFolderContents = (path) =>{
+                var storageRef = firebaseStorage().ref(path);
+                storageRef.listAll()
+                .then((dir)=>{
+                    //-------Files Exist-------
+                    if(dir.items.length > 0)
+                    {
+                        dir.items.forEach((fileRef)=>{
+                        deleteFile(storageRef.fullPath , fileRef.name)
+                        })
+                    }
+                    else
+                    {
+                        console.log("No Files Exist")
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+            //----Calls to Delete Folder Contents----
+            deleteFolderContents(path)
+        }
+        else
+        {
+            console.log("Its a NOn Storage Card")
+        }
         projectRef.update(updates).then(console.log("deleted", id, "successfully"))
     }
 
@@ -212,16 +261,17 @@ export default function CardManager(props) {
     */
     const saveContent = (id, newContent) => {
         changeContent(id, newContent);
-        projectRef.child(id).child("content").set(newContent)
-            .then(console.log("saved new content for", id));
+        projectRef.child(id).child("content").update(newContent)
+            .then(console.log("saved new content for", id))
+            .catch(err=>console.log("Save COntent Error \n",newContent,"\n saveContent",err));
     }
     /**
      * Changes the type of card to dzired type .  
      * @param {String} id - the card for which to perform the operation
      * @param {String} newType - the newType which is going to be changed.
      */
-    const changeType = (id, newType) => {
-        const newTypeCard = cardTemplate(newType); //type,size,content
+    const changeType = (id, newType,size) => {
+        const newTypeCard = cardTemplate(newType,size); //type,size,content
         setCards({ ...cards, 
             [id]: { 
                 ...cards[id], 
@@ -328,7 +378,8 @@ export default function CardManager(props) {
         changeContent: changeContent,
         requestUpload: requestUpload,
         requestDownload: requestDownload,
-        changeType : changeType
+        changeType : changeType,
+        resize: resize
     }
 
     const containerAPI = {

@@ -7,7 +7,7 @@ import "../../../styles/Cards/GenericCard.scss";
 
 /**
  * TODO :-
- * pass Size of Card So that Player or Card Stuff can be under the cards Size.
+ * Check Multiple Uploaded File Renders in single card
  * Files Card Having Different Name ...Correction Needed
  */
 
@@ -16,7 +16,7 @@ gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 function GenericCard(props) {
-    let CardType = cardChooser(props.card?.type);
+    let CardType = cardChooser(props.card?.type , props.card.content);
     useEffect(
         () => { gsap.set("#".concat(props.id), { opacity: 1, ...props.card.position }) }
         , [props.id, props.card.position])
@@ -42,9 +42,9 @@ function GenericCard(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     )
-
+    
     return (
-        <div id={props.id} className="card custom_card border-0" style={{ width: 350, height: 200, position: "absolute", opacity: 0 }}>
+        <div id={props.id} className="card custom_card border-0" style={{ width: props.card.size?.width, height: props.card.size.height, position: "absolute", opacity: 0 }}>
             <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                 <button className="absolute delete_btn wh-20p rounded-circle"
                     onClick={() => props.genericAPI.removeCard(props.id, "recursive", props.card.parent)}>
@@ -60,8 +60,8 @@ function GenericCard(props) {
                             y: props.card.position.y + 100
                         },
                         {
-                            width: 300,
-                            height: 300,
+                            width: props.card.size.width,
+                            height: props.card.size.height,
                         },
                         props.id,
                         "blank"

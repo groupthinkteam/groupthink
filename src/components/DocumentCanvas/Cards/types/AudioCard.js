@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/src/styles.scss';
-
+import ProgressBar from 'react-bootstrap/ProgressBar'
 /**
  * This File Shows the Input of Audio File .
  * @param {*} props 
@@ -12,10 +12,11 @@ const AudioCard = (props) => {
     const listOfExtension = "audio/* "
     const requestUpload = (e) => {
         const file = e.target.files[0];
+        if(file != undefined)
         var metadata = {
-            contentType: file.type
+            contentType: file?.type
         };
-        let uploadPath = props.id + "/" + file.lastModified
+        let uploadPath = props.id + "/" + file.name.split(".")[0] +">"+file.lastModified+"/";
         console.log("path sent from audio:", uploadPath)
         props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
             console.log(uploadStatus)
@@ -23,7 +24,14 @@ const AudioCard = (props) => {
                 setUploading("uploaded")
                 props.typeAPI.requestDownload(
                     uploadPath,
-                    (url, metadata) => props.typeAPI.saveContent(props.id, { url: url, metadata: metadata })
+                    (url, metadata) => 
+                    props.typeAPI.saveContent(props.id,{
+                        [metadata.name]: 
+                        { 
+                            url: url, metadata: metadata 
+                        },
+                        ["/text"] : null
+                    })
                 )
             }
             else {
@@ -31,24 +39,34 @@ const AudioCard = (props) => {
             }
         })
     }
-
+    
     return (
         <div>
-            {uploading ? "upload progress: " + uploading : "not uploading"}
+
+            {
+                (typeof uploading === "number") ? 
+                <ProgressBar animated now={uploading} label={`${Math.floor(uploading)}%`}></ProgressBar>  
+                : null
+            }
             <input
                 type="file"
                 accept={listOfExtension}
                 onChange={(e) => requestUpload(e)}
             />
-            { props.content.url ?
-                <div key={props.content.metadata.name}>
-                    File Name : {props.content.metadata.name}
-                    <AudioPlayer
-                        src={props.content.url}
-                        showDownloadProgress="false"
-                        preload="metadata"
-                    />
-                </div>
+            { props.content.text === undefined ?
+                Object.entries(props.content).map((fileKey,val)=>{
+                    //console.log(fileKey[0] , fileKey[1]?.url )//
+                    return (
+                        <div key={fileKey[0]}>
+                        File Name : {fileKey[0].split(">")[0]}
+                        <AudioPlayer
+                            src={fileKey[1]?.url}
+                            showDownloadProgress="false"
+                            preload="metadata"
+                        />
+                        </div>
+                    )
+                })
                 : null
             }
         </div>
