@@ -212,8 +212,9 @@ export default function CardManager(props) {
     */
     const saveContent = (id, newContent) => {
         changeContent(id, newContent);
-        projectRef.child(id).child("content").set(newContent)
-            .then(console.log("saved new content for", id));
+        projectRef.child(id).child("content").update(newContent)
+            .then(console.log("saved new content for", id))
+            .catch(err=>console.log("Save COntent Error \n",newContent,"\n saveContent",err));
     }
     /**
      * Changes the type of card to dzired type .  

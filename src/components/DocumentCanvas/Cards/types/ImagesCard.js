@@ -15,10 +15,11 @@ const ImagesCard = (props) =>{
   const listOfExtension= "image/*"
   const requestUpload = (e) => {
     const file = e.target.files[0];
+    if(file != undefined)
     var metadata = {
-        contentType: file.type
+        contentType: file?.type
     };
-    let uploadPath = props.id + "/" + file.lastModified
+    let uploadPath = props.id + "/" + file.name.split(".")[0] +">"+file.lastModified+"/";
     console.log("path sent from audio:", uploadPath)
     props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
         console.log(uploadStatus)
@@ -26,7 +27,14 @@ const ImagesCard = (props) =>{
             setUploading("uploaded")
             props.typeAPI.requestDownload(
                 uploadPath,
-                (url, metadata) => props.typeAPI.saveContent(props.id, { url: url, metadata: metadata })
+                (url, metadata) => 
+                props.typeAPI.saveContent(props.id,{
+                    [metadata.name]: 
+                    { 
+                        url: url, metadata: metadata 
+                    },
+                    ["/text"] : null
+                })
             )
         }
         else {
@@ -55,29 +63,34 @@ const ImagesCard = (props) =>{
             accept={`image/x-png,image/gif,image/jpeg,image/svg,${listOfExtension}`}
             onChange={(e) => requestUpload(e)}
         />
-        { props.content.url ?
-            <div key={props.content.metadata.name}>
-              File Name : {props.content.metadata.name}
-              <Gallery photos={[{src:`${props.content.url}` , width:6 , height:7}]} onClick={openLightbox} />
-              <ModalGateway>
-                {
-                  viewerIsOpen ?
-                  <Modal onClose={closeLightbox} >
-                    <Carousel
-                      currentIndex={currentImage}
-                      views={[{src:`${props.content.url}` , width:6 , height:7}].map(x => ({
-                        ...x,
-                        srcset: x.srcSet,
-                        caption: x.title
-                        }))
-                      }
-                    />
-                  </Modal>
-                  : null
-                }
-              </ModalGateway>
-            </div>
-            : null
+        { 
+          props.content.text === undefined ?
+          Object.entries(props.content).map((fileKey,val)=>{
+            return(
+              <div key={fileKey[0]}>
+                File Name : {fileKey[0].split(">")[0]}
+                <Gallery photos={[{src:`${fileKey[1]?.url}` , width:6 , height:7}]} onClick={openLightbox} />
+                <ModalGateway>
+                  {
+                    viewerIsOpen ?
+                    <Modal onClose={closeLightbox} >
+                      <Carousel
+                        currentIndex={currentImage}
+                        views={[{src:`${fileKey[1]?.url}` , width:6 , height:7}].map(x => ({
+                          ...x,
+                          srcset: x.srcSet,
+                          caption: x.title
+                          }))
+                        }
+                      />
+                    </Modal>
+                    : null
+                  }
+                </ModalGateway>
+              </div>
+            )
+          })
+          : null
         }
     </div>
   )

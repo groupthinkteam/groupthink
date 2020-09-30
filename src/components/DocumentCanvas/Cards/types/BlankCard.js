@@ -46,21 +46,29 @@ function BlankCard(props) {
     }
     const requestUpload = (e) => {
         const file = e.target.files[0];
+        if(file != undefined)
         var metadata = {
-            contentType: file.type
+            contentType: file?.type
         };
-        let uploadPath = props.id + "/" + file.name +"/";
+        let uploadPath = props.id + "/" + file.name.split(".")[0] +">"+file.lastModified+"/";
         const type = typeDetector(metadata.contentType);
-        console.log("path sent from audio:", uploadPath,type , types[type])
+        console.log("path sent from audio:", uploadPath)
         props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
             console.log(uploadStatus)
             if (uploadStatus === "complete") {
                 setUploading("uploaded")
                 props.typeAPI.requestDownload(
                     uploadPath,
-                    (url, metadata) =>{
-                        props.typeAPI.changeType(props.id , type, types[type])
-                        props.typeAPI.saveContent(props.id, { url: url, metadata: metadata })    
+                    (url, metadata) => 
+                    {
+                        props.typeAPI.changeType(props.id,type,types[type])
+                        props.typeAPI.saveContent(props.id,{
+                            [metadata.name]: 
+                            { 
+                                url: url, metadata: metadata 
+                            },
+                            ["/text"] : null
+                        })
                     }
                 )
             }

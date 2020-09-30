@@ -9,10 +9,11 @@ const FilesCard = (props) => {
   const listOfExtension = ".odt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
   const requestUpload = (e) => {
     const file = e.target.files[0];
+    if(file != undefined)
     var metadata = {
-        contentType: file.type
+        contentType: file?.type
     };
-    let uploadPath = props.id + "/" + file.lastModified
+    let uploadPath = props.id + "/" + file.name.split(".")[0] +">"+file.lastModified+"/";
     console.log("path sent from audio:", uploadPath)
     props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
         console.log(uploadStatus)
@@ -20,7 +21,14 @@ const FilesCard = (props) => {
             setUploading("uploaded")
             props.typeAPI.requestDownload(
                 uploadPath,
-                (url, metadata) => props.typeAPI.saveContent(props.id, { url: url, metadata: metadata })
+                (url, metadata) => 
+                props.typeAPI.saveContent(props.id,{
+                    [metadata.name]: 
+                    { 
+                        url: url, metadata: metadata 
+                    },
+                    ["/text"] : null
+                })
             )
         }
         else {
@@ -41,11 +49,16 @@ const FilesCard = (props) => {
             accept={listOfExtension}
             onChange={(e) => requestUpload(e)}
         />
-        { props.content.url ?
-            <div key={props.content.metadata.name}>
-                File Name : 
-                  <a href={props.content.url} target="_blank">{props.content.metadata.name}</a>                   
-            </div>
+        { 
+            props.content.text === undefined ?
+            Object.entries(props.content).map((fileKey,val)=>{
+                return(
+                    <div key={fileKey[0]}>
+                        File Name : 
+                        <a href={fileKey[1]?.url} target="_blank">{fileKey[0].split(">")[0]}</a>                   
+                    </div>
+                )
+            })
             : null
         }
     </div>
