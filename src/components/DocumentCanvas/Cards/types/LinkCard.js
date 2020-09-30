@@ -17,7 +17,7 @@ const LinkCard = (props) =>
           '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
         return !!pattern.test(str);
     }
-    const onSave = () => props.typeAPI.saveContent(props.id,{ url: props.content.url })
+    const onSave = () => validURL(props.content.url) ? props.typeAPI.saveContent(props.id,{ url: props.content.url }) : null
     const onChange = (event) => props.typeAPI.changeContent(props.id,{url:event.target.value})
     
     return(
@@ -49,4 +49,4 @@ const LinkCard = (props) =>
     )    
     
 }
-export default LinkCard;
+export default React.memo(LinkCard);

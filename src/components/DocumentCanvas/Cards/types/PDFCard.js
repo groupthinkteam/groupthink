@@ -79,4 +79,4 @@ const PDFCard = (props) =>{
     </div>
   )  
 }
-export default PDFCard;
+export default React.memo(PDFCard);

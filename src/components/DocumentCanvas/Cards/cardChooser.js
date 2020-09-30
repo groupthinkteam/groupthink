@@ -1,4 +1,4 @@
-import YoutubeCard from "./types/YoutubeCard";
+import OnlineVideoCard from "./types/OnlineVideoCard";
 import PDFCard from "./types/PDFCard";
 import ImagesCard from "./types/ImagesCard";
 import FilesCard from "./types/FilesCard";
@@ -18,7 +18,7 @@ export default function cardChooser(type) {
         case "text":
             return TextCard;
         case "VideoLink":
-            return YoutubeCard;
+            return OnlineVideoCard;
         case "VideoFile":
             return VideosCard;
         case "image":

@@ -5,5 +5,4 @@ const Button = ({handleClick, children , className , style}) => {
     <button onClick={handleClick} className={className} style={style}>{children}</button>
   )
 }
-
-export default Button;
+export default React.memo(Button);

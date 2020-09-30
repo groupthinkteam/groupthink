@@ -15,10 +15,10 @@ import "../../../styles/Cards/GenericCard.scss";
 gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
-export default function GenericCard(props) {
+function GenericCard(props) {
     let CardType = cardChooser(props.card?.type);
     useEffect(
-        () => { gsap.set("#".concat(props.id), props.card.position) }
+        () => { gsap.set("#".concat(props.id), { opacity: 1, ...props.card.position }) }
         , [props.id, props.card.position])
     useEffect(
         () => {
@@ -39,12 +39,12 @@ export default function GenericCard(props) {
                     onDragEnd: dragStop
                 })
             return () => y[0].kill()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     )
 
     return (
-        <div  id={props.id} className="card custom_card border-0" style={{ width: 350, height: 200, position: "absolute" }}>
+        <div id={props.id} className="card custom_card border-0" style={{ width: 350, height: 200, position: "absolute", opacity: 0 }}>
             <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                 <button className="absolute delete_btn wh-20p rounded-circle"
                     onClick={() => props.genericAPI.removeCard(props.id, "recursive", props.card.parent)}>
@@ -73,3 +73,5 @@ export default function GenericCard(props) {
         </div>
     )
 }
+
+export default React.memo(GenericCard);

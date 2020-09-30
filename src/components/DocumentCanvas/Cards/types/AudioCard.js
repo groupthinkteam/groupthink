@@ -55,4 +55,4 @@ const AudioCard = (props) => {
 
     )
 }
-export default AudioCard;
+export default React.memo(AudioCard);

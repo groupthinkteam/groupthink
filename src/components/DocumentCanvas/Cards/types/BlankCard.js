@@ -7,9 +7,9 @@ import Button from "../../../Button/Button";
  * it makes use of the changeType function.
  * @param {*} props 
  */
-export default function BlankCard(props) {
+function BlankCard(props) {
 
-    let types = ["text", "image", "VideoLink", "VideoFile", "link", "audio", "pdf","file"]
+    let types = ["text", "image", "VideoLink", "VideoFile", "link", "audio", "pdf", "file"]
 
     return (
         <div className="button_link">
@@ -20,3 +20,5 @@ export default function BlankCard(props) {
         </div>
     )
 }
+
+export default React.memo(BlankCard)

@@ -54,4 +54,4 @@ const VideosCard = (props) =>{
     )
     
 }
-export default VideosCard;
+export default React.memo(VideosCard);

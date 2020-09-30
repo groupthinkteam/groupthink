@@ -47,4 +47,4 @@ const FilesCard = (props) => {
     </div>
   )
 }
-export default FilesCard;
+export default React.memo(FilesCard);

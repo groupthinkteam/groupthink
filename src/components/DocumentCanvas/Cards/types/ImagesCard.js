@@ -78,4 +78,4 @@ const ImagesCard = (props) =>{
     </div>
   )
 }
-export default ImagesCard;
+export default React.memo(ImagesCard);
