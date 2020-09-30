@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import CardContainer from "./CardContainer";
 import throttle from 'lodash.throttle';
-import { firebaseDB, firebaseStorage } from "../../services/firebase";
+import { firebaseDB, firebaseStorage, firebaseTIME } from "../../services/firebase";
 import cardTemplate from "../../constants/cardTemplates";
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
@@ -297,14 +297,17 @@ export default function CardManager(props) {
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     }
     /**
-     * This Function Updates Mouse X and Y Position to Database 
+     * This Function Updates Mouse X and Y Positions and Time to Database 
      */
     const sendToDatabase = useCallback(throttle(
         (event) => {
           if (room != undefined) {
             //console.log(room[props.currentUser().uid],event.clientX , event.clientY)
             firebaseDB.ref("documents/" + props.projectID+"/room/").child(props.currentUser().uid)
-              .set({ x: event.clientX, y: event.clientY })
+              .set({ x: event.clientX, y: event.clientY, time: firebaseTIME })
+                
+              //firebaseDB.ref("documents/" + props.projectID+"/room/").child(props.currentUser().uid)
+              //.set({ time: firebaseDB.ServerValue.TIMESTAMP })
           }
         },
         100), [room])
@@ -342,6 +345,7 @@ export default function CardManager(props) {
                 currentUser={props.currentUser}
                 containerAPI = {containerAPI}
                 room={room}
+                projectID={props.projectID}
             />
             :
             <div>
