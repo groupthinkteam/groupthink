@@ -1,7 +1,7 @@
 import React,{useState,useCallback} from 'react';
 import Gallery from "react-photo-gallery";
 import Carousel, { Modal, ModalGateway } from "react-images";
-
+import ProgressBar from 'react-bootstrap/ProgressBar'
 /**
  * This Card Upload Image file & Shows the Image in Galllery
  * @param {*} props - Property of File .
@@ -45,7 +45,11 @@ const ImagesCard = (props) =>{
   };
   return (
     <div>
-        {uploading ? "upload progress: " + uploading : "not uploading"}
+        {
+            (typeof uploading === "number") ? 
+            <ProgressBar animated now={uploading} label={`${Math.floor(uploading)}%`}></ProgressBar>  
+            : null
+        }
         <input
             type="file"
             accept={`image/x-png,image/gif,image/jpeg,image/svg,${listOfExtension}`}

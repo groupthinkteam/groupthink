@@ -17,8 +17,16 @@ const OnlineVideoCard = (props) => {
         return !!pattern.test(str);
     }
 
-    const onSave = () => props.typeAPI.saveContent(props.id, { url: props.content.url })
-    const onChange = (event) => props.typeAPI.changeContent(props.id, { url: event.target.value })
+    const onSave = () =>{ 
+        props.typeAPI.resize(props.id,{width : 350 , height : 400})
+        props.typeAPI.saveContent(props.id, { url: props.content?.url })
+    }
+    const onChange = (event) =>{
+        if(validURL(event.target.value)) 
+        props.typeAPI.changeContent(props.id, { url: event.target.value })
+        else
+        props.typeAPI.changeContent(props.id, { text: event.target.value })
+    }
 
     return (
         <>
@@ -35,8 +43,8 @@ const OnlineVideoCard = (props) => {
                     <div >
                         <ReactPlayer
                             url={props.content.url}
-                            //width={props.CardDetail.size.width}
-                            //height={`${heigth}px`}  
+                            width=""
+                            height="250px"  
                             controls={true}
                         />
                     </div>

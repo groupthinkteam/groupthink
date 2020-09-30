@@ -220,8 +220,8 @@ export default function CardManager(props) {
      * @param {String} id - the card for which to perform the operation
      * @param {String} newType - the newType which is going to be changed.
      */
-    const changeType = (id, newType) => {
-        const newTypeCard = cardTemplate(newType); //type,size,content
+    const changeType = (id, newType,size) => {
+        const newTypeCard = cardTemplate(newType,size); //type,size,content
         setCards({ ...cards, 
             [id]: { 
                 ...cards[id], 
@@ -325,7 +325,8 @@ export default function CardManager(props) {
         changeContent: changeContent,
         requestUpload: requestUpload,
         requestDownload: requestDownload,
-        changeType : changeType
+        changeType : changeType,
+        resize: resize
     }
 
     const containerAPI = {

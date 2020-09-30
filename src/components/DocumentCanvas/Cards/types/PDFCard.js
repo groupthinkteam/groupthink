@@ -1,17 +1,19 @@
-import React,{useState} from 'react';
+import React,{useRef, useState} from 'react';
 import { Document, Page ,pdfjs} from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/umd/Page/AnnotationLayer.css';
-
+import ProgressBar from 'react-bootstrap/ProgressBar'
 /**
  * This Card Holds PDF Documents in Project.
  * @param {*} props - Property of File .
  * @property `typeAPI` , `content` , `id`
  */
+//console.log(PDFRef.current?.pages)
 const PDFCard = (props) =>{
   const [uploading, setUploading] = useState(false);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+  const PDFRef = useRef(null);
   const listOfExtension = "video/* ";
   const requestUpload = (e) => {
     const file = e.target.files[0];
@@ -49,9 +51,14 @@ const PDFCard = (props) =>{
   {
       setPageNumber( pageNumber + 1 );
   }  
+  
   return (
     <div>
-        {uploading ? "upload progress: " + uploading : "not uploading"}
+        {
+            (typeof uploading === "number") ? 
+            <ProgressBar animated now={uploading} label={`${Math.floor(uploading)}%`}></ProgressBar>  
+            : null
+        }
         <input
             type="file"
             accept="application/pdf,application/vnd.ms-excel"
@@ -68,6 +75,7 @@ const PDFCard = (props) =>{
                 <Document
                   file={props.content.url}
                   onLoadSuccess={onDocumentLoadSuccess}
+                  ref={PDFRef}
                 >
                   <Page pageNumber={pageNumber} />
                 </Document>

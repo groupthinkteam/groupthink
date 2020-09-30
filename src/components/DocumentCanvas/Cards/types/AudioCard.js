@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/src/styles.scss';
-
+import ProgressBar from 'react-bootstrap/ProgressBar'
 /**
  * This File Shows the Input of Audio File .
  * @param {*} props 
@@ -15,7 +15,7 @@ const AudioCard = (props) => {
         var metadata = {
             contentType: file.type
         };
-        let uploadPath = props.id + "/" + file.lastModified
+        let uploadPath = props.id + "/" + file.name +"/"
         console.log("path sent from audio:", uploadPath)
         props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
             console.log(uploadStatus)
@@ -34,7 +34,12 @@ const AudioCard = (props) => {
 
     return (
         <div>
-            {uploading ? "upload progress: " + uploading : "not uploading"}
+
+            {
+                (typeof uploading === "number") ? 
+                <ProgressBar animated now={uploading} label={`${Math.floor(uploading)}%`}></ProgressBar>  
+                : null
+            }
             <input
                 type="file"
                 accept={listOfExtension}

@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-
+import ProgressBar from 'react-bootstrap/ProgressBar'
 /**
  * This File Input's the Files(e.g. `.odt,.doc,.docx`) And Features to download the file .
  * @param {*} props 
@@ -28,10 +28,14 @@ const FilesCard = (props) => {
         }
     })
   }
-  console.log("Metadat FileCard",props.content.metadata)
+  //console.log("Metadat FileCard",props.content.metadata)
   return (
     <div>
-        {uploading ? "upload progress: " + uploading : "not uploading"}
+        {
+            (typeof uploading === "number") ? 
+            <ProgressBar animated now={uploading} label={`${Math.floor(uploading)}%`}></ProgressBar>  
+            : null
+        }
         <input
             type="file"
             accept={listOfExtension}
