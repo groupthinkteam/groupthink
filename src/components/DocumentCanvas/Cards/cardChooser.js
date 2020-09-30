@@ -19,7 +19,7 @@ import BlankCard from "./types/BlankCard";
  * @param {*} content 
  */
 // returns a CardType component based on "type"
-export default function cardChooser(type,content) {
+export default function cardChooser(type) {
     
     switch (type) {
         case "blank":
