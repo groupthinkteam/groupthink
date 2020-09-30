@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import GenericCard from "./Cards/GenericCard"
 import Cursor from "./Cursor";
+import Arrow from "../Arrow/Arrow";
 /**
  * props:
  * 
@@ -31,18 +32,23 @@ export default function CardContainer(props) {
                     props.cards ? Object.entries(props.cards).filter(([id, card]) => id && id !== "root").map(
                         ([id, card]) => {
                             return (
-                                <GenericCard
-                                    key={id}
-                                    id={id}
-                                    card={card}
-                                    genericAPI={props.genericAPI}
-                                    typeAPI={props.typeAPI}
-                                />
+                                <div>
+                                    <GenericCard
+                                        key={id}
+                                        id={id}
+                                        card={card}
+                                        genericAPI={props.genericAPI}
+                                        typeAPI={props.typeAPI}
+                                    />
+                                    {card.parent && card.parent !== "root" &&
+                                        <Arrow id={"arrow".concat(id)} hits={Object.keys(props.cards)} head={props.cards[card.parent]["position"]} tail={card.position} />
+                                    }
+                                </div>
                             )
                         }
                     ) : <p>Double Click to Add a Card</p>
                 }
-                {
+                { // cursors
                     props.room != undefined ?
                         Object.entries(props.room)
                             .filter(([id, position]) =>
