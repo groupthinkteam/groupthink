@@ -58,12 +58,12 @@ export default function CardContainer(props) {
                              * Check for the idle time of cursors in the room.
                              * Change the comparison value to increase/decrease the timeout.
                              */
-                            .map(([id, position]) =>
+                            .map(([id, values]) =>
                                 <Cursor key={props.currentUser().uid}
-                                    id={props.currentUser().uid}
-                                    name={props.currentUser().displayName}
-                                    x={position.x}
-                                    y={position.y}
+                                    id={id}
+                                    name={values.name}
+                                    x={values.x}
+                                    y={values.y}
                                     projectID={props.projectID}
                                     room={props.room} />)
                         : null

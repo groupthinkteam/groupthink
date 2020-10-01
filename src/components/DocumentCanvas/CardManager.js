@@ -18,7 +18,7 @@ export default function CardManager(props) {
     containerRef.current = container;
 
     //
-    const [room , setRoom] = useState();
+    const [room, setRoom] = useState();
     // store card-related state
     const [cards, setCards] = useState({});
 
@@ -43,9 +43,9 @@ export default function CardManager(props) {
             console.log("triggered container size listener, received payload", snapshot.val());
             setContainer(snapshot.val());
         });
-        projectRef.child("room").on("value",(snap)=>{
+        projectRef.child("room").on("value", (snap) => {
             console.log("Room Details Triggered recieved payload", snap.val());
-            setRoom(snap.val());
+            snap.val() && setRoom(snap.val());
         })
         setIsLoaded(true)
         return () => {
@@ -124,15 +124,15 @@ export default function CardManager(props) {
             while (stack.length > 0) {
                 let poppedID = stack.pop();
                 updates[poppedID] = null;
-                if(cards[poppedID]["children"])
-                stack.concat(Object.keys(cards[poppedID]["children"]))
+                if (cards[poppedID]["children"])
+                    stack.concat(Object.keys(cards[poppedID]["children"]))
             }
         }
 
         switch (strategy) {
             case "recursive":
-                if(cards[id]["children"])
-                depthFirstTraversal(Object.keys(cards[id]["children"]));
+                if (cards[id]["children"])
+                    depthFirstTraversal(Object.keys(cards[id]["children"]));
                 break;
             case "reparent":
                 Object.keys(cards[id]["children"])
@@ -142,19 +142,18 @@ export default function CardManager(props) {
                 break;
         }
 
-        
-        const types = ["link","blank" , "VideoLink" , "text"];
-        console.log(cards[id].type , types.includes(cards[id].type,0))
+
+        const types = ["link", "blank", "VideoLink", "text"];
+        console.log(cards[id].type, types.includes(cards[id].type, 0))
         //-----------If Type Contains Storage -----------
-        if(!types.includes(cards[id].type,0) )
-        {
-            const path = "root"+"/"+props.projectID+"/"+id+"/";
+        if (!types.includes(cards[id].type, 0)) {
+            const path = "root" + "/" + props.projectID + "/" + id + "/";
             /**
              * This Function Delete A Particular File From Firebase Storage to given Path
              * @param {*} pathToFile The Path To Which Contents Should be delete
              * @param {*} fileName The FileName Which Has To be Delete
-             */ 
-            const deleteFile = (pathToFile , fileName) => {
+             */
+            const deleteFile = (pathToFile, fileName) => {
                 const ref = firebaseStorage().ref(pathToFile);
                 const childRef = ref.child(fileName);
                 childRef.delete().then(console.log("File Deleted"))
@@ -164,31 +163,28 @@ export default function CardManager(props) {
              * And Then once a file is Got then Delete File Else No Files Exists.
              * @param {*} path The Path To Which Contents Should be delete
              */
-            const deleteFolderContents = (path) =>{
+            const deleteFolderContents = (path) => {
                 var storageRef = firebaseStorage().ref(path);
                 storageRef.listAll()
-                .then((dir)=>{
-                    //-------Files Exist-------
-                    if(dir.items.length > 0)
-                    {
-                        dir.items.forEach((fileRef)=>{
-                        deleteFile(storageRef.fullPath , fileRef.name)
-                        })
-                    }
-                    else
-                    {
-                        console.log("No Files Exist")
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+                    .then((dir) => {
+                        //-------Files Exist-------
+                        if (dir.items.length > 0) {
+                            dir.items.forEach((fileRef) => {
+                                deleteFile(storageRef.fullPath, fileRef.name)
+                            })
+                        }
+                        else {
+                            console.log("No Files Exist")
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             }
             //----Calls to Delete Folder Contents----
             deleteFolderContents(path)
         }
-        else
-        {
+        else {
             console.log("Its a NOn Storage Card")
         }
         projectRef.update(updates).then(console.log("deleted", id, "successfully"))
@@ -263,28 +259,29 @@ export default function CardManager(props) {
         changeContent(id, newContent);
         projectRef.child(id).child("content").update(newContent)
             .then(console.log("saved new content for", id))
-            .catch(err=>console.log("Save COntent Error \n",newContent,"\n saveContent",err));
+            .catch(err => console.log("Save COntent Error \n", newContent, "\n saveContent", err));
     }
     /**
      * Changes the type of card to dzired type .  
      * @param {String} id - the card for which to perform the operation
      * @param {String} newType - the newType which is going to be changed.
      */
-    const changeType = (id, newType,size) => {
-        const newTypeCard = cardTemplate(newType,size); //type,size,content
-        setCards({ ...cards, 
-            [id]: { 
-                ...cards[id], 
+    const changeType = (id, newType, size) => {
+        const newTypeCard = cardTemplate(newType, size); //type,size,content
+        setCards({
+            ...cards,
+            [id]: {
+                ...cards[id],
                 type: newTypeCard.type,
                 size: newTypeCard.size,
-                content : newTypeCard.content 
-            } 
+                content: newTypeCard.content
+            }
         });
         const updates = {};
-        updates[id+'/type'] = newTypeCard.type;
-        updates[id+'/size'] = newTypeCard.size;
-        updates[id+'/content'] = newTypeCard.content;
-        projectRef.update(updates).then(console.log("Set new type for",id ,"to \n",newTypeCard)).catch(err=>err);
+        updates[id + '/type'] = newTypeCard.type;
+        updates[id + '/size'] = newTypeCard.size;
+        updates[id + '/content'] = newTypeCard.content;
+        projectRef.update(updates).then(console.log("Set new type for", id, "to \n", newTypeCard)).catch(err => err);
         //projectRef.child(id).child("type").set(newType).then(console.log("set new type for", id, "to", newType));
     }
     /** 
@@ -351,14 +348,14 @@ export default function CardManager(props) {
      */
     const sendToDatabase = useCallback(throttle(
         (event) => {
-          if (room != undefined) {
-            //console.log(room[props.currentUser().uid],event.clientX , event.clientY)
-            firebaseDB.ref("documents/" + props.projectID+"/room/").child(props.currentUser().uid)
-              .set({ x: event.clientX, y: event.clientY, time: firebaseTIME })
-                
-              //firebaseDB.ref("documents/" + props.projectID+"/room/").child(props.currentUser().uid)
-              //.set({ time: firebaseDB.ServerValue.TIMESTAMP })
-          }
+            if (room) {
+                //console.log(room[props.currentUser().uid],event.clientX , event.clientY)
+                firebaseDB.ref("documents/" + props.projectID + "/room/").child(props.currentUser().uid)
+                    .set({ x: event.clientX, y: event.clientY, time: firebaseTIME, name: props.currentUser().displayName })
+
+                //firebaseDB.ref("documents/" + props.projectID+"/room/").child(props.currentUser().uid)
+                //.set({ time: firebaseDB.ServerValue.TIMESTAMP })
+            }
         },
         100), [room])
     /**
@@ -378,12 +375,12 @@ export default function CardManager(props) {
         changeContent: changeContent,
         requestUpload: requestUpload,
         requestDownload: requestDownload,
-        changeType : changeType,
+        changeType: changeType,
         resize: resize
     }
 
     const containerAPI = {
-        sendToDatabase :  sendToDatabase
+        sendToDatabase: sendToDatabase
     }
     return (
         isLoaded ?
@@ -394,7 +391,7 @@ export default function CardManager(props) {
                 typeAPI={typeAPI}
                 permission={props.permission}
                 currentUser={props.currentUser}
-                containerAPI = {containerAPI}
+                containerAPI={containerAPI}
                 room={room}
                 projectID={props.projectID}
             />
