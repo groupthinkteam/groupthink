@@ -8,21 +8,23 @@ import * as Crypto from 'crypto-js/aes';
 import "../../styles/MenuBar.scss"
 
 //----Create "Public" in Database ----
-const createPublic = (id,permission,uid) =>
+const createPublic = (id,permission,uid,name) =>
 {
     
     const path = `documents/${id}/` ;
     const updates = {};
     updates[path + "/users/public"] = permission;
+    updates[path+"/room/"+uid+"/name"] = name
     updates[path+"/room/"+uid] =  {
         X_POS : 0 ,
         Y_POS : 0
     }
     firebaseDB.ref().update(updates).then(console.log("Created Public With Permission",permission))
 }
-const createRoom = async(child,uid) =>
+const createRoom = async(child,uid,name) =>
 {
     const updates = {};
+    updates[`documents/${child}/room/`+uid+"/name/"] = name
     updates[`documents/${child}/room/`+uid] ={
         X_POS : 0 ,
         Y_POS : 0
@@ -50,7 +52,7 @@ const ShareLink = (props) =>
             setLink(true) 
             if(linkType === "private")
             {
-                createRoom(props.projectID,props.currentUser.uid).then("Room Made").catch(err=>err)
+                createRoom(props.projectID,props.currentUser.uid,props.currentUser.displayName).then("Room Made").catch(err=>err)
                 //-----Encryption-------
                 const encryptPermission = Crypto.encrypt(permission,"grpthink12!").toString();
                 // ------- Used '/' to omit "/:permissionID"
@@ -61,7 +63,7 @@ const ShareLink = (props) =>
             }
             else
             {
-                createPublic(props.projectID,permission,props.currentUser.uid)
+                createPublic(props.projectID,permission,props.currentUser.uid,props.currentUser.displayName)
                 setURL(String(window.location))
             }
         }

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import GenericCard from "./Cards/GenericCard"
 import Cursor from "./Cursor";
 import Arrow from "../Arrow/Arrow";
-import { firebase } from "firebase";
 /**
  * props:
  * 
@@ -50,7 +49,7 @@ export default function CardContainer(props) {
                     ) : <p>Double Click to Add a Card</p>
                 }
                 {
-                    props.room !== undefined
+                    props.room != null || props.room != undefined
                         ? Object.entries(props.room)
                             .filter(
                                 ([id, values]) => id !== props.currentUser().uid && (dateTime - Number(values.time) < 60000))
@@ -58,14 +57,15 @@ export default function CardContainer(props) {
                              * Check for the idle time of cursors in the room.
                              * Change the comparison value to increase/decrease the timeout.
                              */
-                            .map(([id, values]) =>
-                                <Cursor key={props.currentUser().uid}
+                            .map(([id, position]) =>
+                                
+                                <Cursor key={id}
                                     id={id}
-                                    name={values.name}
-                                    x={values.x}
-                                    y={values.y}
+                                    name={position.name}
+                                    x={position.x}
+                                    y={position.y}
                                     projectID={props.projectID}
-                                    room={props.room} />)
+                            room={props.room} /> )
                         : null
                 }
             </div>
