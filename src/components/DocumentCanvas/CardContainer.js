@@ -58,14 +58,13 @@ export default function CardContainer(props) {
                              * Change the comparison value to increase/decrease the timeout.
                              */
                             .map(([id, values]) =>
-                                
                                 <Cursor key={id}
                                     id={id}
                                     name={values.name}
                                     x={values.x}
                                     y={values.y}
                                     projectID={props.projectID}
-                            room={props.room} /> )
+                                    room={props.room} />)
                         : null
                 }
             </div>

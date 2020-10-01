@@ -1,8 +1,6 @@
-import React, { useRef, useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
+import React from 'react';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/umd/Page/AnnotationLayer.css';
-import ProgressBar from 'react-bootstrap/ProgressBar'
 /**
  * This Card Holds PDF Documents in Project.
  * @param {*} props - Property of File .

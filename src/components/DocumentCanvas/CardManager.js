@@ -11,7 +11,7 @@ import cardTemplate from "../../constants/cardTemplates";
  */
 export default function CardManager(props) {
     const [isLoaded, setIsLoaded] = useState(false);
-
+    console.log("my name is", props.currentUser().uid)
     // store container-related state
     const [container, setContainer] = useState({ width: 600, height: 800 });
     const containerRef = useRef({});
@@ -349,12 +349,8 @@ export default function CardManager(props) {
     const sendToDatabase = useCallback(throttle(
         (event) => {
             if (room) {
-                //console.log(room[props.currentUser().uid],event.clientX , event.clientY)
                 firebaseDB.ref("documents/" + props.projectID + "/room/").child(props.currentUser().uid)
                     .set({ x: event.clientX, y: event.clientY, time: firebaseTIME, name: props.currentUser().displayName })
-
-                //firebaseDB.ref("documents/" + props.projectID+"/room/").child(props.currentUser().uid)
-                //.set({ time: firebaseDB.ServerValue.TIMESTAMP })
             }
         },
         100), [room])
