@@ -46,7 +46,7 @@ function GenericCard(props) {
     return (
         <div id={props.id} className="generic-card" style={{ width: props.card.size?.width, height: props.card.size.height, position: "absolute", opacity: 0 }}>
             <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
-                <button className="card-control-button"
+                <button className="card-control-button add"
                     onClick={() => props.genericAPI.addChild(
                         {
                             x: props.card.position.x + 100,
@@ -61,10 +61,10 @@ function GenericCard(props) {
                     )}>
                     +
                 </button>
-                <button className="card-control-button">
+                <button className="card-control-button lock">
                     <i className="fa fa-lock" aria-hidden="true"></i>
                 </button>
-                <button className="card-control-button"
+                <button className="card-control-button delete"
                     onClick={() => props.genericAPI.removeCard(props.id, "recursive", props.card.parent)}>
                     X
                 </button>

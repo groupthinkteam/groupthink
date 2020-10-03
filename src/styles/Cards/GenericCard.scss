@@ -13,13 +13,33 @@
     flex-flow: row nowrap;
     justify-content: flex-end;
     align-items: center;
+    padding-right: 5px;
 
     .card-control-button {
         border-width: 0px;
-        height: 20px;
-        width: 20px;
-        border-radius: 5px;
+        height: 15px;
+        width: 15px;
+        border-radius: 8px;
         padding: 0px 0px 0px 0px;
+        margin: 3px;
+        font-size: 10px;
+        font-weight: 800;
+        font-family: "B612 Mono", monospace;
+        &.add {
+            background-color: #00CA4E;
+            color: #00CA4E;
+        }
+        &.delete {
+            background-color: #FF605C;
+            color: #FF605C;
+        }
+        &.lock {
+            background-color: #FFBD44;
+            color: #FFBD44;
+        }
+        &:hover {
+            color: black;
+        }
     }
 }
 
