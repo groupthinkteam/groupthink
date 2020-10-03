@@ -16,7 +16,7 @@ gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 function GenericCard(props) {
-    let CardType = cardChooser(props.card?.type , props.card.content);
+    let CardType = cardChooser(props.card?.type, props.card.content);
     useEffect(
         () => { gsap.set("#".concat(props.id), { opacity: 1, ...props.card.position }) }
         , [props.id, props.card.position])
@@ -42,18 +42,11 @@ function GenericCard(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     )
-    
+
     return (
-        <div id={props.id} className="card custom_card border-0" style={{ width: props.card.size?.width, height: props.card.size.height, position: "absolute", opacity: 0 }}>
+        <div id={props.id} className="generic-card" style={{ width: props.card.size?.width, height: props.card.size.height, position: "absolute", opacity: 0 }}>
             <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
-                <button className="absolute delete_btn wh-20p rounded-circle"
-                    onClick={() => props.genericAPI.removeCard(props.id, "recursive", props.card.parent)}>
-                    X
-                </button>
-                <button className="absolute lock_btn wh-20p rounded-circle">
-                    <i className="fa fa-lock" aria-hidden="true"></i>
-                </button>
-                <button className="absolute add_btn wh-20p"
+                <button className="card-control-button"
                     onClick={() => props.genericAPI.addChild(
                         {
                             x: props.card.position.x + 100,
@@ -66,7 +59,14 @@ function GenericCard(props) {
                         props.id,
                         "blank"
                     )}>
-                    <span className="rounded-circle">+</span>
+                    +
+                </button>
+                <button className="card-control-button">
+                    <i className="fa fa-lock" aria-hidden="true"></i>
+                </button>
+                <button className="card-control-button"
+                    onClick={() => props.genericAPI.removeCard(props.id, "recursive", props.card.parent)}>
+                    X
                 </button>
             </div>
             <CardType typeAPI={props.typeAPI} content={props.card.content} id={props.id} />

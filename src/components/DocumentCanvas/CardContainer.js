@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import GenericCard from "./Cards/GenericCard"
 import Cursor from "./Cursor";
 import Arrow from "../Arrow/Arrow";
+
+import "../../styles/CardContainer.scss";
+
 /**
  * props:
  * 
@@ -11,7 +14,7 @@ import Arrow from "../Arrow/Arrow";
 export default function CardContainer(props) {
     const dateTime = Date.now();
     return (
-        <div className="card-container w-100 main_card"
+        <div className="card-container w-100"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1 }}>
             <div className="container-filler"
                 style={{ ...props.container, position: "absolute", zIndex: 9999999 }}
@@ -49,7 +52,7 @@ export default function CardContainer(props) {
                     ) : <p>Double Click to Add a Card</p>
                 }
                 {
-                    props.room != null || props.room != undefined
+                    props.room
                         ? Object.entries(props.room)
                             .filter(
                                 ([id, values]) => id !== props.currentUser().uid && (dateTime - Number(values.time) < 60000))

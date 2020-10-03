@@ -1,81 +1,73 @@
-import React,{useState} from "react"
+import React, { useState } from "react"
 import Button from "../Button/Button"
 import { Modal } from "react-bootstrap"
 import { firebaseDB } from "../../services/firebase"
-import { auth } from "firebase"
 import LinkSharing from "./LinkSharing"
 import * as Crypto from 'crypto-js/aes';
 import "../../styles/MenuBar.scss"
 
 //----Create "Public" in Database ----
-const createPublic = (id,permission,uid,name) =>
-{
-    
-    const path = `documents/${id}/` ;
+const createPublic = (id, permission, uid, name) => {
+
+    const path = `documents/${id}/`;
     const updates = {};
     updates[path + "/users/public"] = permission;
-    updates[path+"/room/"+uid+"/name"] = name
-    updates[path+"/room/"+uid] =  {
-        X_POS : 0 ,
-        Y_POS : 0
+    updates[path + "/room/" + uid + "/name"] = name
+    updates[path + "/room/" + uid] = {
+        X_POS: 0,
+        Y_POS: 0
     }
-    firebaseDB.ref().update(updates).then(console.log("Created Public With Permission",permission))
+    firebaseDB.ref().update(updates).then(console.log("Created Public With Permission", permission))
 }
-const createRoom = async(child,uid,name) =>
-{
+const createRoom = async (child, uid, name) => {
     const updates = {};
-    updates[`documents/${child}/room/`+uid+"/name/"] = name
-    updates[`documents/${child}/room/`+uid] ={
-        X_POS : 0 ,
-        Y_POS : 0
-    } 
-    await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err=>err)
-    
+    updates[`documents/${child}/room/` + uid + "/name/"] = name
+    updates[`documents/${child}/room/` + uid] = {
+        X_POS: 0,
+        Y_POS: 0
+    }
+    await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
+
 }
-const ShareLink = (props) =>
-{
+const ShareLink = (props) => {
     const [show, setShow] = useState(false);
-    const [link  , setLink] = useState(false)
-    const [linkType , setLinkType] = useState();
-    const [permission , setPermission] = useState();
-    const [url , setURL] =useState();
-    const handleShow = () =>  setShow(true);
+    const [link, setLink] = useState(false)
+    const [linkType, setLinkType] = useState();
+    const [permission, setPermission] = useState();
+    const [url, setURL] = useState();
+    const handleShow = () => setShow(true);
     const title = "Groupthink Website"
     function replaceAll(str, term, replacement) {
         return str.replace(new RegExp(escapeRegExp(term), 'g'), replacement);
     }
-    function escapeRegExp(string){
+    function escapeRegExp(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }  
+    }
     const openLink = () => {
-        if(linkType != undefined && permission !=undefined){ 
-            setLink(true) 
-            if(linkType === "private")
-            {
-                createRoom(props.projectID,props.currentUser.uid,props.currentUser.displayName).then("Room Made").catch(err=>err)
+        if (linkType != undefined && permission != undefined) {
+            setLink(true)
+            if (linkType === "private") {
+                createRoom(props.projectID, props.currentUser.uid, props.currentUser.displayName).then("Room Made").catch(err => err)
                 //-----Encryption-------
-                const encryptPermission = Crypto.encrypt(permission,"grpthink12!").toString();
+                const encryptPermission = Crypto.encrypt(permission, "grpthink12!").toString();
                 // ------- Used '/' to omit "/:permissionID"
-                const custom = replaceAll(encryptPermission,'/','$')
-                console.log(encryptPermission,permission , custom)
-                setURL(String(window.location)+"/"+custom)
-                
+                const custom = replaceAll(encryptPermission, '/', '$')
+                console.log(encryptPermission, permission, custom)
+                setURL(String(window.location) + "/" + custom)
+
             }
-            else
-            {
-                createPublic(props.projectID,permission,props.currentUser.uid,props.currentUser.displayName)
+            else {
+                createPublic(props.projectID, permission, props.currentUser.uid, props.currentUser.displayName)
                 setURL(String(window.location))
             }
         }
         else
-        setLink(false)
+            setLink(false)
     }
-    const ChangeRadio = (e) =>
-    {
+    const ChangeRadio = (e) => {
         setPermission(e.target.value)
     }
-    const LinkType = (e) =>
-    {
+    const LinkType = (e) => {
         setLinkType(e.target.value)
     }
     //----------While Closing Set Everything As At Initial Level----------
@@ -86,45 +78,45 @@ const ShareLink = (props) =>
         setLinkType(null);
         setPermission(null);
     }
-    return(
+    return (
         <>
-            <Button  handleClick={handleShow}>
+            <Button className={props.buttonClassName} handleClick={handleShow}>
                 Share
             </Button>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                <Modal.Title>Share Your Project</Modal.Title>
+                    <Modal.Title>Share Your Project</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Type Of Link To be Shared 
-                    <br/>
-                    <input type="radio" name="linkType" value="public" onChange={e=> LinkType(e)} required={true}/>
+                    Type Of Link To be Shared
+                    <br />
+                    <input type="radio" name="linkType" value="public" onChange={e => LinkType(e)} required={true} />
                     <label htmlFor="male">Public</label>
-                    <input type="radio" name="linkType" value="private" onChange={e=>LinkType(e)} required={true} />
+                    <input type="radio" name="linkType" value="private" onChange={e => LinkType(e)} required={true} />
                     <label htmlFor="male">Private </label>
-                    <br/>
-                    <input type="radio" name="options" value="r" onChange={e=>ChangeRadio(e)} required={true} />
+                    <br />
+                    <input type="radio" name="options" value="r" onChange={e => ChangeRadio(e)} required={true} />
                     <label htmlFor="male">Read Only</label>
-                    <input type="radio" name="options" value="rw" onChange={e=>ChangeRadio(e)} required={true}/>
+                    <input type="radio" name="options" value="rw" onChange={e => ChangeRadio(e)} required={true} />
                     <label htmlFor="male">Read and Write </label>
-                    <br/>
+                    <br />
                     <Button className="custom_btn" handleClick={openLink}>Generate Link</Button>
                     {
                         link ?
-                        <div>
-                        <br/>
-                            Copy Your Link : 
-                        <br/>
-                            <b style={{display:"inline-flex"}}>{url}</b>
-                        <br/>
-                            <LinkSharing url={url} title={title} size = "2.5rem"/>
-                        </div>
-                        :<div/>
+                            <div>
+                                <br />
+                            Copy Your Link :
+                        <br />
+                                <b style={{ display: "inline-flex" }}>{url}</b>
+                                <br />
+                                <LinkSharing url={url} title={title} size="2.5rem" />
+                            </div>
+                            : <div />
                     }
                 </Modal.Body>
                 <Modal.Footer>
-                <Button className="custom_btn" handleClick={handleClose}>Close</Button>
-                <Button className="custom_btn" handleClick={handleClose}>Save Changes</Button>
+                    <Button className="custom_btn" handleClick={handleClose}>Close</Button>
+                    <Button className="custom_btn" handleClick={handleClose}>Save Changes</Button>
                 </Modal.Footer>
             </Modal>
         </>

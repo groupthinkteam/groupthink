@@ -13,22 +13,21 @@ export default function MenuBar(props) {
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 <div className="menu-bar-site-title">
-                    groupthink
+                    <Link to="/dashboard">
+                        groupthink
+                    </Link>
                 </div>
             </div>
-            <div >
-            <Link to='/dashboard' >Back</Link>
-            </div>
             <div className="menu-bar-panel menu-bar-panel-right">
-                <Button className="logout-button custom_btn" handleClick={props.onLogOut}>
-                    log out
+                <Button className="menu-action-button" handleClick={props.onLogOut}>
+                    Log Out
                 </Button>
+                {
+                    props.document && props.document === "rw" ?
+                        <ShareLink projectID={props.projectID} buttonClassName="menu-action-button" currentUser={currentUser} />
+                        : null
+                }
             </div>
-            {
-                props.document != undefined && props.document === "rw"?
-                <ShareLink projectID ={props.projectID} className="custom_btn" currentUser={currentUser}/>
-                :<div/>
-            }
         </div>
     );
 }

@@ -147,7 +147,7 @@ export default function CardManager(props) {
         console.log(cards[id].type, types.includes(cards[id].type, 0))
         //-----------If Type Contains Storage -----------
         if (!types.includes(cards[id].type, 0)) {
-            const path = "root" + "/" + props.projectID + "/" + id + "/";
+            const path = "root/" + props.projectID + "/" + id + "/";
             /**
              * This Function Delete A Particular File From Firebase Storage to given Path
              * @param {*} pathToFile The Path To Which Contents Should be delete
