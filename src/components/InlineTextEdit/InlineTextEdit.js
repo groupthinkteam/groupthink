@@ -2,14 +2,16 @@ import React from "react"
 import TextareaAutosize from  "react-textarea-autosize"
 import "../../styles/InlineTextEdit.scss"
 
-export default function InlineTextEdit(props) {
+function InlineTextEdit(props) {
     return (
         <TextareaAutosize
             className="inline-input"
-            placeholder="Add a caption..."
+            placeholder="Type something here..."
             value={props.text}
             onChange={props.onChange}
             onBlur={props.onSave}
         />
     )
 }
+
+export default React.memo(InlineTextEdit)

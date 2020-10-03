@@ -9,7 +9,9 @@ export default function MenuBar(props) {
         <div className="menu-bar topheader">
             <div className="menu-bar-panel menu-bar-panel-left">
                 <img alt="" className="menu-bar-user-profile-picture" src={currentUser.photoURL} />
-                {currentUser.displayName}
+                <div className="menu-bar-user-name">
+                    {currentUser.displayName}
+                </div>
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 <div className="menu-bar-site-title">

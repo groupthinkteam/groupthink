@@ -156,7 +156,7 @@ export default function CardManager(props) {
             const deleteFile = (pathToFile, fileName) => {
                 const ref = firebaseStorage().ref(pathToFile);
                 const childRef = ref.child(fileName);
-                childRef.delete().then(console.log("File Deleted")).catch(err=>console.log("Error in Delete File",err))
+                childRef.delete().then(console.log("File Deleted")).catch(err => console.log("Error in Delete File", err))
             }
             /**
              * This Function Calls to Storage and List All Files Acc. to given Path .
@@ -178,7 +178,7 @@ export default function CardManager(props) {
                         }
                     })
                     .catch(error => {
-                        console.log("Error in List All",error);
+                        console.log("Error in List All", error);
                     });
             }
             //----Calls to Delete Folder Contents----

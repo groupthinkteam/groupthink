@@ -40,17 +40,6 @@
     }
 }
 
-textarea.inline-input {
-    resize: none;
-    color: #919191;
-    font-size: 14px;
-    width: 95%;
-    margin: 15px auto;
-    min-height: 24px;
-    &:focus {
-        outline: none;
-    }
-}
 button.custom_btn {
     background: #2e85f7;
     height: 38px;

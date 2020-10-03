@@ -62,7 +62,7 @@ const cardTemplate = (type,size) =>
         type: type,
         size: size,
         content: {
-            text: `This is a ${type} Card`
+            text: ""
         }
     }
     const blankCardTemplate = {

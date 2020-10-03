@@ -1,5 +1,13 @@
 .inline-input {
     border-width: 0px;
     background-color: whitesmoke;
-    width: min-content;
+    color: black;
+    resize: none;
+    font-size: 14px;
+    width: 95%;
+    margin: 15px auto;
+    min-height: 24px;
+    &:focus {
+        outline: none;
+    }
 }

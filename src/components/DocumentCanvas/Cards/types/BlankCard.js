@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Button from "../../../Button/Button";
 import ProgressBar from 'react-bootstrap/ProgressBar'
+import "../../../../styles/Cards/BlankCard.scss"
+
 /**
  * @description The BlankCard type provides the UI for a newly-added card. It 
  * has buttons that let the user select which card type they want to use. Hence,
@@ -9,65 +11,65 @@ import ProgressBar from 'react-bootstrap/ProgressBar'
  */
 function BlankCard(props) {
     let [uploading, setUploading] = useState(false);
-    //let types = ["text", "image", "VideoLink", "VideoFile", "link", "audio", "pdf", "file"]
-    
-    const types = {};
-    types["text"] = {
-        height : 300,
-        width : 350
-    }
-    types["file"] = {
-        height : 300,
-        width : 350
-    }
-    types["image"] = {
-        height : 300,
-        width : 370
-    }
-    types["VideoFile"] = {
-        height : 300,
-        width : 350
-    }
-    types["VideoLink"] = {
-        height : 300,
-        width : 350
-    }
-    types["pdf"] = {
-        height : 300,
-        width : 350
-    }
-    types["audio"] = {
-        height : 300,
-        width : 350
-    }
-    types["link"] = {
-        height : 300,
-        width : 350
-    }
+    const inputFile = useRef(null);
+
+    const types = {
+        text: {
+            height: 300,
+            width: 350
+        },
+        file: {
+            height: 300,
+            width: 350
+        },
+        image: {
+            height: 300,
+            width: 350
+        },
+        VideoFile: {
+            height: 300,
+            width: 350
+        },
+        VideoLink: {
+            height: 300,
+            width: 350
+        },
+        pdf: {
+            height: 300,
+            width: 350
+        },
+        audio: {
+            height: 300,
+            width: 350
+        },
+        link: {
+            height: 300,
+            width: 350
+        }
+    };
+
     const requestUpload = (e) => {
         const file = e.target.files[0];
-        if(file != undefined)
-        var metadata = {
-            contentType: file?.type
-        };
-        let uploadPath = props.id + "/" + file.name.split(".")[0] +">"+file.lastModified+"/";
+        if (file)
+            var metadata = {
+                contentType: file?.type
+            };
+        let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
         const type = typeDetector(metadata.contentType);
         console.log("path sent from audio:", uploadPath)
         props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
-            console.log(uploadStatus)
             if (uploadStatus === "complete") {
                 setUploading("uploaded")
                 props.typeAPI.requestDownload(
                     uploadPath,
-                    (url, metadata) => 
-                    {
-                        props.typeAPI.changeType(props.id,type,types[type])
-                        props.typeAPI.saveContent(props.id,{
-                            [metadata.name]: 
-                            { 
-                                url: url, metadata: metadata 
+                    (url, metadata) => {
+                        props.typeAPI.changeType(props.id, type, types[type])
+                        props.typeAPI.saveContent(props.id, {
+                            [metadata.name]:
+                            {
+                                url: url, metadata: metadata
                             },
-                            ["/text"] : null
+                            ["/text"]: null
                         })
                     }
                 )
@@ -77,43 +79,45 @@ function BlankCard(props) {
             }
         })
     }
+
     return (
-        <>
-        
-        <div className="button_link">
-            {Object.entries(types).map((key,val) =>
-                <Button key={key[0]} handleClick={() => props.typeAPI.changeType(props.id, key[0] , key[1])}>
-                    {key[0]}
-                </Button>)}
-                <input type="file" 
-                    onChange = {(e)=>requestUpload(e)}
-                />
+        <div>
+            <input type="file"
+                onChange={(e) => requestUpload(e)}
+                ref={inputFile}
+                style={{ display: 'none' }} />
+            <Button handleClick={() => inputFile.current.click()}>Upload</Button>
+            {/* {Object.entries(types).map(([key, val]) =>
+                    <Button key={key} handleClick={() => props.typeAPI.changeType(props.id, key, val)}>
+                        {key}
+                    </Button>
+                )} */}
+            <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
+                Text
+            </Button>
+            {(typeof uploading === "number") ?
+                <ProgressBar animated now={uploading} label={`${Math.floor(uploading)}%`}></ProgressBar>
+                : null
+            }
         </div>
-        {
-            (typeof uploading === "number") ? 
-            <ProgressBar animated now={uploading} label={`${Math.floor(uploading)}%`}></ProgressBar>  
-            : null
-        }
-        </>
     )
 }
-const typeDetector = (contentType) =>{
-    const fileSet =["image", "video","audio","pdf"]
-    let demoType = 'file' ;
-    const fileType = contentType.split("/") ;
+
+const typeDetector = (contentType) => {
+    const fileSet = ["image", "video", "audio", "pdf"]
+    let demoType = 'file';
+    const fileType = contentType.split("/");
     console.log(fileType, fileType.length)
-    for(let i  =fileType.length-1; i >= 0 ; i-- )
-    {
-        if(fileSet.indexOf(fileType[i]) !== -1) 
-        { 
+    for (let i = fileType.length - 1; i >= 0; i--) {
+        if (fileSet.indexOf(fileType[i]) !== -1) {
             demoType = fileType[i]
-        } 
+        }
         else continue;
     }
     console.log(contentType, demoType)
     if (demoType === 'video')
-    return 'VideoFile'; 
+        return 'VideoFile';
     else
-    return demoType;        
+        return demoType;
 }
 export default React.memo(BlankCard)
