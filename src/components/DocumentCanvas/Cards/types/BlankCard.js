@@ -3,6 +3,12 @@ import Button from "../../../Button/Button";
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import "../../../../styles/Cards/BlankCard.scss"
 
+// Import React FilePond
+import { FilePond } from 'react-filepond'
+
+// Import FilePond styles
+import 'filepond/dist/filepond.min.css'
+
 /**
  * @description The BlankCard type provides the UI for a newly-added card. It 
  * has buttons that let the user select which card type they want to use. Hence,
@@ -11,6 +17,7 @@ import "../../../../styles/Cards/BlankCard.scss"
  */
 function BlankCard(props) {
     let [uploading, setUploading] = useState(false);
+    const [files, setFiles] = useState([]);
     const inputFile = useRef(null);
 
     const types = {
@@ -48,57 +55,43 @@ function BlankCard(props) {
         }
     };
 
-    const requestUpload = (e) => {
-        const file = e.target.files[0];
-        if (file)
-            var metadata = {
+    let server = {
+        process: (fieldName, file, metadata, load, error, progress, abort) => {
+            var typemeta = {
                 contentType: file?.type
             };
-        let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
-        const type = typeDetector(metadata.contentType);
-        console.log("path sent from audio:", uploadPath)
-        props.typeAPI.requestUpload(uploadPath, file, metadata, (uploadStatus) => {
-            if (uploadStatus === "complete") {
-                setUploading("uploaded")
-                props.typeAPI.requestDownload(
-                    uploadPath,
-                    (url, metadata) => {
-                        props.typeAPI.changeType(props.id, type, types[type])
-                        props.typeAPI.saveContent(props.id, {
-                            [metadata.name]:
-                            {
-                                url: url, metadata: metadata
-                            },
-                            ["/text"]: null
-                        })
-                    }
-                )
+
+            let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
+            let task;
+            props.typeAPI.requestUpload(uploadPath, file, { ...metadata, ...typemeta },
+                (status, taskCallback) => {
+                    task = taskCallback
+                    if (typeof status === "number")
+                        progress(true, status, 100);
+                    else
+                        load(props.id)
+                });
+            return {
+                abort: () => {
+                    console.log("attempted to cancel upload, success:", task.cancel());
+                    abort();
+                }
             }
-            else {
-                setUploading(uploadStatus)
-            }
-        })
-    }
+        }
+    };
 
     return (
         <div>
-            <input type="file"
-                onChange={(e) => requestUpload(e)}
-                ref={inputFile}
-                style={{ display: 'none' }} />
-            <Button handleClick={() => inputFile.current.click()}>Upload</Button>
-            {/* {Object.entries(types).map(([key, val]) =>
-                    <Button key={key} handleClick={() => props.typeAPI.changeType(props.id, key, val)}>
-                        {key}
-                    </Button>
-                )} */}
             <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
                 Text
-            </Button>
-            {(typeof uploading === "number") ?
-                <ProgressBar animated now={uploading} label={`${Math.floor(uploading)}%`}></ProgressBar>
-                : null
-            }
+                </Button>
+            <FilePond
+                files={files}
+                allowMultiple={false}
+                maxFiles={1}
+                onupdatefiles={fileItems => setFiles(fileItems.map(fileItem => fileItem.file))}
+                server={server} // todo: add custom server functionality using firebase
+            />
         </div>
     )
 }

@@ -306,7 +306,7 @@ export default function CardManager(props) {
      * @param {string} uploadPath - a path relative to projectID/
      * @param {blob} file - the file to be uploaded
      * @param {object} metadata - the metadata object associated with the file
-     * @param {function(number)} statusCallback - a callback that receives a number [0, 100] indicating upload progress
+     * @param {function(number, function)} statusCallback - a callback that receives a number [0, 100] indicating upload progress, and `cancel` - a function that cancels the ongoing upload
      */
     const requestUpload = (uploadPath, file, metadata, statusCallback) => {
         let custom = {
@@ -319,12 +319,12 @@ export default function CardManager(props) {
         console.log("metadata sent was", custom)
         const path = "root/" + props.projectID + "/" + uploadPath;
         let requestedPathRef = firebaseStorage().ref(path);
-        let unsubscribe = requestedPathRef.put(file, custom)
-            .on(firebaseStorage.TaskEvent.STATE_CHANGED,
-                (nextSnapshot) => statusCallback(nextSnapshot.bytesTransferred / nextSnapshot.totalBytes * 100), // on upload progress
-                null, // error handling -- nonexistent!
-                () => { console.log(); statusCallback("complete"); unsubscribe(); } // on completion
-            )
+        let uploadTask = requestedPathRef.put(file, custom);
+        let unsubscribe = uploadTask.on(firebaseStorage.TaskEvent.STATE_CHANGED,
+            (nextSnapshot) => statusCallback(nextSnapshot.bytesTransferred / nextSnapshot.totalBytes * 100, uploadTask), // on upload progress
+            null, // error handling -- nonexistent!
+            () => { console.log(); statusCallback("complete"); unsubscribe(); } // on completion
+        )
     }
 
     /**
