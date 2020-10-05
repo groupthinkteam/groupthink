@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { gsap, Draggable } from "gsap/all";
 
 gsap.registerPlugin(Draggable)
@@ -9,14 +9,14 @@ gsap.registerPlugin(Draggable)
  */
 function Arrow(props) {
     let [dragging, setDragging] = useState(false);
-
+    
     useEffect(() => {
         let y = Draggable.create("#nub".concat(props.id),
             {
                 type: "top,left",
                 activeCursor: "grab",
                 onDragStart: function () {
-                    gsap.set("#nub".concat(props.id), { left: props.tail.x - 100, top: props.tail.y - 5 });
+                    // gsap.set("#nub".concat(props.id), { left: props.tail.x - 100, top: props.tail.y - 5 });
                     console.log(y);
                     console.log("start coords", this.x, this.y)
                 },
@@ -50,7 +50,7 @@ function Arrow(props) {
 
     function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
-        var bezierWeight = 0.3;
+        var bezierWeight = 0;
 
         var dx = Math.abs(x4 - x1) * bezierWeight;
         var x2 = x1 - dx;
@@ -59,28 +59,28 @@ function Arrow(props) {
     }
 
     return (
-        <div>
-            <svg style={{ position: "absolute", height: 0, width: 0, overflow: "visible" }}>
+        <div style={{ position: "absolute", height: 0, width: 0, top: 0, left: 0, overflow: "visible" }}>
+            <svg style={{ position: "absolute", overflow: "visible" }}>
                 <path
                     strokeWidth="3"
                     fill="none"
-                    stroke="red"
+                    stroke="grey"
                     d={path} />
                 <circle
                     id={"nub"}
                     cx={props.tail.x + 0}
                     cy={props.tail.y - 5}
                     r="5"
-                    fill="yellow" />
+                    fill="whitesmoke" />
             </svg>
-            <svg style={{ position: "absolute", height: 0, width: 0, overflow: "visible" }}>
+            <svg style={{ position: "absolute", overflow: "visible" }}>
                 <circle
                     style={{ position: "absolute" }}
                     id={"nub".concat(props.id)}
                     cx={dragging ? dragging.x : props.tail.x + 0}
                     cy={dragging ? dragging.y : props.tail.y - 5}
                     r="5"
-                    fill="blue" />
+                    fill="grey" />
             </svg>
         </div>
     )
