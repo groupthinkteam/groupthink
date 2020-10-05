@@ -1,3 +1,5 @@
+import ReactPlayer from "react-player/lazy";
+
 export const extensionDetector = (url) =>{
     const validURL = (str) => {
         var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
@@ -7,26 +9,12 @@ export const extensionDetector = (url) =>{
             '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
             '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
         return !!pattern.test(str);
-    }
-    const onlineVideoExtension = 
-    [
-        "youtube","facebook","soundcloud",
-        "vimeo","wistia","mixcloud","dailymotion","twitch"
-    ];    
+    }   
     if(validURL(url))
     {
-        var urlParts = url.replace('http://','').replace('https://','').split(/[/?#]/);
-        var domain = urlParts[0].split(".");
-        console.log("Detector Extention",domain)
         let resultType = 'link'
-        for(let i = domain.length -1;i>=0 ; i--)
-        {
-            if(onlineVideoExtension.indexOf(domain[i]) !== -1)
-            {
-               resultType = "VideoLink";
-               break;
-            }
-        }
+        if(ReactPlayer.canPlay(url))
+           resultType = "VideoLink";
         console.log("Detector Extention Type After Loop",resultType )
         return resultType;
     }

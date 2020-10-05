@@ -96,9 +96,7 @@ function BlankCard(props) {
         }
     };
     const onChange = (e) =>{
-        const outcome = extensionDetector(e.target.value);
         console.log("Print Text",outcome , e.target.value)
-        
         props.typeAPI.changeContent(props.id, { text: e.target.value })
     }
     const onSave = () => {
