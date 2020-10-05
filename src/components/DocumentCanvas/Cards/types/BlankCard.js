@@ -21,36 +21,36 @@ function BlankCard(props) {
 
     const types = {
         text: {
-            height: 300,
-            width: 350
+            height: 200,
+            width: 280
         },
         file: {
-            height: 300,
-            width: 350
+            height: 100,
+            width: 280
         },
         image: {
             height: 300,
             width: 350
         },
         VideoFile: {
-            height: 300,
+            height: 200,
             width: 350
         },
         VideoLink: {
-            height: 300,
+            height: 250,
             width: 350
         },
         pdf: {
-            height: 300,
-            width: 350
+            height: 208,
+            width: 300
         },
         audio: {
-            height: 300,
-            width: 350
+            height: 142,
+            width: 300
         },
         link: {
-            height: 300,
-            width: 350
+            height: 157,
+            width: 340
         }
     };
 

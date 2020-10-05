@@ -23,6 +23,7 @@
     "react-firebaseui": "^4.1.0",
     "react-h5-audio-player": "^3.4.1",
     "react-hls-player": "^1.1.0",
+    "react-iframe": "^1.8.0",
     "react-images": "^1.1.7",
     "react-images-viewer": "^1.6.2",
     "react-native-pdf-thumbnail": "^1.0.1",

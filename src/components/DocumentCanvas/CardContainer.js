@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import GenericCard from "./Cards/GenericCard"
 import Cursor from "./Cursor";
 import Arrow from "../Arrow/Arrow";
@@ -12,19 +12,21 @@ import "../../styles/CardContainer.scss";
  * 
  */
 export default function CardContainer(props) {
+    const [zoom , setZoom] = useState(1)
     const dateTime = Date.now();
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
+                <input type="range" min="0" max="2.5" defaultValue="1" step="0.1" onChange={e=>setZoom(e.target.value)}/>
             <div className="container-filler"
-                style={{ ...props.container, position: "absolute", zIndex: 9999999 }}
+                style={{ ...props.container, position: "absolute", zIndex: 9999999 , transformOrigin : "0% 0%" , transform : `scale(${zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent.className === "card-container") {
                         var x = Math.floor(e.clientX + e.target.offsetParent.scrollLeft);
                         var y = Math.floor(e.clientY - 60 + e.target.offsetParent.scrollTop);
                         console.log("double click at", x, ",", y);
-                        props.genericAPI.addChild({ x: x, y: y }, { width: 310, height: 360 })
+                        props.genericAPI.addChild({ x: x, y: y }, { width: 310, height: 200 })
                     }
                     else {
                         console.log("registered a double click on a card and did absolutely nothing about it")

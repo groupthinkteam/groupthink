@@ -7,48 +7,19 @@ import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit"
  * @property `typeAPI` , `content` , `id`
  */
 const OnlineVideoCard = (props) => {
-    const validURL = (str) => {
-        var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-            '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
-        return !!pattern.test(str);
-    }
-
-    const onSave = () =>{ 
-        props.typeAPI.resize(props.id,{width : 350 , height : 400})
-        props.typeAPI.saveContent(props.id, { url: props.content?.url })
-    }
-    const onChange = (event) =>{
-        if(validURL(event.target.value)) 
-        props.typeAPI.changeContent(props.id, { url: event.target.value })
-        else
-        props.typeAPI.changeContent(props.id, { text: event.target.value })
-    }
-
     return (
         <>
-            <div className="text-node">
-                <InlineTextEdit
-                    onChange={(e) => onChange(e)}
-                    onSave={onSave}
-                    text={props.content?.url || props.content.text}
-                    lwidth={"100px"}
-                />
-            </div>
             {
-                validURL(props.content?.url) ?
-                    <div >
-                        <ReactPlayer
-                            url={props.content.url}
-                            width=""
-                            height="250px"  
-                            controls={true}
-                        />
-                    </div>
-                    : null
+                props.content?.url ?
+                <div >
+                    <ReactPlayer
+                        url={props.content.url}
+                        width=""
+                        height="250px"  
+                        controls={true}
+                    />
+                </div>
+                : null
             }
         </>
     )

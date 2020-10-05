@@ -81,7 +81,7 @@ function GenericCard(props) {
                     X
                 </button>
             </div>
-            <CardType typeAPI={props.typeAPI} content={props.card.content} id={props.id} />
+            <CardType typeAPI={props.typeAPI} content={props.card.content} size={props.card.size} id={props.id} />
         </div>
     )
 }

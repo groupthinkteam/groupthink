@@ -1,6 +1,5 @@
 import React from 'react';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/umd/Page/AnnotationLayer.css';
+
 /**
  * This Card Holds PDF Documents in Project.
  * @param {*} props - Property of File .
@@ -15,7 +14,9 @@ const PDFCard = (props) => {
           Object.entries(props.content).map((fileKey, val) => {
             return (
               <div key={fileKey[0]}>
-                File Name : {fileKey[0].split(">")[0]}
+                File Name : 
+                <a href={fileKey[1]?.url} target="_blank">{fileKey[0].split(">")[0]}</a>
+                <iframe src={fileKey[1]?.url} style={{overflow:"hidden" , display: "inline-table"}} scrolling="no"/>
               </div>
             )
           })
