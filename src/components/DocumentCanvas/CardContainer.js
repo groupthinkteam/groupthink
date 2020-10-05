@@ -19,6 +19,7 @@ export default function CardContainer(props) {
             <div className="container-filler"
                 style={{ ...props.container, position: "absolute", zIndex: 9999999 }}
                 onDoubleClick={(e) => {
+                    // @TODO - this needs to be fixed to ignore double clicks inside cards
                     // gets the coordinates of the double click relative to "filler"
                     var rect = e.target.getBoundingClientRect();
                     var x = Math.floor(e.clientX - rect.left);

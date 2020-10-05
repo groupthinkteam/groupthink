@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { gsap, Draggable } from "gsap/all";
 
 import cardChooser from "./cardChooser";
@@ -16,7 +16,15 @@ gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 function GenericCard(props) {
+
     let CardType = cardChooser(props.card?.type, props.card.content);
+
+    // if size changes, animate it
+    useEffect(
+        () => { gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 }) },
+        [props.card.size.height, props.card.size.width]
+    )
+
     useEffect(
         () => { gsap.set("#".concat(props.id), { opacity: 1, ...props.card.position }) }
         , [props.id, props.card.position])
@@ -44,7 +52,11 @@ function GenericCard(props) {
     )
 
     return (
-        <div id={props.id} className="generic-card" style={{ width: props.card.size?.width, height: props.card.size.height, position: "absolute", opacity: 0 }}>
+        <div id={props.id} className="generic-card"
+            style={{
+                position: "absolute",
+                opacity: 0
+            }}>
             <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                 <button className="card-control-button add"
                     onClick={() => props.genericAPI.addChild(
