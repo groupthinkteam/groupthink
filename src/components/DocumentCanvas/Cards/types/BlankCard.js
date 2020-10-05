@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import Button from "../../../Button/Button";
-import ProgressBar from 'react-bootstrap/ProgressBar'
 import "../../../../styles/Cards/BlankCard.scss"
 
 // Import React FilePond
@@ -18,9 +17,7 @@ import {extensionDetector, typeDetector } from "../Detector";
  * @param {*} props 
  */
 function BlankCard(props) {
-    let [uploading, setUploading] = useState(false);
     const [files, setFiles] = useState([]);
-    const inputFile = useRef(null);
 
     const types = {
         text: {

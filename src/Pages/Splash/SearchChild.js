@@ -30,10 +30,7 @@ const createRoom = async(child,uid) =>
         X_POS : 0 ,
         Y_POS : 0
     }
-    // var addMsg = firebaseFunction.httpsCallable('createNewProject')
-    // addMsg(updates).then((result) =>{ return 'passed'}).catch(err => console.log(err))
-    // console.log("user Created")    
-    // //return t;
+    
     const roomflag = await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err=>err)
     return roomflag
 }

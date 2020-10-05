@@ -11,7 +11,7 @@ import cardTemplate from "../../constants/cardTemplates";
  */
 export default function CardManager(props) {
     const [isLoaded, setIsLoaded] = useState(false);
-    console.log("my name is", props.currentUser().uid)
+    
     // store container-related state
     const [container, setContainer] = useState({ width: 600, height: 800 });
     const containerRef = useRef({});
