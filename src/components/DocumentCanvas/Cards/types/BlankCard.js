@@ -8,6 +8,8 @@ import { FilePond } from 'react-filepond'
 
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
+import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
+import {extensionDetector, typeDetector } from "../Detector";
 
 /**
  * @description The BlankCard type provides the UI for a newly-added card. It 
@@ -63,13 +65,30 @@ function BlankCard(props) {
 
             let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
             let task;
+            const type = typeDetector(file?.type);
             props.typeAPI.requestUpload(uploadPath, file, { ...metadata, ...typemeta },
                 (status, taskCallback) => {
                     task = taskCallback
                     if (typeof status === "number")
                         progress(true, status, 100);
                     else
-                        load(props.id)
+                    {
+                        load(props.id);
+                        props.typeAPI.requestDownload(
+                            uploadPath,
+                            (url, metadata) => 
+                            {
+                                props.typeAPI.changeType(props.id,type,types[type])
+                                props.typeAPI.saveContent(props.id,{
+                                    [metadata.name]: 
+                                    { 
+                                        url: url, metadata: metadata 
+                                    },
+                                    ["/text"] : null
+                                })
+                            }
+                        )
+                    }
                 });
             return {
                 abort: () => {
@@ -79,12 +98,32 @@ function BlankCard(props) {
             }
         }
     };
-
+    const onChange = (e) =>{
+        const outcome = extensionDetector(e.target.value);
+        console.log("Print Text",outcome)
+        
+        props.typeAPI.changeContent(props.id, { text: e.target.value })
+    }
+    const onSave = () => {
+        const outcome= extensionDetector(props.content.text);
+        if ( outcome === 'NoLink')
+        {    props.typeAPI.saveContent(props.id, { text: props.content.text })}
+        else
+        {
+            props.typeAPI.changeType(props.id,outcome,types[outcome])
+            props.typeAPI.saveContent(props.id,{url:props.content.text});
+            
+        }
+    }
     return (
         <div>
             <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
                 Text
-                </Button>
+            </Button>
+            <InlineTextEdit 
+                onChange= {e=>onChange(e)} 
+                onSave={onSave}
+            />
             <FilePond
                 files={files}
                 allowMultiple={false}
@@ -94,23 +133,5 @@ function BlankCard(props) {
             />
         </div>
     )
-}
-
-const typeDetector = (contentType) => {
-    const fileSet = ["image", "video", "audio", "pdf"]
-    let demoType = 'file';
-    const fileType = contentType.split("/");
-    console.log(fileType, fileType.length)
-    for (let i = fileType.length - 1; i >= 0; i--) {
-        if (fileSet.indexOf(fileType[i]) !== -1) {
-            demoType = fileType[i]
-        }
-        else continue;
-    }
-    console.log(contentType, demoType)
-    if (demoType === 'video')
-        return 'VideoFile';
-    else
-        return demoType;
 }
 export default React.memo(BlankCard)

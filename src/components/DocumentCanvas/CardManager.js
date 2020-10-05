@@ -144,7 +144,7 @@ export default function CardManager(props) {
 
 
         const types = ["link", "blank", "VideoLink", "text"];
-        console.log(cards[id].type, types.includes(cards[id].type, 0))
+        console.log("Type Of Card ",cards[id].type,"\n Exists Storage Types ", !types.includes(cards[id].type, 0))
         //-----------If Type Contains Storage -----------
         if (!types.includes(cards[id].type, 0)) {
             const path = "root/" + props.projectID + "/" + id + "/";
