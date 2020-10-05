@@ -1,9 +1,8 @@
 import React from 'react'
-import loader from './loader.svg';
 function Loading() {
   return (
     <div>
-      <img src={loader} className="loader" alt=""/>
+      <img src={require("../../assets/loader.gif")} className="loader" alt=""/>
     </div>
   )
 }

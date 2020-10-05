@@ -13,9 +13,9 @@ export default function Document(props) {
   //console.log(projectID);
   useEffect(() => {
     (async () => {
-      const isChildPermission =await isChild(projectID);
-      console.log("Permission",isChildPermission)
-      setIsLoaded(true);
+      const isChildPermission = await isChild(projectID);
+      console.log("Permission", isChildPermission)
+      setTimeout(() => setIsLoaded(true), 3000);
 
       //---Check For Child Validation--
       if (isChildPermission == null) {
