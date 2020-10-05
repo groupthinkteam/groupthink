@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Iframe from 'react-iframe'
 /**
  * This Card Holds PDF Documents in Project.
  * @param {*} props - Property of File .
@@ -16,7 +16,7 @@ const PDFCard = (props) => {
               <div key={fileKey[0]}>
                 File Name : 
                 <a href={fileKey[1]?.url} target="_blank">{fileKey[0].split(">")[0]}</a>
-                <iframe src={fileKey[1]?.url} style={{overflow:"hidden" , display: "inline-table"}} scrolling="no"/>
+                <Iframe src={fileKey[1]?.url} style={{overflow:"hidden" , display: "inline-table"}} scrolling="no"/>
               </div>
             )
           })
