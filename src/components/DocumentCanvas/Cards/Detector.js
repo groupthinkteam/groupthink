@@ -16,15 +16,19 @@ export const extensionDetector = (url) =>{
     if(validURL(url))
     {
         var urlParts = url.replace('http://','').replace('https://','').split(/[/?#]/);
-        var domain = urlParts[0].split(".com")[0];
-        if(onlineVideoExtension.indexOf(domain) !== -1)
+        var domain = urlParts[0].split(".");
+        console.log("Detector Extention",domain)
+        let resultType = 'link'
+        for(let i = domain.length -1;i>=0 ; i--)
         {
-            return "VideoLink" 
+            if(onlineVideoExtension.indexOf(domain[i]) !== -1)
+            {
+               resultType = "VideoLink";
+               break;
+            }
         }
-        else
-        {
-            return "link" 
-        }
+        console.log("Detector Extention Type After Loop",resultType )
+        return resultType;
     }
     else
     return "NoLink" 

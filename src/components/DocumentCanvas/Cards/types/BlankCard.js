@@ -97,12 +97,13 @@ function BlankCard(props) {
     };
     const onChange = (e) =>{
         const outcome = extensionDetector(e.target.value);
-        console.log("Print Text",outcome)
+        console.log("Print Text",outcome , e.target.value)
         
         props.typeAPI.changeContent(props.id, { text: e.target.value })
     }
     const onSave = () => {
         const outcome= extensionDetector(props.content.text);
+        console.log("ON SAVE",outcome, props.content.text)
         if ( outcome === 'NoLink')
         {    props.typeAPI.saveContent(props.id, { text: props.content.text })}
         else
