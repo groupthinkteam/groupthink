@@ -73,7 +73,7 @@ export default function Projects(props) {
         const deleteFile = (pathToFile, fileName) => {
             const ref = firebaseStorage().ref(pathToFile);
             const childRef = ref.child(fileName);
-            childRef.delete().then(console.log("File Deleted"))
+            childRef.delete().then(console.log("File Deleted")).catch(err=>console.log("File Delete Error",err))
         }
         const deleteFolderContents = (path) => {
             console.log("Path TO Delete", path)
@@ -97,7 +97,7 @@ export default function Projects(props) {
                     }
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log("List All Error ",error);
                 });
         }
 
