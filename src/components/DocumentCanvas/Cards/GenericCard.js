@@ -74,7 +74,7 @@ function GenericCard(props) {
                     +
                 </button>
                 <button className="card-control-button lock">
-                    <i className="fa fa-lock" aria-hidden="true"></i>
+                    L
                 </button>
                 <button className="card-control-button delete"
                     onClick={() => props.genericAPI.removeCard(props.id, "recursive", props.card.parent)}>

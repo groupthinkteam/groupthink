@@ -8,7 +8,7 @@ import { FilePond } from 'react-filepond'
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
 import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
-import {extensionDetector, typeDetector } from "../Detector";
+import { extensionDetector, typeDetector } from "../Detector";
 
 /**
  * @description The BlankCard type provides the UI for a newly-added card. It 
@@ -68,20 +68,18 @@ function BlankCard(props) {
                     task = taskCallback
                     if (typeof status === "number")
                         progress(true, status, 100);
-                    else
-                    {
+                    else {
                         load(props.id);
                         props.typeAPI.requestDownload(
                             uploadPath,
-                            (url, metadata) => 
-                            {
-                                props.typeAPI.changeType(props.id,type,types[type])
-                                props.typeAPI.saveContent(props.id,{
-                                    [metadata.name]: 
-                                    { 
-                                        url: url, metadata: metadata 
+                            (url, metadata) => {
+                                props.typeAPI.changeType(props.id, type, types[type])
+                                props.typeAPI.saveContent(props.id, {
+                                    [metadata.name]:
+                                    {
+                                        url: url, metadata: metadata
                                     },
-                                    ["/text"] : null
+                                    ["/text"]: null
                                 })
                             }
                         )
@@ -95,20 +93,16 @@ function BlankCard(props) {
             }
         }
     };
-    const onChange = (e) =>{
-        console.log("Print Text",outcome , e.target.value)
+    const onChange = (e) => {
         props.typeAPI.changeContent(props.id, { text: e.target.value })
     }
     const onSave = () => {
-        const outcome= extensionDetector(props.content.text);
-        console.log("ON SAVE",outcome, props.content.text)
-        if ( outcome === 'NoLink')
-        {    props.typeAPI.saveContent(props.id, { text: props.content.text })}
-        else
-        {
-            props.typeAPI.changeType(props.id,outcome,types[outcome])
-            props.typeAPI.saveContent(props.id,{url:props.content.text});
-            
+        const outcome = extensionDetector(props.content.text);
+        if (outcome === 'NoLink') { props.typeAPI.saveContent(props.id, { text: props.content.text }) }
+        else {
+            props.typeAPI.changeType(props.id, outcome, types[outcome])
+            props.typeAPI.saveContent(props.id, { url: props.content.text });
+
         }
     }
     return (
@@ -116,8 +110,8 @@ function BlankCard(props) {
             <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
                 Text
             </Button>
-            <InlineTextEdit 
-                onChange= {e=>onChange(e)} 
+            <InlineTextEdit
+                onChange={e => onChange(e)}
                 onSave={onSave}
             />
             <FilePond
