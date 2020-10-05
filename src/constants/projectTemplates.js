@@ -8,8 +8,8 @@ const projectTemplates = {
             y: 300
         },
         container: {
-            height: window.innerHeight ,
-            width: window.innerWidth
+            height: "4000px",
+            width: "4000px"
         },
         nodes: {
             root: {

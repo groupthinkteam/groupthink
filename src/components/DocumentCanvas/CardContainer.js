@@ -14,18 +14,21 @@ import "../../styles/CardContainer.scss";
 export default function CardContainer(props) {
     const dateTime = Date.now();
     return (
-        <div className="card-container w-100"
-            style={{ overflow: "scroll", position: "absolute", zIndex: 1 }}>
+        <div className="card-container"
+            style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
             <div className="container-filler"
                 style={{ ...props.container, position: "absolute", zIndex: 9999999 }}
                 onDoubleClick={(e) => {
-                    // @TODO - this needs to be fixed to ignore double clicks inside cards
                     // gets the coordinates of the double click relative to "filler"
-                    var rect = e.target.getBoundingClientRect();
-                    var x = Math.floor(e.clientX - rect.left);
-                    var y = Math.floor(e.clientY - rect.top);
-                    console.log("double click at", x, ",", y);
-                    props.genericAPI.addChild({ x: x, y: y }, { width: 310, height: 360 })
+                    if (e.target.offsetParent.className === "card-container") {
+                        var x = Math.floor(e.clientX + e.target.offsetParent.scrollLeft);
+                        var y = Math.floor(e.clientY - 60 + e.target.offsetParent.scrollTop);
+                        console.log("double click at", x, ",", y);
+                        props.genericAPI.addChild({ x: x, y: y }, { width: 310, height: 360 })
+                    }
+                    else {
+                        console.log("registered a double click on a card and did absolutely nothing about it")
+                    }
                 }}
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
