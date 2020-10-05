@@ -36,7 +36,7 @@ export default function CardContainer(props) {
                     props.cards ? Object.entries(props.cards).filter(([id, card]) => id && id !== "root").map(
                         ([id, card]) => {
                             return (
-                                <div>
+                                <div key={"wrapperdiv".concat(id)}>
                                     <GenericCard
                                         key={id}
                                         id={id}
@@ -45,7 +45,12 @@ export default function CardContainer(props) {
                                         typeAPI={props.typeAPI}
                                     />
                                     {card.parent && card.parent !== "root" &&
-                                        <Arrow id={"arrow".concat(id)} hits={Object.keys(props.cards)} head={props.cards[card.parent]["position"]} tail={card.position} />
+                                        <Arrow
+                                            key={"arrow".concat(id)}
+                                            id={"arrow".concat(id)}
+                                            hits={Object.keys(props.cards)}
+                                            head={props.cards[card.parent]["position"]}
+                                            tail={card.position} />
                                     }
                                 </div>
                             )
