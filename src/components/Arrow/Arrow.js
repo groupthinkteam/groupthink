@@ -16,8 +16,8 @@ function Arrow(props) {
                 type: "top,left",
                 activeCursor: "grab",
                 onDragStart: function () {
-                    console.log(y);
-                    console.log("start coords", this.x, this.y)
+                    gsap.set("#nub".concat(props.id), { top: props.tail.y, left: props.tail.x })
+                    y[0].update()
                 },
                 onDrag: function () {
                     setDragging({ x: this.x, y: this.y })
@@ -33,11 +33,11 @@ function Arrow(props) {
                             props.arrowAPI.reparentCard(props.id, cardID)
                         }
                     });
+                    y[0].update()
                     setDragging(false)
-                    console.log("end coords", this.x, this.y)
                 },
             })
-        return () => y[0].kill()
+        return () => { console.log("about to kill a draggable"); y[0].kill() }
     }, [props.hits])
 
     let path;
