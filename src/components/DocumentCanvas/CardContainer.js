@@ -17,9 +17,13 @@ export default function CardContainer(props) {
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
-            <input type="range" min="0" max="2.5" defaultValue="1" step="0.1" onChange={e => setZoom(e.target.value)} />
+            {
+                Object.keys(props.cards).length > 1 ?
+                    <input type="range" min="0" max="2.5" defaultValue="1" step="0.1" onChange={e => setZoom(e.target.value)} />
+                    : null
+            }
             <div className="container-filler"
-                style={{ ...props.container, position: "absolute", zIndex: 9999999, transformOrigin: "0% 0%", transform: `scale(${zoom})` }}
+                style={{ ...props.container, position: "absolute", zIndex: 9999999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent.className === "card-container") {

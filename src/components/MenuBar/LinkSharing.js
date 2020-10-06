@@ -14,7 +14,7 @@ import {
     WhatsappIcon,
     PinterestIcon,
     EmailIcon
-} from "react-share";
+} from 'react-share';
 
 const LinkSharing = (props) => 
 {

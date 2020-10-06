@@ -7,7 +7,7 @@ export default function InvitationCheck(props)
 {
   const location = useLocation() 
   const history = useHistory();
-  const { projectID ,permissionID} = useParams();
+  const { projectID ,permissionID , typeID , nameID} = useParams();
   function replaceAll(str, term, replacement) {
     return str.replace(new RegExp(escapeRegExp(term), 'g'), replacement);
   }
@@ -16,15 +16,21 @@ export default function InvitationCheck(props)
   } 
   React.useEffect(() => {
     (async () => {
-      var  decryptPermissionID ;
+      var  decryptPermissionID,decryptTypeID,decryptNameID ;
       //----------Decrypt Credentials-----
       if(permissionID !=undefined)
       {
-        const custom = replaceAll(permissionID,'$','/')
-        decryptPermissionID = Crypto.AES.decrypt(custom,"grpthink12!").toString(Crypto.enc.Utf8);
-        console.log("Permission ID DEcrypt",decryptPermissionID,permissionID,custom)
+        const customPermission = replaceAll(permissionID,'$','/');
+        const customType = replaceAll(typeID , '$','/');
+        const customName = replaceAll(nameID,'$','/')
+        decryptPermissionID = Crypto.AES.decrypt(customPermission,"grpthink12!").toString(Crypto.enc.Utf8);
+        decryptTypeID = Crypto.AES.decrypt(customType,"grpthink12!").toString(Crypto.enc.Utf8)
+        decryptNameID = Crypto.AES.decrypt(customName,"grpthink12!").toString(Crypto.enc.Utf8)
+        // console.log("Permission ID DEcrypt",decryptPermissionID,permissionID,customPermission)
+        // console.log("Type ID Decrypt ",decryptTypeID,customType,typeID );
+        // console.log("Decrypt Name ID ",decryptNameID,customName,nameID);
       }
-      const  checkInvite= await isChild(projectID,decryptPermissionID);
+      const checkInvite= await isChild(projectID,decryptPermissionID,decryptTypeID,decryptNameID);
       if(checkInvite)
       {
         history.push(`/project/${projectID}`)
