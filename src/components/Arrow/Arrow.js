@@ -16,7 +16,8 @@ function Arrow(props) {
                 type: "top,left",
                 activeCursor: "grab",
                 onDragStart: function () {
-                    gsap.set("#nub".concat(props.id), { top: (props.tail.y + props.head.y) / 2, left: (props.tail.x + props.head.x) / 2 })
+                    // gsap.set("#nub".concat(props.id), { top: (props.tail.y + props.head.y) / 2, left: (props.tail.x + props.head.x) / 2 })
+                    gsap.set("#nub".concat(props.id), { top: props.tail.y, left: props.tail.x })
                     y[0].update()
                 },
                 onDrag: function () {
@@ -51,7 +52,7 @@ function Arrow(props) {
 
     function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
-        var bezierWeight = 0.5;
+        var bezierWeight = 0.1;
 
         var dx = Math.abs(x4 - x1) * bezierWeight;
         var x2 = x1 - dx;
@@ -67,19 +68,15 @@ function Arrow(props) {
                     fill="none"
                     stroke="grey"
                     d={path} />
-                <circle
-                    id={"nub"}
-                    cx={props.tail.x + 0}
-                    cy={props.tail.y - 5}
-                    r="5"
-                    fill="whitesmoke" />
             </svg>
             <svg style={{ position: "absolute", overflow: "visible" }}>
                 <circle
                     style={{ position: "absolute" }}
                     id={"nub".concat(props.id)}
-                    cx={dragging ? dragging.x : (props.tail.x + props.head.x) / 2}
-                    cy={dragging ? dragging.y : (props.tail.y + props.head.y) / 2}
+                    // cx={dragging ? dragging.x : (props.tail.x + props.head.x) / 2}
+                    // cy={dragging ? dragging.y : (props.tail.y + props.head.y) / 2}
+                    cx={dragging ? dragging.x : props.tail.x}
+                    cy={dragging ? dragging.y : props.tail.y}
                     r="5"
                     stroke="black"
                     fill="grey" />

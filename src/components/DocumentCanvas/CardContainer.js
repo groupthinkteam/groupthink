@@ -65,7 +65,9 @@ export default function CardContainer(props) {
                                             }}
                                             tail={{
                                                 x: card.position.x + card.size.width / 2,
-                                                y: card.position.y + card.size.height / 2
+                                                y: card.position.y - 5
+                                                // x: card.position.x + card.size.width / 2,
+                                                // y: card.position.y + card.size.height / 2
                                             }}
                                         />
                                     }
