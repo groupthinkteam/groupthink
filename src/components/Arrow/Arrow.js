@@ -16,7 +16,7 @@ function Arrow(props) {
                 type: "top,left",
                 activeCursor: "grab",
                 onDragStart: function () {
-                    gsap.set("#nub".concat(props.id), { top: props.tail.y, left: props.tail.x })
+                    gsap.set("#nub".concat(props.id), { top: (props.tail.y + props.head.y) / 2, left: (props.tail.x + props.head.x) / 2 })
                     y[0].update()
                 },
                 onDrag: function () {
@@ -43,15 +43,15 @@ function Arrow(props) {
     let path;
 
     if (dragging) {
-        path = updatePath(dragging.x, dragging.y, props.tail.x + 0, props.tail.y)
+        path = updatePath(dragging.x, dragging.y, props.tail.x, props.tail.y)
     }
     else {
-        path = updatePath(props.head.x + 0, props.head.y + 0, props.tail.x + 0, props.tail.y - 5)
+        path = updatePath(props.head.x, props.head.y, props.tail.x, props.tail.y - 5)
     }
 
     function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
-        var bezierWeight = 0;
+        var bezierWeight = 0.5;
 
         var dx = Math.abs(x4 - x1) * bezierWeight;
         var x2 = x1 - dx;
@@ -60,7 +60,7 @@ function Arrow(props) {
     }
 
     return (
-        <div style={{ position: "absolute", height: 0, width: 0, top: 0, left: 0, overflow: "visible" }}>
+        <div style={{ position: "absolute", height: 0, width: 0, top: 0, left: 0, overflow: "visible", zIndex: -1 }}>
             <svg style={{ position: "absolute", overflow: "visible" }}>
                 <path
                     strokeWidth="3"
@@ -78,9 +78,10 @@ function Arrow(props) {
                 <circle
                     style={{ position: "absolute" }}
                     id={"nub".concat(props.id)}
-                    cx={dragging ? dragging.x : props.tail.x + 0}
-                    cy={dragging ? dragging.y : props.tail.y - 5}
+                    cx={dragging ? dragging.x : (props.tail.x + props.head.x) / 2}
+                    cy={dragging ? dragging.y : (props.tail.y + props.head.y) / 2}
                     r="5"
+                    stroke="black"
                     fill="grey" />
             </svg>
         </div>

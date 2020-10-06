@@ -59,8 +59,15 @@ export default function CardContainer(props) {
                                             id={"".concat(id)}
                                             arrowAPI={props.arrowAPI}
                                             hits={Object.keys(props.cards)}
-                                            head={props.cards[card.parent]["position"]}
-                                            tail={card.position} />
+                                            head={{
+                                                x: props.cards[card.parent]["position"].x + props.cards[card.parent]["size"].width / 2,
+                                                y: props.cards[card.parent]["position"].y + props.cards[card.parent]["size"].height / 2,
+                                            }}
+                                            tail={{
+                                                x: card.position.x + card.size.width / 2,
+                                                y: card.position.y + card.size.height / 2
+                                            }}
+                                        />
                                     }
                                 </div>
                             )
