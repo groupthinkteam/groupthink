@@ -12,14 +12,14 @@ import "../../styles/CardContainer.scss";
  * 
  */
 export default function CardContainer(props) {
-    const [zoom , setZoom] = useState(1)
+    const [zoom, setZoom] = useState(1)
     const dateTime = Date.now();
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
-                <input type="range" min="0" max="2.5" defaultValue="1" step="0.1" onChange={e=>setZoom(e.target.value)}/>
+            <input type="range" min="0" max="2.5" defaultValue="1" step="0.1" onChange={e => setZoom(e.target.value)} />
             <div className="container-filler"
-                style={{ ...props.container, position: "absolute", zIndex: 9999999 , transformOrigin : "0% 0%" , transform : `scale(${zoom})` }}
+                style={{ ...props.container, position: "absolute", zIndex: 9999999, transformOrigin: "0% 0%", transform: `scale(${zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent.className === "card-container") {
@@ -52,7 +52,8 @@ export default function CardContainer(props) {
                                     {card.parent && card.parent !== "root" &&
                                         <Arrow
                                             key={"arrow".concat(id)}
-                                            id={"arrow".concat(id)}
+                                            id={"".concat(id)}
+                                            arrowAPI={props.arrowAPI}
                                             hits={Object.keys(props.cards)}
                                             head={props.cards[card.parent]["position"]}
                                             tail={card.position} />

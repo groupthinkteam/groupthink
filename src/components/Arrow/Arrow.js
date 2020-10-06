@@ -9,14 +9,13 @@ gsap.registerPlugin(Draggable)
  */
 function Arrow(props) {
     let [dragging, setDragging] = useState(false);
-    
+
     useEffect(() => {
         let y = Draggable.create("#nub".concat(props.id),
             {
                 type: "top,left",
                 activeCursor: "grab",
                 onDragStart: function () {
-                    // gsap.set("#nub".concat(props.id), { left: props.tail.x - 100, top: props.tail.y - 5 });
                     console.log(y);
                     console.log("start coords", this.x, this.y)
                 },
@@ -25,11 +24,13 @@ function Arrow(props) {
                 },
                 onDragEnd: function () {
                     // do a hittest
-                    // if valid parent make the connection
-                    // if not valid, do nothing
+                    // if valid parent make the connection and update position
+                    // if not valid, update position to previous
                     props.hits.forEach(cardID => {
                         if (y[0].hitTest("#".concat(cardID))) {
                             console.log("i hit", cardID)
+                            // call reparent
+                            props.arrowAPI.reparentCard(props.id, cardID)
                         }
                     });
                     setDragging(false)

@@ -11,7 +11,7 @@ import cardTemplate from "../../constants/cardTemplates";
  */
 export default function CardManager(props) {
     const [isLoaded, setIsLoaded] = useState(false);
-    
+
     // store container-related state
     const [container, setContainer] = useState({ width: 600, height: 800 });
     const containerRef = useRef({});
@@ -144,7 +144,7 @@ export default function CardManager(props) {
 
 
         const types = ["link", "blank", "VideoLink", "text"];
-        console.log("Type Of Card ",cards[id].type,"\n Exists Storage Types ", !types.includes(cards[id].type, 0))
+        console.log("Type Of Card ", cards[id].type, "\n Exists Storage Types ", !types.includes(cards[id].type, 0))
         //-----------If Type Contains Storage -----------
         if (!types.includes(cards[id].type, 0)) {
             const path = "root/" + props.projectID + "/" + id + "/";
@@ -291,14 +291,30 @@ export default function CardManager(props) {
      * @todo implement local state change in addition to firebase change
      * */
     const reparentCard = (id, newParent) => {
-        let updates = {};
-        let currentParent = cards[id]["parent"];
-        updates[id + "/parent"] = newParent;
-        updates[currentParent + "/children/" + id] = null;
-        updates[newParent + "/children/" + id] = 1;
-        projectRef.update(updates)
-            .then(console.log("successfully changed the parent of", id, "from", currentParent, "to", newParent))
-            .catch(console.log("error reparenting"));
+        console.log("reparent requested for", id, "newparent", newParent)
+        let stack = [id];
+        function checkValidity(cardID) {
+            console.log("crossed ifs")
+            if (cardID === newParent) { console.log("cardid === newparent"); return false };
+            if (stack.length === 0) { console.log("stack length was 0"); return true };
+            if (cards[cardID]["children"]) {
+                stack.append(Object.keys(cards[cardID]["children"]));
+                return checkValidity(stack.pop())
+            }
+            return true
+        }
+        if (checkValidity(id)) {
+            let updates = {};
+            let currentParent = cards[id]["parent"];
+            updates[id + "/parent"] = newParent;
+            updates[currentParent + "/children/" + id] = null;
+            updates[newParent + "/children/" + id] = 1;
+            projectRef.update(updates)
+                .then(console.log("successfully changed the parent of", id, "from", currentParent, "to", newParent))
+                .catch((reason) => console.log("error reparenting because", reason));
+            return;
+        }
+        console.log("didn't reparent because it was not a valid request")
     }
 
     /**
@@ -375,6 +391,10 @@ export default function CardManager(props) {
         resize: resize
     }
 
+    let arrowAPI = {
+        reparentCard: reparentCard
+    }
+
     const containerAPI = {
         sendToDatabase: sendToDatabase
     }
@@ -385,6 +405,7 @@ export default function CardManager(props) {
                 cards={cards}
                 genericAPI={genericAPI}
                 typeAPI={typeAPI}
+                arrowAPI={arrowAPI}
                 permission={props.permission}
                 currentUser={props.currentUser}
                 containerAPI={containerAPI}
