@@ -4,16 +4,71 @@ import { auth } from "firebase"
 /**
  * This File Search Child For Route Path ="/project/:projectID" & Inivitation Link
  */
-const createUserForProject =async(path,child,permission,uid)=>{ 
+const isChild = async (child,permissionID,typeID , nameID) => {
+    const uid = auth().currentUser?.uid;
+    const Path = `documents/${child}/users/`;
+    
+    //------Privately Send Invitation Params---
+    if(permissionID != undefined )
+    {
+        //-----Create This To Access Project-----
+        console.log("Permission in Search Child",permissionID)
+        const flag = await createUserinDocument(Path,child,permissionID,uid)
+        const updateUser = await updateInUserTree(uid,child,typeID,nameID,permissionID);
+        console.log("If User is Updated in User Tree ",updateUser)
+        return   flag;
+    }
+    //-----When Project Detail Page is Rendered---
+    else
+    {
+        const ischild = await firebaseDB.ref(`documents/${child}/`).once('value').then(snap => snap.exists()).catch(err=>console.log("isCHild Error \n",err))
+        const isChildInUsers = await firebaseDB.ref(Path).once('value').then((snap)=>{ 
+            //---False Project Id
+            if(!ischild)
+            {
+                return null
+            }
+            //---Internal Check----
+            if(snap.hasChild(uid))
+            {
+                //----Returns The Permission---
+                
+                return snap.child(uid).val()
+            }
+            if(snap.hasChild("public"))
+            {
+                //---Return Permission For Public----
+                return snap.child("public").val()
+                
+            }
+            else
+            {
+                return null
+            }
+        })
+        .catch(err=>console.log("IschildinUsers Error \n",err))
+        return  isChildInUsers ;
+    }
+    
+}
+/**
+ * Create user in Document For Invitation Link
+ * @param {String} path 
+ * @param {String} child 
+ * @param {String} permission 
+ * @param {String} uid 
+ */
+const createUserinDocument =async(path,child,permission,uid)=>{ 
     const updates = {}
+    //GIve Permission
     updates[path+uid]=permission;
+    //Enter User to Room
     updates[`documents/${child}/room/`+uid] ={
         X_POS : 0 ,
         Y_POS : 0
     }
     if(permission === "r" || permission === "rw")
     {
-        //const updatePrivate = await firebaseDB.ref().update(updates).then(()=>{return true}).catch((err)=>{console.log(err); return false});
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         var t = addMsg(updates).then((result) =>{return true}).catch(err => console.log(err))
         console.log("user Created", t)
@@ -23,58 +78,31 @@ const createUserForProject =async(path,child,permission,uid)=>{
     else
     return false;    
 }
-const createRoom = async(child,uid) =>
-{
+/**
+ * Create User in DB's User's Tree for `All type`
+ * @param {String} uid 
+ * @param {String} projectID 
+ * @param {String} typeID 
+ * @param {String} nameID 
+ * @param {String} permissionID 
+ */
+const updateInUserTree = async(uid , projectID , typeID, nameID , permissionID ) => {
+    const projectMetdata = await firebaseDB.ref("documents/"+projectID+"/metadata/").once('value').then(snap =>{console.log(snap.val());return snap.val()}).catch(err=>console.log("Updated In User Tree Error",err))
+    console.log("Project MEtadata \n",projectMetdata?.name )
     const updates = {};
-    updates[`documents/${child}/room/`+uid] ={
-        X_POS : 0 ,
-        Y_POS : 0
-    }
-    
-    const roomflag = await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err=>err)
-    return roomflag
+    updates["users/"+uid+"/projects/"+projectID+"/"] = {
+        access : permissionID,
+        name : projectMetdata?.name,
+        thumbnailURL : projectMetdata?.thumbnailURL,
+        shared : {
+            name: nameID,
+            type : typeID
+        }
+    } 
+    updates["creator/"+projectID] = uid
+    var addMsg = firebaseFunction.httpsCallable('createNewProject')
+    var t = addMsg(updates).then((result) =>{return true}).catch(err => console.log(err))
+    console.log("user Created", t)
+    return t;
 }
-const isChild = async (child,permissionID) => {
-    const uid = auth().currentUser?.uid
-    const ischild = await firebaseDB.ref(`documents/${child}/`).once('value').then(snap => snap.exists()).catch(err=>err)
-    const Path = `documents/${child}/users/`;
-    const isChildInUsers = await firebaseDB.ref(Path).once('value').then((snap)=>{ 
-        //---False Project Id
-        if(!ischild)
-        {
-            return null
-        }
-        //---Internal Check----
-        if(snap.hasChild(uid))
-        {
-            //----Returns The Permission---
-            
-            return snap.child(uid).val()
-        }
-        if(snap.hasChild("public"))
-        {
-            //---Return Permission For Public----
-            const test = createRoom(child,uid).then(resultt=>resultt).catch(err=>err)
-            console.log(test)
-            return snap.child("public").val()
-            
-        }
-        else
-        {
-            return null
-        }
-    })
-    .catch(err=>err)
-    
-    //------Privately Send Invitation Params---
-    if(permissionID != undefined)
-    {
-        //-----Create This To Access Project-----
-        console.log(permissionID)
-        const flag = await createUserForProject(Path,child,permissionID,uid)
-        return   flag;
-    }
-    else
-    return  isChildInUsers ;
-}
-export default isChild; 
+export default isChild;  

@@ -6,6 +6,7 @@ import projectTemplates from "../../constants/projectTemplates";
 import Card from "./Card";
 
 import "../../styles/Projects.scss";
+import { snap } from "gsap/all";
 /**
  * @component
  * This Component Deals with All Database & Storage Operation Required In DashBoard Page
@@ -19,9 +20,9 @@ import "../../styles/Projects.scss";
  */
 export default function Projects(props) {
     const history = useHistory();
-    let [cards, setCards] = useState(null);
+    const [cards, setCards] = useState(null);
 
-    let userRef = "users/" + props.currentUser().uid + "/projects/";
+    const userRef = "users/" + props.currentUser().uid + "/projects/";
 
     useEffect(
         () => {
@@ -39,15 +40,17 @@ export default function Projects(props) {
         const refUsers = firebaseDB.ref().child(userRef);
         const projectID = refUsers.push().key;
         let updates = {};
+        const thumbnailURL = "https://picsum.photos/200?random=" + Math.floor(Math.random() * 100)
         updates['creator/' + projectID] = props.currentUser().uid;
         updates[userRef + projectID] = {
             access: 'rw',
             name: "New Project",
-            thumbnailURL: "https://picsum.photos/200?random=" + Math.floor(Math.random() * 100)
+            thumbnailURL: thumbnailURL
         };
         updates['documents/' + projectID] = {
             metadata: {
                 name: "New Project",
+                thumbnailURL:thumbnailURL,
                 datecreated: firebaseTIME
             },
             users: { [props.currentUser().uid]: "rw" },
@@ -60,15 +63,24 @@ export default function Projects(props) {
      * Deletes the Corresponding ID from DB & Storage(if Exists)
      * @param {String} id Project's ID
      */
-    var onDelete = (id) => {
+    var onDelete = async(id) => {
         console.log("about to delete project", id);
-        let updates = {};
-        updates["users/" + props.currentUser().uid + "/projects/" + id + "/"] = null;
+        const uidDataKeys = firebaseDB.ref("documents/"+id+"/room/").once('value').then(snap=>{return snap.val()}).catch(err=>console.log("onDelete Error",err))
+        console.log("UID DATA KEYS",uidDataKeys);
+        const updates = {};
+        await uidDataKeys.then(result=>{
+            if(result)
+            Object.keys(result)
+            .map((key)=>{
+                updates["users/" + key + "/projects/" + id + "/"] = null;
+            })
+        }).catch(err=>console.log("Error While UID Fetch",err))
         updates["documents/" + id + "/"] = null;
+        updates["creator/"+id+"/"] = null;
         //----Admin Update Method (Cloud Function)----
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
-        addMsg(updates).then((result) => console.log(result)).catch(err => console.log(err))
-        //--------------------Storage Deletion ------------
+        addMsg(updates).then((result) => console.log(result,updates)).catch(err => console.log(err))
+        // //--------------------Storage Deletion ------------
         const path = "root/" + id + "/";
         const deleteFile = (pathToFile, fileName) => {
             const ref = firebaseStorage().ref(pathToFile);
@@ -107,13 +119,25 @@ export default function Projects(props) {
      * Rename The Projects of Given ID on Database .
      * @param {String} id 
      */
-    var onRename = (id) => {
-        let text = cards[id].name;
+    var onRename = async(id) => {
+        const uidDataKeys = firebaseDB.ref("documents/"+id+"/room/").once('value').then(snap=>{return snap.val()}).catch(err=>console.log("on Rename Error",err))
+        console.log("UID DATA KEYS",uidDataKeys);
+        
+        const text = cards[id].name;
         console.log("about to rename project", id, ", changing title to", text);
-        let updates = {};
-        updates[userRef + id + "/name"] = text;
+        const updates = {};
+        await uidDataKeys.then(result=>{
+            if(result)
+            Object.keys(result)
+            .map((key)=>{
+                updates["users/" + key + "/projects/" + id + "/name"] = text;
+            })
+        }).catch(err=>console.log("Error While UID Fetch",err))
         updates["documents/" + id + "/metadata/name"] = text;
-        firebaseDB.ref().update(updates).then(console.log("successfully renamed project", id, "to", text))
+        var addMsg = firebaseFunction.httpsCallable('createNewProject')
+        addMsg(updates)
+        .then((result) => console.log("successfully renamed project", id, "to", text, "\n and Updates are \n ",result,updates))
+        .catch(err => console.log(err))
     }
     /**
      * Redirects The Page to `projects/${id}`

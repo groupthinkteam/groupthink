@@ -351,6 +351,8 @@ export default function CardManager(props) {
             if (room) {
                 firebaseDB.ref("documents/" + props.projectID + "/room/").child(props.currentUser().uid)
                     .set({ x: event.clientX, y: event.clientY, time: firebaseTIME, name: props.currentUser().displayName })
+                    .then(console.log("Data Cursor Updated to DB"))
+                    .catch(err=>console.log("send to DB Cursor Error",err))
             }
         },
         100), [room])

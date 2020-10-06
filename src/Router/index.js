@@ -24,7 +24,7 @@ export default function AppRoutes() {
   return (
     <Router>
       <Switch>
-        <InivitationRoute isAuth={authState.isSignedIn} path="/project/:projectID/:permissionID">
+        <InivitationRoute isAuth={authState.isSignedIn} path="/project/:projectID/:permissionID/:typeID/:nameID">
           <InvitationCheck/>  
         </InivitationRoute>
         <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
