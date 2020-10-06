@@ -292,18 +292,14 @@ export default function CardManager(props) {
      * */
     const reparentCard = (id, newParent) => {
         console.log("reparent requested for", id, "newparent", newParent)
-        let stack = [id];
-        function checkValidity(cardID) {
-            console.log("crossed ifs")
-            if (cardID === newParent) { console.log("cardid === newparent"); return false };
-            if (stack.length === 0) { console.log("stack length was 0"); return true };
-            if (cards[cardID]["children"]) {
-                stack.append(Object.keys(cards[cardID]["children"]));
-                return checkValidity(stack.pop())
-            }
-            return true
+
+        function checkValidity(ancestor) {
+            if (ancestor === "root") return true;
+            if (ancestor === id) return false;
+            return checkValidity(cards[ancestor]["parent"]);
         }
-        if (checkValidity(id)) {
+
+        if (checkValidity(newParent)) {
             let updates = {};
             let currentParent = cards[id]["parent"];
             updates[id + "/parent"] = newParent;

@@ -81,6 +81,9 @@ function GenericCard(props) {
                     X
                 </button>
             </div>
+            I am {props.id}
+            <br />
+            My parent is {props.card.parent}
             <CardType typeAPI={props.typeAPI} content={props.card.content} size={props.card.size} id={props.id} />
         </div>
     )
