@@ -7,8 +7,7 @@
  * @property {{width: number, height: number}} `size` - Contains 2 property. Height and Width.
  * @property {String} `Content` - The Contant of card at initial Render.
  */
-const cardTemplate = (type,size) =>
-{
+const cardTemplate = (type, size) => {
     const audioCardTemplate = {
         type: type,
         size: size,
@@ -72,9 +71,23 @@ const cardTemplate = (type,size) =>
             text: `This is a ${type} Card`
         }
     }
+    const todoCardTemplate = {
+        type: type,
+        size: size,
+        content: {
+            title: "",
+            lastOrder: 0,
+            items: {
+                "root": 1
+            }
+        }
+    }
+
     switch (type) {
         case "text":
             return textCardTemplate;
+        case "todo":
+            return todoCardTemplate;
         case "VideoLink":
             return onlineVideoCardTemplate;
         case "VideoFile":

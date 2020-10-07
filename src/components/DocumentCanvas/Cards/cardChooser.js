@@ -7,6 +7,7 @@ import AudioCard from "./types/AudioCard";
 import LinkCard from "./types/LinkCard";
 import TextCard from "./types/TextCard";
 import BlankCard from "./types/BlankCard";
+import TodoCard from "./types/TodoCard";
 
 /**
  * audio/mpeg - audio
@@ -20,17 +21,19 @@ import BlankCard from "./types/BlankCard";
  */
 // returns a CardType component based on "type"
 export default function cardChooser(type) {
-    
+
     switch (type) {
         case "blank":
-            return BlankCard ;
+            return BlankCard;
         case "text":
             return TextCard;
+        case "todo":
+            return TodoCard;
         case "VideoLink":
             return OnlineVideoCard;
         case "video":
             return VideosCard;
-        case "VideoFile" :
+        case "VideoFile":
             return VideosCard
         case "image":
             return ImagesCard;

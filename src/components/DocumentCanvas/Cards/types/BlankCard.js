@@ -24,6 +24,10 @@ function BlankCard(props) {
             height: 200,
             width: 280
         },
+        todo: {
+            height: 300,
+            width: 230
+        },
         file: {
             height: 100,
             width: 280
@@ -109,6 +113,9 @@ function BlankCard(props) {
         <div>
             <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
                 Text
+            </Button>
+            <Button handleClick={() => props.typeAPI.changeType(props.id, "todo", types["todo"])}>
+                Todo
             </Button>
             <InlineTextEdit
                 onChange={e => onChange(e)}

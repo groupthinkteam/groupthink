@@ -9,7 +9,7 @@ function TextCard(props) {
     const onSave = () => props.typeAPI.saveContent(props.id, { text: props.content.text })
     const onChange = (event) => props.typeAPI.changeContent(props.id, { text: event.target.value })
     return (
-        <div className="text-node">
+        <div className="text-node" style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
             <InlineTextEdit
                 onChange={(e) => onChange(e)}
                 onSave={onSave}
