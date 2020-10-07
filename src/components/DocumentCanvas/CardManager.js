@@ -52,6 +52,7 @@ export default function CardManager(props) {
             projectRef.child("nodes").off();
             projectRef.child("center").off();
             projectRef.child("container").off();
+            projectRef.child("cursors").off();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -361,7 +362,7 @@ export default function CardManager(props) {
     const saveCursorPosition = useCallback(throttle(
         (event) => {
             if (cursors) {
-                firebaseDB.ref("documents/" + props.projectID + "/cursorss/").child(props.currentUser().uid)
+                firebaseDB.ref("documents/" + props.projectID + "/cursors/").child(props.currentUser().uid)
                     .set({
                         x: event.clientX, 
                         y: event.clientY,

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Button from "../Button/Button"
 import { Modal } from "react-bootstrap"
-import { firebaseDB } from "../../services/firebase"
+import { firebaseDB, firebaseTIME } from "../../services/firebase"
 import LinkSharing from "./LinkSharing"
 import * as Crypto from 'crypto-js/aes';
 import "../../styles/MenuBar.scss"
@@ -18,11 +18,21 @@ const createPublic = (id, permission, uid, name,email,photoURL) => {
         email: email,
         permission:permission
     }
+    updates[`documents/${id}/cursors/${uid}`] = {
+        x : 0,
+        y : 0,
+        time: firebaseTIME
+    }
     firebaseDB.ref().update(updates).then(console.log("Created Public With Permission", permission))
 }
 //----Creates Room When Public Type is called---
 const createRoom = async (child, uid, name,permission,email,photoURL) => {
     const updates = {};
+    updates[`documents/${child}/cursors/${uid}`] = {
+        x : 0,
+        y : 0,
+        time: firebaseTIME
+    }
     updates[`documents/${child}/room/` + uid] = {
         name : name,
         photoURL : photoURL,
