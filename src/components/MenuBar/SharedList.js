@@ -6,7 +6,6 @@ import { firebaseDB, firebaseFunction } from '../../services/firebase';
 const SharedList = (props) => {
     const [show, setShow] = useState(false);
     const [users, setUsers] = useState(null);
-    const [isLoaded, setLoaded] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = async () => {
         setShow(true);
@@ -90,17 +89,6 @@ const SharedList = (props) => {
             </div>
         </>
     )
-}
-const retrieveusers = async (id) => {
-    const users = await firebaseDB.ref("documents/" + id + "/room/").once('value')
-        .then(snap => snap.val()).catch(err => console.log("retrieveusers Error", err));
-    if (users) {
-        const uidKeys = [];
-        Object.entries(users).map(([key, val]) => { uidKeys.push(val) });
-        console.log("UID KEYS", uidKeys);
-        return uidKeys;
-    }
-    else return false;
 }
 
 export default React.memo(SharedList);
