@@ -1,49 +1,48 @@
-import React,{useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from "../Button/Button"
-import { DropdownButton, Modal , Dropdown } from "react-bootstrap"
+import { DropdownButton, Modal, Dropdown } from "react-bootstrap"
 import { firebaseDB, firebaseFunction } from '../../services/firebase';
 //Todo :- Check For Re-render
-const SharedList = (props) =>
-{
+const SharedList = (props) => {
     const [show, setShow] = useState(false);
-    const [uidFromRoom , setUIDFromRoom] = useState();
-    const [isLoaded , setLoaded] = useState();
-    const handleShow = async() => {
-        setShow(true);
-        //const uidKey  = await retrieveUIDFromRoom(props.projectID)
-        //setUIDFromRoom(uidKey)
-    }
-    useEffect(()=>{
-        firebaseDB.ref("documents/"+projectID+"/room/").on('value',snap=>setUIDFromRoom(snap.val()))
-        return ()=>firebaseDB.ref("documents/"+projectID+"/room/").off()
-    },[])
-    console.log("UIDS",uidFromRoom)
+    const [users, setUsers] = useState(null);
+    const [isLoaded, setLoaded] = useState(false);
     const handleClose = () => setShow(false);
+    const handleShow = async () => {
+        setShow(true);
+        //const uidKey  = await retrieveusers(props.projectID)
+        //setUsers(uidKey)
+    }
+    useEffect(() => {
+        firebaseDB.ref("documents/" + projectID + "/room/").on('value', snap => setUsers(snap.val()))
+        return () => firebaseDB.ref("documents/" + projectID + "/room/").off()
+    }, [])
+
+    console.log("users state", users)
     const projectID = props.projectID;
-    
-    const changePermission =(uid,permi) =>()=>
-    {
+
+    const changePermission = (uid, permi) => () => {
         const updates = {};
         updates[`users/${uid}/projects/${projectID}/access`] = permi;
         updates[`documents/${projectID}/users/${uid}/`] = permi;
         updates[`documents/${projectID}/room/${uid}/permission`] = permi;
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
-        addMsg(updates).then(result =>console.log("Updates Done", result,updates)).catch(err => console.log(err))
+        addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
     }
-    const makeOwner = (uid) =>async() =>
-    {
-        const inUsers = await firebaseDB.ref(`documents/${projectID}/users/`).once('value').then(snap=>snap.hasChild(uid)).catch(err=>err)
+
+    const makeOwner = (uid) => async () => {
+        const inUsers = await firebaseDB.ref(`documents/${projectID}/users/`).once('value').then(snap => snap.hasChild(uid)).catch(err => err)
         const updates = {};
-        updates[`users/${uid}/projects/${projectID}/shared`]=null;
-        if(inUsers)
-        {
+        updates[`users/${uid}/projects/${projectID}/shared`] = null;
+        if (inUsers) {
             updates[`documents/${projectID}/users/${uid}/`] = "rw";
         }
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
-        addMsg(updates).then(result =>console.log("Updates Done", result,updates)).catch(err => console.log(err))
-        
+        addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
+
     }
-    return(
+
+    return (
         <>
             <div>
                 <Button className={props.buttonClassName} handleClick={handleShow}>
@@ -55,33 +54,32 @@ const SharedList = (props) =>
                     </Modal.Header>
                     <Modal.Body>
                         {
-                            uidFromRoom && !props.isOwner? 
-                            Object.entries(uidFromRoom).map(([key,val])=>{
-                                console.log("User Shared",key,val)
-                                return(
-                                    <div key={key} >
-                                        <img src={val?.photoURL} className="menu-bar-user-profile-picture" />
-                                        <b>{val?.email}</b>-
-                                        {
-                                            val?.name === props.currentUser.displayName ?
-                                            <span>(Owner)</span>
-                                            :
-                                            <>
-                                                <span>{val?.name}</span>
-                                                &nbsp; 
-                                                <span>{val?.permission}</span>
-                                                <DropdownButton title={val?.permission} size="sm">
-                                                    <Dropdown.Item onClick={changePermission(key,"r")}>Read Only</Dropdown.Item>
-                                                    <Dropdown.Item onClick={changePermission(key,"rw")}>Read And Write</Dropdown.Item>
-                                                    <Dropdown.Divider />
-                                                    <Dropdown.Item onClick={makeOwner(key)} >Make Owner</Dropdown.Item>
-                                                </DropdownButton>
-                                            </>
-                                        }
-                                    </div>
-                                )
-                            }) 
-                            : <p>No Lists</p>
+                            users && !props.isOwner ?
+                                Object.entries(users).map(([key, val]) => {
+                                    return (
+                                        <div key={key}>
+                                            <img src={val?.photoURL} className="menu-bar-user-profile-picture" />
+                                            <b>{val?.email}</b>-
+                                            {
+                                                key === props.currentUser.uid ?
+                                                    <span>(Owner)</span>
+                                                    :
+                                                    <>
+                                                        <span>{val?.name}</span>
+                                                &nbsp;
+                                                        <span>{val?.permission}</span>
+                                                        <DropdownButton title={val?.permission} size="sm">
+                                                            <Dropdown.Item onClick={changePermission(key, "r")}>Read Only</Dropdown.Item>
+                                                            <Dropdown.Item onClick={changePermission(key, "rw")}>Read And Write</Dropdown.Item>
+                                                            <Dropdown.Divider />
+                                                            <Dropdown.Item onClick={makeOwner(key)} >Make Owner</Dropdown.Item>
+                                                        </DropdownButton>
+                                                    </>
+                                            }
+                                        </div>
+                                    )
+                                })
+                                : <p>No Lists</p>
                         }
                     </Modal.Body>
                     <Modal.Footer>
@@ -93,18 +91,16 @@ const SharedList = (props) =>
         </>
     )
 }
-const retrieveUIDFromRoom = async(id) => 
-{
-    const uidFromRoom = await firebaseDB.ref("documents/"+id+"/room/").once('value')
-    .then(snap=>snap.val()).catch(err=>console.log("retrieveUIDFromRoom Error",err));
-    if(uidFromRoom)
-    {
-        const uidKeys =[]; 
-        Object.entries(uidFromRoom).map(([key,val])=>{uidKeys.push(val)});
-        console.log("UID KEYS",uidKeys);
+const retrieveusers = async (id) => {
+    const users = await firebaseDB.ref("documents/" + id + "/room/").once('value')
+        .then(snap => snap.val()).catch(err => console.log("retrieveusers Error", err));
+    if (users) {
+        const uidKeys = [];
+        Object.entries(users).map(([key, val]) => { uidKeys.push(val) });
+        console.log("UID KEYS", uidKeys);
         return uidKeys;
     }
     else return false;
-} 
+}
 
-export default SharedList;
+export default React.memo(SharedList);

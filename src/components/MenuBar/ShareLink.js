@@ -13,7 +13,7 @@ const createPublic = (id, permission, uid, name) => {
     const updates = {};
     updates[path + "/users/public"] = permission;
     updates[path + "/room/" + uid] = {
-        name : name,
+        name: name,
         X_POS: 0,
         Y_POS: 0
     }
@@ -49,17 +49,17 @@ const ShareLink = (props) => {
             setLink(true)
             if (linkType === "private") {
                 createRoom(props.projectID, props.currentUser.uid, props.currentUser.displayName)
-                .then("Room Made").catch(err => err)
+                    .then("Room Made").catch(err => err)
             }
             else {
                 createPublic(props.projectID, permission, props.currentUser.uid, props.currentUser.displayName)
             }
             const encryptPermission = replaceAll(Crypto.encrypt(permission, "grpthink12!").toString(), '/', '$');
-            const encryptName = replaceAll(Crypto.encrypt(props.currentUser.displayName , "grpthink12!").toString(), '/', '$');
-            const encryptType = replaceAll(Crypto.encrypt(linkType,"grpthink12!").toString(),'/','$');
+            const encryptName = replaceAll(Crypto.encrypt(props.currentUser.displayName, "grpthink12!").toString(), '/', '$');
+            const encryptType = replaceAll(Crypto.encrypt(linkType, "grpthink12!").toString(), '/', '$');
             // ------- Used '/' to omit "/:permissionID"
-            console.log(encryptPermission, permission ,"\n Name ", encryptName ,"\n Type \n", encryptType)
-            setURL(String(window.location) + "/" +encryptPermission+"/"+encryptType+"/"+encryptName)
+            console.log(encryptPermission, permission, "\n Name ", encryptName, "\n Type \n", encryptType)
+            setURL(String(window.location) + "/" + encryptPermission + "/" + encryptType + "/" + encryptName)
         }
         else
             setLink(false)

@@ -38,7 +38,8 @@ export default function CardContainer(props) {
                 }}
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
-                    event.persist(); props.containerAPI.sendToDatabase(event);
+                    event.persist();
+                    props.containerAPI.saveContainerPosition(event);
                 }}
             >
                 {

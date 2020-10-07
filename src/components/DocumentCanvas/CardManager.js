@@ -358,19 +358,17 @@ export default function CardManager(props) {
     /**
      * This Function Updates Mouse X and Y Positions and Time to Database 
      */
-    const sendToDatabase = useCallback(throttle(
+    const saveCursorPosition = useCallback(throttle(
         (event) => {
             if (room) {
-                firebaseDB.ref("documents/" + props.projectID + "/room/").child(props.currentUser().uid)
-                    .set({ x: event.clientX, y: event.clientY,
-                            time: firebaseTIME, 
-                            name: props.currentUser().displayName ,
-                            email: props.currentUser().email,
-                            photoURL : props.currentUser().photoURL,
-                            permission:props.permission
-                        })
+                firebaseDB.ref("documents/" + props.projectID + "/cursors/").child(props.currentUser().uid)
+                    .set({
+                        x: event.clientX, 
+                        y: event.clientY,
+                        time: firebaseTIME,
+                    })
                     .then(console.log("Data Cursor Updated to DB"))
-                    .catch(err=>console.log("send to DB Cursor Error",err))
+                    .catch(err => console.log("send to DB Cursor Error", err))
             }
         },
         100), [room])
@@ -400,7 +398,7 @@ export default function CardManager(props) {
     }
 
     const containerAPI = {
-        sendToDatabase: sendToDatabase
+        saveCursorPosition: saveCursorPosition
     }
     return (
         isLoaded ?
