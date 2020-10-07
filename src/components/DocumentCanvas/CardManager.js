@@ -17,8 +17,8 @@ export default function CardManager(props) {
     const containerRef = useRef({});
     containerRef.current = container;
 
-    // Store Room-related State
-    const [room, setRoom] = useState();
+    // Store cursors-related State
+    const [cursors, setcursors] = useState();
     // store card-related state
     const [cards, setCards] = useState({});
 
@@ -43,9 +43,9 @@ export default function CardManager(props) {
             console.log("triggered container size listener, received payload", snapshot.val());
             setContainer(snapshot.val());
         });
-        projectRef.child("room").on("value", (snap) => {
-            console.log("Room Details Triggered recieved payload", snap.val());
-            snap.val() && setRoom(snap.val());
+        projectRef.child("cursors").on("value", (snap) => {
+            console.log("cursors Details Triggered recieved payload", snap.val());
+            snap.val() && setcursors(snap.val());
         })
         setIsLoaded(true)
         return () => {
@@ -360,18 +360,18 @@ export default function CardManager(props) {
      */
     const saveCursorPosition = useCallback(throttle(
         (event) => {
-            if (room) {
-                firebaseDB.ref("documents/" + props.projectID + "/cursors/").child(props.currentUser().uid)
+            if (cursors) {
+                firebaseDB.ref("documents/" + props.projectID + "/cursorss/").child(props.currentUser().uid)
                     .set({
                         x: event.clientX, 
                         y: event.clientY,
                         time: firebaseTIME,
                     })
-                    .then(console.log("Data Cursor Updated to DB"))
-                    .catch(err => console.log("send to DB Cursor Error", err))
+                    .then(console.log("Data Cursors Updated to DB"))
+                    .catch(err => console.log("send to DB Cursors Error", err))
             }
         },
-        100), [room])
+        100), [cursors])
     /**
      * bundling card api methods for ease of transmission 
      */
@@ -411,7 +411,7 @@ export default function CardManager(props) {
                 permission={props.permission}
                 currentUser={props.currentUser}
                 containerAPI={containerAPI}
-                room={room}
+                cursors={cursors}
                 projectID={props.projectID}
             />
             :

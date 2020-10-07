@@ -14,6 +14,7 @@ import "../../styles/CardContainer.scss";
 export default function CardContainer(props) {
     const [zoom, setZoom] = useState(1)
     const dateTime = Date.now();
+    console.log(props.cursors)
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
@@ -39,7 +40,7 @@ export default function CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    props.containerAPI.saveContainerPosition(event);
+                    props.containerAPI.saveCursorPosition(event);
                 }}
             >
                 {
@@ -78,22 +79,18 @@ export default function CardContainer(props) {
                     ) : <p>Double Click to Add a Card</p>
                 }
                 {
-                    props.room
-                        ? Object.entries(props.room)
+                    props.cursors != undefined
+                        ? Object.entries(props.cursors)
                             .filter(
                                 ([id, values]) => id !== props.currentUser().uid && (dateTime - Number(values.time) < 60000))
-                            /**
-                             * Check for the idle time of cursors in the room.
-                             * Change the comparison value to increase/decrease the timeout.
-                             */
                             .map(([id, values]) =>
                                 <Cursor key={id}
                                     id={id}
-                                    name={values.name}
+                                    name={props.currentUser().displayName}
                                     x={values.x}
                                     y={values.y}
                                     projectID={props.projectID}
-                                    room={props.room} />)
+                                />)
                         : null
                 }
             </div>
