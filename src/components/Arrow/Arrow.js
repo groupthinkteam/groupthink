@@ -62,14 +62,14 @@ function Arrow(props) {
 
     return (
         <div style={{ position: "absolute", height: 0, width: 0, top: 0, left: 0, overflow: "visible", zIndex: -1 }}>
-            <svg style={{ position: "absolute", overflow: "visible" }}>
+            <svg style={{ position: "absolute", width: 0, height: 0, overflow: "visible" }}>
                 <path
                     strokeWidth="3"
                     fill="none"
                     stroke="grey"
                     d={path} />
             </svg>
-            <svg style={{ position: "absolute", overflow: "visible" }}>
+            <svg style={{ position: "absolute", overflow: "visible", width: 0, height: 0 }}>
                 <circle
                     style={{ position: "absolute" }}
                     id={"nub".concat(props.id)}
