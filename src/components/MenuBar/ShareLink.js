@@ -7,25 +7,27 @@ import * as Crypto from 'crypto-js/aes';
 import "../../styles/MenuBar.scss"
 
 //----Create "Public" in Database ----
-const createPublic = (id, permission, uid, name) => {
+const createPublic = (id, permission, uid, name,email,photoURL) => {
 
     const path = `documents/${id}/`;
     const updates = {};
     updates[path + "/users/public"] = permission;
     updates[path + "/room/" + uid] = {
         name: name,
-        X_POS: 0,
-        Y_POS: 0
+        photoURL : photoURL,
+        email: email,
+        permission:permission
     }
     firebaseDB.ref().update(updates).then(console.log("Created Public With Permission", permission))
 }
 //----Creates Room When Public Type is called---
-const createRoom = async (child, uid, name) => {
+const createRoom = async (child, uid, name,permission,email,photoURL) => {
     const updates = {};
-    updates[`documents/${child}/room/` + uid + "/name/"] = name
     updates[`documents/${child}/room/` + uid] = {
-        X_POS: 0,
-        Y_POS: 0
+        name : name,
+        photoURL : photoURL,
+        email: email,
+        permission:permission
     }
     await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
 
@@ -48,11 +50,17 @@ const ShareLink = (props) => {
         if (linkType != undefined && permission != undefined) {
             setLink(true)
             if (linkType === "private") {
-                createRoom(props.projectID, props.currentUser.uid, props.currentUser.displayName)
-                    .then("Room Made").catch(err => err)
+                createRoom(props.projectID, props.currentUser.uid, 
+                    props.currentUser.displayName,permission , props.currentUser.email , 
+                    props.currentUser.photoURL
+                )
+                .then("Room Made").catch(err => err)
             }
             else {
-                createPublic(props.projectID, permission, props.currentUser.uid, props.currentUser.displayName)
+                createPublic(props.projectID, permission, props.currentUser.uid,
+                    props.currentUser.displayName, props.currentUser.email , 
+                    props.currentUser.photoURL
+                )
             }
             const encryptPermission = replaceAll(Crypto.encrypt(permission, "grpthink12!").toString(), '/', '$');
             const encryptName = replaceAll(Crypto.encrypt(props.currentUser.displayName, "grpthink12!").toString(), '/', '$');

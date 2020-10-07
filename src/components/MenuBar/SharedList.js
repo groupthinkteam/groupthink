@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Button from "../Button/Button"
 import { DropdownButton, Modal, Dropdown } from "react-bootstrap"
 import { firebaseDB, firebaseFunction } from '../../services/firebase';
-//Todo :- Check For Re-render
+/**
+ * This Component Shows The List of Users to which project is Shared . 
+ * Also features to access modification . 
+ * @param {*} props 
+ */
 const SharedList = (props) => {
     const [show, setShow] = useState(false);
     const [users, setUsers] = useState(null);
@@ -60,8 +64,11 @@ const SharedList = (props) => {
                                             <img src={val?.photoURL} className="menu-bar-user-profile-picture" />
                                             <b>{val?.email}</b>-
                                             {
-                                                key === props.currentUser.uid ?
-                                                    <span>(Owner)</span>
+                                                !props.isOwner ?
+                                                    <>
+                                                        <span>{val.name}</span>
+                                                        <span>(Owner)</span>
+                                                    </>
                                                     :
                                                     <>
                                                         <span>{val?.name}</span>
