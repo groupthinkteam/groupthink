@@ -17,6 +17,7 @@
     "pdf-viewer-reactjs": "^2.1.1",
     "prop-passer": "^1.1.1-3",
     "react": "^16.13.1",
+    "react-beautiful-dnd": "^13.0.0",
     "react-bootstrap": "^1.3.0",
     "react-dom": "^16.13.1",
     "react-filepond": "^7.1.0",

@@ -115,3 +115,96 @@ a {
     box-shadow: none;
     outline: none;
 }
+
+.checkbox {
+    display: inline-flex;
+    cursor: pointer;
+    position: relative;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+}
+
+.checkbox > span {
+    display: block;
+    text-align: center;
+    position: absolute;
+    // left: 1px;
+    top: -3px;
+    z-index: 1;
+}
+
+.checkbox > span::before {
+    content: "🔜";
+}
+
+.checkbox > input:checked + span::before {
+    content: "✔️";
+}
+
+.checkbox > input {
+    box-sizing: border-box;
+    height: 24px;
+    width: 24px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    border: 0px solid #2e85f7;
+    border-radius: 12px;
+    outline: none;
+    transition-duration: 0.3s;
+    background-color: white;
+    cursor: pointer;
+}
+
+.checkbox > input:checked {
+    border: 0px solid #41b883;
+    background-color: transparent;
+}
+
+.checkbox > input:active {
+    border: 0px solid #34495e;
+}
+
+.todo-item {
+    &:hover {
+        background-color: whitesmoke;
+    }
+    &:active {
+        background-color: whitesmoke;
+    }
+    background-color: white;
+    display: flex;
+    flex-flow: row wrap;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-right: 10px;
+    align-items: flex-start;
+
+    button {
+        border: 0px solid black;
+        background-color: whitesmoke;
+        display: none;
+        font-size: 14px;
+        position: relative;
+        top: -5px;
+        left: 15px;
+        &:focus {
+            box-shadow: none;
+            outline: none;
+            border: 0px solid black;
+        }
+    }
+    &:hover button {
+        display: block;
+    }
+}
+
+.todo-card {
+    .heading {
+        position: sticky;
+        top: 0px;
+        background-color: white;
+        z-index: 2;
+    }
+}
