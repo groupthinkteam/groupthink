@@ -21,6 +21,7 @@ const isChild = async (child,permissionID,typeID , nameID) => {
     //-----When Project Detail Page is Rendered---
     else
     {
+        const isOwner = await firebaseDB.ref("users/"+uid+"/projects/"+child+"/shared").once('value').then(snap => snap.exists()).catch(err=>console.log("iS Owner Error",err))
         const ischild = await firebaseDB.ref(`documents/${child}/`).once('value').then(snap => snap.exists()).catch(err=>console.log("isCHild Error \n",err))
         const isChildInUsers = await firebaseDB.ref(Path).once('value').then((snap)=>{ 
             //---False Project Id
@@ -47,7 +48,7 @@ const isChild = async (child,permissionID,typeID , nameID) => {
             }
         })
         .catch(err=>console.log("IschildinUsers Error \n",err))
-        return  isChildInUsers ;
+        return  [isChildInUsers , isOwner] ;
     }
     
 }

@@ -17,7 +17,7 @@ export default function CardManager(props) {
     const containerRef = useRef({});
     containerRef.current = container;
 
-    //
+    // Store Room-related State
     const [room, setRoom] = useState();
     // store card-related state
     const [cards, setCards] = useState({});
@@ -362,7 +362,13 @@ export default function CardManager(props) {
         (event) => {
             if (room) {
                 firebaseDB.ref("documents/" + props.projectID + "/room/").child(props.currentUser().uid)
-                    .set({ x: event.clientX, y: event.clientY, time: firebaseTIME, name: props.currentUser().displayName })
+                    .set({ x: event.clientX, y: event.clientY,
+                            time: firebaseTIME, 
+                            name: props.currentUser().displayName ,
+                            email: props.currentUser().email,
+                            photoURL : props.currentUser().photoURL,
+                            permission:props.permission
+                        })
                     .then(console.log("Data Cursor Updated to DB"))
                     .catch(err=>console.log("send to DB Cursor Error",err))
             }

@@ -3,6 +3,7 @@ import Button from "../Button/Button"
 import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
+import SharedList from "./SharedList"
 export default function MenuBar(props) {
     const currentUser = props.currentUser()
     return (
@@ -25,9 +26,16 @@ export default function MenuBar(props) {
                     Log Out
                 </Button>
                 {
-                    props.document && props.document === "rw" ?
-                        <ShareLink projectID={props.projectID} buttonClassName="menu-action-button" currentUser={currentUser} />
-                        : null
+                    props.document && !props.isOwner ?
+                    <>
+                    <ShareLink projectID={props.projectID} buttonClassName="menu-action-button" 
+                        currentUser={currentUser} 
+                    />
+                    <SharedList projectID={props.projectID} buttonClassName="menu-action-button" 
+                        currentUser={currentUser} isOwner={props.isOwner}
+                    />
+                    </>
+                    : null
                 }
             </div>
         </div>

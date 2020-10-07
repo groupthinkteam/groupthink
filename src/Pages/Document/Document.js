@@ -10,11 +10,12 @@ export default function Document(props) {
   const { projectID } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
   const [permission, setPermission] = useState(null);
+  const [isOwner , setOwner] = useState();
   //console.log(projectID);
   useEffect(() => {
     (async () => {
-      const isChildPermission = await isChild(projectID);
-      console.log("Permission", isChildPermission)
+      const [isChildPermission,isOwner] = await isChild(projectID);
+      console.log("Permission", isChildPermission,isOwner)
       setTimeout(() => setIsLoaded(true), 3000);
 
       //---Check For Child Validation--
@@ -24,6 +25,7 @@ export default function Document(props) {
       //---Permission Associated -----
       else {
         setPermission(isChildPermission);
+        setOwner(isOwner)
       }
     })()
   }, [])
@@ -44,13 +46,14 @@ export default function Document(props) {
   return (
     <div>
       <MenuBar style={{ position: "absolute", zIndex: 0 }}
-        onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID} />
+        onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID} isOwner={isOwner}/>
       {
         permission != null ?
           <CardManager
             projectID={projectID}
             currentUser={props.currentUser}
             permission={permission}
+            isOwner={isOwner}
           />
           : <div></div>
       }
