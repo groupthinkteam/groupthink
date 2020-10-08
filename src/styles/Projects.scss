@@ -4,5 +4,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     background-color: antiquewhite;
+    height: calc(100vh - 60px);
     min-height: calc(100vh - 60px);
+    overflow: scroll;
 }
