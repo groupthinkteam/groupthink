@@ -414,6 +414,7 @@ export default function CardManager(props) {
                 containerAPI={containerAPI}
                 cursors={cursors}
                 projectID={props.projectID}
+                isOwner={props.isOwner}
             />
             :
             <div>

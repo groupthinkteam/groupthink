@@ -26,7 +26,7 @@ export default function CardContainer(props) {
                 style={{ ...props.container, position: "absolute", zIndex: 9999999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
-                    if (e.target.offsetParent.className === "card-container") {
+                    if (e.target.offsetParent.className === "card-container" && props.permission === 'rw') {
                         var x = Math.floor(e.clientX + e.target.offsetParent.scrollLeft);
                         var y = Math.floor(e.clientY - 60 + e.target.offsetParent.scrollTop);
                         console.log("double click at", x, ",", y);
@@ -53,6 +53,7 @@ export default function CardContainer(props) {
                                         card={card}
                                         genericAPI={props.genericAPI}
                                         typeAPI={props.typeAPI}
+                                        permission={props.permission}
                                     />
                                     {card.parent && card.parent !== "root" &&
                                         <Arrow
