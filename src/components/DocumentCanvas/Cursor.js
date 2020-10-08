@@ -4,7 +4,6 @@ import gsap from "gsap"
 const MENUBAR_HEIGHT = 60;
 
 export default function Cursor(props) {
-    console.log("cursors",props)
     useEffect(() => {
         gsap.to("#cursor".concat(props.id), { left: props.x, top: props.y - MENUBAR_HEIGHT, duration: 0.2 }).play();
     }, [props.x, props.y, props.id])

@@ -1,65 +1,47 @@
-import React, { useState } from "react"
+import React, { useState , useEffect} from "react"
 import Button from "../Button/Button"
-import { Modal } from "react-bootstrap"
+import {DropdownButton, Modal, Dropdown } from "react-bootstrap"
 import { firebaseDB, firebaseFunction, firebaseTIME } from "../../services/firebase"
 import LinkSharing from "./LinkSharing"
 import * as Crypto from 'crypto-js/aes';
 import "../../styles/MenuBar.scss"
 
-//----Create "Public" in Database ----
-const createPublic = (id, permission, uid, name,email,photoURL) => {
-    const path = `documents/${id}/`;
-    const updates = {};
-    updates[path + "/users/public"] = permission;
-    updates[path + "/room/" + uid] = {
-        name: name,
-        photoURL : photoURL,
-        email: email,
-        permission:permission
-    }
-    updates[`documents/${id}/cursors/${uid}`] = {
-        x : 0,
-        y : 0,
-        time: firebaseTIME
-    }
-    firebaseDB.ref().update(updates).then(console.log("Created Public With Permission", permission))
-}
-//----Creates Room When Public Type is called---
-const createRoom = async (child, uid, name,permission,email,photoURL) => {
-    const updates = {};
-    updates[`documents/${child}/cursors/${uid}`] = {
-        x : 0,
-        y : 0,
-        time: firebaseTIME
-    }
-    updates[`documents/${child}/room/` + uid] = {
-        name : name,
-        photoURL : photoURL,
-        email: email,
-        permission:permission
-    }
-    await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
 
-}
 const ShareLink = (props) => {
+
     //Show Modal State
     const [show, setShow] = useState(false);
+
     //Show Generated Link State
-    const [link, setLink] = useState(false)
+    const [link, setLink] = useState(false);
+
     //Show Email State
     const [email , setEmail] = useState([]);
     const [emailShow , setEmailShow] = useState(false);
+
     //Type Link , Permission & URL State
     const [linkType, setLinkType] = useState();
     const [permission, setPermission] = useState();
     const [url, setURL] = useState();
 
+    /**Users Information State inthe Room*/
+    const [users, setUsers] = useState(null);
+
+    useEffect(() => {
+        firebaseDB.ref("documents/" + projectID + "/room/").on('value', snap => setUsers(snap.val()))
+        return () => firebaseDB.ref("documents/" + projectID + "/room/").off()
+    }, [])
+
+    
+    const title = "Groupthink Website";
+    const projectID = props.projectID;
+
     const handleShow = () => setShow(true);
-    const title = "Groupthink Website"
-    function replaceAll(str, term, replacement) {
+    //Function uSed in URL conversion 
+    const replaceAll = (str, term, replacement) => {
         return str.replace(new RegExp(escapeRegExp(term), 'g'), replacement);
     }
-    function escapeRegExp(string) {
+    const escapeRegExp = (string) => {
         return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
     const isValidEmail = (text) =>
@@ -67,48 +49,39 @@ const ShareLink = (props) => {
         const regExForEMail = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
         return regExForEMail.test(text)
     }
-    const isWhitespaceNotEmpty = (text) =>{
-        return text.length > 0 && !/[^\s]/.test(text);
-    }
+    /**Open the Email Link or Generate Link*/
     const openLink = (operation) =>()=> {
+        const encryptPermission = replaceAll(Crypto.encrypt(permission, "grpthink12!").toString(), '/', '$');
+        const encryptName = replaceAll(Crypto.encrypt(props.currentUser.displayName, "grpthink12!").toString(), '/', '$');
+        const encryptType = replaceAll(Crypto.encrypt(linkType, "grpthink12!").toString(), '/', '$');
+        const customURL = String(window.location) + "/" + encryptPermission + "/" + encryptType + "/" + encryptName ;
+        // ------- Used '/' to omit "/:permissionID"
+        const showLog = {};
+        showLog[permission]=encryptPermission;
+        showLog[props.currentUser.displayName]=encryptName;
+        showLog[linkType]=encryptType;
+        showLog["customURL"]=customURL;
+        console.log("Encryption Log \n",showLog)
         if(operation === 'emailLink' && (linkType != undefined && permission != undefined))
         {
             setEmailShow(true);
             console.log("This Operation \n",linkType , permission , url , emailShow)
-            // createRoom(props.projectID, props.currentUser.uid, 
-            //     props.currentUser.displayName,permission , props.currentUser.email , 
-            //     props.currentUser.photoURL
-            // )
-            // .then("Room & Cursor Made").catch(err => err)
-            const encryptPermission = replaceAll(Crypto.encrypt(permission, "grpthink12!").toString(), '/', '$');
-            const encryptName = replaceAll(Crypto.encrypt(props.currentUser.displayName, "grpthink12!").toString(), '/', '$');
-            const encryptType = replaceAll(Crypto.encrypt(linkType, "grpthink12!").toString(), '/', '$');
-            // ------- Used '/' to omit "/:permissionID"
-            console.log(encryptPermission, permission, "\n Name ", encryptName, "\n Type \n", encryptType)
-            setURL(String(window.location) + "/" + encryptPermission + "/" + encryptType + "/" + encryptName)
+            createRoom(props.projectID, props.currentUser.uid, 
+                props.currentUser.displayName,permission , props.currentUser.email , 
+                props.currentUser.photoURL
+            )
+            .then("Room & Cursor Made").catch(err => err)
+            setURL(customURL)
             
         }
         else if (linkType != undefined && permission != undefined) {
             setLink(true)
-            if (linkType === "private") {
-                createRoom(props.projectID, props.currentUser.uid, 
-                    props.currentUser.displayName,permission , props.currentUser.email , 
-                    props.currentUser.photoURL
-                )
-                .then("Room & Cursor Made").catch(err => err)
-            }
-            else {
-                createPublic(props.projectID, permission, props.currentUser.uid,
-                    props.currentUser.displayName, props.currentUser.email , 
-                    props.currentUser.photoURL
-                )
-            }
-            const encryptPermission = replaceAll(Crypto.encrypt(permission, "grpthink12!").toString(), '/', '$');
-            const encryptName = replaceAll(Crypto.encrypt(props.currentUser.displayName, "grpthink12!").toString(), '/', '$');
-            const encryptType = replaceAll(Crypto.encrypt(linkType, "grpthink12!").toString(), '/', '$');
-            // ------- Used '/' to omit "/:permissionID"
-            console.log(encryptPermission, permission, "\n Name ", encryptName, "\n Type \n", encryptType)
-            setURL(String(window.location) + "/" + encryptPermission + "/" + encryptType + "/" + encryptName)
+            createRoom(props.projectID, props.currentUser.uid, 
+                props.currentUser.displayName,permission , props.currentUser.email , 
+                props.currentUser.photoURL ,linkType
+            )
+            .then("Room & Cursor Made").catch(err => err)
+            setURL(customURL)
         }
         else
         {
@@ -122,7 +95,7 @@ const ShareLink = (props) => {
     const LinkType = (e) => {
         setLinkType(e.target.value)
     }
-    //----------While Closing Set Everything As At Initial Level----------
+    /**While Closing Modal Everything Should be At Initial Level*/
     const handleClose = () => {
         setShow(false);
         setLink(false);
@@ -130,6 +103,7 @@ const ShareLink = (props) => {
         setLinkType(null);
         setPermission(null);
         setEmail([]);
+        setEmailShow(false);
     }
     const onChangeEmails = (e) => 
     {
@@ -153,15 +127,36 @@ const ShareLink = (props) => {
         console.log("Send Emails",email.length , url)
         if(email.length > 0)
         {
-            const updates = {};
-            Object.keys(email).map(item=>{
-                updates["email"] = email;
-                updates["link"] = url;
-            })
             var addMsg = firebaseFunction.httpsCallable('sendLinkEmail')
-            addMsg(updates).then((result) =>console.log("Sended Email", result)).catch(err => console.log(err))
-            
+            const updates = {};
+            for(var i = email.length-1;i>=0;i--)
+            {
+                updates["emailId"] = email[i];
+                updates["link"] = url;
+                addMsg(updates).then((result) =>console.log("Sended Email", result,updates)).catch(err => console.log(err))
+            }
+        
         }
+    }
+    const changePermission = (uid, permi) => () => {
+        const updates = {};
+        updates[`users/${uid}/projects/${projectID}/access`] = permi;
+        updates[`documents/${projectID}/users/${uid}/`] = permi;
+        updates[`documents/${projectID}/room/${uid}/permission`] = permi;
+        var addMsg = firebaseFunction.httpsCallable('createNewProject')
+        addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
+    }
+
+    const makeOwner = (uid) => async () => {
+        const inUsers = await firebaseDB.ref(`documents/${projectID}/users/`).once('value').then(snap => snap.hasChild(uid)).catch(err => err)
+        const updates = {};
+        updates[`users/${uid}/projects/${projectID}/shared`] = null;
+        if (inUsers) {
+            updates[`documents/${projectID}/users/${uid}/`] = "rw";
+        }
+        var addMsg = firebaseFunction.httpsCallable('createNewProject')
+        addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
+
     }
     console.log("EMALS",email)
     return (
@@ -207,6 +202,38 @@ const ShareLink = (props) => {
                             </div>
                             : <Button className="custom_btn" handleClick={openLink()}>Generate Link</Button>
                     }
+                    {
+                        users ?
+                        Object.entries(users).map(([key, val]) => {
+                            return (
+                                <div key={key}>
+                                    <hr/>
+                                    <img src={val?.photoURL} className="menu-bar-user-profile-picture" />
+                                    <b>{val?.email}</b>-
+                                    {
+                                        key === props.currentUser.uid?
+                                            <>
+                                                <span>{val.name}</span>
+                                                <span>(Owner)</span>
+                                            </>
+                                            :
+                                            <>
+                                                <span>{val?.name}</span>
+                                        &nbsp;
+                                                <span>{val?.permission}</span>
+                                                <DropdownButton title={val?.permission} size="sm">
+                                                    <Dropdown.Item onClick={changePermission(key, "r")}>Read Only</Dropdown.Item>
+                                                    <Dropdown.Item onClick={changePermission(key, "rw")}>Read And Write</Dropdown.Item>
+                                                    <Dropdown.Divider />
+                                                    <Dropdown.Item onClick={makeOwner(key)} >Make Owner</Dropdown.Item>
+                                                </DropdownButton>
+                                            </>
+                                    }
+                                </div>
+                            )
+                        })
+                        : <p><hr/>No Lists</p>        
+                    }
                 </Modal.Body>
                 <Modal.Footer>
                     <Button className="custom_btn" handleClick={handleClose}>Close</Button>
@@ -216,4 +243,46 @@ const ShareLink = (props) => {
         </>
     )
 }
-export default ShareLink;
+//----Create "Public" in Database ----
+// const createPublic = (id, permission, uid, name,email,photoURL) => {
+//     const path = `documents/${id}/`;
+//     const updates = {};
+//     updates[path + "/users/public"] = permission;
+//     updates[path + "/room/" + uid] = {
+//         name: name,
+//         photoURL : photoURL,
+//         email: email,
+//         permission:permission
+//     }
+//     updates[`documents/${id}/cursors/${uid}`] = {
+//         name:name,
+//         x : 0,
+//         y : 0,
+//         time: firebaseTIME
+//     }
+//     firebaseDB.ref().update(updates).then(console.log("Created Public With Permission", permission))
+// }
+//----Creates Room When Public Type is called---
+const createRoom = async (child, uid, name,permission,email,photoURL,linkType) => {
+    const path = `documents/${child}/`;
+    const updates = {};
+    if(linkType === 'public')
+    {
+        updates[path + "/users/public"] = permission; 
+    }
+    updates[`${path}/cursors/${uid}`] = {
+        name:name,
+        x : 0,
+        y : 0,
+        time: firebaseTIME
+    }
+    updates[`${path}/room/${uid}`] = {
+        name : name,
+        photoURL : photoURL,
+        email: email,
+        permission:permission
+    }
+    await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
+
+}
+export default React.memo(ShareLink);

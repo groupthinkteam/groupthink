@@ -15,7 +15,6 @@ import "../../styles/CardContainer.scss";
 export default function CardContainer(props) {
     const [zoom, setZoom] = useState(1)
     const dateTime = Date.now();
-    console.log(props.cursors)
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
@@ -28,7 +27,7 @@ export default function CardContainer(props) {
                 style={{ ...props.container, position: "absolute", zIndex: 9999999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
-                    if (e.target.offsetParent.className === "card-container") {
+                    if (e.target.offsetParent.className === "card-container" && props.permission === 'rw') {
                         var x = Math.floor(e.clientX + e.target.offsetParent.scrollLeft);
                         var y = Math.floor(e.clientY - 60 + e.target.offsetParent.scrollTop);
                         console.log("double click at", x, ",", y);
@@ -109,7 +108,7 @@ export default function CardContainer(props) {
                             .map(([id, values]) =>
                                 <Cursor key={id}
                                     id={id}
-                                    name={props.currentUser().displayName}
+                                    name={values.name}
                                     x={values.x}
                                     y={values.y}
                                     projectID={props.projectID}

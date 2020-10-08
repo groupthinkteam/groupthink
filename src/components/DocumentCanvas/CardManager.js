@@ -363,7 +363,7 @@ export default function CardManager(props) {
         (event) => {
             if (cursors) {
                 firebaseDB.ref("documents/" + props.projectID + "/cursors/").child(props.currentUser().uid)
-                    .set({
+                    .update({
                         x: event.clientX, 
                         y: event.clientY,
                         time: firebaseTIME,
@@ -414,6 +414,7 @@ export default function CardManager(props) {
                 containerAPI={containerAPI}
                 cursors={cursors}
                 projectID={props.projectID}
+                isOwner={props.isOwner}
             />
             :
             <div>
