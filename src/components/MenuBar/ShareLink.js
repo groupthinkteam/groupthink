@@ -4,8 +4,8 @@ import {DropdownButton, Modal, Dropdown } from "react-bootstrap"
 import { firebaseDB, firebaseFunction, firebaseTIME } from "../../services/firebase"
 import LinkSharing from "./LinkSharing"
 import * as Crypto from 'crypto-js/aes';
+import CreatableSelect from 'react-select/creatable';
 import "../../styles/MenuBar.scss"
-
 
 const ShareLink = (props) => {
 
@@ -16,8 +16,13 @@ const ShareLink = (props) => {
     const [link, setLink] = useState(false);
 
     //Show Email State
-    const [email , setEmail] = useState([]);
     const [emailShow , setEmailShow] = useState(false);
+    
+    //Stores the State for EMail-ID inputs.
+    const [state , setState] = useState({
+        inputValue: '',
+        value: []
+    });
 
     //Type Link , Permission & URL State
     const [linkType, setLinkType] = useState();
@@ -35,7 +40,7 @@ const ShareLink = (props) => {
     
     const title = "Groupthink Website";
     const projectID = props.projectID;
-    const regWhiteSpace = new RegExp("/^\s+$/");
+
     const handleShow = () => setShow(true);
     //Function uSed in URL conversion 
     const replaceAll = (str, term, replacement) => {
@@ -43,11 +48,6 @@ const ShareLink = (props) => {
     }
     const escapeRegExp = (string) => {
         return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }
-    const isValidEmail = (text) =>
-    {
-        const regExForEMail = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
-        return regExForEMail.test(text)
     }
     /**Open the Email Link or Generate Link*/
     const openLink = (operation) =>()=> {
@@ -102,44 +102,33 @@ const ShareLink = (props) => {
         setURL(null);
         setLinkType(null);
         setPermission(null);
-        setEmail([]);
+        setState({
+            inputValue: '',
+            value: []
+        });
         setEmailShow(false);
     }
     function validateEmail(email) {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
-    const onChangeEmails = (e) => 
-    {
-        console.log("Input is ",e.target.value);
-        
-        const text = [e.target.value];
-        const textParts = text.split(" ")
-        console.log("textParts",textParts);
-        Object.entries(textParts).map(([item,val]) => {
-            console.log("ENTRIES",item,val,regWhiteSpace.test(textParts[val]), validateEmail(val))
-            if(validateEmail(val))
-            {
-                console.log("entered Valid Email")
-                setEmail([val])
-            }
-        })
-    }
+    
     const sendEmails = () => 
     {
-        console.log("Send Emails",email.length , url)
-        if(email.length > 0)
+        console.log("Send Emails",state.value )
+        if(state.value.length>0)
         {
-            var addMsg = firebaseFunction.httpsCallable('sendLinkEmail')
-            const updates = {};
-            for(var i = email.length-1;i>=0;i--)
-            {
-                updates["emailId"] = email[i];
-                updates["link"] = url;
+            var addMsg = firebaseFunction.httpsCallable('sendLinkEmail');
+            Object.entries(state.value).map(([key,val])=>{
+                const updates = {};
+                console.log("ITEM",key,val)
+                updates["emailId"]=val.value;
+                updates["link"]=url;
                 addMsg(updates).then((result) =>console.log("Sended Email", result,updates)).catch(err => console.log(err))
-            }
-            
+            })    
         }
+        else
+        console.log("EMPTY STRING");
     }
     const changePermission = (uid, permi) => () => {
         const updates = {};
@@ -161,7 +150,35 @@ const ShareLink = (props) => {
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
 
     }
-    console.log("EMALS",email)
+    //console.log("EMALS",state)
+    const handleChange = (value, actionMeta) => {
+        console.group('Value Changed');
+        console.log(value);
+        console.log(`action: ${actionMeta.action}`);
+        console.groupEnd();
+        setState({inputValue:state.inputValue, value:value });
+    };
+    const handleInputChange = (inputValue) => {
+        setState({ inputValue:inputValue , value:state.value });
+    };
+    const handleKeyDown = (event) => {
+        const { inputValue, value } = state;
+        if (!inputValue) return;
+        switch (event.key) {
+          case 'Enter':
+          case 'Tab':
+            console.group('Value Added');
+            console.log(value);
+            console.groupEnd();
+            if(validateEmail(inputValue))
+            {setState({
+              inputValue: '',
+              value: [...value, createOption(inputValue)],
+            });}
+            else alert(`Invalid Email Entered ${inputValue}`,setState(state))
+            event.preventDefault();
+        }
+    }
     return (
         <>
             <Button className={props.buttonClassName} handleClick={handleShow}>
@@ -188,8 +205,19 @@ const ShareLink = (props) => {
                     {
                         emailShow ?
                         <div>
-                            <input placeholder="Enter Email ID's" type="text" name="emails" onChange={e=>onChangeEmails(e)} required={true}/>
-                            <input type="submit" onClick={sendEmails}/>
+                            <CreatableSelect
+                                components={components}
+                                inputValue={state.inputValue}
+                                isClearable
+                                isMulti
+                                menuIsOpen={false}
+                                onChange={handleChange.bind(this)}
+                                onInputChange={e=>handleInputChange(e)}
+                                onKeyDown={e=>handleKeyDown(e)}
+                                placeholder="Type something and press enter..."
+                                value={state.value}
+                            />
+                            <input type="submit" onClick={sendEmails} className="custom_btn"/>
                         </div>
                         :<Button className="custom_btn" handleClick={openLink("emailLink")}>Send Email </Button>
                     }
@@ -222,7 +250,7 @@ const ShareLink = (props) => {
                                             :
                                             <>
                                                 <span>{val?.name}</span>
-                                        &nbsp;
+                                                &nbsp;
                                                 <span>{val?.permission}</span>
                                                 <DropdownButton title={val?.permission} size="sm">
                                                     <Dropdown.Item onClick={changePermission(key, "r")}>Read Only</Dropdown.Item>
@@ -246,28 +274,36 @@ const ShareLink = (props) => {
         </>
     )
 }
+    const components = {
+        DropdownIndicator: null,
+    };
+    
+    const createOption = (label) => ({
+        label,
+        value: label,
+    });
+    //----Creates Room When Public Type is called---
+    const createRoom = async (child, uid, name,permission,email,photoURL,linkType) => {
+        const path = `documents/${child}/`;
+        const updates = {};
+        if(linkType === 'public')
+        {
+            updates[path + "/users/public"] = permission; 
+        }
+        updates[`${path}/cursors/${uid}`] = {
+            name:name,
+            x : 0,
+            y : 0,
+            time: firebaseTIME
+        }
+        updates[`${path}/room/${uid}`] = {
+            name : name,
+            photoURL : photoURL,
+            email: email,
+            permission:permission
+        }
+        await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
 
-//----Creates Room When Public Type is called---
-const createRoom = async (child, uid, name,permission,email,photoURL,linkType) => {
-    const path = `documents/${child}/`;
-    const updates = {};
-    if(linkType === 'public')
-    {
-        updates[path + "/users/public"] = permission; 
     }
-    updates[`${path}/cursors/${uid}`] = {
-        name:name,
-        x : 0,
-        y : 0,
-        time: firebaseTIME
-    }
-    updates[`${path}/room/${uid}`] = {
-        name : name,
-        photoURL : photoURL,
-        email: email,
-        permission:permission
-    }
-    await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
 
-}
 export default React.memo(ShareLink);
