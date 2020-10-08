@@ -40,6 +40,17 @@ const ShareLink = (props) => {
     
     const title = "Groupthink Website";
     const projectID = props.projectID;
+
+    /**
+     * This Function Provides the path to the dezired operation.
+     * @param {*} uid uid of the users 
+     * @param {String} operation - 
+     * The Following are Operation And It's corresponding Path.
+     * "usersUnderDocument" : `documents/${projectID}/users/${uid}/`
+     * "projectUnderUser" : `users/${uid}/projects/${projectID}/`
+     * "cursorUnderDocument" : `documents/${projectID}/cursors/${uid}/`
+     * "roomUnderDocument" : `documents/${projectID}/room/${uid}/`
+     */
     const refPaths = (uid,operation) =>{
         switch(operation)
         {
@@ -76,26 +87,30 @@ const ShareLink = (props) => {
         showLog[linkType]=encryptType;
         showLog["customURL"]=customURL;
         console.log("Encryption Log \n",showLog)
-        if(operation === 'emailLink' && (linkType != undefined && permission != undefined))
+        if(linkType != undefined && permission != undefined)
         {
-            setEmailShow(true);
-            console.log("This Operation \n",linkType , permission , url , emailShow)
-            createRoom(props.projectID, props.currentUser.uid, 
-                props.currentUser.displayName,permission , props.currentUser.email , 
-                props.currentUser.photoURL
-            )
-            .then("Room & Cursor Made").catch(err => err)
-            setURL(customURL)
-            
-        }
-        else if (linkType != undefined && permission != undefined) {
-            setLink(true)
-            createRoom(props.projectID, props.currentUser.uid, 
-                props.currentUser.displayName,permission , props.currentUser.email , 
-                props.currentUser.photoURL ,linkType
-            )
-            .then("Room & Cursor Made").catch(err => err)
-            setURL(customURL)
+            if(operation === 'emailLink')
+            {
+                setEmailShow(true);
+                console.log("This Operation \n",linkType , permission , url , emailShow)
+                createRoom(props.projectID, props.currentUser.uid, 
+                    props.currentUser.displayName,permission , props.currentUser.email , 
+                    props.currentUser.photoURL
+                )
+                .then("Room & Cursor Made").catch(err => err)
+                setURL(customURL)
+                
+            }
+            else
+            {
+                setLink(true)
+                createRoom(props.projectID, props.currentUser.uid, 
+                    props.currentUser.displayName,permission , props.currentUser.email , 
+                    props.currentUser.photoURL ,linkType
+                )
+                .then("Room & Cursor Made").catch(err => err)
+                setURL(customURL)
+            }
         }
         else
         {
@@ -126,7 +141,9 @@ const ShareLink = (props) => {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
-    
+    /**
+     * Function Exicutes the Cloud Function Call to Send Email to Entered values
+     */
     const sendEmails = () => 
     {
         console.log("Send Emails",state.value )
@@ -144,6 +161,12 @@ const ShareLink = (props) => {
         else
         console.log("EMPTY STRING");
     }
+
+    /**
+     * Changes the Permission on basis of UID
+     * @param {*} uid 
+     * @param {*} permi 
+     */
     const changePermission = (uid, permi) => () => {
         const updates = {};
         updates[refPaths(uid,"projectUnderUser")+"access"] = permi;
@@ -152,7 +175,12 @@ const ShareLink = (props) => {
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
     }
-
+    /**
+     * Makes The selected user the owner of project ;
+     * Feature of Owner is : Owner can create the Owner but can change it's permission afterward
+     * i.e. `One Way Operation`
+     * @param {*} uid 
+     */
     const makeOwner = (uid) => async () => {
         const inUsers = await firebaseDB.ref(`documents/${projectID}/users/`).once('value').then(snap => snap.hasChild(uid)).catch(err => err)
         const updates = {};
@@ -164,9 +192,12 @@ const ShareLink = (props) => {
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
 
     }
+    /**
+     * Deletes The User of corresponding uid
+     * @param {*} uid 
+     */
     const deleteUser = (uid) => () =>
     {
-        
         const updates = {};
         updates[refPaths(uid,"projectUnderUser")] = null;
         updates[refPaths(uid,"usersUnderDocument")] = null;
