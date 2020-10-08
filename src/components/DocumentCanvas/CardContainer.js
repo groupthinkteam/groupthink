@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import GenericCard from "./Cards/GenericCard"
 import Cursor from "./Cursor";
 import Arrow from "../Arrow/Arrow";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import "../../styles/CardContainer.scss";
 
@@ -48,14 +49,36 @@ export default function CardContainer(props) {
                         ([id, card]) => {
                             return (
                                 <div key={"wrapperdiv".concat(id)}>
-                                    <GenericCard
-                                        key={id}
-                                        id={id}
-                                        card={card}
-                                        genericAPI={props.genericAPI}
-                                        typeAPI={props.typeAPI}
-                                    />
-                                    {card.parent && card.parent !== "root" &&
+                                    <ContextMenuTrigger id={"contextmenu".concat(id)} >
+                                        <GenericCard
+                                            key={id}
+                                            id={id}
+                                            card={card}
+                                            genericAPI={props.genericAPI}
+                                            typeAPI={props.typeAPI}
+                                        />
+                                    </ContextMenuTrigger>
+                                    <ContextMenu id={"contextmenu".concat(id)} className="card-context-menu">
+                                        <MenuItem onClick={() => props.genericAPI.addChild(
+                                            {
+                                                x: card.position.x + 100,
+                                                y: card.position.y + 100
+                                            },
+                                            {
+                                                width: card.size.width,
+                                                height: card.size.height,
+                                            },
+                                            id,
+                                            "blank"
+                                        )}>
+                                            add child
+                                        </MenuItem>
+                                        <MenuItem onClick={() => props.genericAPI.removeCard(id, "recursive", card.parent)}>
+                                            delete
+                                        </MenuItem>
+                                    </ContextMenu>
+                                    {
+                                        card.parent && card.parent !== "root" &&
                                         <Arrow
                                             key={"arrow".concat(id)}
                                             id={"".concat(id)}
@@ -79,7 +102,7 @@ export default function CardContainer(props) {
                     ) : <p>Double Click to Add a Card</p>
                 }
                 {
-                    props.cursors != undefined
+                    props.cursors
                         ? Object.entries(props.cursors)
                             .filter(
                                 ([id, values]) => id !== props.currentUser().uid && (dateTime - Number(values.time) < 60000))
@@ -94,6 +117,6 @@ export default function CardContainer(props) {
                         : null
                 }
             </div>
-        </div>
+        </div >
     )
 }

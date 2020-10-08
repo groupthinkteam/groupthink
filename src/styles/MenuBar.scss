@@ -2,13 +2,15 @@
     display: flex;
     flex-flow: row nowrap;
     z-index: 10000;
-    background-color: transparent;
+    // background-color: #ffc700;
+    background-color: #0fa958;
+    // background-color: #5551ff;
     align-items: center;
     justify-content: center;
     padding: 10px;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
-    font-family: "Varela Round", sans-serif;
-    backdrop-filter: blur(50px);
+    border-bottom: 2px solid black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, "Varela Round", sans-serif;
+    font-weight: 400;
 }
 
 .menu-bar-site-title {
@@ -16,7 +18,7 @@
         user-select: none;
         font-size: 24px;
         font-family: "B612 Mono", monospace;
-        color: black;
+        color: antiquewhite;
         text-decoration: none;
         &:hover {
             color: green;
@@ -46,15 +48,17 @@
 
 .menu-action-button {
     font-size: 14px;
-    color: white;
-    background-color: #5ba151;
-    border: 0px solid black;
-    border-radius: 10px;
+    color: black;
+    background-color: antiquewhite;
+    border: 2px solid black;
+    border-radius: 6px;
     height: 30px;
-    width: 80px;
     margin: 0px 10px 0px 0px;
     &:hover {
         border-color: rgba(151, 5, 5, 0.767);
+    }
+    &.highlight {
+        background-color: #ff8577;
     }
 }
 

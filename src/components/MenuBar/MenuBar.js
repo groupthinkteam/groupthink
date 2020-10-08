@@ -31,7 +31,7 @@ export default function MenuBar(props) {
                     <ShareLink projectID={props.projectID} buttonClassName="menu-action-button" 
                         currentUser={currentUser} 
                     />
-                    <SharedList projectID={props.projectID} buttonClassName="menu-action-button" 
+                    <SharedList projectID={props.projectID} buttonClassName="menu-action-button highlight" 
                         currentUser={currentUser} isOwner={props.isOwner}
                     />
                     </>

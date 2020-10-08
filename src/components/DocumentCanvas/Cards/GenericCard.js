@@ -58,30 +58,9 @@ function GenericCard(props) {
                 opacity: 0
             }}>
             <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
-                <button className="card-control-button add"
-                    onClick={() => props.genericAPI.addChild(
-                        {
-                            x: props.card.position.x + 100,
-                            y: props.card.position.y + 100
-                        },
-                        {
-                            width: props.card.size.width,
-                            height: props.card.size.height,
-                        },
-                        props.id,
-                        "blank"
-                    )}>
-                    +
-                </button>
-                <button className="card-control-button lock">
-                    L
-                </button>
-                <button className="card-control-button delete"
-                    onClick={() => props.genericAPI.removeCard(props.id, "recursive", props.card.parent)}>
-                    X
-                </button>
+                <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
             </div>
-            <div style={{ width: "100%", height: props.card.size.height - 30 }}>
+            <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0 }}>
                 <CardType typeAPI={props.typeAPI} content={props.card.content} size={props.card.size} id={props.id} />
             </div>
         </div>

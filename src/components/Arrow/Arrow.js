@@ -66,7 +66,7 @@ function Arrow(props) {
                 <path
                     strokeWidth="3"
                     fill="none"
-                    stroke="grey"
+                    stroke="#ff8577"
                     d={path} />
             </svg>
             <svg style={{ position: "absolute", overflow: "visible", width: 0, height: 0 }}>
@@ -79,7 +79,8 @@ function Arrow(props) {
                     cy={dragging ? dragging.y : props.tail.y}
                     r="5"
                     stroke="black"
-                    fill="grey" />
+                    strokeWidth="2px"
+                    fill="#0fa958" />
             </svg>
         </div>
     )
