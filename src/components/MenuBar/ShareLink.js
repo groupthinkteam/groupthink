@@ -127,15 +127,15 @@ const ShareLink = (props) => {
         console.log("Send Emails",email.length , url)
         if(email.length > 0)
         {
+            var addMsg = firebaseFunction.httpsCallable('sendLinkEmail')
             const updates = {};
             for(var i = email.length-1;i>=0;i--)
             {
-                updates["email"] = email[i];
+                updates["emailId"] = email[i];
                 updates["link"] = url;
+                addMsg(updates).then((result) =>console.log("Sended Email", result,updates)).catch(err => console.log(err))
             }
-            var addMsg = firebaseFunction.httpsCallable('sendLinkEmail')
-            addMsg(updates).then((result) =>console.log("Sended Email", result,updates)).catch(err => console.log(err))
-            
+        
         }
     }
     const changePermission = (uid, permi) => () => {
