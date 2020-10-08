@@ -35,7 +35,7 @@ const ShareLink = (props) => {
     
     const title = "Groupthink Website";
     const projectID = props.projectID;
-
+    const regWhiteSpace = new RegExp("/^\s+$/");
     const handleShow = () => setShow(true);
     //Function uSed in URL conversion 
     const replaceAll = (str, term, replacement) => {
@@ -105,22 +105,25 @@ const ShareLink = (props) => {
         setEmail([]);
         setEmailShow(false);
     }
+    function validateEmail(email) {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
     const onChangeEmails = (e) => 
     {
         console.log("Input is ",e.target.value);
         
-        const text = e.target.value;
+        const text = [e.target.value];
         const textParts = text.split(" ")
         console.log("textParts",textParts);
-        if(textParts.length >1)
-        Object.keys(textParts).map(item => {
-            if(isValidEmail(item))
+        Object.entries(textParts).map(([item,val]) => {
+            console.log("ENTRIES",item,val,regWhiteSpace.test(textParts[val]), validateEmail(val))
+            if(validateEmail(val))
             {
-                setEmail(...email,item)
+                console.log("entered Valid Email")
+                setEmail([val])
             }
         })
-        else if(isValidEmail(textParts[0]))
-        setEmail([textParts[0]])
     }
     const sendEmails = () => 
     {
@@ -135,7 +138,7 @@ const ShareLink = (props) => {
                 updates["link"] = url;
                 addMsg(updates).then((result) =>console.log("Sended Email", result,updates)).catch(err => console.log(err))
             }
-        
+            
         }
     }
     const changePermission = (uid, permi) => () => {
@@ -243,25 +246,7 @@ const ShareLink = (props) => {
         </>
     )
 }
-//----Create "Public" in Database ----
-// const createPublic = (id, permission, uid, name,email,photoURL) => {
-//     const path = `documents/${id}/`;
-//     const updates = {};
-//     updates[path + "/users/public"] = permission;
-//     updates[path + "/room/" + uid] = {
-//         name: name,
-//         photoURL : photoURL,
-//         email: email,
-//         permission:permission
-//     }
-//     updates[`documents/${id}/cursors/${uid}`] = {
-//         name:name,
-//         x : 0,
-//         y : 0,
-//         time: firebaseTIME
-//     }
-//     firebaseDB.ref().update(updates).then(console.log("Created Public With Permission", permission))
-// }
+
 //----Creates Room When Public Type is called---
 const createRoom = async (child, uid, name,permission,email,photoURL,linkType) => {
     const path = `documents/${child}/`;

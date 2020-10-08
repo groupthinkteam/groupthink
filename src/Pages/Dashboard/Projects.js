@@ -77,6 +77,7 @@ export default function Projects(props) {
         }).catch(err=>console.log("Error While UID Fetch",err))
         updates["documents/" + id + "/"] = null;
         updates["creator/"+id+"/"] = null;
+        updates[userRef+id] = null;
         //----Admin Update Method (Cloud Function)----
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates).then((result) => console.log(result,updates)).catch(err => console.log(err))
