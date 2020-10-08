@@ -76,19 +76,11 @@ const ShareLink = (props) => {
         }
         else if (linkType != undefined && permission != undefined) {
             setLink(true)
-            if (linkType === "private") {
-                createRoom(props.projectID, props.currentUser.uid, 
-                    props.currentUser.displayName,permission , props.currentUser.email , 
-                    props.currentUser.photoURL
-                )
-                .then("Room & Cursor Made").catch(err => err)
-            }
-            else {
-                createPublic(props.projectID, permission, props.currentUser.uid,
-                    props.currentUser.displayName, props.currentUser.email , 
-                    props.currentUser.photoURL
-                )
-            }
+            createRoom(props.projectID, props.currentUser.uid, 
+                props.currentUser.displayName,permission , props.currentUser.email , 
+                props.currentUser.photoURL ,linkType
+            )
+            .then("Room & Cursor Made").catch(err => err)
             setURL(customURL)
         }
         else
@@ -211,7 +203,7 @@ const ShareLink = (props) => {
                             : <Button className="custom_btn" handleClick={openLink()}>Generate Link</Button>
                     }
                     {
-                        users && !props.isOwner ?
+                        users ?
                         Object.entries(users).map(([key, val]) => {
                             return (
                                 <div key={key}>
@@ -219,7 +211,7 @@ const ShareLink = (props) => {
                                     <img src={val?.photoURL} className="menu-bar-user-profile-picture" />
                                     <b>{val?.email}</b>-
                                     {
-                                        !props.isOwner ?
+                                        key === props.currentUser.uid?
                                             <>
                                                 <span>{val.name}</span>
                                                 <span>(Owner)</span>
@@ -252,32 +244,39 @@ const ShareLink = (props) => {
     )
 }
 //----Create "Public" in Database ----
-const createPublic = (id, permission, uid, name,email,photoURL) => {
-    const path = `documents/${id}/`;
-    const updates = {};
-    updates[path + "/users/public"] = permission;
-    updates[path + "/room/" + uid] = {
-        name: name,
-        photoURL : photoURL,
-        email: email,
-        permission:permission
-    }
-    updates[`documents/${id}/cursors/${uid}`] = {
-        x : 0,
-        y : 0,
-        time: firebaseTIME
-    }
-    firebaseDB.ref().update(updates).then(console.log("Created Public With Permission", permission))
-}
+// const createPublic = (id, permission, uid, name,email,photoURL) => {
+//     const path = `documents/${id}/`;
+//     const updates = {};
+//     updates[path + "/users/public"] = permission;
+//     updates[path + "/room/" + uid] = {
+//         name: name,
+//         photoURL : photoURL,
+//         email: email,
+//         permission:permission
+//     }
+//     updates[`documents/${id}/cursors/${uid}`] = {
+//         name:name,
+//         x : 0,
+//         y : 0,
+//         time: firebaseTIME
+//     }
+//     firebaseDB.ref().update(updates).then(console.log("Created Public With Permission", permission))
+// }
 //----Creates Room When Public Type is called---
-const createRoom = async (child, uid, name,permission,email,photoURL) => {
+const createRoom = async (child, uid, name,permission,email,photoURL,linkType) => {
+    const path = `documents/${child}/`;
     const updates = {};
-    updates[`documents/${child}/cursors/${uid}`] = {
+    if(linkType === 'public')
+    {
+        updates[path + "/users/public"] = permission; 
+    }
+    updates[`${path}/cursors/${uid}`] = {
+        name:name,
         x : 0,
         y : 0,
         time: firebaseTIME
     }
-    updates[`documents/${child}/room/` + uid] = {
+    updates[`${path}/room/${uid}`] = {
         name : name,
         photoURL : photoURL,
         email: email,

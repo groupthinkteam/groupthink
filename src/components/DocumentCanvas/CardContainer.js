@@ -85,7 +85,7 @@ export default function CardContainer(props) {
                             .map(([id, values]) =>
                                 <Cursor key={id}
                                     id={id}
-                                    name={props.currentUser().displayName}
+                                    name={values.name}
                                     x={values.x}
                                     y={values.y}
                                     projectID={props.projectID}

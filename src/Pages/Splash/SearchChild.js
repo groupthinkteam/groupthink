@@ -64,6 +64,7 @@ const createUserinDocument =async(path,child,permission,uid)=>{
     //GIve Permission
     updates[path+uid]=permission;
     //Enter User to Room
+    updates[`documents/${child}/cursors/${uid}`] = {name:auth().currentUser.displayName};
     updates[`documents/${child}/room/`+uid] ={
         name : auth().currentUser.displayName,
         photoURL : auth().currentUser.photoURL,
