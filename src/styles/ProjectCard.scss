@@ -2,14 +2,14 @@
     margin: 10px;
     width: 200px;
     height: 300px;
-    border: 0px dashed black;
+    border: 2px solid black;
+    background-color: #ffffff;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
-    font-family: monospace;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 4px;
+    font-family: "Varela Round", sans-serif;
+    border-radius: 10px;
 }
 
 .inline-input {

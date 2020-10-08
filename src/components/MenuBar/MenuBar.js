@@ -35,7 +35,7 @@ export default function MenuBar(props) {
                 {
                     props.document && !props.isOwner ?
                     <>
-                    <ShareLink projectID={props.projectID} buttonClassName="menu-action-button" 
+                    <ShareLink projectID={props.projectID} buttonClassName="menu-action-button highlight" 
                         currentUser={currentUser} isOwner={props.isOwner}
                         />
                     </>
