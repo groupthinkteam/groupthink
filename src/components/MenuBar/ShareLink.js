@@ -40,7 +40,21 @@ const ShareLink = (props) => {
     
     const title = "Groupthink Website";
     const projectID = props.projectID;
-
+    const refPaths = (uid,operation) =>{
+        switch(operation)
+        {
+            case "usersUnderDocument" :
+                return `documents/${projectID}/users/${uid}/`;
+            case "projectUnderUser" :
+                return `users/${uid}/projects/${projectID}/`;
+            case "cursorUnderDocument" :
+                return `documents/${projectID}/cursors/${uid}/`;
+            case "roomUnderDocument" :
+                return `documents/${projectID}/room/${uid}/`;
+            default :
+                return undefined;
+        }
+    }
     const handleShow = () => setShow(true);
     //Function uSed in URL conversion 
     const replaceAll = (str, term, replacement) => {
@@ -132,9 +146,9 @@ const ShareLink = (props) => {
     }
     const changePermission = (uid, permi) => () => {
         const updates = {};
-        updates[`users/${uid}/projects/${projectID}/access`] = permi;
-        updates[`documents/${projectID}/users/${uid}/`] = permi;
-        updates[`documents/${projectID}/room/${uid}/permission`] = permi;
+        updates[refPaths(uid,"projectUnderUser")+"access"] = permi;
+        updates[refPaths(uid,"usersUnderDocument")] = permi;
+        updates[refPaths(uid,"roomUnderDocument")+"permission"] = permi;
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
     }
@@ -142,13 +156,24 @@ const ShareLink = (props) => {
     const makeOwner = (uid) => async () => {
         const inUsers = await firebaseDB.ref(`documents/${projectID}/users/`).once('value').then(snap => snap.hasChild(uid)).catch(err => err)
         const updates = {};
-        updates[`users/${uid}/projects/${projectID}/shared`] = null;
+        updates[refPaths(uid,"projectUnderUser")+`shared`] = null;
         if (inUsers) {
-            updates[`documents/${projectID}/users/${uid}/`] = "rw";
+            updates[refPaths(uid,"usersUnderDocument")] = "rw";
         }
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
 
+    }
+    const deleteUser = (uid) => () =>
+    {
+        
+        const updates = {};
+        updates[refPaths(uid,"projectUnderUser")] = null;
+        updates[refPaths(uid,"usersUnderDocument")] = null;
+        updates[refPaths(uid,"cursorUnderDocument")] = null;
+        updates[refPaths(uid,"roomUnderDocument")] = null;
+        var addMsg = firebaseFunction.httpsCallable('createNewProject')
+        addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
     }
     //console.log("EMALS",state)
     const handleChange = (value, actionMeta) => {
@@ -251,7 +276,9 @@ const ShareLink = (props) => {
                                             <>
                                                 <span>{val?.name}</span>
                                                 &nbsp;
-                                                <span>{val?.permission}</span>
+                                                <span><strong>{val?.permission}</strong></span>
+                                                &nbsp; &nbsp;
+                                                <span><Button handleClick={deleteUser(key)}>X</Button></span>
                                                 <DropdownButton title={val?.permission} size="sm">
                                                     <Dropdown.Item onClick={changePermission(key, "r")}>Read Only</Dropdown.Item>
                                                     <Dropdown.Item onClick={changePermission(key, "rw")}>Read And Write</Dropdown.Item>
