@@ -14,7 +14,6 @@ import "../../styles/CardContainer.scss";
 export default function CardContainer(props) {
     const [zoom, setZoom] = useState(1)
     const dateTime = Date.now();
-    console.log(props.cursors)
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>

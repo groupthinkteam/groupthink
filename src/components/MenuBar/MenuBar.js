@@ -3,9 +3,16 @@ import Button from "../Button/Button"
 import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
-import SharedList from "./SharedList"
 export default function MenuBar(props) {
     const currentUser = props.currentUser()
+    const returnShareLink = () =>
+    {
+        return(
+            <ShareLink projectID={props.projectID} buttonClassName="menu-action-button" 
+                currentUser={currentUser} isOwner={props.isOwner}
+            />
+        )
+    }
     return (
         <div className="menu-bar topheader">
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -29,11 +36,8 @@ export default function MenuBar(props) {
                     props.document && !props.isOwner ?
                     <>
                     <ShareLink projectID={props.projectID} buttonClassName="menu-action-button" 
-                        currentUser={currentUser} 
-                    />
-                    <SharedList projectID={props.projectID} buttonClassName="menu-action-button" 
                         currentUser={currentUser} isOwner={props.isOwner}
-                    />
+                        />
                     </>
                     : null
                 }
