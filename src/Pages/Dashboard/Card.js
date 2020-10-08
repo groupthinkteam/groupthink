@@ -9,8 +9,8 @@ function Card(props) {
     if (props.addNew) {
         return (
             <div className="project-card text_card">
-                <Button className="" handleClick={props.onAddNew}>
-                    Add New Card
+                <Button className="custom_btn" handleClick={props.onAddNew}>
+                    Create New Project
                 </Button>
             </div>
         )
@@ -19,7 +19,7 @@ function Card(props) {
         return (
             <div className="project-card img_card">
                 {
-                    props.card.shared != undefined ? <div>Shared By :- {props.card.shared.name} <br/> Shared Type : {props.card.shared.type}</div> 
+                    props.card.shared ? <div>Shared By :- {props.card.shared.name} <br/> Shared Type : {props.card.shared.type}</div> 
                     :<div>Owner</div>
                 }
                 <img
@@ -37,7 +37,8 @@ function Card(props) {
                             onSave={() => props.onSave(props.id)} 
                         />
                         <Button
-                            className="project-card-item"
+                            className="project-card-item custom_btn highlight"
+                            style={{marginBottom: "5px"}}
                             handleClick={() => props.onDelete(props.id)}>
                             Delete
                         </Button>

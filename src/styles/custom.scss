@@ -4,28 +4,11 @@
 
 /******dashboard mid section starts here************/
 .project-card.text_card {
-    min-height: 45px;
-    height: 66px;
-    background: #ffffff;
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
-    border-radius: 6px;
-    button {
-        border: none;
-        background-color: transparent;
-        font-size: 18px;
-        &:focus {
-            outline: none;
-        }
-    }
+    min-height: 280px;
 }
 .project-card.img_card {
-    background: #ffffff;
-    height: auto;
     min-height: 280px;
-    overflow: hidden;
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
-    border-radius: 6px;
-    min-height: 275px;
+    height: auto;
     textarea {
         resize: none !important;
         border: none;
@@ -41,19 +24,24 @@
 }
 
 button.custom_btn {
-    background: #2e85f7;
-    height: 38px;
-    min-width: 100px;
-    border-radius: 10px;
-    color: #fff;
-    margin-right: 12px;
-    padding: 0 10px;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 21px;
-    border: none;
+    font-size: 14px;
+    font-family: "Varela Round", sans-serif;
+    color: black;
+    background-color: antiquewhite;
+    border: 2px solid black;
+    border-radius: 6px;
+    height: 30px;
+    margin: 0px 10px 0px 0px;
+    &:hover {
+        border-color: rgba(151, 5, 5, 0.767);
+    }
+    &.highlight {
+        background-color: #ff8577;
+    }
     &:focus {
-        box-shadow: none;
+        outline: none
+    }
+    &:active {
         outline: none;
     }
 }
