@@ -72,7 +72,6 @@ export default function Projects(props) {
         const uidDataKeys = firebaseDB.ref("documents/" + id + "/room/").once('value').then(snap => { return snap.val() }).catch(err => console.log("onDelete Error", err))
         console.log("UID DATA KEYS", uidDataKeys);
         const updates = {};
-<<<<<<< HEAD
         await uidDataKeys.then(result=>{
             if(result)
             Object.keys(result)
@@ -88,22 +87,6 @@ export default function Projects(props) {
         //----Admin Update Method (Cloud Function)----
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates).then((result) => console.log(result,updates)).catch(err => console.log("ERROR WHILE DELETE",err))
-=======
-        await uidDataKeys.then(result => {
-            if (result)
-                Object.keys(result)
-                    .map((key) => {
-                        if (key !== props.currentUser().uid)
-                            updates["users/" + key + "/projects/" + id + "/"] = null;
-                    })
-        }).catch(err => console.log("Error While UID Fetch", err))
-        updates["documents/" + id + "/"] = null;
-        updates["creator/" + id + "/"] = null;
-        updates[userRef + id] = null;
-        //----Admin Update Method (Cloud Function)----
-        var addMsg = firebaseFunction.httpsCallable('createNewProject')
-        addMsg(updates).then((result) => console.log(result, updates)).catch(err => console.log(err))
->>>>>>> 82291e11c433384343fb4c78e79b99fc698b1f63
         // //--------------------Storage Deletion ------------
         const path = "root/" + id + "/";
         const deleteFile = (pathToFile, fileName) => {
