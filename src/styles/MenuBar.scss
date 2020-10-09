@@ -9,7 +9,10 @@
     align-items: center;
     justify-content: center;
     padding: 10px;
-    border-bottom: 2px solid black;
+    position: relative;
+    top: 10px;
+    border: 3.5px solid black;
+    border-radius: 10px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, "Varela Round", sans-serif;
     font-weight: 400;
 }

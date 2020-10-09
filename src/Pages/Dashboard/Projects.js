@@ -75,7 +75,8 @@ export default function Projects(props) {
             if (result)
                 Object.keys(result)
                     .map((key) => {
-                        updates["users/" + key + "/projects/" + id + "/"] = null;
+                        if (key !== props.currentUser().uid)
+                            updates["users/" + key + "/projects/" + id + "/"] = null;
                     })
         }).catch(err => console.log("Error While UID Fetch", err))
         updates["documents/" + id + "/"] = null;
