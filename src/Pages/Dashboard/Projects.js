@@ -21,7 +21,7 @@ import { snap } from "gsap/all";
 export default function Projects(props) {
     const history = useHistory();
     const [cards, setCards] = useState(null);
-
+    const [isLoaded, setIsLoaded] = useState(false);
     const userRef = "users/" + props.currentUser().uid + "/projects/";
 
     useEffect(
@@ -30,6 +30,7 @@ export default function Projects(props) {
             ref.on('value', (snapshot) => {
                 console.log("triggered listener and updated project list state, snapshot value was", snapshot.val());
                 setCards(snapshot.val());
+                setIsLoaded(true)
             })
             return () => ref.off('value');
         }
@@ -40,7 +41,9 @@ export default function Projects(props) {
         const refUsers = firebaseDB.ref().child(userRef);
         const projectID = refUsers.push().key;
         let updates = {};
-        const thumbnailURL = "https://picsum.photos/200?random=" + Math.floor(Math.random() * 100)
+        const thumbnails = [require("../../assets/1.webp"), require("../../assets/2.webp"), require("../../assets/3.webp"), require("../../assets/4.webp")]
+        const thumbnailURL = thumbnails[Math.floor(Math.random() * thumbnails.length)]
+
         updates['creator/' + projectID] = props.currentUser().uid;
         updates[userRef + projectID] = {
             access: 'rw',
@@ -51,7 +54,7 @@ export default function Projects(props) {
         updates['documents/' + projectID] = {
             metadata: {
                 name: "New Project",
-                thumbnailURL:thumbnailURL,
+                thumbnailURL: thumbnailURL,
                 datecreated: firebaseTIME
             },
             users: { [props.currentUser().uid]: "rw" },
@@ -64,11 +67,12 @@ export default function Projects(props) {
      * Deletes the Corresponding ID from DB & Storage(if Exists)
      * @param {String} id Project's ID
      */
-    var onDelete = async(id) => {
+    var onDelete = async (id) => {
         console.log("about to delete project", id);
-        const uidDataKeys = firebaseDB.ref("documents/"+id+"/room/").once('value').then(snap=>{return snap.val()}).catch(err=>console.log("onDelete Error",err))
-        console.log("UID DATA KEYS",uidDataKeys);
+        const uidDataKeys = firebaseDB.ref("documents/" + id + "/room/").once('value').then(snap => { return snap.val() }).catch(err => console.log("onDelete Error", err))
+        console.log("UID DATA KEYS", uidDataKeys);
         const updates = {};
+<<<<<<< HEAD
         await uidDataKeys.then(result=>{
             if(result)
             Object.keys(result)
@@ -84,12 +88,28 @@ export default function Projects(props) {
         //----Admin Update Method (Cloud Function)----
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates).then((result) => console.log(result,updates)).catch(err => console.log("ERROR WHILE DELETE",err))
+=======
+        await uidDataKeys.then(result => {
+            if (result)
+                Object.keys(result)
+                    .map((key) => {
+                        if (key !== props.currentUser().uid)
+                            updates["users/" + key + "/projects/" + id + "/"] = null;
+                    })
+        }).catch(err => console.log("Error While UID Fetch", err))
+        updates["documents/" + id + "/"] = null;
+        updates["creator/" + id + "/"] = null;
+        updates[userRef + id] = null;
+        //----Admin Update Method (Cloud Function)----
+        var addMsg = firebaseFunction.httpsCallable('createNewProject')
+        addMsg(updates).then((result) => console.log(result, updates)).catch(err => console.log(err))
+>>>>>>> 82291e11c433384343fb4c78e79b99fc698b1f63
         // //--------------------Storage Deletion ------------
         const path = "root/" + id + "/";
         const deleteFile = (pathToFile, fileName) => {
             const ref = firebaseStorage().ref(pathToFile);
             const childRef = ref.child(fileName);
-            childRef.delete().then(console.log("File Deleted")).catch(err=>console.log("File Delete Error",err))
+            childRef.delete().then(console.log("File Deleted")).catch(err => console.log("File Delete Error", err))
         }
         const deleteFolderContents = (path) => {
             console.log("Path TO Delete", path)
@@ -113,7 +133,7 @@ export default function Projects(props) {
                     }
                 })
                 .catch(error => {
-                    console.log("List All Error ",error);
+                    console.log("List All Error ", error);
                 });
         }
 
@@ -123,10 +143,10 @@ export default function Projects(props) {
      * Rename The Projects of Given ID on Database .
      * @param {String} id 
      */
-    var onRename = async(id) => {
-        const uidDataKeys = firebaseDB.ref("documents/"+id+"/room/").once('value').then(snap=>{return snap.val()}).catch(err=>console.log("on Rename Error",err))
-        console.log("UID DATA KEYS",uidDataKeys);
-        
+    var onRename = async (id) => {
+        const uidDataKeys = firebaseDB.ref("documents/" + id + "/room/").once('value').then(snap => { return snap.val() }).catch(err => console.log("on Rename Error", err))
+        console.log("UID DATA KEYS", uidDataKeys);
+
         const text = cards[id].name;
         console.log("about to rename project", id, ", changing title to", text);
         const updates = {};
@@ -141,8 +161,8 @@ export default function Projects(props) {
         updates["documents/" + id + "/metadata/name"] = text;
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates)
-        .then((result) => console.log("successfully renamed project", id, "to", text, "\n and Updates are \n ",result,updates))
-        .catch(err => console.log(err))
+            .then((result) => console.log("successfully renamed project", id, "to", text, "\n and Updates are \n ", result, updates))
+            .catch(err => console.log(err))
     }
     /**
      * Redirects The Page to `projects/${id}`
@@ -163,25 +183,58 @@ export default function Projects(props) {
         setCards({ ...cards, [id]: { ...cards[id], name: text } });
     }
 
-    return (
-        <div id="project-card-container">
-            <Card addNew onAddNew={onAddNew} />
-            {cards ?
-                Object.entries(cards).map(
-                    ([id, card]) => {
-                        return <Card
-                            key={id}
-                            id={id}
-                            card={card}
-                            onChange={onChange}
-                            onSave={onRename}
-                            onDelete={onDelete}
-                            onOpen={onOpen}
-                        />
-                    }
-                )
-                : null
+    const sharedCardsToRender = cards ?
+        Object.entries(cards).filter(([id, card]) => card.shared).map(
+            ([id, card]) => {
+                return <Card
+                    key={id}
+                    id={id}
+                    card={card}
+                    onChange={onChange}
+                    onSave={onRename}
+                    onDelete={onDelete}
+                    onOpen={onOpen}
+                />
             }
-        </div>
+        )
+        : null
+
+    const ownerCardsToRender = cards ?
+        Object.entries(cards).filter(([id, card]) => !card.shared).map(
+            ([id, card]) => {
+                return <Card
+                    key={id}
+                    id={id}
+                    card={card}
+                    onChange={onChange}
+                    onSave={onRename}
+                    onDelete={onDelete}
+                    onOpen={onOpen}
+                />
+            }
+        )
+        : null
+    return (
+        isLoaded ?
+            <div className="project-view-container">
+                <div className="project-container-title" > Your Projects</div >
+                <div className="project-card-container">
+                    <Card addNew onAddNew={onAddNew} />
+                    {ownerCardsToRender ||
+                        <div className="project-container-nodata">
+                            You have not created any projects yet. What are you waiting for? Click "Add a Project" to begin.
+                    </div>
+                    }
+                </div>
+                <div className="project-container-title">Shared With You</div>
+                <div className="project-card-container">
+                    {sharedCardsToRender ||
+                        <div className="project-container-nodata">
+                            No one has shared a project with you yet. SAD!
+                    </div>
+                    }
+                </div>
+            </div >
+            : <div>Loading...</div>
     )
 }
