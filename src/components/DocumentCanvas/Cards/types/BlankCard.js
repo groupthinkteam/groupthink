@@ -108,7 +108,7 @@ function BlankCard(props) {
             props.typeAPI.saveContent(props.id, { url: props.content.text });
 
         }
-    }
+    } 
     return (
         <div>
             <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
