@@ -81,6 +81,9 @@ const ShareLink = (props) => {
         const encryptType = replaceAll(Crypto.encrypt(linkType, "grpthink12!").toString(), '/', '$');
         const customURL = String(window.location) + "/" + encryptPermission + "/" + encryptType + "/" + encryptName ;
         // ------- Used '/' to omit "/:permissionID"
+        /**
+         * To Show Encryption in Better Way
+         */
         const showLog = {};
         showLog[permission]=encryptPermission;
         showLog[props.currentUser.displayName]=encryptName;
@@ -93,24 +96,17 @@ const ShareLink = (props) => {
             {
                 setEmailShow(true);
                 console.log("This Operation \n",linkType , permission , url , emailShow)
-                createRoom(props.projectID, props.currentUser.uid, 
-                    props.currentUser.displayName,permission , props.currentUser.email , 
-                    props.currentUser.photoURL
-                )
-                .then("Room & Cursor Made").catch(err => err)
-                setURL(customURL)
-                
             }
             else
             {
                 setLink(true)
-                createRoom(props.projectID, props.currentUser.uid, 
-                    props.currentUser.displayName,permission , props.currentUser.email , 
-                    props.currentUser.photoURL ,linkType
-                )
-                .then("Room & Cursor Made").catch(err => err)
-                setURL(customURL)
             }
+            createRoom(props.projectID, props.currentUser.uid, 
+                props.currentUser.displayName,permission , props.currentUser.email , 
+                props.currentUser.photoURL ,linkType
+            )
+            .then("Room & Cursor Made").catch(err => err)
+            setURL(customURL)
         }
         else
         {
@@ -168,8 +164,14 @@ const ShareLink = (props) => {
      * @param {*} permi 
      */
     const changePermission = (uid, permi) => () => {
+        var isLocked = true;
+        if(permi === 'rw')
+        {
+            isLocked=false;
+        }
         const updates = {};
         updates[refPaths(uid,"projectUnderUser")+"access"] = permi;
+        updates[refPaths(uid,"projectUnderUser")+"isLocked"] = isLocked;
         updates[refPaths(uid,"usersUnderDocument")] = permi;
         updates[refPaths(uid,"roomUnderDocument")+"permission"] = permi;
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
@@ -299,24 +301,24 @@ const ShareLink = (props) => {
                                     <b>{val?.email}</b>-
                                     {
                                         key === props.currentUser.uid?
-                                            <>
-                                                <span>{val.name}</span>
-                                                <span>(Owner)</span>
-                                            </>
-                                            :
-                                            <>
-                                                <span>{val?.name}</span>
-                                                &nbsp;
-                                                <span><strong>{val?.permission}</strong></span>
-                                                &nbsp; &nbsp;
-                                                <span><Button handleClick={deleteUser(key)}>X</Button></span>
-                                                <DropdownButton title={val?.permission} size="sm">
-                                                    <Dropdown.Item onClick={changePermission(key, "r")}>Read Only</Dropdown.Item>
-                                                    <Dropdown.Item onClick={changePermission(key, "rw")}>Read And Write</Dropdown.Item>
-                                                    <Dropdown.Divider />
-                                                    <Dropdown.Item onClick={makeOwner(key)} >Make Owner</Dropdown.Item>
-                                                </DropdownButton>
-                                            </>
+                                        <>
+                                            <span>{val.name}</span>
+                                            <span>(Owner)</span>
+                                        </>
+                                        :
+                                        <>
+                                            <span>{val?.name}</span>
+                                            &nbsp;
+                                            <span><strong>{val?.permission}</strong></span>
+                                            &nbsp; &nbsp;
+                                            <span><Button handleClick={deleteUser(key)}>X</Button></span>
+                                            <DropdownButton title={val?.permission} size="sm">
+                                                <Dropdown.Item onClick={changePermission(key, "r")}>Read Only</Dropdown.Item>
+                                                <Dropdown.Item onClick={changePermission(key, "rw")}>Read And Write</Dropdown.Item>
+                                                <Dropdown.Divider />
+                                                <Dropdown.Item onClick={makeOwner(key)} >Make Owner</Dropdown.Item>
+                                            </DropdownButton>
+                                        </>
                                     }
                                 </div>
                             )

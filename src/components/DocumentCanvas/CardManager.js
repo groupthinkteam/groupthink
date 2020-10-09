@@ -3,6 +3,9 @@ import CardContainer from "./CardContainer";
 import throttle from 'lodash.throttle';
 import { firebaseDB, firebaseStorage, firebaseTIME } from "../../services/firebase";
 import cardTemplate from "../../constants/cardTemplates";
+import { useHistory,useLocation } from "react-router-dom";
+import { Modal } from "react-bootstrap";
+import Button from "../Button/Button";
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
  * @property {state} cards - stores the local state information for all the cards
@@ -19,33 +22,95 @@ export default function CardManager(props) {
 
     // Store cursors-related State
     const [cursors, setcursors] = useState();
+
     // store card-related state
     const [cards, setCards] = useState({});
 
+    //project Existence state
+    const [projectExistence , setProjectExistence] = useState(true);
+
+    //isproject Shared state
+    const [isShared , setIsShared] = useState(props.isOwner); 
+
+    //isowner State 
+    const [isOwner , setIsOwner] = useState(!props.isOwner);
+
+    //permission changed state
+    const [permissionChange , setPermissionChange] = useState(props.permission);
+
+    //state of knowing  project Types
+    const [type,setType]=useState();
+
+    //isLocked State
+    var lock = true;
+    if(props.permission === "rw")
+    lock=false
+    const [isLocked , setIsLocked] = useState(lock);
+
     // "root/documents/projectID/nodes" reference in firebase db
     const projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
-
+    const location = useLocation()
+    const history = useHistory();
+    console.log("CARD MANAGER STATE Existence ",projectExistence,"\n Owner ",isOwner ,
+        "\n Shared ",isShared,"\n Permission Change ",permissionChange , "\n isLocked ", isLocked ,
+        "\n Chnaged Project Type :-" , type
+    )
     // get initial firebase state and subscribe to changes
     // unsubscribe before unmount
     useEffect(() => {
         // TODO: split the nodes listener into separate ones for "child_added", 
         // "child_removed" and so on reduce size of snapshot received
-        let projectRef = firebaseDB.ref("documents/" + props.projectID);
-        projectRef.child("nodes").on("value", (snapshot) => {
+        const projectRef = firebaseDB.ref("documents/" + props.projectID+"/");
+        const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
+        projectRef.child("nodes").on('value', (snapshot) => {
             console.log("triggered node listener, received payload", snapshot.val());
             setCards(snapshot.val());
         });
         projectRef.child("center").on("value", (snapshot) => {
             console.log("triggered center location listener, received payload", snapshot.val());
-            // setDocCenter(snapshot.val());
         });
         projectRef.child("container").on("value", (snapshot) => {
             console.log("triggered container size listener, received payload", snapshot.val());
             setContainer(snapshot.val());
         });
-        projectRef.child("cursors").on("value", (snap) => {
+        projectRef.child("cursors").on('value', (snap) => {
             console.log("cursors Details Triggered recieved payload", snap.val());
             snap.val() && setcursors(snap.val());
+        });
+        projectRef.child(`/room/${props.currentUser().uid}/`).on('child_changed',currentSnap=>{
+            if(currentSnap.key === 'permission')
+            {
+                console.log("Changed  In Permission :- ",currentSnap.val())
+                setPermissionChange(currentSnap.val())
+            }
+        })
+        projectUnderUserRef.on('child_removed', (snap )=>{
+            if(snap.key === props.projectID)
+            {
+                console.log('This Child is removed ',props.projectID);
+                setProjectExistence(false)
+            }
+            else if(snap.child(props.projectID).hasChild('shared'))
+            {
+                console.log("This Project is Shared")
+                setIsOwner(false);
+                setIsShared(true);
+            }
+            else
+            {
+                setProjectExistence(true);
+                setIsShared(false);
+                setIsOwner(true);
+            }
+        });
+        // projectUnderUserRef.child(props.projectID).child("/shared/").on('child_changed',snap=>{
+        //     console.log("Type of Project Shared is Changed Recieved Payload",snap.child('type').val());
+        //     setType(snap.child('type').val());
+        // })
+        projectUnderUserRef.child(props.projectID).on('child_changed',snap=>{
+            console.log(snap.key , " Is Changed under user tree");
+            if(snap.key === 'isLocked')
+            setIsLocked(snap.val());
         })
         setIsLoaded(true)
         return () => {
@@ -53,6 +118,9 @@ export default function CardManager(props) {
             projectRef.child("center").off();
             projectRef.child("container").off();
             projectRef.child("cursors").off();
+            projectRef.child(`/room/${props.currentUser().uid}/`).off();
+            projectUnderUserRef.off();
+            projectUnderUserRef.child(props.projectID).off();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -207,10 +275,10 @@ export default function CardManager(props) {
      * @todo take card size into account when increasing container size
      */
     const savePosition = (id, newPos) => {
-        let updates = {};
+        const updates = {};
         let newContainer = { width: containerRef.current.width, height: containerRef.current.height }
 
-        let projectRef = firebaseDB.ref("documents/" + props.projectID);
+        const projectRef = firebaseDB.ref("documents/" + props.projectID);
         if (newPos.x > containerRef.current.width) {
             console.log("x", newPos.x, "was greater than width", containerRef.current)
             newContainer.width = newPos.x + 300;
@@ -372,7 +440,15 @@ export default function CardManager(props) {
                     .catch(err => console.log("send to DB Cursors Error", err))
             }
         },
-        100), [cursors])
+        100), [cursors]
+    )
+    /**
+     * Closes The Modal When Project is Removed  & Redirect to Dashboard Page
+     */
+    const handleClose = () => {
+        history.push('/dashboard',{from : location})
+    }
+
     /**
      * bundling card api methods for ease of transmission 
      */
@@ -402,24 +478,42 @@ export default function CardManager(props) {
         saveCursorPosition: saveCursorPosition
     }
     return (
-        isLoaded ?
-            <CardContainer
-                container={container}
-                cards={cards}
-                genericAPI={genericAPI}
-                typeAPI={typeAPI}
-                arrowAPI={arrowAPI}
-                permission={props.permission}
-                currentUser={props.currentUser}
-                containerAPI={containerAPI}
-                cursors={cursors}
-                projectID={props.projectID}
-                isOwner={props.isOwner}
-            />
-            :
-            <div>
-                Loading...
-            </div>
-
+        <>
+            {
+                isLoaded  ?
+                projectExistence ?
+                    <CardContainer
+                        container={container}
+                        cards={cards}
+                        genericAPI={genericAPI}
+                        typeAPI={typeAPI}
+                        arrowAPI={arrowAPI}
+                        permission={permissionChange}
+                        currentUser={props.currentUser}
+                        containerAPI={containerAPI}
+                        cursors={cursors}
+                        projectID={props.projectID}
+                        isOwner={props.isOwner}
+                    />
+                    : 
+                    <div>
+                    <Modal show={!projectExistence} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Alert Message of Project</Modal.Title>
+                            <Modal.Body>
+                                You have Been removed by owner from this project . Try to Contact the Owner.
+                            </Modal.Body>
+                            <Modal.Footer>
+                            <Button className="custom_btn" handleClick={handleClose}>Close</Button>
+                            </Modal.Footer>
+                        </Modal.Header>
+                    </Modal>
+                    </div>
+                :
+                <div>
+                    Loading...
+                </div>
+            }
+        </>
     )
 }
