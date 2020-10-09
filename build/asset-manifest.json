@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.5647b188.chunk.css",
+    "main.css": "/static/css/main.37c911a3.chunk.css",
     "main.js": "/static/js/main.f7188ea4.chunk.js",
     "reactPlayerDailyMotion.js": "/static/js/reactPlayerDailyMotion.c22f6dc3.chunk.js",
     "reactPlayerFacebook.js": "/static/js/reactPlayerFacebook.efcf5345.chunk.js",
@@ -18,7 +18,7 @@
     "static/css/14.3ffe43b4.chunk.css": "/static/css/14.3ffe43b4.chunk.css",
     "static/js/14.91f98ed6.chunk.js": "/static/js/14.91f98ed6.chunk.js",
     "index.html": "/index.html",
-    "precache-manifest.2ca11b84654a036ec28a83461f47fffe.js": "/precache-manifest.2ca11b84654a036ec28a83461f47fffe.js",
+    "precache-manifest.d288861a56d244abf7e2cd12b7e72b89.js": "/precache-manifest.d288861a56d244abf7e2cd12b7e72b89.js",
     "service-worker.js": "/service-worker.js",
     "static/js/14.91f98ed6.chunk.js.LICENSE.txt": "/static/js/14.91f98ed6.chunk.js.LICENSE.txt",
     "static/media/cursor.svg": "/static/media/cursor.3f646017.svg",
@@ -29,7 +29,7 @@
     "static/js/runtime-main.3ab7a69c.js",
     "static/css/14.3ffe43b4.chunk.css",
     "static/js/14.91f98ed6.chunk.js",
-    "static/css/main.5647b188.chunk.css",
+    "static/css/main.37c911a3.chunk.css",
     "static/js/main.f7188ea4.chunk.js"
   ]
 }
