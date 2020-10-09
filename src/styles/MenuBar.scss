@@ -2,10 +2,10 @@
     display: flex;
     flex-flow: row nowrap;
     z-index: 10000;
-    background-color: #ffc700;
+    // background-color: #ffc700;
     // background-color: #0fa958;
     // background-color: #5551ff;
-    // background-color: white;
+    background-color: white;
     align-items: center;
     justify-content: center;
     padding: 10px;
@@ -16,8 +16,7 @@
     width: calc(100vw - 20px);
     border: 3.5px solid black;
     border-radius: 10px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, "Varela Round", sans-serif;
-    font-weight: 400;
+    font-family: "Open Sans", "Varela Round", sans-serif;
 }
 
 .menu-bar-site-title {
@@ -43,6 +42,7 @@
 
 .menu-bar-panel-left {
     justify-content: flex-start;
+    font-weight: 600;
 }
 
 .menu-bar-panel-center {
@@ -55,7 +55,8 @@
 
 .menu-action-button {
     font-size: 14px;
-    font-family: "varela Round", sans-serif;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
     color: black;
     background-color: antiquewhite;
     border: 2px solid black;

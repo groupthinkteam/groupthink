@@ -1,6 +1,7 @@
 import React from "react"
 import Button from "../../components/Button/Button"
 import InlineTextEdit from "../../components/InlineTextEdit/InlineTextEdit"
+import { gsap } from "gsap/all"
 
 import "../../styles/ProjectCard.scss"
 import "../../styles/custom.scss"
@@ -17,7 +18,7 @@ function Card(props) {
     }
     else {
         return (
-            <div className="project-card img_card">
+            <div id={props.id} className="project-card img_card">
                 {
                     props.card.shared ? <div>Shared By :- {props.card.shared.name} <br /> Shared Type : {props.card.shared.type}</div>
                         : null
