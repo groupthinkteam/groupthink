@@ -19,33 +19,33 @@ function Card(props) {
         return (
             <div className="project-card img_card">
                 {
-                    props.card.shared ? <div>Shared By :- {props.card.shared.name} <br/> Shared Type : {props.card.shared.type}</div> 
-                    :<div>Owner</div>
+                    props.card.shared ? <div>Shared By :- {props.card.shared.name} <br /> Shared Type : {props.card.shared.type}</div>
+                        : null
                 }
                 <img
                     onClick={() => props.onOpen(props.id)}
                     src={props.card.thumbnailURL}
                     alt="project thumbnail" />
-                
+
                 {
                     props.card.shared === undefined ?
-                    <>
-                        <InlineTextEdit
-                            className="project-card-item"
-                            text={props.card.name}
-                            onChange={(event) => props.onChange(props.id, event.target.value)}
-                            onSave={() => props.onSave(props.id)} 
-                        />
-                        <Button
-                            className="project-card-item custom_btn highlight"
-                            style={{marginBottom: "5px"}}
-                            handleClick={() => props.onDelete(props.id)}>
-                            Delete
+                        <>
+                            <InlineTextEdit
+                                className="project-card-item"
+                                text={props.card.name}
+                                onChange={(event) => props.onChange(props.id, event.target.value)}
+                                onSave={() => props.onSave(props.id)}
+                            />
+                            <Button
+                                className="project-card-item custom_btn highlight"
+                                style={{ marginBottom: "5px" }}
+                                handleClick={() => props.onDelete(props.id)}>
+                                Delete
                         </Button>
-                    </>
-                    :<>Project Name: {props.card.name}</>
+                        </>
+                        : <>Project Name: {props.card.name}</>
                 }
-                
+
             </div>
         )
     }

@@ -55,7 +55,9 @@ function TodoCard(props) {
                 />
                 <hr style={{ marginTop: "0px", marginBottom: "7px" }} />
             </div>
-            <Button handleClick={() => {
+            <Button 
+            className="custom_btn"
+            handleClick={() => {
                 props.typeAPI.saveContent(props.id, {
                     ...props.content, lastOrder: props.content.lastOrder + 1, items: {
                         ...props.content.items, ["todoitem" + (props.content.lastOrder + 1)]: {

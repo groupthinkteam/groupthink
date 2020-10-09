@@ -1,10 +1,35 @@
-#project-card-container {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    background-color: antiquewhite;
+.project-view-container {
     height: calc(100vh - 60px);
     min-height: calc(100vh - 60px);
-    overflow: scroll;
+    width: 100vw;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: antiquewhite;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .project-container-title {
+        font-family: "Open Sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 800;
+        color: black;
+        font-size: 30px;
+        margin-left: 15px;
+        margin-top: 10px;
+    }
+    .project-card-container {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        height: auto;
+        width: 100%;
+        overflow-y: visible;
+        .project-container-nodata {
+            margin-left: 15px;
+            font-family: "Open Sans", sans-serif;
+            font-size: 22px;
+        }
+    }
 }

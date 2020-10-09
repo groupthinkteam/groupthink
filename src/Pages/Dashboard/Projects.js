@@ -21,7 +21,7 @@ import { snap } from "gsap/all";
 export default function Projects(props) {
     const history = useHistory();
     const [cards, setCards] = useState(null);
-
+    const [isLoaded, setIsLoaded] = useState(false);
     const userRef = "users/" + props.currentUser().uid + "/projects/";
 
     useEffect(
@@ -30,6 +30,7 @@ export default function Projects(props) {
             ref.on('value', (snapshot) => {
                 console.log("triggered listener and updated project list state, snapshot value was", snapshot.val());
                 setCards(snapshot.val());
+                setIsLoaded(true)
             })
             return () => ref.off('value');
         }
@@ -161,25 +162,58 @@ export default function Projects(props) {
         setCards({ ...cards, [id]: { ...cards[id], name: text } });
     }
 
-    return (
-        <div id="project-card-container">
-            <Card addNew onAddNew={onAddNew} />
-            {cards ?
-                Object.entries(cards).map(
-                    ([id, card]) => {
-                        return <Card
-                            key={id}
-                            id={id}
-                            card={card}
-                            onChange={onChange}
-                            onSave={onRename}
-                            onDelete={onDelete}
-                            onOpen={onOpen}
-                        />
-                    }
-                )
-                : null
+    const sharedCardsToRender = cards ?
+        Object.entries(cards).filter(([id, card]) => card.shared).map(
+            ([id, card]) => {
+                return <Card
+                    key={id}
+                    id={id}
+                    card={card}
+                    onChange={onChange}
+                    onSave={onRename}
+                    onDelete={onDelete}
+                    onOpen={onOpen}
+                />
             }
-        </div>
+        )
+        : null
+
+    const ownerCardsToRender = cards ?
+        Object.entries(cards).filter(([id, card]) => !card.shared).map(
+            ([id, card]) => {
+                return <Card
+                    key={id}
+                    id={id}
+                    card={card}
+                    onChange={onChange}
+                    onSave={onRename}
+                    onDelete={onDelete}
+                    onOpen={onOpen}
+                />
+            }
+        )
+        : null
+    return (
+        isLoaded ?
+            <div className="project-view-container">
+                <div className="project-container-title" > Your Projects</div >
+                <div className="project-card-container">
+                    <Card addNew onAddNew={onAddNew} />
+                    {ownerCardsToRender ||
+                        <div className="project-container-nodata">
+                            You have not created any projects yet. What are you waiting for? Click "Add a Project" to begin.
+                    </div>
+                    }
+                </div>
+                <div className="project-container-title">Shared With You</div>
+                <div className="project-card-container">
+                    {sharedCardsToRender ||
+                        <div className="project-container-nodata">
+                            No one has shared a project with you yet. SAD!
+                    </div>
+                    }
+                </div>
+            </div >
+            : <div>Loading...</div>
     )
 }
