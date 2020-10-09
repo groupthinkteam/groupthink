@@ -51,6 +51,7 @@ export default function CardManager(props) {
     const projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
     const location = useLocation()
     const history = useHistory();
+    const uid=props.currentUser().uid;
     console.log("CARD MANAGER STATE Existence ",projectExistence,"\n Owner ",isOwner ,
         "\n Shared ",isShared,"\n Permission Change ",permissionChange , "\n isLocked ", isLocked ,
         "\n Chnaged Project Type :-" , type
@@ -60,6 +61,7 @@ export default function CardManager(props) {
     useEffect(() => {
         // TODO: split the nodes listener into separate ones for "child_added", 
         // "child_removed" and so on reduce size of snapshot received
+        const uid=props.currentUser().uid;
         const projectRef = firebaseDB.ref("documents/" + props.projectID+"/");
         const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
         projectRef.child("nodes").on('value', (snapshot) => {
@@ -118,7 +120,7 @@ export default function CardManager(props) {
             projectRef.child("center").off();
             projectRef.child("container").off();
             projectRef.child("cursors").off();
-            projectRef.child(`/room/${props.currentUser().uid}/`).off();
+            projectRef.child(`/room/${uid}/`).off();
             projectUnderUserRef.off();
             projectUnderUserRef.child(props.projectID).off();
         }
