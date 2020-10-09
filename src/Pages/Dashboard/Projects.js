@@ -203,7 +203,7 @@ export default function Projects(props) {
                     {ownerCardsToRender ||
                         <div className="project-container-nodata">
                             You have not created any projects yet. What are you waiting for? Click "Add a Project" to begin.
-                    </div>
+                        </div>
                     }
                 </div>
                 <div className="project-container-title">Shared With You</div>
@@ -211,7 +211,7 @@ export default function Projects(props) {
                     {sharedCardsToRender ||
                         <div className="project-container-nodata">
                             No one has shared a project with you yet. SAD!
-                    </div>
+                        </div>
                     }
                 </div>
             </div >

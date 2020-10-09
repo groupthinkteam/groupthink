@@ -44,7 +44,7 @@ function GenericCard(props) {
                     autoScroll: 1,
                     trigger: "#handle".concat(props.id),
                     onDrag: drag,
-                    onDragEnd: dragStop
+                    onDragEnd: dragStop,
                 })
             return () => y[0].kill()
             // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import gsap from "gsap"
 
-const MENUBAR_HEIGHT = 60;
+const MENUBAR_HEIGHT = 0;
 
 export default function Cursor(props) {
     useEffect(() => {
