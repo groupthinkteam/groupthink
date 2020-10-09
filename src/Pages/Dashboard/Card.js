@@ -9,7 +9,7 @@ import "../../styles/custom.scss"
 function Card(props) {
     if (props.addNew) {
         return (
-            <div className="project-card text_card">
+            <div className="project-card">
                 <Button className="custom_btn" handleClick={props.onAddNew}>
                     Create New Project
                 </Button>
@@ -18,7 +18,7 @@ function Card(props) {
     }
     else {
         return (
-            <div id={props.id} className="project-card img_card">
+            <div id={props.id} className="project-card">
                 {
                     props.card.shared ? <div>Shared By :- {props.card.shared.name} <br /> Shared Type : {props.card.shared.type}</div>
                         : null

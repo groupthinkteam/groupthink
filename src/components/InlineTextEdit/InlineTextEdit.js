@@ -18,7 +18,7 @@ function InlineTextEdit(props) {
             value={props.text}
             onChange={props.onChange}
             onBlur={props.onSave}
-            disabled={!props.isLocked}
+            disabled={props.disabled}
         />
     )
 }

@@ -6,22 +6,6 @@
 .project-card.text_card {
     min-height: 280px;
 }
-.project-card.img_card {
-    min-height: 280px;
-    height: auto;
-    textarea {
-        resize: none !important;
-        border: none;
-        font-size: 14px;
-        color: #919191;
-        width: 95%;
-        margin: 15px auto;
-        min-height: 24px;
-        &:focus {
-            outline: none;
-        }
-    }
-}
 
 button.custom_btn {
     font-size: 14px;
