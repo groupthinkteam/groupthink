@@ -15,6 +15,7 @@ function TextCard(props) {
                 onSave={onSave}
                 text={props.content.text}
                 lwidth={"100px"}
+                disabled={props.isLocked}
             />
         </div>
     )
