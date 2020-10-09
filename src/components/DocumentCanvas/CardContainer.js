@@ -27,7 +27,7 @@ export default function CardContainer(props) {
                 style={{ ...props.container, position: "absolute", zIndex: 9999999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
-                    if (e.target.offsetParent.className === "card-container" && props.permission === 'rw') {
+                    if (e.target.offsetParent.className === "card-container" && !props.isLocked) {
                         var x = Math.floor(e.clientX + e.target.offsetParent.scrollLeft);
                         var y = Math.floor(e.clientY + e.target.offsetParent.scrollTop);
                         console.log("double click at", x, ",", y);
@@ -49,30 +49,38 @@ export default function CardContainer(props) {
                             return (
                                 <div key={"wrapperdiv".concat(id)}>
                                     <ContextMenuTrigger id={"contextmenu".concat(id)} >
-                                        <GenericCard
-                                            key={id}
-                                            id={id}
-                                            card={card}
-                                            genericAPI={props.genericAPI}
-                                            typeAPI={props.typeAPI}
-                                        />
+                                        {
+                                            props.isLocked && card?.type === "blank" ? null :
+                                            <GenericCard
+                                                key={id}
+                                                id={id}
+                                                card={card}
+                                                genericAPI={props.genericAPI}
+                                                typeAPI={props.typeAPI}
+                                                isLocked={props.isLocked}
+                                            />
+                                        }
                                     </ContextMenuTrigger>
                                     <ContextMenu id={"contextmenu".concat(id)} className="card-context-menu">
-                                        <MenuItem onClick={() => props.genericAPI.addChild(
-                                            {
-                                                x: card.position.x + 100,
-                                                y: card.position.y + 100
-                                            },
-                                            {
-                                                width: card.size.width,
-                                                height: card.size.height,
-                                            },
-                                            id,
-                                            "blank"
-                                        )}>
+                                        <MenuItem onClick={() => !props.isLocked ?
+                                            props.genericAPI.addChild(
+                                                {
+                                                    x: card.position.x + 100,
+                                                    y: card.position.y + 100
+                                                },
+                                                {
+                                                    width: card.size.width,
+                                                    height: card.size.height,
+                                                },
+                                                id,
+                                                "blank"
+                                            )
+                                            :null
+                                        }
+                                        >
                                             add child
                                         </MenuItem>
-                                        <MenuItem onClick={() => props.genericAPI.removeCard(id, "recursive", card.parent)}>
+                                        <MenuItem onClick={() =>!props.isLocked ? props.genericAPI.removeCard(id, "recursive", card.parent) :null}>
                                             delete
                                         </MenuItem>
                                     </ContextMenu>

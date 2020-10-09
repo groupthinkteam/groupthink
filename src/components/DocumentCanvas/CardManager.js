@@ -494,6 +494,7 @@ export default function CardManager(props) {
                         cursors={cursors}
                         projectID={props.projectID}
                         isOwner={props.isOwner}
+                        isLocked={isLocked}
                     />
                     : 
                     <div>

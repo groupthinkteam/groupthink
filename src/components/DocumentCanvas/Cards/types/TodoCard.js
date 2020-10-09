@@ -52,11 +52,13 @@ function TodoCard(props) {
                     margin="7px 0px 0px 0px"
                     bold
                     sticky
+                    disabled={props.isLocked}
                 />
                 <hr style={{ marginTop: "0px", marginBottom: "7px" }} />
             </div>
             <Button 
             className="custom_btn"
+            isLocked={props.isLocked}
             handleClick={() => {
                 props.typeAPI.saveContent(props.id, {
                     ...props.content, lastOrder: props.content.lastOrder + 1, items: {
@@ -85,6 +87,7 @@ function TodoCard(props) {
                                     onTextChange={(newText) => onItemChanged(id, "text", newText)}
                                     onTextSave={(newText) => onItemSaved(id, "text", newText)}
                                     onDelete={() => onDelete(id)}
+                                    isLocked={props.isLocked}
                                 />
                             )
                         : null
@@ -114,8 +117,9 @@ let TodoItem = React.memo((props) => {
                 margin="0px 0px 0px 10px"
                 strikethrough={props.checked}
                 color={props.checked ? "grey" : "black"}
+                disabled={props.isLocked}
             />
-            <Button handleClick={props.onDelete}>x</Button>
+            <Button handleClick={props.onDelete} isLocked={props.isLocked}>x</Button>
         </div>
     )
 })

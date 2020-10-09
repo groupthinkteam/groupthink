@@ -17,7 +17,7 @@ gsap.registerPlugin(Draggable);
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 function GenericCard(props) {
 
-    let CardType = cardChooser(props.card?.type, props.card.content);
+    let CardType = cardChooser(props.card?.type,props.isLocked);
 
     // if size changes, animate it
     useEffect(
@@ -60,8 +60,9 @@ function GenericCard(props) {
             <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                 <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
             </div>
+            
             <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0 }}>
-                <CardType typeAPI={props.typeAPI} content={props.card.content} size={props.card.size} id={props.id} />
+                <CardType typeAPI={props.typeAPI} content={props.card.content} size={props.card.size} id={props.id} isLocked={props.isLocked}/>
             </div>
         </div>
     )
