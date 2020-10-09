@@ -92,12 +92,18 @@ const createUserinDocument =async(path,child,permission,uid)=>{
  */
 const updateInUserTree = async(uid , projectID , typeID, nameID , permissionID ) => {
     const projectMetdata = await firebaseDB.ref("documents/"+projectID+"/metadata/").once('value').then(snap =>{console.log(snap.val());return snap.val()}).catch(err=>console.log("Updated In User Tree Error",err))
+    var isLocked = true;
+    if(permissionID === 'rw')
+    {
+        isLocked = false;
+    }
     console.log("Project MEtadata \n",projectMetdata?.name )
     const updates = {};
     updates["users/"+uid+"/projects/"+projectID+"/"] = {
         access : permissionID,
         name : projectMetdata?.name,
         thumbnailURL : projectMetdata?.thumbnailURL,
+        isLocked :isLocked,
         shared : {
             name: nameID,
             type : typeID

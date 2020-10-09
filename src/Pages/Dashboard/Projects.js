@@ -48,7 +48,8 @@ export default function Projects(props) {
         updates[userRef + projectID] = {
             access: 'rw',
             name: "New Project",
-            thumbnailURL: thumbnailURL
+            thumbnailURL: thumbnailURL,
+            isLocked : false
         };
         updates['documents/' + projectID] = {
             metadata: {
@@ -71,20 +72,21 @@ export default function Projects(props) {
         const uidDataKeys = firebaseDB.ref("documents/" + id + "/room/").once('value').then(snap => { return snap.val() }).catch(err => console.log("onDelete Error", err))
         console.log("UID DATA KEYS", uidDataKeys);
         const updates = {};
-        await uidDataKeys.then(result => {
-            if (result)
-                Object.keys(result)
-                    .map((key) => {
-                        if (key !== props.currentUser().uid)
-                            updates["users/" + key + "/projects/" + id + "/"] = null;
-                    })
-        }).catch(err => console.log("Error While UID Fetch", err))
+        await uidDataKeys.then(result=>{
+            if(result)
+            Object.keys(result)
+            .map((key)=>{
+                if(key !== props.currentUser().uid)
+                updates["users/" + key + "/projects/" + id + "/"] = null;
+            })
+        }).catch(err=>console.log("Error While UID Fetch",err))
         updates["documents/" + id + "/"] = null;
-        updates["creator/" + id + "/"] = null;
-        updates[userRef + id] = null;
+        updates["creator/"+id+"/"] = null;
+        updates[userRef+id] = null;
+        console.log("UPDATES ",updates)
         //----Admin Update Method (Cloud Function)----
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
-        addMsg(updates).then((result) => console.log(result, updates)).catch(err => console.log(err))
+        addMsg(updates).then((result) => console.log(result,updates)).catch(err => console.log("ERROR WHILE DELETE",err))
         // //--------------------Storage Deletion ------------
         const path = "root/" + id + "/";
         const deleteFile = (pathToFile, fileName) => {
@@ -131,13 +133,14 @@ export default function Projects(props) {
         const text = cards[id].name;
         console.log("about to rename project", id, ", changing title to", text);
         const updates = {};
-        await uidDataKeys.then(result => {
-            if (result)
-                Object.keys(result)
-                    .map((key) => {
-                        updates["users/" + key + "/projects/" + id + "/name"] = text;
-                    })
-        }).catch(err => console.log("Error While UID Fetch", err))
+        await uidDataKeys.then(result=>{
+            if(result)
+            Object.keys(result)
+            .map((key)=>{
+                console.log("DATAKEYS Count",key)
+                updates["users/" + key + "/projects/" + id + "/name"] = text;
+            })
+        }).catch(err=>console.log("Error While UID Fetch",err))
         updates["documents/" + id + "/metadata/name"] = text;
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates)
