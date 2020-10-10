@@ -1,6 +1,7 @@
 .generic-card {
     background: white;
     box-sizing: border-box;
+    border-radius: 6px;
     &.active-card {
         border: 2px solid black;
     }

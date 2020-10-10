@@ -430,12 +430,12 @@ export default function CardManager(props) {
      * This Function Updates Mouse X and Y Positions and Time to Database 
      */
     const saveCursorPosition = useCallback(throttle(
-        (event) => {
+        (x, y) => {
             if (cursors) {
                 firebaseDB.ref("documents/" + props.projectID + "/cursors/").child(props.currentUser().uid)
                     .update({
-                        x: event.clientX,
-                        y: event.clientY,
+                        x: x,
+                        y: y,
                         time: firebaseTIME,
                     })
                     .then(console.log("Data Cursors Updated to DB"))

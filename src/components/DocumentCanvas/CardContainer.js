@@ -40,7 +40,10 @@ export default function CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    props.containerAPI.saveCursorPosition(event);
+                    props.containerAPI.saveCursorPosition(
+                        event.clientX + event.target.offsetParent.scrollLeft,
+                        event.clientY + event.target.offsetParent.scrollTop
+                    );
                 }}
             >
                 {
@@ -51,14 +54,14 @@ export default function CardContainer(props) {
                                     <ContextMenuTrigger id={"contextmenu".concat(id)} >
                                         {
                                             props.isLocked && card?.type === "blank" ? null :
-                                            <GenericCard
-                                                key={id}
-                                                id={id}
-                                                card={card}
-                                                genericAPI={props.genericAPI}
-                                                typeAPI={props.typeAPI}
-                                                isLocked={props.isLocked}
-                                            />
+                                                <GenericCard
+                                                    key={id}
+                                                    id={id}
+                                                    card={card}
+                                                    genericAPI={props.genericAPI}
+                                                    typeAPI={props.typeAPI}
+                                                    isLocked={props.isLocked}
+                                                />
                                         }
                                     </ContextMenuTrigger>
                                     <ContextMenu id={"contextmenu".concat(id)} className="card-context-menu">
@@ -75,12 +78,12 @@ export default function CardContainer(props) {
                                                 id,
                                                 "blank"
                                             )
-                                            :null
+                                            : null
                                         }
                                         >
                                             add child
                                         </MenuItem>
-                                        <MenuItem onClick={() =>!props.isLocked ? props.genericAPI.removeCard(id, "recursive", card.parent) :null}>
+                                        <MenuItem onClick={() => !props.isLocked ? props.genericAPI.removeCard(id, "recursive", card.parent) : null}>
                                             delete
                                         </MenuItem>
                                     </ContextMenu>
