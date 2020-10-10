@@ -37,11 +37,11 @@ function GenericCard(props) {
                 // this.update();
             }
             function dragStop() {
+                setDragging(false);
                 gsap.to("#".concat(props.id), {
-                    boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)",
+                    boxShadow: "none",
                     duration: 0.5
                 })
-                setDragging(false);
                 props.genericAPI.savePosition(props.id, { x: this.x, y: this.y });
             }
             function dragStart() {
@@ -87,7 +87,7 @@ function GenericCard(props) {
             {/* <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                 <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
             </div> */}
-            <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0 }}>
+            <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
                 <CardType typeAPI={props.typeAPI} content={props.card.content} size={props.card.size} id={props.id} isLocked={props.isLocked} />
             </div>
         </div>

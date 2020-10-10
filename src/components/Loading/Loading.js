@@ -1,5 +1,6 @@
 import React from 'react'
 function Loading() {
+  const loadertext = ["Pulling up your document", "Aligning some planets", "Calibrating the vibe", "Preparing some pixels"]
   return (
     <div className="loader-container">
       <img className="loader-animation"
@@ -7,7 +8,7 @@ function Loading() {
         height="60%"
         alt="Loading" />
       <div className="loader-text">
-        Preparing Your Document...
+        {loadertext[Math.floor(Math.random() * loadertext.length)]}...
       </div>
     </div>
   )
