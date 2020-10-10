@@ -3,7 +3,7 @@ import CardContainer from "./CardContainer";
 import throttle from 'lodash.throttle';
 import { firebaseDB, firebaseStorage, firebaseTIME } from "../../services/firebase";
 import cardTemplate from "../../constants/cardTemplates";
-import { useHistory,useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import Button from "../Button/Button";
 /**
@@ -27,42 +27,42 @@ export default function CardManager(props) {
     const [cards, setCards] = useState({});
 
     //project Existence state
-    const [projectExistence , setProjectExistence] = useState(true);
+    const [projectExistence, setProjectExistence] = useState(true);
 
     //isproject Shared state
-    const [isShared , setIsShared] = useState(props.isOwner); 
+    const [isShared, setIsShared] = useState(props.isOwner);
 
     //isowner State 
-    const [isOwner , setIsOwner] = useState(!props.isOwner);
+    const [isOwner, setIsOwner] = useState(!props.isOwner);
 
     //permission changed state
-    const [permissionChange , setPermissionChange] = useState(props.permission);
+    const [permissionChange, setPermissionChange] = useState(props.permission);
 
     //state of knowing  project Types
-    const [type,setType]=useState();
+    const [type, setType] = useState();
 
     //isLocked State
     var lock = true;
-    if(props.permission === "rw")
-    lock=false
-    const [isLocked , setIsLocked] = useState(lock);
+    if (props.permission === "rw")
+        lock = false
+    const [isLocked, setIsLocked] = useState(lock);
 
     // "root/documents/projectID/nodes" reference in firebase db
     const projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
     const location = useLocation()
     const history = useHistory();
-    const uid=props.currentUser().uid;
-    console.log("CARD MANAGER STATE Existence ",projectExistence,"\n Owner ",isOwner ,
-        "\n Shared ",isShared,"\n Permission Change ",permissionChange , "\n isLocked ", isLocked ,
-        "\n Chnaged Project Type :-" , type
+    const uid = props.currentUser().uid;
+    console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
+        "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
+        "\n Chnaged Project Type :-", type
     )
     // get initial firebase state and subscribe to changes
     // unsubscribe before unmount
     useEffect(() => {
         // TODO: split the nodes listener into separate ones for "child_added", 
         // "child_removed" and so on reduce size of snapshot received
-        const uid=props.currentUser().uid;
-        const projectRef = firebaseDB.ref("documents/" + props.projectID+"/");
+        const uid = props.currentUser().uid;
+        const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
         const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
         projectRef.child("nodes").on('value', (snapshot) => {
             console.log("triggered node listener, received payload", snapshot.val());
@@ -79,27 +79,23 @@ export default function CardManager(props) {
             console.log("cursors Details Triggered recieved payload", snap.val());
             snap.val() && setcursors(snap.val());
         });
-        projectRef.child(`/room/${props.currentUser().uid}/`).on('child_changed',currentSnap=>{
-            if(currentSnap.key === 'permission')
-            {
-                console.log("Changed  In Permission :- ",currentSnap.val())
+        projectRef.child(`/room/${props.currentUser().uid}/`).on('child_changed', currentSnap => {
+            if (currentSnap.key === 'permission') {
+                console.log("Changed  In Permission :- ", currentSnap.val())
                 setPermissionChange(currentSnap.val())
             }
         })
-        projectUnderUserRef.on('child_removed', (snap )=>{
-            if(snap.key === props.projectID)
-            {
-                console.log('This Child is removed ',props.projectID);
+        projectUnderUserRef.on('child_removed', (snap) => {
+            if (snap.key === props.projectID) {
+                console.log('This Child is removed ', props.projectID);
                 setProjectExistence(false)
             }
-            else if(snap.child(props.projectID).hasChild('shared'))
-            {
+            else if (snap.child(props.projectID).hasChild('shared')) {
                 console.log("This Project is Shared")
                 setIsOwner(false);
                 setIsShared(true);
             }
-            else
-            {
+            else {
                 setProjectExistence(true);
                 setIsShared(false);
                 setIsOwner(true);
@@ -109,10 +105,10 @@ export default function CardManager(props) {
         //     console.log("Type of Project Shared is Changed Recieved Payload",snap.child('type').val());
         //     setType(snap.child('type').val());
         // })
-        projectUnderUserRef.child(props.projectID).on('child_changed',snap=>{
-            console.log(snap.key , " Is Changed under user tree");
-            if(snap.key === 'isLocked')
-            setIsLocked(snap.val());
+        projectUnderUserRef.child(props.projectID).on('child_changed', snap => {
+            console.log(snap.key, " Is Changed under user tree");
+            if (snap.key === 'isLocked')
+                setIsLocked(snap.val());
         })
         setIsLoaded(true)
         return () => {
@@ -311,6 +307,20 @@ export default function CardManager(props) {
         projectRef.child(id).child("size").set(newSize).then(console.log("set new size for", id, "to", newSize));
     }
 
+
+    /** 
+     * push card content to firebase (replaces any currently existing content for that card)
+     * @param {string} id - the card for which to perform the operation 
+     * @param {object} newContent - the new content to push to database
+    */
+    const saveContent = (id, newContent) => {
+        projectRef.child(id).child("content").update(newContent)
+            .then(console.log("saved new content for", id))
+            .catch(err => console.log("Save COntent Error \n", newContent, "\n saveContent", err));
+    }
+
+    let throttledSave = useCallback(throttle(saveContent, 3000), [])
+
     /**
      * update card content locally
      * @param {string} id - the card for which to perform the operation 
@@ -319,19 +329,9 @@ export default function CardManager(props) {
     const changeContent = (id, newContent) => {
         console.log("triggered local content change on", id)
         setCards({ ...cards, [id]: { ...cards[id], content: newContent } });
+        throttledSave(id, newContent);
     }
 
-    /** 
-     * push card content to firebase (replaces any currently existing content for that card)
-     * @param {string} id - the card for which to perform the operation 
-     * @param {object} newContent - the new content to push to database
-    */
-    const saveContent = (id, newContent) => {
-        changeContent(id, newContent);
-        projectRef.child(id).child("content").update(newContent)
-            .then(console.log("saved new content for", id))
-            .catch(err => console.log("Save COntent Error \n", newContent, "\n saveContent", err));
-    }
     /**
      * Changes the type of card to dzired type .  
      * @param {String} id - the card for which to perform the operation
@@ -434,7 +434,7 @@ export default function CardManager(props) {
             if (cursors) {
                 firebaseDB.ref("documents/" + props.projectID + "/cursors/").child(props.currentUser().uid)
                     .update({
-                        x: event.clientX, 
+                        x: event.clientX,
                         y: event.clientY,
                         time: firebaseTIME,
                     })
@@ -448,7 +448,7 @@ export default function CardManager(props) {
      * Closes The Modal When Project is Removed  & Redirect to Dashboard Page
      */
     const handleClose = () => {
-        history.push('/dashboard',{from : location})
+        history.push('/dashboard', { from: location })
     }
 
     /**
@@ -482,39 +482,39 @@ export default function CardManager(props) {
     return (
         <>
             {
-                isLoaded  ?
-                projectExistence ?
-                    <CardContainer
-                        container={container}
-                        cards={cards}
-                        genericAPI={genericAPI}
-                        typeAPI={typeAPI}
-                        arrowAPI={arrowAPI}
-                        permission={permissionChange}
-                        currentUser={props.currentUser}
-                        containerAPI={containerAPI}
-                        cursors={cursors}
-                        projectID={props.projectID}
-                        isOwner={props.isOwner}
-                        isLocked={isLocked}
-                    />
-                    : 
-                    <div>
-                    <Modal show={!projectExistence} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Alert Message of Project</Modal.Title>
-                            <Modal.Body>
-                                You have Been removed by owner from this project . Try to Contact the Owner.
+                isLoaded ?
+                    projectExistence ?
+                        <CardContainer
+                            container={container}
+                            cards={cards}
+                            genericAPI={genericAPI}
+                            typeAPI={typeAPI}
+                            arrowAPI={arrowAPI}
+                            permission={permissionChange}
+                            currentUser={props.currentUser}
+                            containerAPI={containerAPI}
+                            cursors={cursors}
+                            projectID={props.projectID}
+                            isOwner={props.isOwner}
+                            isLocked={isLocked}
+                        />
+                        :
+                        <div>
+                            <Modal show={!projectExistence} onHide={handleClose}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Alert Message of Project</Modal.Title>
+                                    <Modal.Body>
+                                        You have Been removed by owner from this project . Try to Contact the Owner.
                             </Modal.Body>
-                            <Modal.Footer>
-                            <Button className="custom_btn" handleClick={handleClose}>Close</Button>
-                            </Modal.Footer>
-                        </Modal.Header>
-                    </Modal>
-                    </div>
-                :
-                <div>
-                    Loading...
+                                    <Modal.Footer>
+                                        <Button className="custom_btn" handleClick={handleClose}>Close</Button>
+                                    </Modal.Footer>
+                                </Modal.Header>
+                            </Modal>
+                        </div>
+                    :
+                    <div>
+                        Loading...
                 </div>
             }
         </>
