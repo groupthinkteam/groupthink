@@ -49,7 +49,7 @@ export default function Projects(props) {
             access: 'rw',
             name: "New Project",
             thumbnailURL: thumbnailURL,
-            isLocked : false
+            isLocked: false
         };
         updates['documents/' + projectID] = {
             metadata: {
@@ -72,21 +72,21 @@ export default function Projects(props) {
         const uidDataKeys = firebaseDB.ref("documents/" + id + "/room/").once('value').then(snap => { return snap.val() }).catch(err => console.log("onDelete Error", err))
         console.log("UID DATA KEYS", uidDataKeys);
         const updates = {};
-        await uidDataKeys.then(result=>{
-            if(result)
-            Object.keys(result)
-            .map((key)=>{
-                if(key !== props.currentUser().uid)
-                updates["users/" + key + "/projects/" + id + "/"] = null;
-            })
-        }).catch(err=>console.log("Error While UID Fetch",err))
+        await uidDataKeys.then(result => {
+            if (result)
+                Object.keys(result)
+                    .map((key) => {
+                        if (key !== props.currentUser().uid)
+                            updates["users/" + key + "/projects/" + id + "/"] = null;
+                    })
+        }).catch(err => console.log("Error While UID Fetch", err))
         updates["documents/" + id + "/"] = null;
-        updates["creator/"+id+"/"] = null;
-        updates[userRef+id] = null;
-        console.log("UPDATES ",updates)
+        updates["creator/" + id + "/"] = null;
+        updates[userRef + id] = null;
+        console.log("UPDATES ", updates)
         //----Admin Update Method (Cloud Function)----
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
-        addMsg(updates).then((result) => console.log(result,updates)).catch(err => console.log("ERROR WHILE DELETE",err))
+        addMsg(updates).then((result) => console.log(result, updates)).catch(err => console.log("ERROR WHILE DELETE", err))
         // //--------------------Storage Deletion ------------
         const path = "root/" + id + "/";
         const deleteFile = (pathToFile, fileName) => {
@@ -133,14 +133,14 @@ export default function Projects(props) {
         const text = cards[id].name;
         console.log("about to rename project", id, ", changing title to", text);
         const updates = {};
-        await uidDataKeys.then(result=>{
-            if(result)
-            Object.keys(result)
-            .map((key)=>{
-                console.log("DATAKEYS Count",key)
-                updates["users/" + key + "/projects/" + id + "/name"] = text;
-            })
-        }).catch(err=>console.log("Error While UID Fetch",err))
+        await uidDataKeys.then(result => {
+            if (result)
+                Object.keys(result)
+                    .map((key) => {
+                        console.log("DATAKEYS Count", key)
+                        updates["users/" + key + "/projects/" + id + "/name"] = text;
+                    })
+        }).catch(err => console.log("Error While UID Fetch", err))
         updates["documents/" + id + "/metadata/name"] = text;
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates)
@@ -197,27 +197,33 @@ export default function Projects(props) {
             }
         )
         : null
+
+    console.log("owner", ownerCardsToRender, "shared", sharedCardsToRender)
     return (
         isLoaded ?
             <div className="project-view-container">
                 <div className="project-container-title" > Your Projects</div >
                 <div className="project-card-container">
                     <Card addNew onAddNew={onAddNew} />
-                    {ownerCardsToRender ||
-                        <div className="project-container-nodata">
-                            You have not created any projects yet. What are you waiting for? Click "Add a Project" to begin.
-                        </div>
+                    {ownerCardsToRender 
+                    // ||
+                    //     <div className="project-container-nodata">
+                    //         You have not created any projects yet. What are you waiting for? Click "Add a Project" to begin.
+                    //     </div>
                     }
                 </div>
                 <div className="project-container-title">Shared With You</div>
                 <div className="project-card-container">
-                    {sharedCardsToRender ||
-                        <div className="project-container-nodata">
+                    {sharedCardsToRender && sharedCardsToRender.length > 0
+                        ? sharedCardsToRender
+                        : <div className="project-container-nodata">
                             No one has shared a project with you yet. SAD!
                         </div>
                     }
                 </div>
             </div >
-            : <div>Loading...</div>
+            : <div>
+                Loading...
+            </div>
     )
 }
