@@ -16,7 +16,7 @@ export default function Document(props) {
     (async () => {
       const [isChildPermission,isOwner] = await isChild(projectID);
       console.log("Permission", isChildPermission,isOwner)
-      setTimeout(() => setIsLoaded(true), 3000);
+      setTimeout(() => setIsLoaded(true), 3500);
 
       //---Check For Child Validation--
       if (isChildPermission == null) {

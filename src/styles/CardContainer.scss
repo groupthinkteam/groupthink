@@ -1,4 +1,6 @@
 .card-container {
     height: calc(100vh);
     background-color: #ebedee;
+    background-image: radial-gradient(circle at 1px 1px, grey 0.5px, transparent 0);
+    background-size: 10px 10px;
 }

@@ -19,6 +19,7 @@ function InlineTextEdit(props) {
             onChange={props.onChange}
             onBlur={props.onSave}
             disabled={props.disabled}
+            spellCheck="false"
         />
     )
 }

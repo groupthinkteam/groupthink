@@ -27,7 +27,7 @@ function GenericCard(props) {
         [props.card.size.height, props.card.size.width]
     )
     useEffect(
-        () => { gsap.set("#".concat(props.id), { opacity: 1, ...props.card.position }) }
+        () => { gsap.set("#".concat(props.id), { opacity: 1, ...props.card.position, boxShadow: "0px 0px 0px 0px white" }) }
         , [props.id, props.card.position])
     useEffect(
         () => {
@@ -37,8 +37,19 @@ function GenericCard(props) {
                 // this.update();
             }
             function dragStop() {
+                gsap.to("#".concat(props.id), {
+                    boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)",
+                    duration: 0.5
+                })
                 setDragging(false);
                 props.genericAPI.savePosition(props.id, { x: this.x, y: this.y });
+            }
+            function dragStart() {
+                setDragging(true);
+                gsap.to("#".concat(props.id), {
+                    boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
+                    duration: 0.5
+                })
             }
             let y = Draggable.create(
                 "#".concat(props.id),
@@ -47,7 +58,7 @@ function GenericCard(props) {
                     trigger: "#".concat(props.id),
                     dragClickables: !isActive,
                     onClick: () => { cardRef.current.focus(); setActive(true); },
-                    onDragStart: () => setDragging(true),
+                    onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
                     cursor: "grab",
@@ -63,6 +74,12 @@ function GenericCard(props) {
             ref={cardRef}
             onFocus={() => setActive(true)}
             onBlur={() => { console.log("called blur"); setActive(false) }}
+            onKeyDown={(e) => { 
+                console.log("pressed ", e.key); 
+                if(e.key==="Delete"){
+                    props.genericAPI.removeCard(props.id, "recursive")
+                }
+            }}
             style={{
                 position: "absolute",
                 opacity: 0
