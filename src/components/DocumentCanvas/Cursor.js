@@ -17,6 +17,7 @@ export default function Cursor(props) {
             justifyContent: "space-between",
             alignItems: "flex-start",
             overflow: "visible",
+            zIndex: 9999999999,
         }}>
             <img alt="cursor"
                 src={require("../../assets/cursor.svg")}
