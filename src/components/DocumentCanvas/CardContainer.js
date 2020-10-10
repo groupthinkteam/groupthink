@@ -27,7 +27,7 @@ export default function CardContainer(props) {
                         min="0.5"
                         max="2.5"
                         defaultValue="1"
-                        step="0.1"
+                        step="0.0001"
                         onChange={e => setZoom(e.target.value)} />
                     : null
             }
