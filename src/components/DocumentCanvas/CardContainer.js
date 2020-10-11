@@ -36,8 +36,8 @@ export default function CardContainer(props) {
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent.className === "card-container" && !props.isLocked) {
-                        var x = Math.floor(e.clientX + e.target.offsetParent.scrollLeft);
-                        var y = Math.floor(e.clientY + e.target.offsetParent.scrollTop);
+                        var x = Math.floor(e.clientX / zoom + e.target.offsetParent.scrollLeft);
+                        var y = Math.floor(e.clientY / zoom + e.target.offsetParent.scrollTop);
                         console.log("double click at", x, ",", y);
                         props.genericAPI.addChild({ x: x, y: y }, { width: 310, height: 200 })
                     }
