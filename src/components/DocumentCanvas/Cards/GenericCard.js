@@ -21,6 +21,13 @@ function GenericCard(props) {
     let [isDragging, setDragging] = useState(false)
     let CardType = cardChooser(props.card?.type, props.isLocked);
     let cardRef = useRef(null);
+    const [userInfo ,setUserInfo] = useState(null);
+    const currentUser=props.currentUser;
+    const activeUsers = () => 
+    {
+        props.genericAPI.isActiveUserInfo(currentUser().uid)
+    }
+    const removeActiveUsers = () => props.genericAPI.removeActiveUser(currentUser().uid);
     // if size changes, animate it
     useEffect(
         () => { gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 }) },
@@ -57,7 +64,7 @@ function GenericCard(props) {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
                     dragClickables: !isActive,
-                    onClick: () => { cardRef.current.focus(); setActive(true); },
+                    onClick: () => { cardRef.current.focus(); setActive(true); activeUsers(); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -68,12 +75,12 @@ function GenericCard(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isActive]
     )
-
+    console.log("USER INFO",userInfo , isActive)
     return (
         <div id={props.id} tabIndex={0} className={(isActive ? "generic-card active-card" : "generic-card") + (isDragging ? " dragging-card" : "")}
             ref={cardRef}
             onFocus={() => setActive(true)}
-            onBlur={() => { console.log("called blur"); setActive(false) }}
+            onBlur={() => { console.log("called blur"); setActive(false); removeActiveUsers();}}
             onKeyDown={(e) => { 
                 console.log("pressed ", e.key); 
                 if(e.key==="Delete"){
@@ -84,6 +91,12 @@ function GenericCard(props) {
                 position: "absolute",
                 opacity: 0
             }}>
+            {
+                props.activeUser.length >0 ?
+                Object.entries(props.activeUser).map(([key,val])=>
+                <img src={val.photoURL} className="generic-card-text-profile-pic" />)
+                :null
+            }
             {/* <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                 <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
             </div> */}

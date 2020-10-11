@@ -69,6 +69,8 @@ export default function CardContainer(props) {
                                                     genericAPI={props.genericAPI}
                                                     typeAPI={props.typeAPI}
                                                     isLocked={props.isLocked}
+                                                    currentUser={props.currentUser}
+                                                    activeUser={props.activeUser}
                                                 />
                                         }
                                     </ContextMenuTrigger>

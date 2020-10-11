@@ -12,6 +12,7 @@ function InlineTextEdit(props) {
                 fontFamily: props.fontFamily || "Varela Round, sans-serif",
                 textDecorationLine: props.strikethrough ? "line-through" : "none",
                 color: props.color || "black",
+                cursor:"initial"
             }}
             className="inline-input"
             placeholder={props.placeholder || "Type something here..."}

@@ -6,6 +6,7 @@ import cardTemplate from "../../constants/cardTemplates";
 import { useHistory, useLocation } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import Button from "../Button/Button";
+import { snap } from "gsap/all";
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
  * @property {state} cards - stores the local state information for all the cards
@@ -41,6 +42,9 @@ export default function CardManager(props) {
     //state of knowing  project Types
     const [type, setType] = useState();
 
+    //Active User State
+    const [activeUser,setActiveUser] = useState([]);
+
     //isLocked State
     var lock = true;
     if (props.permission === "rw")
@@ -54,7 +58,7 @@ export default function CardManager(props) {
     const uid = props.currentUser().uid;
     console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
         "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
-        "\n Chnaged Project Type :-", type
+        "\n Chnaged Project Type :-", type , " \n Active User :-" , activeUser
     )
     // get initial firebase state and subscribe to changes
     // unsubscribe before unmount
@@ -110,6 +114,23 @@ export default function CardManager(props) {
             if (snap.key === 'isLocked')
                 setIsLocked(snap.val());
         })
+        projectRef.child("room").on('child_changed',snap=>{
+            //checkes if user is active or not . snap.key gives changed uid
+            const checkActive =()=> projectRef.child("room").child(snap.key).child("isActiveUser").on("value",innersnap=>{return innersnap.val()})
+            if(checkActive)
+            {
+                projectRef.child("room/"+snap.key+"/").on("value",innersnap=>{
+                    //Add the User whose active property is true
+                    setActiveUser(...activeUser,[innersnap.val()])
+                })
+            }
+            else
+            {
+                console.log("Else Condition POPED OUT",activeUser.pop(snap.key));
+            }
+            // projectRef.child("room/"+snap.key+"/").off();
+            console.log("CHeck Active",checkActive,snap.key);
+        })
         setIsLoaded(true)
         return () => {
             projectRef.child("nodes").off();
@@ -117,6 +138,7 @@ export default function CardManager(props) {
             projectRef.child("container").off();
             projectRef.child("cursors").off();
             projectRef.child(`/room/${uid}/`).off();
+            projectRef.child("room").off();
             projectUnderUserRef.off();
             projectUnderUserRef.child(props.projectID).off();
         }
@@ -450,7 +472,24 @@ export default function CardManager(props) {
     const handleClose = () => {
         history.push('/dashboard', { from: location })
     }
-
+    /**
+     * Update the active property of user in room
+     * @param {String} uid 
+     */
+    const isActiveUserInfo = (uid) =>{
+        firebaseDB.ref(`documents/${props.projectID}/room/${uid}/`).update({
+            isActiveUser : true
+        }).then(console.log("UPDated Active user")).catch(err=>console.log("isActiveUserInfo",err))
+    }
+    /**
+     * False the isActive property in room
+     * @param {*} uid 
+     */
+    const removeActiveUser = (uid) => {
+        firebaseDB.ref(`documents/${props.projectID}/room/${uid}/`).update({
+            isActiveUser : false
+        }).then(console.log("UPDated Active user")).catch(err=>console.log("isActiveUserInfo",err))
+    }
     /**
      * bundling card api methods for ease of transmission 
      */
@@ -460,7 +499,9 @@ export default function CardManager(props) {
         reparentCard: reparentCard,
         removeCard: removeCard,
         addChild: addCard,
-        resize: resize
+        resize: resize,
+        isActiveUserInfo:isActiveUserInfo,
+        removeActiveUser:removeActiveUser
     }
 
     let typeAPI = {
@@ -497,6 +538,7 @@ export default function CardManager(props) {
                             projectID={props.projectID}
                             isOwner={props.isOwner}
                             isLocked={isLocked}
+                            activeUser={activeUser}
                         />
                         :
                         <div>
