@@ -43,7 +43,7 @@ export default function CardManager(props) {
     const [type, setType] = useState();
 
     //Active User State
-    const [activeUser,setActiveUser] = useState([]);
+    const [activeUser,setActiveUser] = useState({});
 
     //isLocked State
     var lock = true;
@@ -56,10 +56,10 @@ export default function CardManager(props) {
     const location = useLocation()
     const history = useHistory();
     const uid = props.currentUser().uid;
-    console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
-        "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
-        "\n Chnaged Project Type :-", type , " \n Active User :-" , activeUser
-    )
+    // console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
+    //     "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
+    //     "\n Chnaged Project Type :-", type , " \n Active User :-" , activeUser
+    // )
     // get initial firebase state and subscribe to changes
     // unsubscribe before unmount
     useEffect(() => {
@@ -116,20 +116,13 @@ export default function CardManager(props) {
         })
         projectRef.child("room").on('child_changed',snap=>{
             //checkes if user is active or not . snap.key gives changed uid
-            const checkActive =()=> projectRef.child("room").child(snap.key).child("isActiveUser").on("value",innersnap=>{return innersnap.val()})
-            if(checkActive)
-            {
-                projectRef.child("room/"+snap.key+"/").on("value",innersnap=>{
-                    //Add the User whose active property is true
-                    setActiveUser(...activeUser,[innersnap.val()])
-                })
-            }
-            else
-            {
-                console.log("Else Condition POPED OUT",activeUser.pop(snap.key));
-            }
-            // projectRef.child("room/"+snap.key+"/").off();
-            console.log("CHeck Active",checkActive,snap.key);
+            console.log("CHeck Active",snap.key,snap.val()["isEditingUser"]);
+            //Add the User whose active property is true
+            if(snap.val()["isEditingUser"] != undefined)
+            setActiveUser({
+                ...activeUser,
+                [snap.key]:snap.val()
+            });
         })
         setIsLoaded(true)
         return () => {
@@ -473,21 +466,22 @@ export default function CardManager(props) {
         history.push('/dashboard', { from: location })
     }
     /**
-     * Update the active property of user in room
+     * Update the isEditing property of user in room
      * @param {String} uid 
      */
-    const isActiveUserInfo = (uid) =>{
+    const isActiveUserInfo = () =>{
         firebaseDB.ref(`documents/${props.projectID}/room/${uid}/`).update({
-            isActiveUser : true
+            isEditingUser : true
         }).then(console.log("UPDated Active user")).catch(err=>console.log("isActiveUserInfo",err))
     }
     /**
-     * False the isActive property in room
+     * False the isEditing property in room
      * @param {*} uid 
      */
-    const removeActiveUser = (uid) => {
+    const removeActiveUser = () => {
+        console.log("Remove Active User Called")
         firebaseDB.ref(`documents/${props.projectID}/room/${uid}/`).update({
-            isActiveUser : false
+            isEditingUser : null
         }).then(console.log("UPDated Active user")).catch(err=>console.log("isActiveUserInfo",err))
     }
     /**

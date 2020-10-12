@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GenericCard from "./Cards/GenericCard"
 import Cursor from "./Cursor";
 import Arrow from "../Arrow/Arrow";
@@ -13,7 +13,21 @@ import "../../styles/CardContainer.scss";
  * 
  */
 export default function CardContainer(props) {
-    const [zoom, setZoom] = useState(1)
+    const [zoom, setZoom] = useState(1);
+    // const [updateCursor , setUpdateCursor] = useState()
+    // useEffect(()=>{
+    //     if(props.cursors)
+    //     {
+    //         Object.entries(props.cursors)
+    //         .filter(([id, values]) =>{
+    //             if(dateTime - Number(values.time) < 60000)
+    //             setUpdateCursor(true)
+    //             else
+    //             setUpdateCursor(false)
+    //         })
+    //     }
+    // })
+    
     const dateTime = Date.now();
     return (
         <div className="card-container"
@@ -48,6 +62,7 @@ export default function CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
+                    //if(updateCursor)
                     props.containerAPI.saveCursorPosition(
                         event.clientX + event.target.offsetParent.scrollLeft,
                         event.clientY + event.target.offsetParent.scrollTop
@@ -124,8 +139,8 @@ export default function CardContainer(props) {
                 {
                     props.cursors
                         ? Object.entries(props.cursors)
-                            .filter(
-                                ([id, values]) => id !== props.currentUser().uid && (dateTime - Number(values.time) < 60000))
+                        .filter(
+                            ([id, values]) => id !== props.currentUser().uid && (dateTime - Number(values.time) < 60000))
                             .map(([id, values]) =>
                                 <Cursor key={id}
                                     id={id}
