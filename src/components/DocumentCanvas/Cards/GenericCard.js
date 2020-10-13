@@ -24,6 +24,7 @@ function GenericCard(props) {
     // if size changes, animate it
     useEffect(
         () => { gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 }) },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.card.size.height, props.card.size.width]
     )
     useEffect(

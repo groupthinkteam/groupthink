@@ -64,12 +64,21 @@ export default function CardManager(props) {
         const uid = props.currentUser().uid;
         const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
         const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
-        projectRef.child("nodes").on('value', (snapshot) => {
-            console.log("triggered node listener, received payload", snapshot.val());
-            setCards(snapshot.val());
+        projectRef.child("nodes").on('child_added', (snapshot) => {
+            console.log("synced new card added for", snapshot.key);
+            setCards((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }));
         });
-        projectRef.child("center").on("value", (snapshot) => {
-            console.log("triggered center location listener, received payload", snapshot.val());
+        projectRef.child("nodes").on('child_removed', (snapshot) => {
+            console.log("synced card deleted for", snapshot.key);
+            setCards((prevCards) => {
+                let clonedPrevCards = { ...prevCards };
+                delete clonedPrevCards[snapshot.key];
+                return clonedPrevCards;
+            });
+        });
+        projectRef.child("nodes").on('child_changed', (snapshot) => {
+            console.log("synced card change for", snapshot.key);
+            setCards((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }));
         });
         projectRef.child("container").on("value", (snapshot) => {
             console.log("triggered container size listener, received payload", snapshot.val());
@@ -113,7 +122,6 @@ export default function CardManager(props) {
         setIsLoaded(true)
         return () => {
             projectRef.child("nodes").off();
-            projectRef.child("center").off();
             projectRef.child("container").off();
             projectRef.child("cursors").off();
             projectRef.child(`/room/${uid}/`).off();
@@ -502,9 +510,9 @@ export default function CardManager(props) {
                         <div>
                             <Modal show={!projectExistence} onHide={handleClose}>
                                 <Modal.Header closeButton>
-                                    <Modal.Title>Alert Message of Project</Modal.Title>
+                                    <Modal.Title>Oops</Modal.Title>
                                     <Modal.Body>
-                                        You have Been removed by owner from this project . Try to Contact the Owner.
+                                        The owner has unceremoniously kicked you off this project. You no longer have access to this project.
                             </Modal.Body>
                                     <Modal.Footer>
                                         <Button className="custom_btn" handleClick={handleClose}>Close</Button>
