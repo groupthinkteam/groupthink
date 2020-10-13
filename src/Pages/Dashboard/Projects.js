@@ -59,7 +59,15 @@ export default function Projects(props) {
                 thumbnailURL: thumbnailURL,
                 datecreated: firebaseTIME
             },
-            users: { [props.currentUser().uid]: "rw" },
+            users: { 
+                [props.currentUser().uid]: { 
+                    "permission":"rw" ,
+                    "email" : props.currentUser().email , 
+                    "photoURL":props.currentUser().photoURL,
+                    "name" : props.currentUser().displayName,
+                    "isOwner" : true
+                }
+            },
             ...projectTemplates.tester
         }
         var addMsg = firebaseFunction.httpsCallable('createNewProject')

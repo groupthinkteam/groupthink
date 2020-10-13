@@ -30,7 +30,7 @@ function  CardContainer(props) {
     //         })
     //     }
     // },[props.cursors])
-    // console.log("COntainer",updateCursor,props.cursors)
+     console.log("COntainer",updateCursor,props.cursors)
     const onChangeSearch = (text) =>
     {
       const result= props.containerAPI.searchElement(text);
@@ -82,7 +82,7 @@ function  CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    if(props.cursors != undefined)
+                    // if(props.cursors != undefined)
                     props.containerAPI.saveCursorPosition(
                         event.clientX + event.target.offsetParent.scrollLeft,
                         event.clientY + event.target.offsetParent.scrollTop

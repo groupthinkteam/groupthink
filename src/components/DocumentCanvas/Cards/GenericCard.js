@@ -17,10 +17,10 @@ gsap.registerPlugin(Draggable);
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 function GenericCard(props) {
 
-    let [isActive, setActive] = useState(false)
-    let [isDragging, setDragging] = useState(false)
-    let CardType = cardChooser(props.card?.type, props.isLocked);
-    let cardRef = useRef(null);
+    const [isActive, setActive] = useState(false)
+    const [isDragging, setDragging] = useState(false)
+    const CardType = cardChooser(props.card?.type, props.isLocked);
+    const cardRef = useRef(null);
     const [userInfo ,setUserInfo] = useState(null);
     const currentUser=props.currentUser;
     const [isSearched , setIsSearched] = useState(false);
@@ -106,7 +106,7 @@ function GenericCard(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isActive]
     )
-    //console.log("USER INFO",props.result , isSearched , props.card.type)
+    console.log("USER INFO",isActive)
     return (  
         <>
         {
