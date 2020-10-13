@@ -82,7 +82,7 @@ function  CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    // if(props.cursors != undefined)
+                    if(props.cursors != undefined && Object.keys(props.cursors).length >1)
                     props.containerAPI.saveCursorPosition(
                         event.clientX + event.target.offsetParent.scrollLeft,
                         event.clientY + event.target.offsetParent.scrollTop

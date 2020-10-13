@@ -22,12 +22,12 @@ export default function Projects(props) {
     const history = useHistory();
     const [cards, setCards] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    
     const userRef = "users/" + props.currentUser().uid + "/projects/";
 
     useEffect(
         () => {
-            let ref = firebaseDB.ref("users/" + props.currentUser().uid + "/projects/");
+            const ref = firebaseDB.ref("users/" + props.currentUser().uid + "/projects/");
+            
             ref.on('value', (snapshot) => {
                 console.log("triggered listener and updated project list state, snapshot value was", snapshot.val());
                 setCards(snapshot.val());
@@ -79,7 +79,7 @@ export default function Projects(props) {
      */
     var onDelete = async (id) => {
         console.log("about to delete project", id);
-        const uidDataKeys = firebaseDB.ref("documents/" + id + "/room/").once('value').then(snap => { return snap.val() }).catch(err => console.log("onDelete Error", err))
+        const uidDataKeys = firebaseDB.ref("documents/" + id + "/users").once('value').then(snap => { return snap.val() }).catch(err => console.log("onDelete Error", err))
         console.log("UID DATA KEYS", uidDataKeys);
         const updates = {};
         await uidDataKeys.then(result => {
@@ -137,14 +137,14 @@ export default function Projects(props) {
      * @param {String} id 
      */
     var onRename = async (id) => {
-        const uidDataKeys =  firebaseDB.ref("documents/" + id + "/room/").once('value').then(snap => { return snap.val() }).catch(err => console.log("on Rename Error", err))
+        const uidDataKeys =  firebaseDB.ref("documents/" + id + "/users").once('value').then(snap => { return snap.val() }).catch(err => console.log("on Rename Error", err))
         console.log("UID DATA KEYS", uidDataKeys,id);
 
         const text = cards[id].name;
         console.log("about to rename project", id, ", changing title to", text);
         const updates = {};
         await uidDataKeys.then(result => {
-            if (result)
+            console.log("ENTRIES ",result);
                 Object.keys(result)
                     .map((key) => {
                         console.log("DATAKEYS Count", key)
