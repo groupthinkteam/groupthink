@@ -75,9 +75,9 @@ function GenericCard(props) {
             ref={cardRef}
             onFocus={() => setActive(true)}
             onBlur={() => { console.log("called blur"); setActive(false) }}
-            onKeyDown={(e) => { 
-                console.log("pressed ", e.key); 
-                if(e.key==="Delete"){
+            onKeyDown={(e) => {
+                console.log("pressed ", e.key);
+                if (e.key === "Delete") {
                     props.genericAPI.removeCard(props.id, "recursive")
                 }
             }}
@@ -85,11 +85,13 @@ function GenericCard(props) {
                 position: "absolute",
                 opacity: 0
             }}>
-            {/* <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
-                <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
-            </div> */}
             <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                <CardType typeAPI={props.typeAPI} content={props.card.content} size={props.card.size} id={props.id} isLocked={props.isLocked} />
+                <CardType
+                    id={props.id}
+                    typeAPI={props.typeAPI}
+                    content={props.card.content}
+                    size={props.card.size}
+                    isLocked={props.isLocked} />
             </div>
         </div>
     )
