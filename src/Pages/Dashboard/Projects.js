@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { firebaseDB, firebaseTIME, firebaseStorage, firebaseFunction } from "../../services/firebase";
 import projectTemplates from "../../constants/projectTemplates";
-
+import MiniSearch from 'minisearch';
 import Card from "./Card";
 
 import "../../styles/Projects.scss";
@@ -22,6 +22,7 @@ export default function Projects(props) {
     const history = useHistory();
     const [cards, setCards] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
+    
     const userRef = "users/" + props.currentUser().uid + "/projects/";
 
     useEffect(
@@ -49,7 +50,8 @@ export default function Projects(props) {
             access: 'rw',
             name: "New Project",
             thumbnailURL: thumbnailURL,
-            isLocked: false
+            isLocked: false,
+            id:projectID
         };
         updates['documents/' + projectID] = {
             metadata: {
@@ -127,8 +129,8 @@ export default function Projects(props) {
      * @param {String} id 
      */
     var onRename = async (id) => {
-        const uidDataKeys = firebaseDB.ref("documents/" + id + "/room/").once('value').then(snap => { return snap.val() }).catch(err => console.log("on Rename Error", err))
-        console.log("UID DATA KEYS", uidDataKeys);
+        const uidDataKeys =  firebaseDB.ref("documents/" + id + "/room/").once('value').then(snap => { return snap.val() }).catch(err => console.log("on Rename Error", err))
+        console.log("UID DATA KEYS", uidDataKeys,id);
 
         const text = cards[id].name;
         console.log("about to rename project", id, ", changing title to", text);
@@ -138,10 +140,12 @@ export default function Projects(props) {
                 Object.keys(result)
                     .map((key) => {
                         console.log("DATAKEYS Count", key)
+                        if (key !== props.currentUser().uid)
                         updates["users/" + key + "/projects/" + id + "/name"] = text;
                     })
         }).catch(err => console.log("Error While UID Fetch", err))
         updates["documents/" + id + "/metadata/name"] = text;
+        updates["users/"+props.currentUser().uid+"/projects/"+id+"/name/"] = text;
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates)
             .then((result) => console.log("successfully renamed project", id, "to", text, "\n and Updates are \n ", result, updates))
@@ -166,6 +170,24 @@ export default function Projects(props) {
         setCards({ ...cards, [id]: { ...cards[id], name: text } });
     }
 
+    const searchEelemnt = (text) =>{
+        const makeArrayofProject = [] ;
+        let miniSearch = new MiniSearch({
+            fields : ['name'],
+            storeFields:['name']
+        });
+        let cnt = 0;
+        Object.entries(cards).map(([key,val])=>{
+            makeArrayofProject.push(val)
+            cnt = cnt+1;
+        })
+        if(makeArrayofProject.length > 0 )
+        miniSearch.addAll(makeArrayofProject)
+
+        let results = miniSearch.search(text);
+        console.log("THE SEARCH ELEMENTS ",results , text);
+    }
+
     const sharedCardsToRender = cards ?
         Object.entries(cards).filter(([id, card]) => card.shared).map(
             ([id, card]) => {
@@ -177,6 +199,7 @@ export default function Projects(props) {
                     onSave={onRename}
                     onDelete={onDelete}
                     onOpen={onOpen}
+                    searchEelemnt={searchEelemnt}
                 />
             }
         )
@@ -193,6 +216,7 @@ export default function Projects(props) {
                     onSave={onRename}
                     onDelete={onDelete}
                     onOpen={onOpen}
+                    searchEelemnt={searchEelemnt}
                 />
             }
         )

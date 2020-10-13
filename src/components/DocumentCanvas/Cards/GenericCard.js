@@ -23,12 +23,43 @@ function GenericCard(props) {
     let cardRef = useRef(null);
     const [userInfo ,setUserInfo] = useState(null);
     const currentUser=props.currentUser;
+    const [isSearched , setIsSearched] = useState(false);
+    const [highlightText , setHighlightText] = useState();
     const activeUsers = () => 
     {
         props.genericAPI.isActiveUserInfo()
     }
     const removeActiveUsers = () => props.genericAPI.removeActiveUser();
     // if size changes, animate it
+    useEffect(()=>{
+        if(props.result?.length >0)
+        Object.entries(props.result).map(([key,value])=>{
+            const term = value.terms[0];
+            console.log('ENtries',key,value ,value.match[term][0])
+            if(value.id === props.id)
+            {
+                setIsSearched(true);
+                switch(value.match[term][0])
+                {
+                    case 'title':
+                        setHighlightText({title:term});
+                        break;
+                    case 'content.url':
+                        break;
+                    case 'fileName':
+                        setHighlightText({fileName:term});
+                        break;
+                    default :
+                        setHighlightText({text:term});
+                        break;
+                }
+                
+            }
+            
+        })
+        else
+        setIsSearched(false)
+    },[props])
     useEffect(
         () => { gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 }) },
         [props.card.size.height, props.card.size.width]
@@ -75,7 +106,7 @@ function GenericCard(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isActive]
     )
-    //console.log("USER INFO",props.activeUser , isActive)
+    //console.log("USER INFO",props.result , isSearched , props.card.type)
     return (  
         <>
         {
@@ -84,7 +115,10 @@ function GenericCard(props) {
             <img src={val.photoURL} className="generic-card-text-profile-pic" />)
             :null
         }  
-        <div id={props.id} tabIndex={0} className={(isActive ? "generic-card active-card" : "generic-card") + (isDragging ? " dragging-card" : "")}
+        <div id={props.id} tabIndex={0} className={(isActive ? "generic-card active-card" : "generic-card") 
+            + (isDragging ? " dragging-card" : "")
+            +(isSearched ? " searched-card": '')
+            }
             ref={cardRef}
             onFocus={() => setActive(true)}
             onBlur={() => { console.log("called blur"); setActive(false); removeActiveUsers();}}
@@ -103,7 +137,7 @@ function GenericCard(props) {
                 <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
             </div> */}
             <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                <CardType typeAPI={props.typeAPI} content={props.card.content} size={props.card.size} id={props.id} isLocked={props.isLocked} />
+                <CardType typeAPI={props.typeAPI} content={props.card.content} highlightText={highlightText} size={props.card.size} id={props.id} isLocked={props.isLocked} />
             </div>
         </div>
         </>

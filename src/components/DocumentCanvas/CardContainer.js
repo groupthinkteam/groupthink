@@ -5,6 +5,7 @@ import Arrow from "../Arrow/Arrow";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import "../../styles/CardContainer.scss";
+import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
 
 /**
  * props:
@@ -12,28 +13,35 @@ import "../../styles/CardContainer.scss";
  * @param {*} props 
  * 
  */
-export default function CardContainer(props) {
+function  CardContainer(props) {
     const [zoom, setZoom] = useState(1);
-    // const [updateCursor , setUpdateCursor] = useState()
+    const [updateCursor , setUpdateCursor] = useState();
+    const [result,setResult] = useState();
+    const dateTime = Date.now();
     // useEffect(()=>{
     //     if(props.cursors)
     //     {
     //         Object.entries(props.cursors)
     //         .filter(([id, values]) =>{
-    //             if(dateTime - Number(values.time) < 60000)
-    //             setUpdateCursor(true)
-    //             else
+    //             if(id!== props.currentUser().uid && (dateTime - Number(values.time) < 60000))
     //             setUpdateCursor(false)
+    //             else
+    //             setUpdateCursor(true)
     //         })
     //     }
-    // })
-    
-    const dateTime = Date.now();
+    // },[props.cursors])
+    // console.log("COntainer",updateCursor,props.cursors)
+    const onChangeSearch = (text) =>
+    {
+      const result= props.containerAPI.searchElement(text);
+        setResult(result);
+    }
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
             {
                 Object.keys(props.cards).length > 1 ?
+                    <>
                     <input
                         className="zoom-slider"
                         style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
@@ -42,8 +50,20 @@ export default function CardContainer(props) {
                         max="2.5"
                         defaultValue="1"
                         step="0.0001"
-                        onChange={e => setZoom(e.target.value)} />
+                        onChange={e => setZoom(e.target.value)} 
+                    />
+                    <div
+                    style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
+                    >
+                    <InlineTextEdit 
+                        onFocus={e=>{console.log(e.target.select());e.target.select()}}
+                        borderColor='black'
+                        onChange={(e) => onChangeSearch(e.target.value)}
+                    />
+                    </div>
+                    </>
                     : null
+
             }
             <div className="container-filler"
                 style={{ ...props.container, position: "absolute", zIndex: 9999999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${zoom})` }}
@@ -62,18 +82,20 @@ export default function CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    //if(updateCursor)
+                    if(props.cursors != undefined)
                     props.containerAPI.saveCursorPosition(
                         event.clientX + event.target.offsetParent.scrollLeft,
                         event.clientY + event.target.offsetParent.scrollTop
                     );
                 }}
             >
+                
                 {
                     props.cards ? Object.entries(props.cards).filter(([id, card]) => id && id !== "root").map(
                         ([id, card]) => {
                             return (
                                 <div key={"wrapperdiv".concat(id)}>
+                                    
                                     <ContextMenuTrigger id={"contextmenu".concat(id)} >
                                         {
                                             props.isLocked && card?.type === "blank" ? null :
@@ -86,6 +108,7 @@ export default function CardContainer(props) {
                                                     isLocked={props.isLocked}
                                                     currentUser={props.currentUser}
                                                     activeUser={props.activeUser}
+                                                    result={result}
                                                 />
                                         }
                                     </ContextMenuTrigger>
@@ -155,3 +178,4 @@ export default function CardContainer(props) {
         </div >
     )
 }
+export default React.memo(CardContainer)

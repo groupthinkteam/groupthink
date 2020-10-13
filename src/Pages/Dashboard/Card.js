@@ -7,6 +7,9 @@ import "../../styles/ProjectCard.scss"
 import "../../styles/custom.scss"
 
 function Card(props) {
+    // const searchEelemnts=(e) =>{
+    //     props.searchEelemnt(e.target.value);
+    // }
     if (props.addNew) {
         return (
             <div className="project-card">
@@ -19,6 +22,7 @@ function Card(props) {
     else {
         return (
             <div id={props.id} className="project-card">
+                
                 {
                     props.card.shared ? <div>Shared By :- {props.card.shared.name} <br /> Shared Type : {props.card.shared.type}</div>
                         : null

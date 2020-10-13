@@ -7,6 +7,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import Button from "../Button/Button";
 import { snap } from "gsap/all";
+import { searchElementinDocuments } from "../../constants/searchTemplate";
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
  * @property {state} cards - stores the local state information for all the cards
@@ -45,6 +46,7 @@ export default function CardManager(props) {
     //Active User State
     const [activeUser,setActiveUser] = useState({});
 
+    const [customSearchElements , setCustomSearch] = useState([]); 
     //isLocked State
     var lock = true;
     if (props.permission === "rw")
@@ -485,6 +487,17 @@ export default function CardManager(props) {
         }).then(console.log("UPDated Active user")).catch(err=>console.log("isActiveUserInfo",err))
     }
     /**
+     * Search Element In all cards Content.
+     * @param {String} text 
+     * @returns {Array} Result
+     */
+    const searchElementsInDocuments = (text) =>
+    {
+        const result = searchElementinDocuments(text , cards);
+        return result;
+    }
+    
+    /**
      * bundling card api methods for ease of transmission 
      */
     let genericAPI = {
@@ -512,7 +525,8 @@ export default function CardManager(props) {
     }
 
     const containerAPI = {
-        saveCursorPosition: saveCursorPosition
+        saveCursorPosition: saveCursorPosition,
+        searchElement :searchElementsInDocuments
     }
     return (
         <>

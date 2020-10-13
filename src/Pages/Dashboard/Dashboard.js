@@ -17,10 +17,10 @@ export default function Dashboard(props) {
       />
     )
   }
-
+  
   return (
     <div>
-      <MenuBar onLogOut={logout} currentUser={props.currentUser} />
+      <MenuBar onLogOut={logout} currentUser={props.currentUser} dashboard={true}/>
       <Projects currentUser={props.currentUser} />
     </div>
   )
