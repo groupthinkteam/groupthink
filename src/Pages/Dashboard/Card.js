@@ -7,9 +7,8 @@ import "../../styles/ProjectCard.scss"
 import "../../styles/custom.scss"
 
 function Card(props) {
-    // const searchEelemnts=(e) =>{
-    //     props.searchEelemnt(e.target.value);
-    // }
+    const createdAt = props.card?.createdAt;
+    const DateNow = Date.now();
     if (props.addNew) {
         return (
             <div className="project-card">
