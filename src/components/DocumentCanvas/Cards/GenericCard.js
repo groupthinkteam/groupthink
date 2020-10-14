@@ -62,6 +62,7 @@ function GenericCard(props) {
     },[props])
     useEffect(
         () => { gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 }) },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.card.size.height, props.card.size.width]
     )
     useEffect(
@@ -126,18 +127,32 @@ function GenericCard(props) {
             style={{
                 position: "absolute",
                 opacity: 0
-            }}>
-            {
-                props.userListDetail != undefined?
-                Object.entries(props.userListDetail).filter(([key,val])=>val.isEditingUser).map(([key,val])=>
-                <img src={val.photoURL} className="generic-card-text-profile-pic" />)
-                :null
-            }
-            {/* <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
-                <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
-            </div> */}
+            }}
+        >
+
             <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                <CardType typeAPI={props.typeAPI} content={props.card.content} highlightText={highlightText} size={props.card.size} id={props.id} isLocked={props.isLocked} />
+                <CardType
+                    id={props.id}
+                    typeAPI={props.typeAPI}
+                    content={props.card.content}
+                    size={props.card.size}
+                    isLocked={props.isLocked} 
+                />
+
+                {
+                    props.userListDetail != undefined?
+                    Object.entries(props.userListDetail).filter(([key,val])=>val.isEditingUser).map(([key,val])=>
+                    <img src={val.photoURL} className="generic-card-text-profile-pic" />)
+                    :null
+                }
+
+                {/* <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
+                    <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
+                </div> */}
+                <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
+                    <CardType typeAPI={props.typeAPI} content={props.card.content} highlightText={highlightText} size={props.card.size} id={props.id} isLocked={props.isLocked} />
+
+                </div>
             </div>
         </div>
         </>

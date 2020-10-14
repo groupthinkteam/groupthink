@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import CardContainer from "./CardContainer";
 import throttle from 'lodash.throttle';
-import { firebaseDB, firebaseFunction, firebaseStorage, firebaseTIME } from "../../services/firebase";
+import { firebaseDB, firebaseStorage, firebaseTIME } from "../../services/firebase";
 import cardTemplate from "../../constants/cardTemplates";
 import { useHistory, useLocation } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import Button from "../Button/Button";
-import { snap } from "gsap/all";
 import { searchElementinDocuments } from "../../constants/searchTemplate";
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
@@ -44,7 +43,7 @@ export default function CardManager(props) {
     const [type, setType] = useState();
 
     //Active User State
-    const [activeUser,setActiveUser] = useState({});
+    const [activeUser, setActiveUser] = useState({});
 
     //UserList Detail State
     const [userListDetail , setUserListDetail] = useState(); 
@@ -80,13 +79,22 @@ export default function CardManager(props) {
         projectRef.child("users").on('value',snap=>{
             console.log("Users List Details Triggered recieved payload", snap.val());
             setUserListDetail(snap.val());
+        })
+        projectRef.child("nodes").on('child_added', (snapshot) => {
+            console.log("synced new card added for", snapshot.key);
+            setCards((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }))
         });
-        projectRef.child("nodes").on('value', (snapshot) => {
-            console.log("triggered node listener, received payload", snapshot.val());
-            setCards(snapshot.val());
+        projectRef.child("nodes").on('child_removed', (snapshot) => {
+            console.log("synced card deleted for", snapshot.key);
+            setCards((prevCards) => {
+                let clonedPrevCards = { ...prevCards };
+                delete clonedPrevCards[snapshot.key];
+                return clonedPrevCards;
+            });
         });
-        projectRef.child("center").on("value", (snapshot) => {
-            console.log("triggered center location listener, received payload", snapshot.val());
+        projectRef.child("nodes").on('child_changed', (snapshot) => {
+            console.log("synced card change for", snapshot.key);
+            setCards((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }));
         });
         projectRef.child("container").on("value", (snapshot) => {
             console.log("triggered container size listener, received payload", snapshot.val());
@@ -140,8 +148,10 @@ export default function CardManager(props) {
         })
         setIsLoaded(true)
         return () => {
-            projectRef.child("users").off('value')
-            projectRef.child("nodes").off('value');
+            projectRef.child("users").off('value');
+            projectRef.child("nodes").off('child_added');
+            projectRef.child("nodes").off('child_removed');
+            projectRef.child("nodes").off('child_changed');
             projectRef.child("center").off('value');
             projectRef.child("container").off('value');
             projectRef.child("cursors").off('value'); 
@@ -154,7 +164,7 @@ export default function CardManager(props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    
+
     /**
      * add a new card with the specified type, position, and parent
      * @param {{x: number, y: number}} position - the initial position of the card
@@ -508,7 +518,7 @@ export default function CardManager(props) {
      * Update the isEditing property of user in room 
      * @param {String} uid 
      */
-    const isActiveUserInfo = () =>{
+    const isActiveUserInfo = () => {
         firebaseDB.ref(`documents/${props.projectID}/users/${uid}/`).update({
             isEditingUser : true,
             lastUpdatedAt : firebaseTIME
@@ -529,12 +539,11 @@ export default function CardManager(props) {
      * @param {String} text 
      * @returns {Array} Result
      */
-    const searchElementsInDocuments = (text) =>
-    {
-        const result = searchElementinDocuments(text , cards);
+    const searchElementsInDocuments = (text) => {
+        const result = searchElementinDocuments(text, cards);
         return result;
     }
-    
+
     /**
      * bundling card api methods for ease of transmission 
      */
@@ -545,8 +554,8 @@ export default function CardManager(props) {
         removeCard: removeCard,
         addChild: addCard,
         resize: resize,
-        isActiveUserInfo:isActiveUserInfo,
-        removeActiveUser:removeActiveUser
+        isActiveUserInfo: isActiveUserInfo,
+        removeActiveUser: removeActiveUser
     }
 
     let typeAPI = {
@@ -564,7 +573,7 @@ export default function CardManager(props) {
 
     const containerAPI = {
         saveCursorPosition: saveCursorPosition,
-        searchElement :searchElementsInDocuments
+        searchElement: searchElementsInDocuments
     }
     return (
         <>
@@ -591,9 +600,9 @@ export default function CardManager(props) {
                         <div>
                             <Modal show={!projectExistence} onHide={handleClose}>
                                 <Modal.Header closeButton>
-                                    <Modal.Title>Alert Message of Project</Modal.Title>
+                                    <Modal.Title>Oops</Modal.Title>
                                     <Modal.Body>
-                                        You have Been removed by owner from this project . Try to Contact the Owner.
+                                        The owner has unceremoniously kicked you off this project. You no longer have access to this project.
                             </Modal.Body>
                                     <Modal.Footer>
                                         <Button className="custom_btn" handleClick={handleClose}>Close</Button>

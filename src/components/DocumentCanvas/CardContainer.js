@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import GenericCard from "./Cards/GenericCard"
 import Cursor from "./Cursor";
 import Arrow from "../Arrow/Arrow";
@@ -69,7 +69,7 @@ function  CardContainer(props) {
                 style={{ ...props.container, position: "absolute", zIndex: 9999999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
-                    if (e.target.offsetParent.className === "card-container" && !props.isLocked) {
+                    if (e.target.offsetParent && e.target.offsetParent.className === "card-container" && !props.isLocked) {
                         var x = Math.floor(e.clientX / zoom + e.target.offsetParent.scrollLeft);
                         var y = Math.floor(e.clientY / zoom + e.target.offsetParent.scrollTop);
                         console.log("double click at", x, ",", y);
@@ -169,8 +169,8 @@ function  CardContainer(props) {
                                 <Cursor key={id}
                                     id={id}
                                     name={values.name}
-                                    x={values.x}
-                                    y={values.y}
+                                    x={values.x / zoom}
+                                    y={values.y / zoom}
                                     projectID={props.projectID}
                                 />)
                         : null
