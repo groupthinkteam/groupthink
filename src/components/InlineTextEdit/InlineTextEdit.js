@@ -10,6 +10,7 @@ function InlineTextEdit(props) {
                 margin: props.margin || "5px 5px 5px 5px", 
                 fontWeight: props.bold ? "bold" : "normal", 
                 width: props.widthOffset ? 'calc(100% - ' + props.widthOffset + 'px)' : "95%",
+                height: "auto",
                 fontFamily: props.fontFamily || "Varela Round, sans-serif",
                 textDecorationLine: props.strikethrough ? "line-through" : "none",
                 color: props.color || "black",
@@ -24,6 +25,7 @@ function InlineTextEdit(props) {
             disabled={props.disabled}
             spellCheck="false"
             onFocus={props.onFocus}
+            autoFocus={props.forceFocus}
         />
     )
 }

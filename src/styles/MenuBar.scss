@@ -1,7 +1,7 @@
 .menu-bar {
     display: flex;
     flex-flow: row nowrap;
-    z-index: 10000;
+    z-index: 10000000;
     // background-color: #ffc700;
     // background-color: #0fa958;
     // background-color: #5551ff;
@@ -9,13 +9,12 @@
     align-items: center;
     justify-content: center;
     padding: 3px 7px 3px 7px;
-    position: absolute;
-    top: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-    width: calc(100vw - 20px);
-    border: 2.5px solid black;
-    border-radius: 6px;
+    margin: 0;
+    width: 100vw;
+    height: 60px;
+    border-bottom: 2px solid black;
+    border-radius: 0px;
+    position: relative;
     font-family: "Open Sans", "Varela Round", sans-serif;
 }
 

@@ -1,12 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useCallback, useRef } from "react";
+import { useDropzone } from 'react-dropzone'
+
 import Button from "../../../Button/Button";
 import "../../../../styles/Cards/BlankCard.scss"
 
-// Import React FilePond
-import { FilePond } from 'react-filepond'
-
-// Import FilePond styles
-import 'filepond/dist/filepond.min.css'
 import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
 import { extensionDetector, typeDetector } from "../Detector";
 
@@ -17,7 +14,6 @@ import { extensionDetector, typeDetector } from "../Detector";
  * @param {*} props 
  */
 function BlankCard(props) {
-    const [files, setFiles] = useState([]);
 
     const types = {
         text: {
@@ -58,57 +54,53 @@ function BlankCard(props) {
         }
     };
 
-    let server = {
-        process: (fieldName, file, metadata, load, error, progress, abort) => {
-            var typemeta = {
-                contentType: file?.type
-            };
+    let inputFile = useRef(null);
+    let [uploadState, setUploadState] = useState(false)
 
-            let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
-            let task;
-            const type = typeDetector(file?.type);
-            props.typeAPI.requestUpload(uploadPath, file, { ...metadata, ...typemeta },
-                (status, taskCallback) => {
-                    task = taskCallback
-                    if (typeof status === "number")
-                        progress(true, status, 100);
-                    else {
-                        load(props.id);
-                        props.typeAPI.requestDownload(
-                            uploadPath,
-                            (url, metadata) => {
-                                props.typeAPI.changeType(props.id, type, types[type])
-                                props.typeAPI.saveContent(props.id, {
-                                    [metadata.name]:
-                                    {
-                                        url: url, metadata: metadata
-                                    },
-                                    ["/text"]: null
-                                })
-                            }
-                        )
-                    }
-                });
-            return {
-                abort: () => {
-                    console.log("attempted to cancel upload, success:", task.cancel());
-                    abort();
-                }
-            }
-        }
-    };
     const onChange = (e) => {
         props.typeAPI.changeContent(props.id, { text: e.target.value })
     }
+
     const onSave = () => {
         const outcome = extensionDetector(props.content.text);
         if (outcome === 'NoLink') { props.typeAPI.saveContent(props.id, { text: props.content.text }) }
         else {
             props.typeAPI.changeType(props.id, outcome, types[outcome])
             props.typeAPI.saveContent(props.id, { url: props.content.text });
-
         }
-    } 
+    }
+
+    const upload = (files) => {
+        let file = files[0]
+        let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
+        var typemeta = {
+            contentType: file.type
+        };
+        const type = typeDetector(file?.type);
+        props.typeAPI.requestUpload(uploadPath, file, typemeta,
+            (status) => {
+                if (typeof status === "number")
+                    setUploadState(status);
+                else {
+                    props.typeAPI.requestDownload(
+                        uploadPath,
+                        (url, metadata) => {
+                            props.typeAPI.changeType(props.id, type, types[type])
+                            props.typeAPI.saveContent(props.id, {
+                                [metadata.name]: {url: url, metadata: metadata},
+                                "text": null
+                            })
+                        }
+                    )
+                }
+            });
+    }
+
+    const onDrop = useCallback(acceptedFiles => {
+        upload(acceptedFiles)
+    }, [])
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
     return (
         <div>
             <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
@@ -117,18 +109,28 @@ function BlankCard(props) {
             <Button handleClick={() => props.typeAPI.changeType(props.id, "todo", types["todo"])}>
                 Todo
             </Button>
+            <Button handleClick={() => inputFile.current.click()}>
+                Upload
+            </Button>
+            <input type="file"
+                onChange={(e) => upload(e.target.files)}
+                ref={inputFile}
+                style={{ display: 'none' }} />
+            <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                {
+                    isDragActive ?
+                        <p>Drop the files here ...</p> :
+                        <p>Drag 'n' drop some files here, or click to select files</p>
+                }
+            </div>
             <InlineTextEdit
                 onChange={e => onChange(e)}
                 onSave={onSave}
-            />
-            <FilePond
-                files={files}
-                allowMultiple={false}
-                maxFiles={1}
-                onupdatefiles={fileItems => setFiles(fileItems.map(fileItem => fileItem.file))}
-                server={server} // todo: add custom server functionality using firebase
+                placeholder="Paste a link here..."
             />
         </div>
     )
 }
+
 export default React.memo(BlankCard)

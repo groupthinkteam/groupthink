@@ -21,47 +21,44 @@ function GenericCard(props) {
     const [isDragging, setDragging] = useState(false)
     const CardType = cardChooser(props.card?.type, props.isLocked);
     const cardRef = useRef(null);
-    const [userInfo ,setUserInfo] = useState(null);
-    const currentUser=props.currentUser;
-    const [isSearched , setIsSearched] = useState(false);
-    const [highlightText , setHighlightText] = useState();
-    const activeUsers = () => 
-    {
+    const [userInfo, setUserInfo] = useState(null);
+    const currentUser = props.currentUser;
+    const [isSearched, setIsSearched] = useState(false);
+    const [highlightText, setHighlightText] = useState();
+    const activeUsers = () => {
         props.genericAPI.isActiveUserInfo()
     }
     const removeActiveUsers = () => props.genericAPI.removeActiveUser();
     // if size changes, animate it
-    useEffect(()=>{
-        if(props.result?.length >0)
-        Object.entries(props.result).map(([key,value])=>{
-            const term = value.terms[0];
-            console.log('ENtries',key,value ,value.match[term][0])
-            if(value.id === props.id)
-            {
-                setIsSearched(true);
-                switch(value.match[term][0])
-                {
-                    case 'title':
-                        setHighlightText({title:term});
-                        break;
-                    case 'content.url':
-                        break;
-                    case 'fileName':
-                        setHighlightText({fileName:term});
-                        break;
-                    default :
-                        setHighlightText({text:term});
-                        break;
+    useEffect(() => {
+        if (props.result?.length > 0)
+            Object.entries(props.result).map(([key, value]) => {
+                const term = value.terms[0];
+                console.log('ENtries', key, value, value.match[term][0])
+                if (value.id === props.id) {
+                    setIsSearched(true);
+                    switch (value.match[term][0]) {
+                        case 'title':
+                            setHighlightText({ title: term });
+                            break;
+                        case 'content.url':
+                            break;
+                        case 'fileName':
+                            setHighlightText({ fileName: term });
+                            break;
+                        default:
+                            setHighlightText({ text: term });
+                            break;
+                    }
                 }
-                
-            }
-            
-        })
+            })
         else
-        setIsSearched(false)
-    },[props])
+            setIsSearched(false)
+    }, [props])
     useEffect(
-        () => { gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 }) },
+        () => { 
+            gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 }) 
+        },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.card.size.height, props.card.size.width]
     )
@@ -107,61 +104,45 @@ function GenericCard(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isActive]
     )
-    console.log("USER INFO",isActive)
-    return (  
+    console.log("USER INFO", isActive)
+    return (
         <>
-          
-        <div id={props.id} tabIndex={0} className={(isActive ? "generic-card active-card" : "generic-card") 
-            + (isDragging ? " dragging-card" : "")
-            +(isSearched ? " searched-card": '')
+
+            <div id={props.id} tabIndex={0} className={(isActive ? "generic-card active-card" : "generic-card")
+                + (isDragging ? " dragging-card" : "")
+                + (isSearched ? " searched-card" : '')
             }
-            ref={cardRef}
-            onFocus={() => setActive(true)}
-<<<<<<< HEAD
-            onBlur={() => { console.log("called blur"); setActive(false) }}
-            onKeyDown={(e) => {
-                console.log("pressed ", e.key);
-                if (e.key === "Delete") {
-=======
-            onBlur={() => { console.log("called blur"); setActive(false); removeActiveUsers();}}
-            onKeyDown={(e) => { 
-                console.log("pressed ", e.key); 
-                if(e.key==="Delete"){
->>>>>>> d69afb80a383933b9b81274507006d06d76f370a
-                    props.genericAPI.removeCard(props.id, "recursive")
+                ref={cardRef}
+                onFocus={() => setActive(true)}
+
+                onBlur={() => { console.log("called blur"); setActive(false); removeActiveUsers(); }}
+                onKeyDown={(e) => {
+                    console.log("pressed ", e.key);
+                    if (e.key === "Delete") {
+                        props.genericAPI.removeCard(props.id, "recursive")
+                    }
+                }}
+                style={{
+                    position: "absolute",
+                    opacity: 0
+                }}>
+
+                {
+                    props.userListDetail ?
+                        Object.entries(props.userListDetail).filter(([key, val]) => val.isEditingUser).map(([key, val]) =>
+                            <img alt="display" src={val.photoURL} className="generic-card-text-profile-pic" />)
+                        : null
                 }
-            }}
-            style={{
-                position: "absolute",
-                opacity: 0
-            }}>
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                <CardType
-                    id={props.id}
-                    typeAPI={props.typeAPI}
-                    content={props.card.content}
-                    size={props.card.size}
-                    isLocked={props.isLocked} />
-=======
-            
-=======
-            {
-                props.userListDetail != undefined?
-                Object.entries(props.userListDetail).filter(([key,val])=>val.isEditingUser).map(([key,val])=>
-                <img src={val.photoURL} className="generic-card-text-profile-pic" />)
-                :null
-            }
->>>>>>> dbb4ce7dcbf801e472e7f4eb376257305a3d95c8
-            {/* <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
-                <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
-            </div> */}
-            <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                <CardType typeAPI={props.typeAPI} content={props.card.content} highlightText={highlightText} size={props.card.size} id={props.id} isLocked={props.isLocked} />
->>>>>>> d69afb80a383933b9b81274507006d06d76f370a
+                <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
+                    <CardType
+                        typeAPI={props.typeAPI}
+                        content={props.card.content}
+                        highlightText={highlightText}
+                        size={props.card.size}
+                        id={props.id}
+                        isLocked={props.isLocked} />
+                </div>
             </div>
-        </div>
         </>
     )
 }

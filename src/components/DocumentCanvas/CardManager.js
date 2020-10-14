@@ -59,7 +59,7 @@ export default function CardManager(props) {
     const uid = props.currentUser().uid;
     console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
         "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
-        "\n Chnaged Project Type :-", type , " \n List User :-" , userListDetail
+        "\n Chnaged Project Type :-", type, " \n List User :-", userListDetail
     )
     // get initial firebase state and subscribe to changes
     // unsubscribe before unmount
@@ -69,7 +69,7 @@ export default function CardManager(props) {
         const uid = props.currentUser().uid;
         const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
         const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
-        projectRef.child("users").on('value',snap=>{
+        projectRef.child("users").on('value', snap => {
             console.log("Users List Details Triggered recieved payload", snap.val());
             setUserListDetail(snap.val());
         })
@@ -93,23 +93,21 @@ export default function CardManager(props) {
             console.log("triggered container size listener, received payload", snapshot.val());
             setContainer(snapshot.val());
         });
-        if(cursors ===undefined)
-        {
+        if (cursors === undefined) {
             projectRef.child("cursors").on('value', (snap) => {
-                console.log("cursors Details Triggered recieved payload", snap.val() );
+                console.log("cursors Details Triggered recieved payload", snap.val());
                 setcursors(snap.val());
             });
         }
-        else if(Object.keys(cursors).length >1)
-        {
+        else if (Object.keys(cursors).length > 1) {
             projectRef.child("cursors").on("child_changed", (snap) => {
-                console.log("cursors Details Triggered recieved payload", snap.val() );
+                console.log("cursors Details Triggered recieved payload", snap.val());
                 setcursors({
                     ...cursors,
-                    [snap.key]:{
+                    [snap.key]: {
                         ...cursors[snap.key],
-                        x: snap.val().x , 
-                        y:snap.val().y,
+                        x: snap.val().x,
+                        y: snap.val().y,
                         time: snap.val().time
                     }
                 });
@@ -137,8 +135,8 @@ export default function CardManager(props) {
                 setIsOwner(true);
             }
         });
-        projectUnderUserRef.child(props.projectID).child("shared").on('child_changed',snap=>{
-            console.log("Type of Project Shared is Changed Recieved Payload",snap.child('type').val());
+        projectUnderUserRef.child(props.projectID).child("shared").on('child_changed', snap => {
+            console.log("Type of Project Shared is Changed Recieved Payload", snap.child('type').val());
             setType(snap.child('type').val());
         })
         projectUnderUserRef.child(props.projectID).on('child_changed', snap => {
@@ -152,10 +150,8 @@ export default function CardManager(props) {
             projectRef.child("nodes").off('value');
             projectRef.child("center").off('value');
             projectRef.child("container").off('value');
-            if(cursors ===undefined)
-            { projectRef.child("cursors").off('value'); }
-            else if(Object.keys(cursors).length >1)
-            {  projectRef.child("cursors").off('child_changed'); }
+            if (cursors === undefined) { projectRef.child("cursors").off('value'); }
+            else if (Object.keys(cursors).length > 1) { projectRef.child("cursors").off('child_changed'); }
             projectRef.child(`/users/${uid}/`).off('child_changed');
             projectUnderUserRef.off('child_removed');
             projectUnderUserRef.child(props.projectID).child("shared").off('child_changed')
@@ -315,26 +311,18 @@ export default function CardManager(props) {
      */
     const savePosition = (id, newPos) => {
         const updates = {};
-        let newContainer = { width: containerRef.current.width, height: containerRef.current.height }
-
         const projectRef = firebaseDB.ref("documents/" + props.projectID);
         if (newPos.x > containerRef.current.width) {
             console.log("x", newPos.x, "was greater than width", containerRef.current)
-            newContainer.width = newPos.x + 300;
+            updates["container/width"] = newPos.x + 300;
         }
         if (newPos.y > containerRef.current.height) {
             console.log("y", newPos.y, "was greater than height", container.current)
-            newContainer.height = newPos.y + 300;
+            updates["container/height"] = newPos.y + 300;
         }
         updates["nodes/" + id + "/position/"] = newPos;
-        if (newContainer) {
-            updates["container/"] = newContainer
-        }
-
-        console.log("newcontainer: ", newContainer, "old container: ", containerRef.current)
-
         projectRef.update(updates)
-            .then(console.log("set new position for", id, "to", newPos, "\nresized container to", newContainer));
+            .then(console.log("set new position for", id, "to", newPos));
     }
 
     /**
@@ -478,9 +466,9 @@ export default function CardManager(props) {
                 update[`documents/${props.projectID}/cursors/${uid}/x`] = x;
                 update[`documents/${props.projectID}/cursors/${uid}/y`] = y;
                 update[`documents/${props.projectID}/cursors/${uid}/time`] = firebaseTIME;
-                firebaseDB.ref().update(update).then(console.log("Updated Cursor Position to DB" ))
-                .catch(err => console.log("SaveCursor Position",err))
-                
+                firebaseDB.ref().update(update).then(console.log("Updated Cursor Position to DB"))
+                    .catch(err => console.log("SaveCursor Position", err))
+
             }
         },
         100), [cursors]
@@ -507,8 +495,8 @@ export default function CardManager(props) {
     const removeActiveUser = () => {
         console.log("Remove Active User Called")
         const updates = {};
-        updates[`documents/${props.projectID}/users/${uid}/isEditingUser`]=null;
-        firebaseDB.ref().update(updates).then(console.log("Removed Active user")).catch(err=>console.log("isActiveUserInfo",err))
+        updates[`documents/${props.projectID}/users/${uid}/isEditingUser`] = null;
+        firebaseDB.ref().update(updates).then(console.log("Removed Active user")).catch(err => console.log("isActiveUserInfo", err))
     }
     /**
      * Search Element In all cards Content.
