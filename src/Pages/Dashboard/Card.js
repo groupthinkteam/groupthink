@@ -9,6 +9,7 @@ import "../../styles/custom.scss"
 function Card(props) {
     const createdAt = props.card?.createdAt;
     const DateNow = Date.now();
+    //console.log("DATES \n", new Date(createdAt).toTimeString(), new Date((DateNow-createdAt)).toUTCString() )
     if (props.addNew) {
         return (
             <div className="project-card">
@@ -46,8 +47,15 @@ function Card(props) {
                                 handleClick={() => props.onDelete(props.id)}>
                                 Delete
                         </Button>
+                        <p>Last Modified At : {new Date(createdAt).toDateString()}</p>
+                        <p>Last Modified On : {new Date(createdAt).toTimeString()} </p>
                         </>
-                        : <>Project Name: {props.card.name}</>
+                        : 
+                        <>
+                        Project Name: {props.card.name}
+                        <p>Last Modified At : {new Date(createdAt).toDateString()}</p>
+                        <p>Last Modified On : {new Date(createdAt).toTimeString()} </p>
+                        </>
                 }
 
             </div>

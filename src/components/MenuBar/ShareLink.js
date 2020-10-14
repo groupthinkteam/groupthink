@@ -345,11 +345,11 @@ const ShareLink = (props) => {
             updates[path + "/users/public"] = permission; 
         }
         updates[`${path}/cursors/${uid}`] = {
-            name:name,
             x : 0,
-            y : 0,
-            time: firebaseTIME
+            y : 0
         }
+        updates[`${path}/users/${uid}/lastUpdatedAt`] = firebaseTIME;
+        updates[`${path}/lastActive/${uid}`]={time: firebaseTIME}
         await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
 
     }

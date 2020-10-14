@@ -21,8 +21,6 @@ function GenericCard(props) {
     const [isDragging, setDragging] = useState(false)
     const CardType = cardChooser(props.card?.type, props.isLocked);
     const cardRef = useRef(null);
-    const [userInfo, setUserInfo] = useState(null);
-    const currentUser = props.currentUser;
     const [isSearched, setIsSearched] = useState(false);
     const [highlightText, setHighlightText] = useState();
     const activeUsers = () => {
@@ -56,8 +54,8 @@ function GenericCard(props) {
             setIsSearched(false)
     }, [props])
     useEffect(
-        () => { 
-            gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 }) 
+        () => {
+            gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 })
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.card.size.height, props.card.size.width]
@@ -104,17 +102,16 @@ function GenericCard(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isActive]
     )
-    console.log("USER INFO", isActive)
+    // console.log("USER INFO",isActive)
     return (
         <>
-
-            <div id={props.id} tabIndex={0} className={(isActive ? "generic-card active-card" : "generic-card")
-                + (isDragging ? " dragging-card" : "")
-                + (isSearched ? " searched-card" : '')
-            }
+            <div id={props.id} tabIndex={0}
+                className={(isActive ? "generic-card active-card" : "generic-card")
+                    + (isDragging ? " dragging-card" : "")
+                    + (isSearched ? " searched-card" : '')
+                }
                 ref={cardRef}
                 onFocus={() => setActive(true)}
-
                 onBlur={() => { console.log("called blur"); setActive(false); removeActiveUsers(); }}
                 onKeyDown={(e) => {
                     console.log("pressed ", e.key);
@@ -126,21 +123,14 @@ function GenericCard(props) {
                     position: "absolute",
                     opacity: 0
                 }}>
-
                 {
-                    props.userListDetail ?
+                    props.userListDetail && isActive ?
                         Object.entries(props.userListDetail).filter(([key, val]) => val.isEditingUser).map(([key, val]) =>
-                            <img alt="display" src={val.photoURL} className="generic-card-text-profile-pic" />)
+                            <img alt="user" src={val.photoURL} className="generic-card-text-profile-pic" />)
                         : null
                 }
                 <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                    <CardType
-                        typeAPI={props.typeAPI}
-                        content={props.card.content}
-                        highlightText={highlightText}
-                        size={props.card.size}
-                        id={props.id}
-                        isLocked={props.isLocked} />
+                    <CardType typeAPI={props.typeAPI} content={props.card.content} highlightText={highlightText} size={props.card.size} id={props.id} isLocked={props.isLocked} />
                 </div>
             </div>
         </>

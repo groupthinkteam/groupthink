@@ -161,14 +161,14 @@ function  CardContainer(props) {
                     ) : <p>Double Click to Add a Card</p>
                 }
                 {
-                    props.cursors
+                    props.cursors && props.lastActive
                         ? Object.entries(props.cursors)
                         .filter(
-                            ([id, values]) => id !== props.currentUser().uid && (dateTime - Number(values.time) < 60000))
+                            ([id, values]) => id !== props.currentUser().uid && (dateTime - Number(props.lastActive[`${id}`]) < 60000))
                             .map(([id, values]) =>
                                 <Cursor key={id}
                                     id={id}
-                                    name={values.name}
+                                    name={ props.userListDetail[id]["name"]}
                                     x={values.x / zoom}
                                     y={values.y / zoom}
                                     projectID={props.projectID}

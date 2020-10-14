@@ -68,6 +68,7 @@ function BlankCard(props) {
             props.typeAPI.changeType(props.id, outcome, types[outcome])
             props.typeAPI.saveContent(props.id, { url: props.content.text });
         }
+<<<<<<< HEAD
     }
 
     const upload = (files) => {
@@ -101,6 +102,11 @@ function BlankCard(props) {
     }, [])
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
+=======
+    } 
+    let text =props.content?.text;
+    if(text === 'This is a blank Card' && text === undefined ){}
+>>>>>>> 55cdcd92a662e69c916ef89cb9dc457d2606e906
     return (
         <div>
             <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
