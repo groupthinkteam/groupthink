@@ -28,6 +28,7 @@ const isChild = async (child,permissionID,typeID , nameID) => {
         {
             const isOwner = await firebaseDB.ref("users/"+uid+"/projects/"+child+"/shared").once('value').then(snap => snap.exists()).catch(err=>console.log("iS Owner Error",err))
             firebaseDB.ref(`documents/${child}/users/${uid}/`).update({lastUpdatedAt:firebaseTIME}).then(console.log("Updated LastUpdated Prop")).catch(err=>console.log("Update in LastUpdate Error \n",err))
+            firebaseDB.ref("users/"+uid+"/projects/"+child).update({createdAt:firebaseTIME}).then(console.log("Updated cratedAt Prop")).catch(err=>console.log("Update in LastUpdate Error \n",err))
             const isChildInUsers = await firebaseDB.ref(Path).once('value').then((snap)=>{ 
                 
                 //---Internal Check----
@@ -65,14 +66,22 @@ const isChild = async (child,permissionID,typeID , nameID) => {
  */
 const createUserinDocument =async(path,child,permission,uid)=>{ 
     const updates = {}
-    //GIve Permission
-    updates[`documents/${child}/cursors/${uid}`] = {name:auth().currentUser.displayName};
-    //Enter User to Users Tree
+    //Initialize cursor Axis
+    updates[`documents/${child}/cursors/${uid}`] = {
+        x:0,
+        y:0
+    };
+    // Update the Time 
+    updates[`documents/${child}/lastActive/${uid}`] ={
+        time:firebaseTIME
+    }
+    //Enter User to Document-Users Tree
     updates[path+uid] ={
         name : auth().currentUser.displayName,
         photoURL : auth().currentUser.photoURL,
         email: auth().currentUser.email,
-        permission:permission
+        permission:permission,
+        lastUpdatedAt:firebaseTIME
     }
     if(permission === "r" || permission === "rw")
     {

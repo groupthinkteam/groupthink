@@ -106,7 +106,7 @@ function GenericCard(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isActive]
     )
-    console.log("USER INFO",isActive)
+    // console.log("USER INFO",isActive)
     return (  
         <>
           

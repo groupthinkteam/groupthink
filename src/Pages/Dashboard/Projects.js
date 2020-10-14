@@ -60,6 +60,9 @@ export default function Projects(props) {
                 thumbnailURL: thumbnailURL,
                 datecreated: firebaseTIME
             },
+            lastActive : {
+                [props.currentUser().uid]:firebaseTIME
+            },
             users: { 
                 [props.currentUser().uid]: { 
                     "permission":"rw" ,
