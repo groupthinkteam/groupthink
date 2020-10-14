@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import CardContainer from "./CardContainer";
 import throttle from 'lodash.throttle';
-import { firebaseDB, firebaseFunction, firebaseStorage, firebaseTIME } from "../../services/firebase";
+import { firebaseDB, firebaseStorage, firebaseTIME } from "../../services/firebase";
 import cardTemplate from "../../constants/cardTemplates";
 import { useHistory, useLocation } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import Button from "../Button/Button";
-import { snap } from "gsap/all";
 import { searchElementinDocuments } from "../../constants/searchTemplate";
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
@@ -60,7 +59,7 @@ export default function CardManager(props) {
     const uid = props.currentUser().uid;
     console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
         "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
-        "\n Chnaged Project Type :-", type, " \n Active User :-", activeUser
+        "\n Chnaged Project Type :-", type , " \n List User :-" , userListDetail
     )
     // get initial firebase state and subscribe to changes
     // unsubscribe before unmount
@@ -70,11 +69,9 @@ export default function CardManager(props) {
         const uid = props.currentUser().uid;
         const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
         const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
-        let userList = {};
-        projectRef.child("users").on('value', snap => {
+        projectRef.child("users").on('value',snap=>{
             console.log("Users List Details Triggered recieved payload", snap.val());
             setUserListDetail(snap.val());
-            userList = snap.val();
         })
         projectRef.child("nodes").on('child_added', (snapshot) => {
             console.log("synced new card added for", snapshot.key);
@@ -96,10 +93,28 @@ export default function CardManager(props) {
             console.log("triggered container size listener, received payload", snapshot.val());
             setContainer(snapshot.val());
         });
-        projectRef.child("cursors").on('value', (snap) => {
-            console.log("cursors Details Triggered recieved payload", snap.val());
-            setcursors(snap.val());
-        });
+        if(cursors ===undefined)
+        {
+            projectRef.child("cursors").on('value', (snap) => {
+                console.log("cursors Details Triggered recieved payload", snap.val() );
+                setcursors(snap.val());
+            });
+        }
+        else if(Object.keys(cursors).length >1)
+        {
+            projectRef.child("cursors").on("child_changed", (snap) => {
+                console.log("cursors Details Triggered recieved payload", snap.val() );
+                setcursors({
+                    ...cursors,
+                    [snap.key]:{
+                        ...cursors[snap.key],
+                        x: snap.val().x , 
+                        y:snap.val().y,
+                        time: snap.val().time
+                    }
+                });
+            });
+        }
         projectRef.child(`/users/${props.currentUser().uid}/`).on('child_changed', currentSnap => {
             if (currentSnap.key === 'permission') {
                 console.log("Changed  In Permission :- ", currentSnap.val())
@@ -122,29 +137,28 @@ export default function CardManager(props) {
                 setIsOwner(true);
             }
         });
+        projectUnderUserRef.child(props.projectID).child("shared").on('child_changed',snap=>{
+            console.log("Type of Project Shared is Changed Recieved Payload",snap.child('type').val());
+            setType(snap.child('type').val());
+        })
         projectUnderUserRef.child(props.projectID).on('child_changed', snap => {
             console.log(snap.key, " Is Changed under user tree");
             if (snap.key === 'isLocked')
                 setIsLocked(snap.val());
         })
-        projectRef.child("users").on('child_changed', snap => {
-            //checkes if user is active or not . snap.key gives changed uid
-            console.log("CHeck Active", snap.key, snap.val()["isEditingUser"]);
-            //Add the User whose active property is true
-            if (snap.val()["isEditingUser"] != undefined)
-                setActiveUser({
-                    ...activeUser,
-                    [snap.key]: snap.val()
-                });
-        })
         setIsLoaded(true)
         return () => {
-            projectRef.child("users").off()
-            projectRef.child("nodes").off();
-            projectRef.child("container").off();
-            projectRef.child("cursors").off();
+            projectRef.child("users").off('value')
+            projectRef.child("nodes").off('value');
+            projectRef.child("center").off('value');
+            projectRef.child("container").off('value');
+            if(cursors ===undefined)
+            { projectRef.child("cursors").off('value'); }
+            else if(Object.keys(cursors).length >1)
+            {  projectRef.child("cursors").off('child_changed'); }
             projectRef.child(`/users/${uid}/`).off('child_changed');
             projectUnderUserRef.off('child_removed');
+            projectUnderUserRef.child(props.projectID).child("shared").off('child_changed')
             projectUnderUserRef.child(props.projectID).off('child_changed');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -461,17 +475,12 @@ export default function CardManager(props) {
         (x, y) => {
             if (cursors) {
                 const update = {};
-                update[`documents/${props.projectID}/cursors/${uid}/`] = {
-                    name: props.currentUser().displayName,
-                    x: x,
-                    y: y,
-                    time: firebaseTIME,
-                }
-                var addMsg = firebaseFunction.httpsCallable('createNewProject')
-                addMsg(update)
-                    .then((result) => console.log("Updated Cursor Position to DB"))
-                    .catch(err => console.log("SaveCursor Position", err))
-
+                update[`documents/${props.projectID}/cursors/${uid}/x`] = x;
+                update[`documents/${props.projectID}/cursors/${uid}/y`] = y;
+                update[`documents/${props.projectID}/cursors/${uid}/time`] = firebaseTIME;
+                firebaseDB.ref().update(update).then(console.log("Updated Cursor Position to DB" ))
+                .catch(err => console.log("SaveCursor Position",err))
+                
             }
         },
         100), [cursors]
@@ -497,9 +506,9 @@ export default function CardManager(props) {
      */
     const removeActiveUser = () => {
         console.log("Remove Active User Called")
-        firebaseDB.ref(`documents/${props.projectID}/users/${uid}/`).update({
-            isEditingUser: null
-        }).then(console.log("UPDated Active user")).catch(err => console.log("isActiveUserInfo", err))
+        const updates = {};
+        updates[`documents/${props.projectID}/users/${uid}/isEditingUser`]=null;
+        firebaseDB.ref().update(updates).then(console.log("Removed Active user")).catch(err=>console.log("isActiveUserInfo",err))
     }
     /**
      * Search Element In all cards Content.
@@ -561,6 +570,7 @@ export default function CardManager(props) {
                             isOwner={props.isOwner}
                             isLocked={isLocked}
                             activeUser={activeUser}
+                            userListDetail={userListDetail}
                         />
                         :
                         <div>

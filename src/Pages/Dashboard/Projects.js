@@ -51,6 +51,7 @@ export default function Projects(props) {
             name: "New Project",
             thumbnailURL: thumbnailURL,
             isLocked: false,
+            createdAt : firebaseTIME,
             id:projectID
         };
         updates['documents/' + projectID] = {
@@ -65,7 +66,8 @@ export default function Projects(props) {
                     "email" : props.currentUser().email , 
                     "photoURL":props.currentUser().photoURL,
                     "name" : props.currentUser().displayName,
-                    "isOwner" : true
+                    "isOwner" : true,
+                    "lastUpdatedAt" : firebaseTIME
                 }
             },
             ...projectTemplates.tester

@@ -30,7 +30,7 @@ function  CardContainer(props) {
     //         })
     //     }
     // },[props.cursors])
-     console.log("COntainer",updateCursor,props.cursors)
+    // console.log("COntainer",updateCursor,props.cursors)
     const onChangeSearch = (text) =>
     {
       const result= props.containerAPI.searchElement(text);
@@ -109,6 +109,7 @@ function  CardContainer(props) {
                                                     currentUser={props.currentUser}
                                                     activeUser={props.activeUser}
                                                     result={result}
+                                                    userListDetail={props.userListDetail}
                                                 />
                                         }
                                     </ContextMenuTrigger>

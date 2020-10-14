@@ -110,12 +110,7 @@ function GenericCard(props) {
     console.log("USER INFO",isActive)
     return (  
         <>
-        {
-            Object.keys(props.activeUser).length >0 ?
-            Object.entries(props.activeUser).map(([key,val])=>
-            <img src={val.photoURL} className="generic-card-text-profile-pic" />)
-            :null
-        }  
+          
         <div id={props.id} tabIndex={0} className={(isActive ? "generic-card active-card" : "generic-card") 
             + (isDragging ? " dragging-card" : "")
             +(isSearched ? " searched-card": '')
@@ -141,6 +136,7 @@ function GenericCard(props) {
                 opacity: 0
             }}>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
                 <CardType
                     id={props.id}
@@ -150,6 +146,14 @@ function GenericCard(props) {
                     isLocked={props.isLocked} />
 =======
             
+=======
+            {
+                props.userListDetail != undefined?
+                Object.entries(props.userListDetail).filter(([key,val])=>val.isEditingUser).map(([key,val])=>
+                <img src={val.photoURL} className="generic-card-text-profile-pic" />)
+                :null
+            }
+>>>>>>> dbb4ce7dcbf801e472e7f4eb376257305a3d95c8
             {/* <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                 <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
             </div> */}

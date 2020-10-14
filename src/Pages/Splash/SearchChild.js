@@ -1,4 +1,4 @@
-import { firebaseDB, firebaseFunction } from "../../services/firebase";
+import { firebaseDB, firebaseFunction, firebaseTIME } from "../../services/firebase";
 import { auth } from "firebase"
 
 /**
@@ -21,34 +21,38 @@ const isChild = async (child,permissionID,typeID , nameID) => {
     //-----When Project Detail Page is Rendered---
     else
     {
-        const isOwner = await firebaseDB.ref("users/"+uid+"/projects/"+child+"/shared").once('value').then(snap => snap.exists()).catch(err=>console.log("iS Owner Error",err))
-        const ischild = await firebaseDB.ref(`documents/${child}/`).once('value').then(snap => snap.exists()).catch(err=>console.log("isCHild Error \n",err))
-        const isChildInUsers = await firebaseDB.ref(Path).once('value').then((snap)=>{ 
-            //---False Project Id
-            if(!ischild)
-            {
-                return null
-            }
-            //---Internal Check----
-            if(snap.hasChild(uid))
-            {
-                //----Returns The Permission---
+        const ischildren = await firebaseDB.ref(`documents/${child}/`).once('value').then(snap => snap.exists()).catch(err=>console.log("isCHild Error \n",err))
+        console.log('isChildren',ischildren)
+        //---If Project Id Exists in DOcument
+        if(ischildren!=undefined &&  ischildren)
+        {
+            const isOwner = await firebaseDB.ref("users/"+uid+"/projects/"+child+"/shared").once('value').then(snap => snap.exists()).catch(err=>console.log("iS Owner Error",err))
+            firebaseDB.ref(`documents/${child}/users/${uid}/`).update({lastUpdatedAt:firebaseTIME}).then(console.log("Updated LastUpdated Prop")).catch(err=>console.log("Update in LastUpdate Error \n",err))
+            const isChildInUsers = await firebaseDB.ref(Path).once('value').then((snap)=>{ 
                 
-                return snap.child(uid).val().permission
-            }
-            if(snap.hasChild("public"))
-            {
-                //---Return Permission For Public----
-                return snap.child("public").val().permission
-                
-            }
-            else
-            {
-                return null
-            }
-        })
-        .catch(err=>console.log("IschildinUsers Error \n",err))
-        return  [isChildInUsers , isOwner] ;
+                //---Internal Check----
+                if(snap.hasChild(uid))
+                {
+                    //----Returns The Permission---
+                    
+                    return snap.child(uid).val().permission
+                }
+                if(snap.hasChild("public"))
+                {
+                    //---Return Permission For Public----
+                    return snap.child("public").val().permission
+                    
+                }
+                else
+                {
+                    return null
+                }
+            })
+            .catch(err=>console.log("IschildinUsers Error \n",err))
+            return  [isChildInUsers , isOwner] ;
+        }
+        else
+        return [null ,null ]
     }
     
 }
@@ -103,6 +107,7 @@ const updateInUserTree = async(uid , projectID , typeID, nameID , permissionID )
         name : projectMetdata?.name,
         thumbnailURL : projectMetdata?.thumbnailURL,
         isLocked :isLocked,
+        createdAt : firebaseTIME,
         shared : {
             name: nameID,
             type : typeID
