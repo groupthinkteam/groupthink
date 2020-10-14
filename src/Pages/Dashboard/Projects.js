@@ -7,6 +7,8 @@ import Card from "./Card";
 
 import "../../styles/Projects.scss";
 import { snap } from "gsap/all";
+import { Modal } from "react-bootstrap";
+import Button from "../../components/Button/Button";
 /**
  * @component
  * This Component Deals with All Database & Storage Operation Required In DashBoard Page
@@ -23,7 +25,8 @@ export default function Projects(props) {
     const [cards, setCards] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const userRef = "users/" + props.currentUser().uid + "/projects/";
-
+    const [show,setShow]= useState(true);
+    const handleClose = () => setShow(false);
     useEffect(
         () => {
             const ref = firebaseDB.ref("users/" + props.currentUser().uid + "/projects/");
@@ -258,6 +261,18 @@ export default function Projects(props) {
                         </div>
                     }
                 </div>
+                <Modal show={show}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Would You Like to Work on last Modified File</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button className="custom_btn" handleClick={handleClose}>Close</Button>
+                    <Button className="custom_btn" handleClick={handleClose}>Save Changes</Button>
+                </Modal.Footer>
+                </Modal>
             </div >
             : <div>
                 Loading...

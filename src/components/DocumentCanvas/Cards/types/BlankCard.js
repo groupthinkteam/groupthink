@@ -109,6 +109,8 @@ function BlankCard(props) {
 
         }
     } 
+    let text =props.content?.text;
+    if(text === 'This is a blank Card' && text === undefined ){}
     return (
         <div>
             <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>

@@ -21,7 +21,6 @@ function GenericCard(props) {
     const [isDragging, setDragging] = useState(false)
     const CardType = cardChooser(props.card?.type, props.isLocked);
     const cardRef = useRef(null);
-    const [userInfo ,setUserInfo] = useState(null);
     const currentUser=props.currentUser;
     const [isSearched , setIsSearched] = useState(false);
     const [highlightText , setHighlightText] = useState();
@@ -111,9 +110,10 @@ function GenericCard(props) {
     return (  
         <>
           
-        <div id={props.id} tabIndex={0} className={(isActive ? "generic-card active-card" : "generic-card") 
-            + (isDragging ? " dragging-card" : "")
-            +(isSearched ? " searched-card": '')
+        <div id={props.id} tabIndex={0} 
+            className={(isActive ? "generic-card active-card" : "generic-card") 
+                + (isDragging ? " dragging-card" : "")
+                +(isSearched ? " searched-card": '')
             }
             ref={cardRef}
             onFocus={() => setActive(true)}
@@ -129,30 +129,18 @@ function GenericCard(props) {
                 opacity: 0
             }}
         >
-
-            <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                <CardType
-                    id={props.id}
-                    typeAPI={props.typeAPI}
-                    content={props.card.content}
-                    size={props.card.size}
-                    isLocked={props.isLocked} 
-                />
-
-                {
-                    props.userListDetail != undefined?
-                    Object.entries(props.userListDetail).filter(([key,val])=>val.isEditingUser).map(([key,val])=>
-                    <img src={val.photoURL} className="generic-card-text-profile-pic" />)
-                    :null
-                }
+            {
+                props.userListDetail != undefined && isActive ?
+                Object.entries(props.userListDetail).filter(([key,val])=>val.isEditingUser).map(([key,val])=>
+                <img src={val.photoURL} className="generic-card-text-profile-pic" />)
+                :null
+            }
 
                 {/* <div id={"handle".concat(props.id)} className="card-handle card-title-bar">
                     <img alt="drag icon" src={require("../../../assets/drag-indicator.svg")} />
                 </div> */}
-                <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                    <CardType typeAPI={props.typeAPI} content={props.card.content} highlightText={highlightText} size={props.card.size} id={props.id} isLocked={props.isLocked} />
-
-                </div>
+            <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
+                <CardType typeAPI={props.typeAPI} content={props.card.content} highlightText={highlightText} size={props.card.size} id={props.id} isLocked={props.isLocked} />
             </div>
         </div>
         </>
