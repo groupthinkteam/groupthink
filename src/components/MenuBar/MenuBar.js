@@ -3,6 +3,7 @@ import Button from "../Button/Button"
 import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
+import SearchBar from "./SearchBar"
 export default function MenuBar(props) {
     const currentUser = props.currentUser()
    
@@ -32,7 +33,16 @@ export default function MenuBar(props) {
                         currentUser={currentUser} isOwner={props.isOwner}
                         />
                     </>
-                    : null
+                    : null                    
+                }
+                {
+                    props.dashboard ?
+                    <>
+                    <SearchBar projectID={props.projectID} buttonClassName="menu-action-button highlight" 
+                        currentUser={currentUser} isOwner={props.isOwner}
+                    />
+                    </>
+                    :null
                 }
             </div>
         </div>

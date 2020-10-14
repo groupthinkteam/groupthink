@@ -6,6 +6,9 @@
     &.active-card {
         border: 2px solid black;
     }
+    &.searched-card{
+        border: 2px solid green;   
+    }
 }
 
 .inline-input {
