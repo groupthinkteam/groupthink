@@ -34,12 +34,12 @@ const isChild = async (child,permissionID,typeID , nameID) => {
             {
                 //----Returns The Permission---
                 
-                return snap.child(uid).val()
+                return snap.child(uid).val().permission
             }
             if(snap.hasChild("public"))
             {
                 //---Return Permission For Public----
-                return snap.child("public").val()
+                return snap.child("public").val().permission
                 
             }
             else
@@ -62,10 +62,9 @@ const isChild = async (child,permissionID,typeID , nameID) => {
 const createUserinDocument =async(path,child,permission,uid)=>{ 
     const updates = {}
     //GIve Permission
-    updates[path+uid]=permission;
-    //Enter User to Room
     updates[`documents/${child}/cursors/${uid}`] = {name:auth().currentUser.displayName};
-    updates[`documents/${child}/room/`+uid] ={
+    //Enter User to Users Tree
+    updates[path+uid] ={
         name : auth().currentUser.displayName,
         photoURL : auth().currentUser.photoURL,
         email: auth().currentUser.email,

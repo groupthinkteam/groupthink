@@ -4,6 +4,7 @@ import "../../styles/InlineTextEdit.scss"
 
 function InlineTextEdit(props) {
     return (
+        
         <TextareaAutosize
             style={{ 
                 margin: props.margin || "5px 5px 5px 5px", 
@@ -12,6 +13,8 @@ function InlineTextEdit(props) {
                 fontFamily: props.fontFamily || "Varela Round, sans-serif",
                 textDecorationLine: props.strikethrough ? "line-through" : "none",
                 color: props.color || "black",
+                cursor:"initial",
+                borderColor:props.borderColor
             }}
             className="inline-input"
             placeholder={props.placeholder || "Type something here..."}
@@ -20,6 +23,7 @@ function InlineTextEdit(props) {
             onBlur={props.onSave}
             disabled={props.disabled}
             spellCheck="false"
+            onFocus={props.onFocus}
         />
     )
 }

@@ -31,10 +31,10 @@ const ShareLink = (props) => {
 
     /**Users Information State inthe Room*/
     const [users, setUsers] = useState(null);
-
+    
     useEffect(() => {
-        firebaseDB.ref("documents/" + projectID + "/room/").on('value', snap => setUsers(snap.val()))
-        return () => firebaseDB.ref("documents/" + projectID + "/room/").off()
+        firebaseDB.ref("documents/" + projectID + "/users/").on('value', snap => setUsers(snap.val()));
+        return () => firebaseDB.ref("documents/" + projectID + "/users/").off('value')
     }, [])
 
     
@@ -49,7 +49,6 @@ const ShareLink = (props) => {
      * "usersUnderDocument" : `documents/${projectID}/users/${uid}/`
      * "projectUnderUser" : `users/${uid}/projects/${projectID}/`
      * "cursorUnderDocument" : `documents/${projectID}/cursors/${uid}/`
-     * "roomUnderDocument" : `documents/${projectID}/room/${uid}/`
      */
     const refPaths = (uid,operation) =>{
         switch(operation)
@@ -60,8 +59,6 @@ const ShareLink = (props) => {
                 return `users/${uid}/projects/${projectID}/`;
             case "cursorUnderDocument" :
                 return `documents/${projectID}/cursors/${uid}/`;
-            case "roomUnderDocument" :
-                return `documents/${projectID}/room/${uid}/`;
             default :
                 return undefined;
         }
@@ -102,8 +99,7 @@ const ShareLink = (props) => {
                 setLink(true)
             }
             createRoom(props.projectID, props.currentUser.uid, 
-                props.currentUser.displayName,permission , props.currentUser.email , 
-                props.currentUser.photoURL ,linkType
+                props.currentUser.displayName,permission  ,linkType
             )
             .then("Room & Cursor Made").catch(err => err)
             setURL(customURL)
@@ -172,8 +168,8 @@ const ShareLink = (props) => {
         const updates = {};
         updates[refPaths(uid,"projectUnderUser")+"access"] = permi;
         updates[refPaths(uid,"projectUnderUser")+"isLocked"] = isLocked;
-        updates[refPaths(uid,"usersUnderDocument")] = permi;
-        updates[refPaths(uid,"roomUnderDocument")+"permission"] = permi;
+        updates[refPaths(uid,"usersUnderDocument")+"permission"] =permi;
+        
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
     }
@@ -184,12 +180,11 @@ const ShareLink = (props) => {
      * @param {*} uid 
      */
     const makeOwner = (uid) => async () => {
-        const inUsers = await firebaseDB.ref(`documents/${projectID}/users/`).once('value').then(snap => snap.hasChild(uid)).catch(err => err)
         const updates = {};
+        updates[refPaths(uid,"projectUnderUser")+`access`] = 'rw';
         updates[refPaths(uid,"projectUnderUser")+`shared`] = null;
-        if (inUsers) {
-            updates[refPaths(uid,"usersUnderDocument")] = "rw";
-        }
+        updates[refPaths(uid,"usersUnderDocument")+"permission"] ="rw";
+        updates[refPaths(uid,"usersUnderDocument")+"isOwner"] =true;
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
 
@@ -204,7 +199,6 @@ const ShareLink = (props) => {
         updates[refPaths(uid,"projectUnderUser")] = null;
         updates[refPaths(uid,"usersUnderDocument")] = null;
         updates[refPaths(uid,"cursorUnderDocument")] = null;
-        updates[refPaths(uid,"roomUnderDocument")] = null;
         var addMsg = firebaseFunction.httpsCallable('createNewProject')
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
     }
@@ -300,7 +294,7 @@ const ShareLink = (props) => {
                                     <img src={val?.photoURL} className="menu-bar-user-profile-picture" />
                                     <b>{val?.email}</b>-
                                     {
-                                        key === props.currentUser.uid?
+                                        val.isOwner?
                                         <>
                                             <span>{val.name}</span>
                                             <span>(Owner)</span>
@@ -343,7 +337,7 @@ const ShareLink = (props) => {
         value: label,
     });
     //----Creates Room When Public Type is called---
-    const createRoom = async (child, uid, name,permission,email,photoURL,linkType) => {
+    const createRoom = async (child, uid, name,permission,linkType) => {
         const path = `documents/${child}/`;
         const updates = {};
         if(linkType === 'public')
@@ -355,12 +349,6 @@ const ShareLink = (props) => {
             x : 0,
             y : 0,
             time: firebaseTIME
-        }
-        updates[`${path}/room/${uid}`] = {
-            name : name,
-            photoURL : photoURL,
-            email: email,
-            permission:permission
         }
         await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
 
