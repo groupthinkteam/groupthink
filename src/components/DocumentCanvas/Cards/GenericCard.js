@@ -55,7 +55,7 @@ function GenericCard(props) {
     }, [props])
     useEffect(
         () => {
-            gsap.to("#".concat(props.id), { ...props.card.size, duration: 0.3 })
+            gsap.set("#".concat(props.id), { ...props.card.size })
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.card.size.height, props.card.size.width]

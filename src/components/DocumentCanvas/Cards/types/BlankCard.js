@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useRef } from "react";
-import { useDropzone } from 'react-dropzone'
-
+import { useDropzone } from 'react-dropzone';
+import { gsap } from "gsap/all";
 import Button from "../../../Button/Button";
-import "../../../../styles/Cards/BlankCard.scss"
+import "../../../../styles/Cards/BlankCard.scss";
 
 import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
 import { extensionDetector, typeDetector } from "../Detector";
@@ -68,7 +68,6 @@ function BlankCard(props) {
             props.typeAPI.changeType(props.id, outcome, types[outcome])
             props.typeAPI.saveContent(props.id, { url: props.content.text });
         }
-<<<<<<< HEAD
     }
 
     const upload = (files) => {
@@ -88,7 +87,7 @@ function BlankCard(props) {
                         (url, metadata) => {
                             props.typeAPI.changeType(props.id, type, types[type])
                             props.typeAPI.saveContent(props.id, {
-                                [metadata.name]: {url: url, metadata: metadata},
+                                [metadata.name]: { url: url, metadata: metadata },
                                 "text": null
                             })
                         }
@@ -102,40 +101,47 @@ function BlankCard(props) {
     }, [])
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
-=======
-    } 
-    let text =props.content?.text;
-    if(text === 'This is a blank Card' && text === undefined ){}
->>>>>>> 55cdcd92a662e69c916ef89cb9dc457d2606e906
+    if (uploadState) {
+        gsap.to("#uploadfiller".concat(props.id), { height: uploadState + "%" })
+    }
+    console.log("hello my name is dev sethsjdalksad", uploadState)
+    console.log(uploadState)
+
     return (
-        <div>
-            <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
-                Text
-            </Button>
-            <Button handleClick={() => props.typeAPI.changeType(props.id, "todo", types["todo"])}>
-                Todo
-            </Button>
-            <Button handleClick={() => inputFile.current.click()}>
-                Upload
-            </Button>
-            <input type="file"
-                onChange={(e) => upload(e.target.files)}
-                ref={inputFile}
-                style={{ display: 'none' }} />
-            <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                {
-                    isDragActive ?
-                        <p>Drop the files here ...</p> :
-                        <p>Drag 'n' drop some files here, or click to select files</p>
-                }
+        uploadState
+            ? <div style={{ position: "relative", height: "100%", width: "100%", display: "flex", flexFlow: "column nowrap", justifyContent: "flex-end" }}>
+                <div id={"uploadfiller".concat(props.id)} style={{ width: "100%", height: 0, backgroundColor: "lavenderblush" }} />
+                <div style={{position: "absolute", top: "50%"}}> Uploading </div>
             </div>
-            <InlineTextEdit
-                onChange={e => onChange(e)}
-                onSave={onSave}
-                placeholder="Paste a link here..."
-            />
-        </div>
+            :
+            <div>
+                    <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
+                        Text
+            </Button>
+                    <Button handleClick={() => props.typeAPI.changeType(props.id, "todo", types["todo"])}>
+                        Todo
+            </Button>
+                    <Button handleClick={() => inputFile.current.click()}>
+                        Upload
+            </Button>
+                    <input type="file"
+                        onChange={(e) => upload(e.target.files)}
+                        ref={inputFile}
+                        style={{ display: 'none' }} />
+                    <div {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        {
+                            isDragActive ?
+                                <p>Drop the file here ...</p> :
+                                <p>Drag and Drop a file, or Browse</p>
+                        }
+                    </div>
+                    <InlineTextEdit
+                        onChange={e => onChange(e)}
+                        onSave={onSave}
+                        placeholder="Paste a link here..."
+                    />
+                </div>
     )
 }
 

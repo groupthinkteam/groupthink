@@ -71,7 +71,7 @@ function  CardContainer(props) {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent && e.target.offsetParent.className === "card-container" && !props.isLocked) {
                         var x = Math.floor(e.clientX / zoom + e.target.offsetParent.scrollLeft);
-                        var y = Math.floor(e.clientY / zoom + e.target.offsetParent.scrollTop);
+                        var y = Math.floor(e.clientY / zoom + e.target.offsetParent.scrollTop - 60);
                         console.log("double click at", x, ",", y);
                         props.genericAPI.addChild({ x: x, y: y }, { width: 310, height: 200 })
                     }
@@ -82,7 +82,7 @@ function  CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    if(props.cursors != undefined && Object.keys(props.cursors).length >1)
+                    if(props.cursors && Object.keys(props.cursors).length >1)
                     props.containerAPI.saveCursorPosition(
                         event.clientX + event.target.offsetParent.scrollLeft,
                         event.clientY + event.target.offsetParent.scrollTop

@@ -64,12 +64,8 @@ export default function CardManager(props) {
     const uid = props.currentUser().uid;
     console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
         "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
-<<<<<<< HEAD
-        "\n Chnaged Project Type :-", type, " \n List User :-", userListDetail
-=======
-        "\n Chnaged Project Type :-", type , " \n List User :-" , userListDetail ,"\n Last Active " , lastActive,
+        "\n Changed Project Type :-", type , " \n List User :-" , userListDetail ,"\n Last Active " , lastActive,
         "\n cursors ",cursors
->>>>>>> 55cdcd92a662e69c916ef89cb9dc457d2606e906
     )
     // get initial firebase state and subscribe to changes
     // unsubscribe before unmount
@@ -80,12 +76,7 @@ export default function CardManager(props) {
         const uid = props.currentUser().uid;
         const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
         const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
-<<<<<<< HEAD
         projectRef.child("users").on('value', snap => {
-=======
-        
-        projectRef.child("users").on('value',snap=>{
->>>>>>> 55cdcd92a662e69c916ef89cb9dc457d2606e906
             console.log("Users List Details Triggered recieved payload", snap.val());
             setUserListDetail(snap.val());
         });
@@ -112,35 +103,12 @@ export default function CardManager(props) {
             console.log("triggered container size listener, received payload", snapshot.val());
             setContainer(snapshot.val());
         });
-<<<<<<< HEAD
-        if (cursors === undefined) {
-            projectRef.child("cursors").on('value', (snap) => {
-                console.log("cursors Details Triggered recieved payload", snap.val());
-                setcursors(snap.val());
-            });
-        }
-        else if (Object.keys(cursors).length > 1) {
-            projectRef.child("cursors").on("child_changed", (snap) => {
-                console.log("cursors Details Triggered recieved payload", snap.val());
-                setcursors({
-                    ...cursors,
-                    [snap.key]: {
-                        ...cursors[snap.key],
-                        x: snap.val().x,
-                        y: snap.val().y,
-                        time: snap.val().time
-                    }
-                });
-            });
-        }
-=======
 
         projectRef.child("cursors").on('value', (snap) => {
             console.log("cursors Details Triggered recieved payload", snap.val() , cursors );
             setCursors(snap.val());
         });
        
->>>>>>> 55cdcd92a662e69c916ef89cb9dc457d2606e906
         projectRef.child(`/users/${props.currentUser().uid}/`).on('child_changed', currentSnap => {
             if (currentSnap.key === 'permission') {
                 console.log("Changed  In Permission :- ", currentSnap.val())
@@ -190,12 +158,7 @@ export default function CardManager(props) {
             projectRef.child("nodes").off('child_changed');
             projectRef.child("center").off('value');
             projectRef.child("container").off('value');
-<<<<<<< HEAD
-            if (cursors === undefined) { projectRef.child("cursors").off('value'); }
-            else if (Object.keys(cursors).length > 1) { projectRef.child("cursors").off('child_changed'); }
-=======
             projectRef.child("cursors").off('value'); 
->>>>>>> 55cdcd92a662e69c916ef89cb9dc457d2606e906
             projectRef.child(`/users/${uid}/`).off('child_changed');
             projectUnderUserRef.off('child_removed');
             projectUnderUserRef.child(props.projectID).child("shared").off('child_changed')
@@ -369,15 +332,6 @@ export default function CardManager(props) {
             updates["container/height"] = newPos.y + 300;
         }
         updates["nodes/" + id + "/position/"] = newPos;
-<<<<<<< HEAD
-=======
-        if (newContainer) {
-            updates["container/"] = newContainer
-        }
-        console.log("newcontainer: ", newContainer, "old container: ", containerRef.current)
-        firebaseDB.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : firebaseTIME})
-        .then(console.log("Updated LastUpdated At")).catch(err=>err)
->>>>>>> 55cdcd92a662e69c916ef89cb9dc457d2606e906
         projectRef.update(updates)
             .then(console.log("set new position for", id, "to", newPos));
     }
@@ -525,16 +479,9 @@ export default function CardManager(props) {
                 const update = {};
                 update[`documents/${props.projectID}/cursors/${uid}/x`] = x;
                 update[`documents/${props.projectID}/cursors/${uid}/y`] = y;
-<<<<<<< HEAD
-                update[`documents/${props.projectID}/cursors/${uid}/time`] = firebaseTIME;
-                firebaseDB.ref().update(update).then(console.log("Updated Cursor Position to DB"))
-                    .catch(err => console.log("SaveCursor Position", err))
-
-=======
                 update[`documents/${props.projectID}/lastActive/${uid}/`] = firebaseTIME;
                 firebaseDB.ref().update(update).then(console.log("Updated Cursor Position to DB" ))
                 .catch(err => console.log("SaveCursor Position",err))
->>>>>>> 55cdcd92a662e69c916ef89cb9dc457d2606e906
             }
         },
         100), [cursors]
