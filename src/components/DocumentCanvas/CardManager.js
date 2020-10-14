@@ -62,11 +62,11 @@ export default function CardManager(props) {
     const location = useLocation()
     const history = useHistory();
     const uid = props.currentUser().uid;
-    // console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
-    //     "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
-    //     "\n Chnaged Project Type :-", type , " \n List User :-" , userListDetail ,"\n Last Active " , lastActive,
-    //     "\n cursors ",cursors
-    // )
+    console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
+        "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
+        "\n Chnaged Project Type :-", type , " \n List User :-" , userListDetail ,"\n Last Active " , lastActive,
+        "\n cursors ",cursors
+    )
     // get initial firebase state and subscribe to changes
     // unsubscribe before unmount
     useEffect(() => {
@@ -76,10 +76,12 @@ export default function CardManager(props) {
         const uid = props.currentUser().uid;
         const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
         const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
+        
         projectRef.child("users").on('value',snap=>{
             console.log("Users List Details Triggered recieved payload", snap.val());
             setUserListDetail(snap.val());
-        })
+        });
+
         projectRef.child("nodes").on('child_added', (snapshot) => {
             console.log("synced new card added for", snapshot.key);
             setCards((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }))
@@ -92,16 +94,19 @@ export default function CardManager(props) {
                 return clonedPrevCards;
             });
         });
+
         projectRef.child("nodes").on('child_changed', (snapshot) => {
             console.log("synced card change for", snapshot.key);
             setCards((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }));
         });
+
         projectRef.child("container").on("value", (snapshot) => {
             console.log("triggered container size listener, received payload", snapshot.val());
             setContainer(snapshot.val());
         });
+
         projectRef.child("cursors").on('value', (snap) => {
-            console.log("cursors Details Triggered recieved payload", snap.val() );
+            console.log("cursors Details Triggered recieved payload", snap.val() , cursors );
             setCursors(snap.val());
         });
        
@@ -136,9 +141,9 @@ export default function CardManager(props) {
             if (snap.key === 'isLocked')
                 setIsLocked(snap.val());
         })
-        projectRef.child('lastActive').on('child_changed',snap=>{
+        projectRef.child('lastActive').on('value',snap=>{
             console.log("Last Active of Project is Changed Recieved Payload",snap.key,snap.val());
-            setLastActive({[snap.key]:snap.val()});
+            setLastActive(snap.val());
         })
         projectRef.child('users/'+uid).on('child_changed',snap=>{
             if(snap.key === 'lastUpdatedAt')
@@ -159,7 +164,7 @@ export default function CardManager(props) {
             projectUnderUserRef.off('child_removed');
             projectUnderUserRef.child(props.projectID).child("shared").off('child_changed')
             projectUnderUserRef.child(props.projectID).off('child_changed');
-            projectRef.child('lastActive').off('child_changed');
+            projectRef.child('lastActive').off('value');
             projectRef.child('users/'+uid).off('child_changed')
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -477,23 +482,6 @@ export default function CardManager(props) {
     /**
      * This Function Updates Mouse X and Y Positions and Time to Database 
      */
-    const updateCursorsInfo = () =>
-    {
-        if(lastActive)
-        {
-            Object.entries(lastActive).map(([key,val] )=> {
-                console.log("CHECKS ",key,val)
-                setCursors({
-                    ...cursors ,
-                    [key] : {
-                        ...cursors[key] ,
-                        time : val,
-                        name: userListDetail[key]["name"]
-                    }
-                })
-            })
-        }
-    }
     const saveCursorPosition = useCallback(throttle(
         (x, y) => {
             if (cursors) {
@@ -503,7 +491,6 @@ export default function CardManager(props) {
                 update[`documents/${props.projectID}/lastActive/${uid}/`] = firebaseTIME;
                 firebaseDB.ref().update(update).then(console.log("Updated Cursor Position to DB" ))
                 .catch(err => console.log("SaveCursor Position",err))
-                updateCursorsInfo();
             }
         },
         100), [cursors]
@@ -595,6 +582,7 @@ export default function CardManager(props) {
                             isLocked={isLocked}
                             activeUser={activeUser}
                             userListDetail={userListDetail}
+                            lastActive={lastActive}
                         />
                         :
                         <div>
