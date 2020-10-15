@@ -7,8 +7,6 @@ import Card from "./Card";
 
 import "../../styles/Projects.scss";
 import { snap } from "gsap/all";
-import { Modal } from "react-bootstrap";
-import Button from "../../components/Button/Button";
 /**
  * @component
  * This Component Deals with All Database & Storage Operation Required In DashBoard Page
@@ -25,18 +23,34 @@ export default function Projects(props) {
     const [cards, setCards] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const userRef = "users/" + props.currentUser().uid + "/projects/";
-    const [show,setShow]= useState(true);
-    const handleClose = () => setShow(false);
     useEffect(
         () => {
-            const ref = firebaseDB.ref("users/" + props.currentUser().uid + "/projects/");
+            const ref = firebaseDB.ref("users/" + props.currentUser().uid + "/projects/").orderByChild('createdAt');
             
-            ref.on('value', (snapshot) => {
-                console.log("triggered listener and updated project list state, snapshot value was", snapshot.val());
-                setCards(snapshot.val());
+            ref.on('child_added', (snap) => {
+                
+                console.log("synced new card added for", snap.key);
+                setCards((prevCards) => ({ ...prevCards, [snap.key]: snap.val() }))
+                // setCards(snap.val());
                 setIsLoaded(true)
             })
-            return () => ref.off('value');
+            ref.on('child_changed',snap=>{
+                console.log("synced card Changed for", snap.key);
+                setCards((prevCards) => ({ ...prevCards, [snap.key]: snap.val() }))
+            })
+            ref.on('child_removed',snap=>{
+                console.log("synced card deleted for", snap.key);
+                setCards((prevCards) => {
+                    let clonedPrevCards = { ...prevCards };
+                    delete clonedPrevCards[snap.key];
+                    return clonedPrevCards;
+                });
+            })
+            return () =>{ 
+                ref.off('child_added');
+                ref.off('child_removed');
+                ref.off('child_changed');
+            }
         }
         , [props])
     /**Adds New Project To Database. */
@@ -185,27 +199,28 @@ export default function Projects(props) {
         console.log({ ...cards, [id]: { ...cards[id], name: text } })
         setCards({ ...cards, [id]: { ...cards[id], name: text } });
     }
+    /**
+     * Returns The Object in Revers Order
+     * @param {Object} object 
+     */
+    const reverseObject = (object) => {
+        var newObject = {};
+        var keys = [];
 
-    const searchEelemnt = (text) =>{
-        const makeArrayofProject = [] ;
-        let miniSearch = new MiniSearch({
-            fields : ['name'],
-            storeFields:['name']
-        });
-        let cnt = 0;
-        Object.entries(cards).map(([key,val])=>{
-            makeArrayofProject.push(val)
-            cnt = cnt+1;
-        })
-        if(makeArrayofProject.length > 0 )
-        miniSearch.addAll(makeArrayofProject)
+        for (var key in object) {
+            keys.push(key);
+        }
 
-        let results = miniSearch.search(text);
-        console.log("THE SEARCH ELEMENTS ",results , text);
+        for (var i = keys.length - 1; i >= 0; i--) {
+          var value = object[keys[i]];
+          newObject[keys[i]]= value;
+        }       
+
+        return newObject;
     }
 
     const sharedCardsToRender = cards ?
-        Object.entries(cards).filter(([id, card]) => card.shared).map(
+        Object.entries(reverseObject(cards)).filter(([id, card]) => card.shared).map(
             ([id, card]) => {
                 return <Card
                     key={id}
@@ -215,14 +230,13 @@ export default function Projects(props) {
                     onSave={onRename}
                     onDelete={onDelete}
                     onOpen={onOpen}
-                    searchEelemnt={searchEelemnt}
                 />
             }
         )
         : null
 
     const ownerCardsToRender = cards ?
-        Object.entries(cards).filter(([id, card]) => !card.shared).map(
+        Object.entries(reverseObject(cards)).filter(([id, card]) => !card.shared).map(
             ([id, card]) => {
                 return <Card
                     key={id}
@@ -232,7 +246,6 @@ export default function Projects(props) {
                     onSave={onRename}
                     onDelete={onDelete}
                     onOpen={onOpen}
-                    searchEelemnt={searchEelemnt}
                 />
             }
         )
@@ -261,18 +274,6 @@ export default function Projects(props) {
                         </div>
                     }
                 </div>
-                <Modal show={show}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Would You Like to Work on last Modified File</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-
-                    </Modal.Body>
-                    <Modal.Footer>
-                    <Button className="custom_btn" handleClick={handleClose}>Close</Button>
-                    <Button className="custom_btn" handleClick={handleClose}>Save Changes</Button>
-                </Modal.Footer>
-                </Modal>
             </div >
             : <div>
                 Loading...

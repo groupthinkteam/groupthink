@@ -29,6 +29,7 @@
     "react-highlighter": "^0.4.3",
     "react-hls-player": "^1.1.0",
     "react-iframe": "^1.8.0",
+    "react-image-lightbox": "^5.1.1",
     "react-images": "^1.1.7",
     "react-images-viewer": "^1.6.2",
     "react-native-pdf-thumbnail": "^1.0.1",

@@ -518,7 +518,8 @@ export default function CardManager(props) {
      * @returns {Array} Result
      */
     const searchElementsInDocuments = (text) => {
-        const result = searchElementinDocuments(text, cards);
+        const indexes = ['content.text' , 'fileName' ,  'title' , 'content.url']
+        const result = searchElementinDocuments(text, cards ,indexes );
         return result;
     }
 

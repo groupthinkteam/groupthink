@@ -6,8 +6,9 @@ import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 import Button from '../Button/Button';
 import {Modal } from "react-bootstrap"
 import DisplaySearchedCards from './DisplaySearchedCards';
+import { searchElementinDocuments } from '../../constants/searchTemplate';
 const SearchBar = (props) => {
-    const [cards, setCards] = useState(null);
+    const [cards, setCards] = useState({});
     const [searchResult,setSearchResult] = useState();
     const [show , setShow] = useState(false);
     useEffect(
@@ -24,19 +25,7 @@ const SearchBar = (props) => {
     const handleShow = () => setShow(true);
     const handleClose = () =>{ setShow(false); setSearchResult();}
     const searchElemnt = (text) =>{
-        const makeArrayofProject = [] ;
-        let miniSearch = new MiniSearch({
-            fields : ['name'],
-            storeFields:['name']
-        });
-        
-        Object.entries(cards).map(([key,val])=>{
-            makeArrayofProject.push(val)
-        })
-        if(makeArrayofProject.length > 0 )
-         miniSearch.addAll(makeArrayofProject)
-
-        const results = miniSearch.search(text, { fuzzy: 0.2 });
+        const results = searchElementinDocuments(text,cards,['content.name'])
         setSearchResult(results);
         console.log("THE SEARCH ELEMENTS ",results , text);
     }
