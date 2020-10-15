@@ -31,7 +31,7 @@
     font-family: "Open Sans", monospace;
     font-weight: 800;
     color: white;
-    background-color: #5FA2F1;
+    background-color: #5fa2f1;
     text-decoration: none;
     line-height: 24px;
 }
@@ -54,19 +54,33 @@
 
 .menu-bar-panel-left {
     justify-content: flex-start;
-    font-weight: 600;
+    .site-title {
+        margin-left: 10px;
+        a {
+            font-family: "B612 Mono", monospace;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 28px;
+            line-height: 27px;
+            color: #FF6B43;
+            text-decoration: none;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
 }
 
 .menu-bar-panel-center {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    height: 83px;
+    height: 81px;
     position: relative;
     top: 11px;
     .menu-center-vertical-filler {
-        height: 23px;
+        height: 21px;
     }
     .inline-text {
         &::before {

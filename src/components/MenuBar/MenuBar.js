@@ -10,9 +10,12 @@ export default function MenuBar(props) {
     return (
         <div className="menu-bar topheader">
             <div className="menu-bar-panel menu-bar-panel-left">
-                <Link to="/dashboard">
-                    <img className="menu-bar-logo" alt="groupthink logo" src={require("../../assets/logo.jpg")} />
+                <div className="site-title">
+                    <Link to="/dashboard">
+                        {/* <img className="menu-bar-logo" alt="groupthink logo" src={require("../../assets/logo.jpg")} /> */}
+                    groupthink
                 </Link>
+                </div>
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 {props.documentName ?
@@ -21,7 +24,7 @@ export default function MenuBar(props) {
                     </div>
                     : null
                 }
-                <div className="menu-center-vertical-filler" />
+                {/* <div className="menu-center-vertical-filler" /> */}
                 <SearchBar
                     projectID={props.projectID}
                     buttonClassName="menu-action-button highlight"
