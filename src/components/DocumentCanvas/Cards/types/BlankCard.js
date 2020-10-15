@@ -29,7 +29,7 @@ function BlankCard(props) {
             width: 280
         },
         image: {
-            height: 300,
+            height: 250,
             width: 350
         },
         VideoFile: {
@@ -72,6 +72,7 @@ function BlankCard(props) {
 
     const upload = (files) => {
         let file = files[0]
+        console.log("FILE",file)
         let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
         var typemeta = {
             contentType: file.type

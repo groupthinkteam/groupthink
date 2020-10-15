@@ -33,7 +33,7 @@ function GenericCard(props) {
         if (props.result?.length > 0)
             Object.entries(props.result).map(([key, value]) => {
                 const term = value.terms[0];
-                console.log('ENtries', key, value, value.match[term][0])
+                // console.log('ENtries', key, value, value.match[term][0])
                 if (value.id === props.id) {
                     setIsSearched(true);
                     switch (value.match[term][0]) {

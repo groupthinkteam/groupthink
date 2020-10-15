@@ -1,9 +1,34 @@
 import MiniSearch from 'minisearch';
-
-export const searchElementinDocuments = (text , elementToBeSearchIn) =>{
+/**
+ * This File Searches the text from the given element from which is need to be serched
+ * @param {String} text - The text that has to be searched
+ * @param {Object} elementToBeSearchIn  - The Object/ Element from which it needs to be searched
+ * @param {Array} indexes - The index on basis of which search is done.
+ * @returns {Array} - Searched Outcomes
+ * 
+ * Note:- for any new index to search then it will be under content
+ * @example 
+ * //CASE 1 :
+ * elementoBeSearch = {
+ * {
+ *  id : 1
+ *  name : 'XYZ' 
+ * }
+ * //Need to find name then 
+ * indexes = [content.name] //indexes should be like this
+ * 
+ * //CASE 2 : For Nested 
+ * {
+ *  id:1
+ *  author : {name : 'XYZ' }
+ * }
+ * //Need to find name then 
+ * indexes = [content.author.name] //indexes should be like this
+ */
+export const searchElementinDocuments = (text , elementToBeSearchIn , indexes) =>{
     const makeArrayofProject = [] ;
     let miniSearch = new MiniSearch({
-        fields : ['content.text' , 'fileName' ,  'title' , 'content.url'],
+        fields : indexes,
         extractField: (document, fieldName) => {
             // Access nested fields
             return fieldName.split('.').reduce((doc, key) => doc && doc[key], document)
@@ -56,6 +81,8 @@ export const searchElementinDocuments = (text , elementToBeSearchIn) =>{
                 makeArrayofProject.push({id:key,content:val.content});
                 break;
             default :
+                //This is For Search in Cards Other than documents/projectID/nodes/
+                makeArrayofProject.push({id:key , content:val})
                 break;    
         }
         
