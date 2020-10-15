@@ -5,7 +5,6 @@ import Arrow from "../Arrow/Arrow";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import "../../styles/CardContainer.scss";
-import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
 
 /**
  * props:
@@ -15,27 +14,7 @@ import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
  */
 function  CardContainer(props) {
     const [zoom, setZoom] = useState(1);
-    const [updateCursor , setUpdateCursor] = useState();
-    const [result,setResult] = useState();
     const dateTime = Date.now();
-    // useEffect(()=>{
-    //     if(props.cursors)
-    //     {
-    //         Object.entries(props.cursors)
-    //         .filter(([id, values]) =>{
-    //             if(id!== props.currentUser().uid && (dateTime - Number(values.time) < 60000))
-    //             setUpdateCursor(false)
-    //             else
-    //             setUpdateCursor(true)
-    //         })
-    //     }
-    // },[props.cursors])
-    // console.log("COntainer",updateCursor,props.cursors)
-    const onChangeSearch = (text) =>
-    {
-      const result= props.containerAPI.searchElement(text);
-        setResult(result);
-    }
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
@@ -52,15 +31,6 @@ function  CardContainer(props) {
                         step="0.0001"
                         onChange={e => setZoom(e.target.value)} 
                     />
-                    <div
-                    style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
-                    >
-                    <InlineTextEdit 
-                        onFocus={e=>{console.log(e.target.select());e.target.select()}}
-                        borderColor='black'
-                        onChange={(e) => onChangeSearch(e.target.value)}
-                    />
-                    </div>
                     </>
                     : null
 
@@ -108,7 +78,6 @@ function  CardContainer(props) {
                                                     isLocked={props.isLocked}
                                                     currentUser={props.currentUser}
                                                     activeUser={props.activeUser}
-                                                    result={result}
                                                     userListDetail={props.userListDetail}
                                                 />
                                         }

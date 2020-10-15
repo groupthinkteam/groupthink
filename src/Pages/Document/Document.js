@@ -4,6 +4,10 @@ import MenuBar from "../../components/MenuBar/MenuBar";
 import CardManager from "../../components/DocumentCanvas/CardManager";
 import isChild from "../Splash/SearchChild";
 import Loading from "../../components/Loading";
+
+//EXPORT  Context 
+export const ResultContext = React.createContext({});
+
 export default function Document(props) {
   const location = useLocation();
   const history = useHistory();
@@ -11,7 +15,10 @@ export default function Document(props) {
   const [isloaded, setIsLoaded] = useState(false);
   const [permission, setPermission] = useState(null);
   const [isOwner , setOwner] = useState();
-  //console.log(projectID);
+  const [documentResult , setDocumentResult] = useState({});
+  const [userList , setUserList] = useState({});
+  const [nodes,setNodes] = useState({});
+  console.log("BNSJK \n",documentResult , userList)
   useEffect(() => {
     (async () => {
       const [isChildPermission,isOwner] = await isChild(projectID);
@@ -45,6 +52,12 @@ export default function Document(props) {
   }
   return (
     <div>
+      <ResultContext.Provider 
+        value={{
+          setDocumentResult , documentResult,
+          userList , setUserList , nodes,setNodes
+        }}
+      >
       <MenuBar style={{ position: "absolute", zIndex: 0 }}
         onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID} isOwner={isOwner}/>
       {
@@ -57,6 +70,7 @@ export default function Document(props) {
           />
           : <div></div>
       }
+      </ResultContext.Provider>
     </div>
   );
 }

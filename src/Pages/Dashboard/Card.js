@@ -9,7 +9,7 @@ import "../../styles/custom.scss"
 function Card(props) {
     const createdAt = props.card?.createdAt;
     const DateNow = Date.now();
-    //console.log("DATES \n", new Date(createdAt).toTimeString(), new Date((DateNow-createdAt)).toUTCString() )
+    console.log("DATES \n",props.highlightText )
     if (props.addNew) {
         return (
             <div className="project-card">
@@ -21,7 +21,7 @@ function Card(props) {
     }
     else {
         return (
-            <div id={props.id} className="project-card">
+            <div id={props.id} className={( props.highlightText ? "project-card searched-card" : "project-card active-card")}>
                 
                 {
                     props.card.shared ? <div>Shared By :- {props.card.shared.name} <br /> Shared Type : {props.card.shared.type}</div>

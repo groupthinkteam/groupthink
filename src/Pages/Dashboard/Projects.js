@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { firebaseDB, firebaseTIME, firebaseStorage, firebaseFunction } from "../../services/firebase";
 import projectTemplates from "../../constants/projectTemplates";
@@ -7,6 +7,7 @@ import Card from "./Card";
 
 import "../../styles/Projects.scss";
 import { snap } from "gsap/all";
+import { DataContext } from "./Dashboard";
 /**
  * @component
  * This Component Deals with All Database & Storage Operation Required In DashBoard Page
@@ -23,6 +24,9 @@ export default function Projects(props) {
     const [cards, setCards] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const userRef = "users/" + props.currentUser().uid + "/projects/";
+    const {setCardsDashBoard,resultCards} = useContext(DataContext);
+    console.log("PROJECTJS ",resultCards,cards);
+    
     useEffect(
         () => {
             const ref = firebaseDB.ref("users/" + props.currentUser().uid + "/projects/").orderByChild('createdAt');
@@ -30,13 +34,15 @@ export default function Projects(props) {
             ref.on('child_added', (snap) => {
                 
                 console.log("synced new card added for", snap.key);
-                setCards((prevCards) => ({ ...prevCards, [snap.key]: snap.val() }))
-                // setCards(snap.val());
+                setCards((prevCards) => ({ ...prevCards, [snap.key]: snap.val() }));
+                //TODO :- Check WHy infinite Loop
+                //setCardsDashBoard((prevCards) => ({ ...prevCards, [snap.key]: snap.val() }))
+                // // // setCards(snap.val());
                 setIsLoaded(true)
             })
             ref.on('child_changed',snap=>{
                 console.log("synced card Changed for", snap.key);
-                setCards((prevCards) => ({ ...prevCards, [snap.key]: snap.val() }))
+                setCards((prevCards) => ({ ...prevCards, [snap.key]: snap.val() }));
             })
             ref.on('child_removed',snap=>{
                 console.log("synced card deleted for", snap.key);
@@ -45,14 +51,31 @@ export default function Projects(props) {
                     delete clonedPrevCards[snap.key];
                     return clonedPrevCards;
                 });
-            })
+            });
             return () =>{ 
                 ref.off('child_added');
                 ref.off('child_removed');
                 ref.off('child_changed');
             }
         }
-        , [props])
+        , [props]);
+
+        useEffect(()=>{
+            if(resultCards.length>0 && cards !=null)
+            {
+                console.log("XYZ ",resultCards,cards)
+                Object.entries(resultCards).map(([key,value])=>{
+                    console.log("TEST ",key,value);
+                    setCards({
+                        ...cards,
+                        [value.id] : {
+                            ...cards[value.id] ,
+                            highlightText: value.terms[0]
+                        }
+                    })
+                })
+            }
+        },[props])
     /**Adds New Project To Database. */
     var onAddNew = () => {
         console.log("clicked add new")
@@ -222,6 +245,35 @@ export default function Projects(props) {
     const sharedCardsToRender = cards ?
         Object.entries(reverseObject(cards)).filter(([id, card]) => card.shared).map(
             ([id, card]) => {
+                if(resultCards.length>0 && cards !=null)
+                {
+                    return Object.entries(resultCards).map(([key,value])=>{
+                       if (value.id === id)
+                       {
+                        return <Card
+                            key={id}
+                            id={id}
+                            card={card}
+                            onChange={onChange}
+                            onSave={onRename}
+                            onDelete={onDelete}
+                            onOpen={onOpen}
+                            highlightText={value.terms[0]}
+                        />
+                       }
+                       else
+                       return <Card
+                            key={id}
+                            id={id}
+                            card={card}
+                            onChange={onChange}
+                            onSave={onRename}
+                            onDelete={onDelete}
+                            onOpen={onOpen}
+                        />
+                    })
+                }
+                else
                 return <Card
                     key={id}
                     id={id}
@@ -238,6 +290,35 @@ export default function Projects(props) {
     const ownerCardsToRender = cards ?
         Object.entries(reverseObject(cards)).filter(([id, card]) => !card.shared).map(
             ([id, card]) => {
+                if(resultCards.length>0 && cards !=null)
+                {
+                    return Object.entries(resultCards).map(([key,value])=>{
+                       if (value.id === id)
+                       {
+                        return <Card
+                            key={id}
+                            id={id}
+                            card={card}
+                            onChange={onChange}
+                            onSave={onRename}
+                            onDelete={onDelete}
+                            onOpen={onOpen}
+                            highlightText={value.terms[0]}
+                        />
+                       }
+                       else
+                       return <Card
+                            key={id}
+                            id={id}
+                            card={card}
+                            onChange={onChange}
+                            onSave={onRename}
+                            onDelete={onDelete}
+                            onOpen={onOpen}
+                        />
+                    })
+                }
+                else
                 return <Card
                     key={id}
                     id={id}

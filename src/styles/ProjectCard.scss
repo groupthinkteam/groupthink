@@ -2,7 +2,6 @@
     margin: 10px;
     width: 206px;
     min-height: 344px;
-    border: 3.5px solid black;
     background-color: white;
     display: flex;
     flex-flow: column nowrap;
@@ -11,6 +10,13 @@
     font-family: "Varela Round", sans-serif;
     border-radius: 10px;
     box-sizing: content-box;
+    &.active-card {
+        border: 2px solid black;
+    }
+    &.searched-card{
+        border: 4px solid green;   
+        box-shadow: 0px 1px 31px black;
+    }
     img {
         width: 100%;
         height: 100%;

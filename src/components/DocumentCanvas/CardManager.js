@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 import CardContainer from "./CardContainer";
 import throttle from 'lodash.throttle';
 import { firebaseDB, firebaseStorage, firebaseTIME } from "../../services/firebase";
@@ -6,7 +6,8 @@ import cardTemplate from "../../constants/cardTemplates";
 import { useHistory, useLocation } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import Button from "../Button/Button";
-import { searchElementinDocuments } from "../../constants/searchTemplate";
+import { ResultContext } from "../../Pages/Document/Document";
+
 /**
  * Business logic for all canvas operations. Provides and implements the TypeAPI and GenericAPI
  * @property {state} cards - stores the local state information for all the cards
@@ -15,7 +16,7 @@ import { searchElementinDocuments } from "../../constants/searchTemplate";
  */
 export default function CardManager(props) {
     const [isLoaded, setIsLoaded] = useState(false);
-
+    
     // store container-related state
     const [container, setContainer] = useState({ width: 600, height: 800 });
     const containerRef = useRef({});
@@ -56,7 +57,9 @@ export default function CardManager(props) {
     if (props.permission === "rw")
         lock = false
     const [isLocked, setIsLocked] = useState(lock);
-
+    
+    const {userList , setUserList , nodes,setNodes} = useContext(ResultContext);
+    
     // "root/documents/projectID/nodes" reference in firebase db
     const projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
     const location = useLocation()
@@ -79,15 +82,22 @@ export default function CardManager(props) {
         projectRef.child("users").on('value', snap => {
             console.log("Users List Details Triggered recieved payload", snap.val());
             setUserListDetail(snap.val());
+            setUserList(snap.val());
         });
 
         projectRef.child("nodes").on('child_added', (snapshot) => {
             console.log("synced new card added for", snapshot.key);
-            setCards((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }))
+            setCards((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }));
+            setNodes((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }));
         });
         projectRef.child("nodes").on('child_removed', (snapshot) => {
             console.log("synced card deleted for", snapshot.key);
             setCards((prevCards) => {
+                let clonedPrevCards = { ...prevCards };
+                delete clonedPrevCards[snapshot.key];
+                return clonedPrevCards;
+            });
+            setNodes((prevCards) => {
                 let clonedPrevCards = { ...prevCards };
                 delete clonedPrevCards[snapshot.key];
                 return clonedPrevCards;
@@ -97,6 +107,7 @@ export default function CardManager(props) {
         projectRef.child("nodes").on('child_changed', (snapshot) => {
             console.log("synced card change for", snapshot.key);
             setCards((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }));
+            setNodes((prevCards) => ({ ...prevCards, [snapshot.key]: snapshot.val() }));
         });
 
         projectRef.child("container").on("value", (snapshot) => {
@@ -149,7 +160,8 @@ export default function CardManager(props) {
             {
                 projectUnderUserRef.child(props.projectID).update({"createdAt":snap.val()}).then(console.log("Updated Time to User Tree")).catch(err=>err);
             }
-        })
+        });
+        
         setIsLoaded(true)
         return () => {
             projectRef.child("users").off('value');
@@ -512,16 +524,6 @@ export default function CardManager(props) {
         updates[`documents/${props.projectID}/users/${uid}/isEditingUser`] = null;
         firebaseDB.ref().update(updates).then(console.log("Removed Active user")).catch(err => console.log("isActiveUserInfo", err))
     }
-    /**
-     * Search Element In all cards Content.
-     * @param {String} text 
-     * @returns {Array} Result
-     */
-    const searchElementsInDocuments = (text) => {
-        const indexes = ['content.text' , 'fileName' ,  'title' , 'content.url']
-        const result = searchElementinDocuments(text, cards ,indexes );
-        return result;
-    }
 
     /**
      * bundling card api methods for ease of transmission 
@@ -551,8 +553,7 @@ export default function CardManager(props) {
     }
 
     const containerAPI = {
-        saveCursorPosition: saveCursorPosition,
-        searchElement: searchElementsInDocuments
+        saveCursorPosition: saveCursorPosition
     }
     return (
         <>

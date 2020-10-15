@@ -233,9 +233,14 @@ const ShareLink = (props) => {
     }
     return (
         <>
-            <Button className={props.buttonClassName} handleClick={handleShow}>
-                Share
-            </Button>
+            {
+                props.document && !props.isOwner ?
+                <Button className={props.buttonClassName} handleClick={handleShow}>
+                    Share
+                </Button>
+                :null
+            }
+            
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Share Your Project</Modal.Title>

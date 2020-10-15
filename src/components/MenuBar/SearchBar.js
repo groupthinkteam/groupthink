@@ -1,68 +1,59 @@
-
-import React ,{useEffect,  useState} from 'react';
+import React ,{useEffect,  useState , useContext} from 'react';
 import { firebaseDB } from '../../services/firebase';
-import MiniSearch from 'minisearch';
 import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 import Button from '../Button/Button';
-import {Modal } from "react-bootstrap"
-import DisplaySearchedCards from './DisplaySearchedCards';
+import {Modal } from "react-bootstrap";
 import { searchElementinDocuments } from '../../constants/searchTemplate';
+import { ResultContext } from '../../Pages/Document/Document';
+import { DataContext } from '../../Pages/Dashboard/Dashboard';
+
+/**
+ * This Bar Do Search Operation and Return the Result to Context Provider
+ * @param {*} props 
+ */
 const SearchBar = (props) => {
     const [cards, setCards] = useState({});
-    const [searchResult,setSearchResult] = useState();
-    const [show , setShow] = useState(false);
+    const {setDocumentResult ,nodes } = useContext(ResultContext);
+    const {setResultCards,cardsDashboard} = useContext(DataContext);
+    console.log("NODES ",nodes , cardsDashboard)
     useEffect(
         () => {
             const ref = firebaseDB.ref("users/" + props.currentUser.uid + "/projects/");
+            const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
             ref.on('value', (snapshot) => {
                 console.log("Menu Bar Listener to cards", snapshot.val());
                 setCards(snapshot.val());
                 
             })
-            return () => ref.off('value');
+            return () => {
+                ref.off('value');
+            };
         }, 
     [props])
-    const handleShow = () => setShow(true);
-    const handleClose = () =>{ setShow(false); setSearchResult();}
-    const searchElemnt = (text) =>{
-        const results = searchElementinDocuments(text,cards,['content.name'])
-        setSearchResult(results);
-        console.log("THE SEARCH ELEMENTS ",results , text);
+    const searchElemnt = (text ) =>{
+        let results ;
+        if(props.dashboard)
+        {
+            results = searchElementinDocuments(text,cards,['content.name'])
+            setResultCards(results);
+            console.log(results)
+        }
+        else if(props.document && nodes != undefined )
+        {
+            results = searchElementinDocuments(text,nodes,['content.text' , 'fileName' ,  'title' , 'content.url'])
+            setDocumentResult(results);
+        }
     }
     return (
         <>
-            <Button className={props.buttonClassName} handleClick={handleShow}>
-                Search
-            </Button>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        Search Project
-                        <InlineTextEdit 
-                            borderColor='black'
-                            onChange={(e) => searchElemnt(e.target.value)}
-                        />
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div>
-                        {
-                            searchResult != undefined &&  Object.keys(searchResult).length >0 ?
-                            Object.entries(searchResult).map(([key,val])=>{
-                                return(
-                                    <DisplaySearchedCards id={val.id} card={cards[val.id]} />
-                                )
-                            })
-                            : <p>Nothing to Show</p>
-                        }
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                <Button className="custom_btn" handleClick={handleClose}>Close</Button>
-                </Modal.Footer>
-            </Modal>
             
-            
+                <InlineTextEdit
+                placeholder = 'Search Here .....'
+                borderColor='black'
+                onChange={(e) => searchElemnt(e.target.value)}
+                />
+                   
+              
         </>
     )
 }

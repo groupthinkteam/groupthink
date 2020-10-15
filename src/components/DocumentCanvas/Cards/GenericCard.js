@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState,useContext } from "react";
 import { gsap, Draggable } from "gsap/all";
-
+import { ResultContext } from "../../../Pages/Document/Document";
 import cardChooser from "./cardChooser";
 
 import "../../../styles/Cards/GenericCard.scss";
+
 
 /**
  * TODO :-
@@ -23,14 +24,20 @@ function GenericCard(props) {
     const cardRef = useRef(null);
     const [isSearched, setIsSearched] = useState(false);
     const [highlightText, setHighlightText] = useState();
+
+    //The Result Coming From Menubar
+    const { documentResult} = useContext(ResultContext);
+
     const activeUsers = () => {
         props.genericAPI.isActiveUserInfo()
     }
+
     const removeActiveUsers = () => props.genericAPI.removeActiveUser();
-    // if size changes, animate it
+
+    
     useEffect(() => {
-        if (props.result?.length > 0)
-            Object.entries(props.result).map(([key, value]) => {
+        if (documentResult != undefined &&  documentResult.length > 0)
+            Object.entries(documentResult).map(([key, value]) => {
                 const term = value.terms[0];
                 // console.log('ENtries', key, value, value.match[term][0])
                 if (value.id === props.id) {
@@ -53,6 +60,8 @@ function GenericCard(props) {
         else
             setIsSearched(false)
     }, [props])
+
+    // if size changes, animate it
     useEffect(
         () => {
             gsap.set("#".concat(props.id), { ...props.card.size })
@@ -102,7 +111,7 @@ function GenericCard(props) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isActive]
     )
-    // console.log("USER INFO",isActive)
+    // console.log("USER INFO",documentResult)
     return (
         <>
             <div id={props.id} tabIndex={0}
