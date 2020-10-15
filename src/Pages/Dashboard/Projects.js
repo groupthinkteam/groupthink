@@ -173,7 +173,7 @@ export default function Projects(props) {
      */
     var onOpen = (id) => {
         console.log("attempting to open project", id);
-        history.push("/project/" + id)
+        history.push("/project/" + id + "/" + cards[id].name)
     }
     /**
      * Store the text in Current Card State.

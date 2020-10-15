@@ -23,6 +23,7 @@ function GenericCard(props) {
     const cardRef = useRef(null);
     const [isSearched, setIsSearched] = useState(false);
     const [highlightText, setHighlightText] = useState();
+    
     const activeUsers = () => {
         props.genericAPI.isActiveUserInfo()
     }

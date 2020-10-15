@@ -27,7 +27,7 @@ export default function AppRoutes() {
         <InivitationRoute isAuth={authState.isSignedIn} path="/project/:projectID/:permissionID/:typeID/:nameID">
           <InvitationCheck/>  
         </InivitationRoute>
-        <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
+        <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID/:documentName">
           <Document
             currentUser={() => auth().currentUser}
             signOut={() => auth().signOut()} />

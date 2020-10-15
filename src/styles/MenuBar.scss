@@ -18,20 +18,31 @@
     font-family: "Open Sans", "Varela Round", sans-serif;
 }
 
-.menu-bar-site-title {
-    a {
-        user-select: none;
-        font-size: 24px;
-        padding-top: 3px;
-        padding-bottom: 3px;
-        font-family: "B612 Mono", monospace;
-        color: black;
-        text-decoration: none;
-        &:hover {
-            color: green;
-            text-decoration: none;
-        }
-    }
+.menu-bar-project-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px 7px 3px 7px;
+    position: relative;
+    // top: -15px;
+    height: 32px;
+    user-select: none;
+    font-size: 24px;
+    font-family: "Open Sans", monospace;
+    font-weight: 800;
+    color: white;
+    background-color: #5FA2F1;
+    text-decoration: none;
+    line-height: 24px;
+}
+.menu-bar-searchbox {
+    width: 500px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 20px;
+    background-color: white;
+    // position: relative;
+    // top: 10px;
 }
 
 .menu-bar-panel {
@@ -47,7 +58,21 @@
 }
 
 .menu-bar-panel-center {
-    justify-content: center;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+    align-items: center;
+    height: 83px;
+    position: relative;
+    top: 11px;
+    .menu-center-vertical-filler {
+        height: 23px;
+    }
+    .inline-text {
+        &::before {
+            content: "🔍";
+        }
+    }
 }
 
 .menu-bar-panel-right {
@@ -71,7 +96,7 @@
         background-color: #ff8577;
     }
     &:focus {
-        outline: none
+        outline: none;
     }
     &:active {
         outline: none;
@@ -79,9 +104,12 @@
 }
 
 .menu-bar-user-profile-picture {
-    height: 30px;
-    width: 30px;
+    height: 50px;
+    width: 50px;
     border: 2px solid black;
-    border-radius: 20px;
-    margin-right: 10px;
+    border-radius: 25px;
+}
+
+.menu-bar-logo {
+    height: 28px;
 }

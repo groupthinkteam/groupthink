@@ -7,15 +7,15 @@ import Loading from "../../components/Loading";
 export default function Document(props) {
   const location = useLocation();
   const history = useHistory();
-  const { projectID } = useParams();
+  const { projectID, documentName } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
   const [permission, setPermission] = useState(null);
-  const [isOwner , setOwner] = useState();
+  const [isOwner, setOwner] = useState();
   //console.log(projectID);
   useEffect(() => {
     (async () => {
-      const [isChildPermission,isOwner] = await isChild(projectID);
-      console.log("Permission", isChildPermission,isOwner)
+      const [isChildPermission, isOwner] = await isChild(projectID);
+      console.log("Permission", isChildPermission, isOwner)
       setTimeout(() => setIsLoaded(true), 3500);
 
       //---Check For Child Validation--
@@ -46,7 +46,9 @@ export default function Document(props) {
   return (
     <div>
       <MenuBar style={{ position: "absolute", zIndex: 0 }}
-        onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID} isOwner={isOwner}/>
+        onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID} isOwner={isOwner}
+        documentName={documentName}
+      />
       {
         permission != null ?
           <CardManager
