@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import GenericCard from "./Cards/GenericCard"
 import Cursor from "./Cursor";
 import Arrow from "../Arrow/Arrow";
@@ -15,22 +15,21 @@ import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
  */
 function  CardContainer(props) {
     const [zoom, setZoom] = useState(1);
-    const [updateCursor , setUpdateCursor] = useState();
+    const [updateCursor , setUpdateCursor] = useState(false);
     const [result,setResult] = useState();
     const dateTime = Date.now();
-    // useEffect(()=>{
-    //     if(props.cursors)
-    //     {
-    //         Object.entries(props.cursors)
-    //         .filter(([id, values]) =>{
-    //             if(id!== props.currentUser().uid && (dateTime - Number(values.time) < 60000))
-    //             setUpdateCursor(false)
-    //             else
-    //             setUpdateCursor(true)
-    //         })
-    //     }
-    // },[props.cursors])
-    // console.log("COntainer",updateCursor,props.cursors)
+    useEffect(()=>{
+        if(props.lastActive)
+        {
+            Object.entries(props.lastActive)
+            .map(([id, values]) =>{
+                //console.log("TESTING ",id,values , "Diff", (dateTime - Number(values)))
+                if(id != props.currentUser().uid && (dateTime - Number(values) < 60000))
+                setUpdateCursor(true);
+            })
+        }
+    },[props.cursors])
+//console.log("COntainer",updateCursor,dateTime)
     const onChangeSearch = (text) =>
     {
       const result= props.containerAPI.searchElement(text);
@@ -82,7 +81,7 @@ function  CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    if(props.cursors && Object.keys(props.cursors).length >1 && event.target.offsetParent != null)
+                    if(updateCursor && event.target.offsetParent != null)// props.cursors && Object.keys(props.cursors).length >1 )
                     props.containerAPI.saveCursorPosition(
                         event.clientX + event.target.offsetParent.scrollLeft,
                         event.clientY + event.target.offsetParent.scrollTop

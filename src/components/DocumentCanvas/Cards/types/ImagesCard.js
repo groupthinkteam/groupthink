@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {  useState } from 'react';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 /**
@@ -11,16 +11,24 @@ const ImagesCard = (props) =>{
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
+  const changeSize = (height,width) =>{
+    props.typeAPI.resize(props.id,{width:width, height:height})
+  }
   return (
     <>
         
         { 
           props.content.text === undefined ?
           Object.entries(props.content).map((fileKey,val)=>{
+            
             return(
               <div key={fileKey[0]}>
                 File Name : {fileKey[0].split(">")[0]}
-                <img src={`${fileKey[1]?.url}`} height="193px" width="348px" onClick={handleShow}/>
+                <img src={`${fileKey[1]?.url}`} onClick={handleShow} 
+                  height={`${Math.floor(fileKey[1].height/3)}px`}
+                  width={`${Math.floor(fileKey[1].width/4)}px`}
+                  onLoad={e=>changeSize(Math.floor(fileKey[1].height/3),Math.floor(fileKey[1].width/4))}
+                />
                 {
                   show && (
                     <Lightbox

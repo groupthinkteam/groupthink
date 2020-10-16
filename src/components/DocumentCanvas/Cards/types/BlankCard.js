@@ -71,13 +71,40 @@ function BlankCard(props) {
     }
 
     const upload = (files) => {
-        let file = files[0]
+        let file = files[0] ,imageHeight=null , imageWidth=null , aspectRatio = null ;
+        const type = typeDetector(file?.type);
+        if(type === 'image')
+        { 
+           var reader = new FileReader();
+
+            //Read the contents of Image File.
+            reader.readAsDataURL(file);
+            reader.onload = function (e) 
+            {
+
+                //Initiate the JavaScript Image object.
+                var image = new Image();
+
+                //Set the Base64 string return from FileReader as source.
+                image.src = e.target.result;
+
+                //Validate the File Height and Width.
+                image.onload = function () {
+                    var height = this.height;
+                    var width = this.width;
+                    imageHeight = height;
+                    imageWidth = width;
+                    aspectRatio= height/width;
+                    console.log("Uploaded image has valid Height and Width.",height , width);
+                    
+                }
+            }
+        }
         console.log("FILE",file)
         let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
         var typemeta = {
             contentType: file.type
         };
-        const type = typeDetector(file?.type);
         props.typeAPI.requestUpload(uploadPath, file, typemeta,
             (status) => {
                 if (typeof status === "number")
@@ -88,7 +115,7 @@ function BlankCard(props) {
                         (url, metadata) => {
                             props.typeAPI.changeType(props.id, type, types[type])
                             props.typeAPI.saveContent(props.id, {
-                                [metadata.name]: { url: url, metadata: metadata },
+                                [metadata.name]: { url: url, metadata: metadata , height:imageHeight , width:imageWidth , aspectRatio:aspectRatio},
                                 "text": null
                             })
                         }
