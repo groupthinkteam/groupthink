@@ -19,7 +19,7 @@ const ImagesCard = (props) => {
       {
         Object.entries(props.content).map(([key, val]) => {
           const maxDimension = Math.max(val.height, val.width);
-          const multiplier =  maxDimension > 500 ? 500 / maxDimension : 1;
+          const multiplier = maxDimension > 500 ? 500 / maxDimension : 1;
           return (
             <div key={key}>
               <img

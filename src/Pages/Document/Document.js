@@ -7,7 +7,7 @@ import Loading from "../../components/Loading";
 export default function Document(props) {
   const location = useLocation();
   const history = useHistory();
-  const { projectID, documentName } = useParams();
+  const { projectID } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
   const [permission, setPermission] = useState(null);
   const [isOwner, setOwner] = useState();
@@ -47,7 +47,7 @@ export default function Document(props) {
     <div>
       <MenuBar style={{ position: "absolute", zIndex: 0 }}
         onLogOut={logout} currentUser={props.currentUser} document={permission} projectID={projectID} isOwner={isOwner}
-        documentName={documentName}
+        documentName={props.documentName || "document name placeholder" }
       />
       {
         permission != null ?
