@@ -76,6 +76,10 @@ export default function CardManager(props) {
         const uid = props.currentUser().uid;
         const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
         const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
+        projectRef.child('lastActive').on('value',snap=>{
+            console.log("Last Active of Project is Changed Recieved Payload",snap.key,snap.val());
+            setLastActive(snap.val());
+        })
         projectRef.child("users").on('value', snap => {
             console.log("Users List Details Triggered recieved payload", snap.val());
             setUserListDetail(snap.val());
@@ -140,10 +144,7 @@ export default function CardManager(props) {
             if (snap.key === 'isLocked')
                 setIsLocked(snap.val());
         })
-        projectRef.child('lastActive').on('value',snap=>{
-            console.log("Last Active of Project is Changed Recieved Payload",snap.key,snap.val());
-            setLastActive(snap.val());
-        })
+        
         projectRef.child('users/'+uid).on('child_changed',snap=>{
             if(snap.key === 'lastUpdatedAt')
             {

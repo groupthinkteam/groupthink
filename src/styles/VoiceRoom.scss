@@ -1,0 +1,84 @@
+.room-connect 
+{
+    //position: absolute;
+    width: 46px;
+    height: 46px;
+    left: 1305px;
+    top: 8px;background: #FFFFFF;
+    /* gt call green */
+    box-sizing: border-box;
+    border-radius: 100px;
+    &.connected {
+        border: 2px solid #42AE1D;
+    }
+    &.disconnect{
+        border: 2px solid #E83E31;
+    }
+}
+.connect-call {
+    //position: absolute;
+    left: 68.49%;
+    right: 30.21%;
+    top: 1.64%;
+    bottom: 95.89%;
+
+        /* gt call green */
+
+    background: #42AE1D;
+}
+.speaker {
+	height: 30px;
+	width: 30px;
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+
+	span {
+		display: block;
+		width: 8px;
+		height: 8px;
+		background: #fff;
+		margin: 11px 0 0 2px;
+
+		&:after {
+			content: '';
+			position: absolute;
+			width: 0;
+			height: 0;
+			border-style: solid;
+			border-color: transparent #fff transparent transparent;
+			border-width: 10px 14px 10px 15px;
+			left: -13px;
+			top: 5px;
+		}
+
+		&:before {
+			transform: rotate(45deg);
+			border-radius: 0 50px 0 0;
+			content: '';
+			position: absolute;
+			width: 5px;
+			height: 5px;
+			border-style: double;
+			border-color: #fff;
+			border-width: 7px 7px 0 0;
+			left: 18px;
+			top: 9px;
+			transition: all 0.2s ease-out;
+		}
+	}
+
+	&:hover {
+
+		span:before {
+			transform: scale(.8) translate(-3px, 0) rotate(42deg);		
+    }
+	}
+  
+  &.mute {
+    span:before {
+			transform: scale(.5) translate(-15px, 0) rotate(36deg);
+      opacity: 0;
+    }
+  }
+}

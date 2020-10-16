@@ -4,6 +4,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@andyet/simplewebrtc": "^1.29.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -36,6 +37,7 @@
     "react-pdf": "^5.0.0",
     "react-photo-gallery": "^8.0.0",
     "react-player": "^2.6.1",
+    "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "react-select": "^3.1.0",

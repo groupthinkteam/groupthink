@@ -18,17 +18,32 @@ function  CardContainer(props) {
     const [updateCursor , setUpdateCursor] = useState(false);
     const [result,setResult] = useState();
     const dateTime = Date.now();
-    useEffect(()=>{
-        if(props.lastActive)
+    // useEffect(()=>{
+    //     if(props.lastActive)
+    //     {
+    //         Object.entries(props.lastActive)
+    //         .map(([id, values]) =>{
+    //             console.log("TESTING ",id,values , "Diff", (dateTime - Number(values)))
+    //             if(id != props.currentUser().uid && (dateTime - Number(values) < 60000))
+    //             setUpdateCursor(true);
+    //         })
+    //     }
+    // },[props.cursors]);
+    const updateCursorPos = (event) =>{
+        if(props.lastActive && event.target.offsetParent != null)
         {
             Object.entries(props.lastActive)
             .map(([id, values]) =>{
-                //console.log("TESTING ",id,values , "Diff", (dateTime - Number(values)))
+                console.log("TESTING ",id,values , "Diff", (dateTime - Number(values)))
                 if(id != props.currentUser().uid && (dateTime - Number(values) < 60000))
-                setUpdateCursor(true);
+                props.containerAPI.saveCursorPosition(
+                    event.clientX + event.target.offsetParent.scrollLeft,
+                    event.clientY + event.target.offsetParent.scrollTop
+                );
             })
         }
-    },[props.cursors])
+        
+    }
 //console.log("COntainer",updateCursor,dateTime)
     const onChangeSearch = (text) =>
     {
@@ -81,11 +96,8 @@ function  CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    if(updateCursor && event.target.offsetParent != null)// props.cursors && Object.keys(props.cursors).length >1 )
-                    props.containerAPI.saveCursorPosition(
-                        event.clientX + event.target.offsetParent.scrollLeft,
-                        event.clientY + event.target.offsetParent.scrollTop
-                    );
+                    // props.cursors && Object.keys(props.cursors).length >1 )
+                    updateCursorPos(event)
                 }}
             >
                 

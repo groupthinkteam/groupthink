@@ -33,7 +33,7 @@ export default function InvitationCheck(props)
       const checkInvite= await isChild(projectID,decryptPermissionID,decryptTypeID,decryptNameID);
       if(checkInvite)
       {
-        history.push(`/project/${projectID}`)
+        history.push(`/project/${projectID}/${nameID}`)
       }
       else
       {
