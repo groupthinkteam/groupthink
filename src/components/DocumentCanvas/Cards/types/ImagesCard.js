@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 /**
@@ -6,42 +6,42 @@ import 'react-image-lightbox/style.css';
  * @param {*} props - Property of File .
  * @property `typeAPI` , `content` , `id` 
  */
-const ImagesCard = (props) =>{
+const ImagesCard = (props) => {
   //Show Modal State
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
-  const changeSize = (height,width) =>{
-    props.typeAPI.resize(props.id,{width:width, height:height})
+  const changeSize = (height, width) => {
+    props.typeAPI.resize(props.id, { width: width, height: height })
   }
   return (
     <>
-        
-        { 
-          props.content.text === undefined ?
-          Object.entries(props.content).map((fileKey,val)=>{
-            
-            return(
-              <div key={fileKey[0]}>
-                File Name : {fileKey[0].split(">")[0]}
-                <img src={`${fileKey[1]?.url}`} onClick={handleShow} 
-                  height={`${Math.floor(fileKey[1].height/3)}px`}
-                  width={`${Math.floor(fileKey[1].width/4)}px`}
-                  onLoad={e=>changeSize(Math.floor(fileKey[1].height/3),Math.floor(fileKey[1].width/4))}
-                />
-                {
-                  show && (
-                    <Lightbox
-                      mainSrc={`${fileKey[1]?.url}`}
-                      onCloseRequest={handleClose}
-                    />
-                  )
-                }
-              </div>
-            )
-          })
-          : null
-        }
+      {
+        Object.entries(props.content).map(([key, val]) => {
+          const maxDimension = Math.max(val.height, val.width);
+          const multiplier =  maxDimension > 500 ? 500 / maxDimension : 1;
+          return (
+            <div key={key}>
+              <img
+                alt={key}
+                src={`${val?.url}`}
+                onClick={handleShow}
+                height={`${Math.floor(val.height * multiplier)}px`}
+                width={`${Math.floor(val.width * multiplier)}px`}
+                onLoad={e => changeSize(Math.floor(val.height * multiplier) + 5, Math.floor(val.width * multiplier) + 5)}
+              />
+              {
+                show && (
+                  <Lightbox
+                    mainSrc={`${val?.url}`}
+                    onCloseRequest={handleClose}
+                  />
+                )
+              }
+            </div>
+          )
+        })
+      }
     </>
   )
 }
