@@ -15,36 +15,29 @@ import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
  */
 function  CardContainer(props) {
     const [zoom, setZoom] = useState(1);
-    const [updateCursor , setUpdateCursor] = useState(false);
     const [result,setResult] = useState();
     const dateTime = Date.now();
-    // useEffect(()=>{
-    //     if(props.lastActive)
-    //     {
-    //         Object.entries(props.lastActive)
-    //         .map(([id, values]) =>{
-    //             console.log("TESTING ",id,values , "Diff", (dateTime - Number(values)))
-    //             if(id != props.currentUser().uid && (dateTime - Number(values) < 60000))
-    //             setUpdateCursor(true);
-    //         })
-    //     }
-    // },[props.cursors]);
     const updateCursorPos = (event) =>{
         if(props.lastActive && event.target.offsetParent != null)
         {
+            var flag=false;
             Object.entries(props.lastActive)
             .map(([id, values]) =>{
-                console.log("TESTING ",id,values , "Diff", (dateTime - Number(values)))
-                if(id != props.currentUser().uid && (dateTime - Number(values) < 60000))
-                props.containerAPI.saveCursorPosition(
-                    event.clientX + event.target.offsetParent.scrollLeft,
-                    event.clientY + event.target.offsetParent.scrollTop
-                );
+                //console.log("TESTING ",id,values , "Diff", ((dateTime - Number(values) ) < 60000))
+                if( id !== props.currentUser().uid && (dateTime - Number(values) < 60000))
+                {
+                    //console.log("TESTING ",id,values , "Diff", ((dateTime - Number(values) ) < 60000))
+                    flag=true;
+                }
             })
+            
+            props.containerAPI.saveCursorPosition(
+                event.clientX + event.target.offsetParent.scrollLeft,
+                event.clientY + event.target.offsetParent.scrollTop
+            );
         }
         
     }
-//console.log("COntainer",updateCursor,dateTime)
     const onChangeSearch = (text) =>
     {
       const result= props.containerAPI.searchElement(text);

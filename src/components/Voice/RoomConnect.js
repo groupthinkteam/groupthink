@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Provider } from 'react-redux';
 import * as SWRTC from '@andyet/simplewebrtc';
 import '../../styles/VoiceRoom.scss';
+import { getRoomByAddress } from '@andyet/simplewebrtc/Selectors';
 //const API_KEY = 'INSERT API KEY';
 const API_KEY = '120319f9263e8477a01064c0';
 const ROOM_NAME = "document_id";
@@ -25,7 +26,8 @@ const style = {
   borderRadius: "100px"
 }
 const RoomConnect = (props) => {
-    const [isJoined, setIsJoined] = useState(false)
+    const [isJoined, setIsJoined] = useState(false);
+    const [mute , setMute] = useState(true);
     return (
       <div className="">
         <Provider store={store}>
@@ -52,8 +54,8 @@ const RoomConnect = (props) => {
                       }
                       <SWRTC.UserControls>
                         {userprops =>
-                          <button  onClick={() =>{console.log("MUTE ",userprops.isMuted); userprops.isMuted ? userprops.unmute() : userprops.mute()}}>
-                            {userprops.isMuted ? "Unmute" : "Mute"}
+                          <button  onClick={() =>{console.log("MUTE ",userprops.isMuted,mute); setMute(!mute); mute ? userprops.unmute() : userprops.mute()}}>
+                            {mute  ? "Unmute" : "Mute"}
                           </button>
                         }
                       </SWRTC.UserControls>

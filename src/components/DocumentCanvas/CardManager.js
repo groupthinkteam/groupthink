@@ -62,12 +62,12 @@ export default function CardManager(props) {
     const location = useLocation()
     const history = useHistory();
     const uid = props.currentUser().uid;
-    console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
-        "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
-        "\n Changed Project Type :-", type , " \n List User :-" , userListDetail ,"\n Last Active " , lastActive,
-        "\n cursors ",cursors
-    )
-    // get initial firebase state and subscribe to changes
+    // console.log("CARD MANAGER STATE Existence ", projectExistence, "\n Owner ", isOwner,
+    //     "\n Shared ", isShared, "\n Permission Change ", permissionChange, "\n isLocked ", isLocked,
+    //     "\n Changed Project Type :-", type , " \n List User :-" , userListDetail ,"\n Last Active " , lastActive,
+    //     "\n cursors ",cursors
+    // )
+    // // get initial firebase state and subscribe to changes
     // unsubscribe before unmount
     useEffect(() => {
         // TODO: split the nodes listener into separate ones for "child_added", 

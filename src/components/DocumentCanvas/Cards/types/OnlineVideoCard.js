@@ -6,7 +6,14 @@ import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit"
  * @param {*} props - Property of File .
  * @property `typeAPI` , `content` , `id`
  */
+
 const OnlineVideoCard = (props) => {
+    var video_id = props.content.url.split('v=')[1];
+    var ampersandPosition = video_id.indexOf('&');
+    if(ampersandPosition != -1) {
+    video_id = video_id.substring(0, ampersandPosition);
+    }
+    console.log("YTID ", video_id)
     return (
         <>
             {
@@ -17,6 +24,13 @@ const OnlineVideoCard = (props) => {
                         width=""
                         height="250px"  
                         controls={true}
+                        light={true}
+                        pip={true}
+                        stopOnUnmount={false}
+                        ref={e=>{
+                            if(!e) return;
+                            console.log(e)
+                        }}
                     />
                 </div>
                 : null
