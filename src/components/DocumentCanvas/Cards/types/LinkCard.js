@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { ReactTinyLink } from 'react-tiny-link';
 /**
  * This Card Shows The Link's image description in single card
@@ -7,25 +7,34 @@ import { ReactTinyLink } from 'react-tiny-link';
  */
 const LinkCard = (props) => {
     
-    let multiplier,maxDimension , htmlChange;
-    if( props.content.metadata?.error === undefined)
-    {
-        maxDimension = Math.max(props.content.metadata?.height, props.content.metadata?.width);
-        multiplier = maxDimension > 500 ? 3500 / maxDimension : 1;
-    }
-    const changeSize = (height, width) => {
-        console.log("TYEST ")
-        props.typeAPI.resize(props.id, { width: width, height: height })
-    }
-    console.log("props.content.metadata ",props.content.metadata , maxDimension , multiplier);
+    const [maxDimension,setMaxDimension]=useState();
+    const [multiplier,setMultiplier]=useState();
+    const [dimension,setDimension] = useState();
+    useEffect(()=>{
+        const changeSize = (height, width) => {
+            props.typeAPI.resize(props.id, { width: width, height: height })
+        }
+        if(props.content.metadata?.error !== undefined)
+        {
+            let height= typeof props.content.metadata?.height ==='number' ?props.content.metadata?.height:350;
+            let width=typeof props.content.metadata?.width ==='number' ?props.content.metadata?.width:350;
+            let  temp = Math.max(height,width)
+            setMaxDimension(temp);
+            setDimension({width:width , height:height})
+            setMultiplier(temp >= 350 ? 350 / temp : 1);
+            temp = temp >= 350 ? 350 / temp : 1 ;
+            console.log("CHNAGES ",temp,Math.floor(height * temp) + 35);
+            console.log("CHNAGES ",Math.floor(width  * temp));
+            changeSize(Math.floor(height * temp) + 35 , Math.floor(width  * temp))
+        }
+    },[])
+    //console.log("props.content.metadata ",props.content.metadata , maxDimension , multiplier);
     return (
         <>
             
             {
-                props.content?.url ?
-                <div
-                    onLoad={e =>props.content.metadata?.error === undefined? changeSize(Math.floor(props.content.metadata.height * multiplier) + 150 , Math.floor(props.content.metadata.width * multiplier) + 5) : console.log(e)}
-                >
+                props.content.url?
+                <div>
                     {
                         props.content.metadata?.error !== undefined ?
                         <ReactTinyLink
@@ -38,7 +47,7 @@ const LinkCard = (props) => {
                         :
                         <>
                         <div 
-                            dangerouslySetInnerHTML={{__html:props.content.metadata.html}}
+                            dangerouslySetInnerHTML={{__html:props.content.metadata?.html}}
                         ></div>
                         <a href={props.content.url}>{props.content.metadata.title}</a> 
                         </>

@@ -130,7 +130,7 @@ function GenericCard(props) {
                             <img alt="user" src={val.photoURL} className="generic-card-text-profile-pic" />)
                         : null
                 }
-                <div style={{ width: "100%", height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
+                <div style={{ width: props.card.size.width, height: props.card.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
                     <CardType typeAPI={props.typeAPI} content={props.card.content} highlightText={highlightText} size={props.card.size} id={props.id} isLocked={props.isLocked} />
                 </div>
             </div>

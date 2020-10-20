@@ -57,7 +57,7 @@ export const typeDetector = (contentType) => {
  * @param {Object} callback Gives callback of returned metadata
  */
 export const metadataOfLinks = (link,callback)=>{
-    const linkFetch=`https://noembed.com/embed?url=${link}`;
+    const linkFetch=`https://noembed.com/embed?url=${link}&maxwidth=350&maxheight=350`;
         fetch(linkFetch)
           .then(function(response) {
             if (response.status >= 400) {

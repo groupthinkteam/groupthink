@@ -14,7 +14,6 @@ import { detectDimension, extensionDetector, metadataOfLinks, typeDetector } fro
  * @param {*} props 
  */
 function BlankCard(props) {
-    const [metadataOfLink ,setMetadataOfLink ]=useState();
     const types = {
         text: {
             height: 200,
@@ -66,6 +65,7 @@ function BlankCard(props) {
         if (outcome === 'NoLink') { props.typeAPI.saveContent(props.id, { text: props.content.text }) }
         else{
             metadataOfLinks(props.content.text,metadata=>{
+                
                 props.typeAPI.changeType(props.id, outcome, types[outcome])
                 props.typeAPI.saveContent(props.id, { url:metadata.url, metadata: metadata});
             })
