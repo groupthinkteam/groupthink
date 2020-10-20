@@ -18,6 +18,8 @@ const ImagesCard = (props) => {
     <>
       {
         Object.entries(props.content).map(([key, val]) => {
+          if(val?.height !== undefined)
+          {
           const maxDimension = Math.max(val.height, val.width);
           const multiplier = maxDimension > 500 ? 500 / maxDimension : 1;
           return (
@@ -39,7 +41,7 @@ const ImagesCard = (props) => {
                 )
               }
             </div>
-          )
+          )}
         })
       }
     </>

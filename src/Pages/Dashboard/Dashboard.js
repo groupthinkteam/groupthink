@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
 import Projects from './Projects'
 import MenuBar from '../../components/MenuBar/MenuBar'
+import StoreProvider from './StoreCardContext'
 
 export default function Dashboard(props) {
   const location = useLocation()
@@ -20,8 +21,10 @@ export default function Dashboard(props) {
   
   return (
     <div>
+      <StoreProvider>
       <MenuBar onLogOut={logout} currentUser={props.currentUser} dashboard={true}/>
       <Projects currentUser={props.currentUser} />
+      </StoreProvider>
     </div>
   )
 }

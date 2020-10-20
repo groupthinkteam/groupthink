@@ -7,6 +7,7 @@ import "../../styles/ProjectCard.scss"
 import "../../styles/custom.scss"
 
 function Card(props) {
+    
     const createdAt = props.card?.createdAt;
     const DateNow = Date.now();
     //console.log("DATES \n", new Date(createdAt).toTimeString(), new Date((DateNow-createdAt)).toUTCString() )

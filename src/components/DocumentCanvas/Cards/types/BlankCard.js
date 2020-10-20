@@ -5,7 +5,7 @@ import Button from "../../../Button/Button";
 import "../../../../styles/Cards/BlankCard.scss";
 
 import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
-import { extensionDetector, typeDetector } from "../Detector";
+import { detectDimension, extensionDetector, metadataOfLinks, typeDetector } from "../Detector";
 
 /**
  * @description The BlankCard type provides the UI for a newly-added card. It 
@@ -14,7 +14,7 @@ import { extensionDetector, typeDetector } from "../Detector";
  * @param {*} props 
  */
 function BlankCard(props) {
-
+    const [metadataOfLink ,setMetadataOfLink ]=useState();
     const types = {
         text: {
             height: 200,
@@ -61,45 +61,26 @@ function BlankCard(props) {
         props.typeAPI.changeContent(props.id, { text: e.target.value })
     }
 
-    const onSave = () => {
+    const onSave = async() => {
         const outcome = extensionDetector(props.content.text);
         if (outcome === 'NoLink') { props.typeAPI.saveContent(props.id, { text: props.content.text }) }
-        else {
-            props.typeAPI.changeType(props.id, outcome, types[outcome])
-            props.typeAPI.saveContent(props.id, { url: props.content.text });
+        else{
+            metadataOfLinks(props.content.text,metadata=>{
+                props.typeAPI.changeType(props.id, outcome, types[outcome])
+                props.typeAPI.saveContent(props.id, { url:metadata.url, metadata: metadata});
+            })
+            
         }
     }
 
     const upload = (files) => {
         let file = files[0] ,imageHeight=null , imageWidth=null , aspectRatio = null ;
         const type = typeDetector(file?.type);
-        if(type === 'image')
-        { 
-           var reader = new FileReader();
-
-            //Read the contents of Image File.
-            reader.readAsDataURL(file);
-            reader.onload = function (e) 
-            {
-
-                //Initiate the JavaScript Image object.
-                var image = new Image();
-
-                //Set the Base64 string return from FileReader as source.
-                image.src = e.target.result;
-
-                //Validate the File Height and Width.
-                image.onload = function () {
-                    var height = this.height;
-                    var width = this.width;
-                    imageHeight = height;
-                    imageWidth = width;
-                    aspectRatio= height/width;
-                    console.log("Uploaded image has valid Height and Width.",height , width);
-                    
-                }
-            }
-        }
+        detectDimension(type,file,data=>{
+            imageHeight=data.height;
+            imageWidth=data.width;
+            console.log("TEST ",data);
+        });
         console.log("FILE",file)
         let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
         var typemeta = {
