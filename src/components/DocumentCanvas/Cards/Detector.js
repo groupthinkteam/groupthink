@@ -1,5 +1,4 @@
 import ReactPlayer from "react-player/lazy";
-
 /**
  * This Function Detects Extenstion of given URL
  * @param {String} url URL Whose Extension is to be detect
@@ -58,21 +57,23 @@ export const typeDetector = (contentType) => {
  */
 export const metadataOfLinks = (link,callback)=>{
     const linkFetch=`https://noembed.com/embed?url=${link}&maxwidth=350&maxheight=350`;
-        fetch(linkFetch)
-          .then(function(response) {
-            if (response.status >= 400) {
-              throw new Error("Bad response from server");
-            }
-            console.log("RES ",response)
-            return response.json();
-          })
-          .then(function(data) {
-              console.log("DATA ",data)
-            callback(data);
-          })
-          .catch(error => {
-            console.error(error);
-          });
+    fetch(linkFetch)
+    .then(function(response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server");
+        }
+        console.log("RES ",response)
+        return response.json();
+    })
+    .then(function(data) {
+        console.log("DATA ",data)
+        callback(data);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+    
+    
 }
 /**
  * This Function Detects Dimension of Given File and Send data as Callback
@@ -114,8 +115,7 @@ const imageDimension = (file,callback)=>{
             console.log("Uploaded image has valid Height and Width.",height , width);
             callback({height:height , width:width , aspectRatio:aspectRatio})
         }
-    }       
-                    
+    }                  
 }
 const videoDimension = (file,callback)=>{
     var video = document.createElement('video');

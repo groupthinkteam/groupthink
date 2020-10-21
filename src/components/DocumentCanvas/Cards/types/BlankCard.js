@@ -74,8 +74,9 @@ function BlankCard(props) {
     }
 
     const upload = (files) => {
-        let file = files[0] ,imageHeight=null , imageWidth=null , aspectRatio = null ;
+        let file = files[0] ,imageHeight=null , imageWidth=null , aspectRatio = null ,target=null;
         const type = typeDetector(file?.type);
+       
         detectDimension(type,file,data=>{
             imageHeight=data.height;
             imageWidth=data.width;
@@ -96,7 +97,7 @@ function BlankCard(props) {
                         (url, metadata) => {
                             props.typeAPI.changeType(props.id, type, types[type])
                             props.typeAPI.saveContent(props.id, {
-                                [metadata.name]: { url: url, metadata: metadata , height:imageHeight , width:imageWidth , aspectRatio:aspectRatio},
+                                [metadata.name]: { url: url , metadata: metadata , height:imageHeight , width:imageWidth , aspectRatio:aspectRatio},
                                 "text": null
                             })
                         }

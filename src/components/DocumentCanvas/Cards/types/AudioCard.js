@@ -18,6 +18,7 @@ const AudioCard = (props) => {
                             src={fileKey[1]?.url}
                             showDownloadProgress="false"
                             preload="metadata"
+                            style={{width:props.size.width , marginTop:'5px'}}
                         />
                         </div>
                     )
