@@ -26,6 +26,8 @@ function InlineTextEdit(props) {
             spellCheck="false"
             onFocus={props.onFocus}
             autoFocus={props.forceFocus}
+            href={props.href}
+            target={props.target}
         />
     )
 }

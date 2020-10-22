@@ -526,16 +526,16 @@ export default function CardManager(props) {
     const renameStorageFile = (id,fileName,rename) =>{
         const fileMetadata = cards[id]['content'][fileName]["metadata"];
         console.log("METADATA ",fileMetadata)
-        // const path = "root/" + props.projectID + "/" + id +"/";
-        // firebaseStorage().ref(path).updateMetadata(
-        //     {
-        //         ...fileMetadata , 
-        //         ['name']:
-        //         { ...fileMetadata['name'] ,
-        //             name: rename
-        //         }
-        //     }
-        // ).then(console.log("Renamed  File")).catch(err=>console.log("RenameStorage File ERROR ",err))
+        const path = "root/" + props.projectID + "/" + id +"/";
+        firebaseStorage().ref(path).updateMetadata(
+            {
+                ...fileMetadata , 
+                ['name']:
+                { ...fileMetadata['name'] ,
+                    name: rename
+                }
+            }
+        ).then(console.log("Renamed  File")).catch(err=>console.log("RenameStorage File ERROR ",err))
     }
     /**
      * bundling card api methods for ease of transmission 
