@@ -453,6 +453,9 @@ export default function CardManager(props) {
             null, // error handling -- nonexistent!
             () => { console.log(); statusCallback("complete"); unsubscribe(); } // on completion
         )
+        custom['fpath'] = path;
+        var convToBw = firebaseFunction.httpsCallable('imageToBw')
+        convToBw(custom).then((result) => console.log(result)).catch(err => console.log(err))
     }
 
     /**
