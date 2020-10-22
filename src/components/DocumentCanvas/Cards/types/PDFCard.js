@@ -9,7 +9,6 @@ import InlineTextEdit from '../../../InlineTextEdit/InlineTextEdit';
 //console.log(PDFRef.current?.pages)
 const PDFCard = (props) => {
   const [fileState , setFile] = useState({fileName:'',url:''});
-  console.log("PROPS ",props.content)
   const onSave = (fileName,url) =>()=>{ 
     //Check this
     //props.typeAPI.renameStorageFile(props.id,fileName,fileState.fileName)
@@ -34,31 +33,31 @@ const PDFCard = (props) => {
       fileName:fileName,
       url:url
     });
-    props.typeAPI.resize(props.id,{width:props.size.width,height:246})
+    props.typeAPI.resize(props.id,{width:props.size.width,height:props.size.height})
   }
   return (
     <div>
       {
         props.content.text === undefined ?
-          Object.entries(props.content).map((fileKey, val) => {
+          Object.entries(props.content).map(([fileKey, val]) => {
             return (
               <div  
-                key={fileKey[0]} 
-                onLoad={e=>onLoadDiv(fileKey[0].split(">")[0],fileKey[1]?.url)}
+                key={fileKey} 
+                onLoad={e=>onLoadDiv(fileKey.split(">")[0],val?.url)}
               >
                 
                 <InlineTextEdit
                   onChange={(e) =>setFile({fileName:e.target.value , url:fileState.url}) }
-                  onSave={onSave(fileKey[0],fileKey[1]?.url)}
+                  onSave={onSave(fileKey,val?.url)}
                   placeholder="Enter File Name ...."
                   text={fileState.fileName}
                   lwidth={"50px"}
                   disabled={props.isLocked}
-                  href={fileKey[1]?.url}
+                  href={val?.url}
                   target="_blank"
                   style={{color:"red" ,textAlignLast:'center' }}
                 />
-                <Iframe  src={fileState.url.length >1 ? fileState.url :fileKey[1]?.url } style={{overflow:"hidden" , display: "inline-table"}} scrolling="no"/>
+                <Iframe  src={fileState.url.length >1 ? fileState.url :val?.url } style={{overflow:"hidden" , display: "inline-table"}} scrolling="no"/>
               </div>
             )
           })
