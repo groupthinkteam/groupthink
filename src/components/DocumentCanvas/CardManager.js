@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import CardContainer from "./CardContainer";
 import throttle from 'lodash.throttle';
-import { firebaseDB, firebaseStorage, firebaseTIME } from "../../services/firebase";
+import { firebaseDB, firebaseFunction, firebaseStorage, firebaseTIME } from "../../services/firebase";
 import cardTemplate from "../../constants/cardTemplates";
 import { useHistory, useLocation } from "react-router-dom";
 import { Modal } from "react-bootstrap";
@@ -454,6 +454,7 @@ export default function CardManager(props) {
             () => { console.log(); statusCallback("complete"); unsubscribe(); } // on completion
         )
         custom['fpath'] = path;
+        
         var convToBw = firebaseFunction.httpsCallable('imageToBw')
         convToBw(custom).then((result) => console.log(result)).catch(err => console.log(err))
     }
