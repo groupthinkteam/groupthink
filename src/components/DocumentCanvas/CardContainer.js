@@ -6,6 +6,7 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import "../../styles/CardContainer.scss";
 import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
+import { useStore } from "../../store/hook";
 
 /**
  * props:
@@ -14,6 +15,7 @@ import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
  * 
  */
 function  CardContainer(props) {
+    let store = useStore()
     const [zoom, setZoom] = useState(1);
     const [result,setResult] = useState();
     const dateTime = Date.now();

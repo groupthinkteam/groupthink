@@ -1,8 +1,8 @@
 import set from "lodash.set"
 import throttle from "lodash.throttle"
-import { database, storage, functions } from "../firebase/firebase"
+import { database, storage, auth, servertime } from "../services/firebase"
+import projectTemplates from "../constants/projectTemplates"
 import "mobx-react-lite"
-
 export var storeObject = {
     projects: {},
     cards: {},
@@ -11,8 +11,10 @@ export var storeObject = {
     container: {},
     projectID: null,
     userID: "",
-    currentUser: null,
     permission: "",
+    get currentUser() {
+        return auth().currentUser
+    },
     get ownProjects() {
         return Object.keys(this.projects).filter((id) => this.projects[id].shared)
     },
@@ -29,16 +31,55 @@ export var storeObject = {
     addNewProject() {
         const thumbnails = [require("../../assets/1.webp"), require("../../assets/2.webp"), require("../../assets/3.webp"), require("../../assets/4.webp")]
         const thumbnailURL = thumbnails[Math.floor(Math.random() * thumbnails.length)]
-        functions.httpsCallable('modifyProject')
-            ({ type: "add", user: this.currentUser, thumb: thumbnailURL })
-            .then((result) => console.log(result))
-            .catch(err => console.log(err))
+        const template = {
+            metadata: {
+                name: "New Project",
+                thumbnailURL: thumbnailURL,
+                datecreated: servertime
+            },
+            lastActive: {
+                [this.currentUser.uid]: servertime
+            },
+            users: {
+                [this.currentUser.uid]: {
+                    "permission": "admin",
+                    "email": this.currentUser.email,
+                    "photoURL": this.currentUser.photoURL,
+                    "name": this.currentUser.displayName,
+                }
+            },
+            ...projectTemplates.tester
+        }
+        const newProjectID = database.ref("documents").push(template).key
+        this.userRef.child(newProjectID).set({
+            access: "admin",
+            name: "New Project",
+            thumbnailURL: thumbnailURL,
+            createdAt: servertime,
+        })
     },
     deleteProject(id) {
-        functions.httpsCallable('modifyProject')
-            ({ type: "delete", id: id })
-            .then((result) => console.log(result))
-            .catch(err => console.log(err))
+        database.ref("garbagecollection").child(id).set(servertime);
+        database.ref("documents").child(id).child("users")
+            .once("value")
+            .then((snap) => {
+                let updates = {}
+                Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id] = null)
+                database.ref("users").update(updates)
+                    .then(database.ref("documents").child(id).set(null))
+            }
+            )
+    },
+    renameProject(id, title) {
+        database.ref("documents").child(id).child("metadata").child("name").set(title)
+        database.ref("documents").child(id).child("users")
+            .once("value")
+            .then((snap) => {
+                let updates = {}
+                Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id + "/name"] = title)
+                database.ref("users").update(updates)
+            }
+            )
     },
     // document related actions
     saveCursorPosition(x, y) {
@@ -52,7 +93,7 @@ export var storeObject = {
     updateLastActive() {
         throttle(() => {
             this.projectRef.child("users").child(this.userID).child("lastUpdatedAt")
-                .set("firebasetime")
+                .set("servertime")
         }, 5000)()
     },
     setProjectID(newProjectID) {
@@ -112,7 +153,7 @@ export var storeObject = {
                     depthFirstTraversal(Object.keys(this.cards[id]["children"]));
                 break;
             case "reparent":
-                Object.keys(cards[id]["children"])
+                Object.keys(this.cards[id]["children"])
                     .forEach(child => updates[child + "/parent"] = newParent);
                 break;
             default:
@@ -126,11 +167,11 @@ export var storeObject = {
     },
     savePosition(id, newPos) {
         let updates = {};
-        if (newPos.x > container.width) {
+        if (newPos.x > this.container.width) {
             console.log("x", newPos.x, "was greater than width")
             updates["container/width"] = newPos.x + 300;
         }
-        if (newPos.y > container.height) {
+        if (newPos.y > this.container.height) {
             console.log("y", newPos.y, "was greater than height")
             updates["container/height"] = newPos.y + 300;
         }
@@ -245,5 +286,9 @@ export var storeObject = {
     },
     removeCursorListener() {
         this.projectRef.child("cursors").off()
-    }
+    },
+    // auth related actions
+    signout() {
+        auth().signOut()
+    },
 };

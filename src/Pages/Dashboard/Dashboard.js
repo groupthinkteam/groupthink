@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
-import { Redirect, useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useStore } from "../../store/hook"
 
 import MenuBar from '../../components/MenuBar/MenuBar'
 import Card from "./Card"
 
 export default function Dashboard(props) {
-  const location = useLocation()
   let history = useHistory()
   let store = useStore();
 
@@ -15,18 +14,6 @@ export default function Dashboard(props) {
     return () => store.removeDashboardListeners()
   }, [])
 
-
-  const logout = () => {
-    props.signOut()
-    return (
-      <Redirect to={{
-        pathname: "/dashboard",
-        state: { from: location }
-      }}
-      />
-    )
-  }
-
   const onOpen = (id) => {
     store.setProjectID(id);
     history.push("/project/" + id)
@@ -34,9 +21,9 @@ export default function Dashboard(props) {
 
   return (
     <div className="dashboard-page">
-      <MenuBar onLogOut={logout} currentUser={props.currentUser} dashboard={true} />
+      <MenuBar dashboard />
       <div className="project-view-container">
-        <div className="project-container-title" > Your Projects</div >
+        <div className="project-container-title">Your Projects</div >
         <div className="project-card-container">
           <Card addNew />
           {store.ownProjects.length > 0

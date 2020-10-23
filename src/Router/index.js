@@ -1,56 +1,38 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom";
-import SplashPage from "../Pages/Splash/Splash"
-import LoginPage from "../Pages/Login/Login";
+import { BrowserRouter as Router, Switch, Route, } from "react-router-dom";
+import LoginPage from "../pages/Login/Login";
 import PrivateRoute from "./PrivateRoute";
-import Dashboard from "../Pages/Dashboard/Dashboard";
-import Document from "../Pages/Document/Document";
-import { useAuth } from "../services/auth";
-import InvitationCheck from "../Pages/Document/InvitationCheck";
-import ErrorsPage from "../Pages/Errors/ErrorsPage";
-import InivitationRoute from "./InvitationRoute";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import Document from "../pages/Document/Document";
+import InvitationCheck from "../pages/Document/InvitationCheck";
+import ErrorsPage from "../pages/Errors/ErrorsPage";
+import { useStore } from "../store/hook";
 
 export default function AppRoutes() {
-  const { auth, uiConfig, authState } = useAuth();
-  // console.log("authState", authState.pendingAuth)
-  if(authState.pendingAuth){
-    return false;
-  }
+  let store = useStore();
+  let isSignedIn = !!store.currentUser;
   return (
     <Router>
       <Switch>
-        <InivitationRoute isAuth={authState.isSignedIn} path="/project/:projectID/:permissionID/:typeID/:nameID">
-          <InvitationCheck/>  
-        </InivitationRoute>
-        <PrivateRoute isAuth={authState.isSignedIn} path="/project/:projectID">
-          <Document
-            currentUser={() => auth().currentUser}
-            signOut={() => auth().signOut()} />
+        <PrivateRoute isSignedIn={isSignedIn} path="/project/:projectID/:permissionID/:typeID/:nameID">
+          <InvitationCheck />
+        </PrivateRoute>
+        <PrivateRoute isSignedIn={isSignedIn} path="/project/:projectID">
+          <Document />
         </PrivateRoute>
         <Route path="/login" >
-          <LoginPage auth={auth} uiConfig={uiConfig} authState={authState} />
+          <LoginPage />
         </Route>
-        <PrivateRoute isAuth={authState.isSignedIn} path="/dashboard">
-          <Dashboard
-            currentUser={() => auth().currentUser}
-            signOut={() => auth().signOut()} />
+        <PrivateRoute isSignedIn={isSignedIn} path="/dashboard">
+          <Dashboard />
         </PrivateRoute>
         <Route path="/error">
-          <ErrorsPage/>
+          <ErrorsPage />
         </Route>
         <Route path="/">
-          <SplashPage pendingAuth={authState.pendingAuth} isAuth={authState.isSignedIn} />
+          {/* redirect to login or dashboard based on auth */}
         </Route>
       </Switch>
     </Router>
   );
 }
-/**
- * <Route path="/project/:projectID">
-   <Document />
-</Route>*/
