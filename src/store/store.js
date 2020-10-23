@@ -27,6 +27,9 @@ export var storeObject = {
     get userRef() {
         return database.ref("users").child(this.userID).child("projects")
     },
+    get hitTestCards() {
+        return Object.keys(this.cards)
+    },
     // dashboard related actions
     addNewProject() {
         const thumbnails = [require("../../assets/1.webp"), require("../../assets/2.webp"), require("../../assets/3.webp"), require("../../assets/4.webp")]
