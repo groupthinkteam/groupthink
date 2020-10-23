@@ -1,12 +1,21 @@
 import React, { useEffect } from "react";
 import gsap from "gsap"
+import { useStore } from "../../store/hook";
 
 const MENUBAR_HEIGHT = 0;
 
 export default function Cursor(props) {
+    let store = useStore()
+
     useEffect(() => {
-        gsap.to("#cursor".concat(props.id), { left: props.x, top: props.y - MENUBAR_HEIGHT, duration: 0.2 }).play();
-    }, [props.x, props.y, props.id])
+        gsap.to("#cursor".concat(props.id), {
+            left: store.cursors[props.id].x,
+            top: store.cursors[props.id].y - MENUBAR_HEIGHT,
+            duration: 0.2
+        }).play();
+    }, [store.cursors, props.id])
+
+    let name = store.users[props.id].name
 
     return (
         <div id={"cursor".concat(props.id)} style={{
@@ -26,7 +35,7 @@ export default function Cursor(props) {
                 marginLeft: 10, paddingLeft: 5, paddingRight: 5, paddingBottom: 2, paddingTop: 2,
                 backgroundColor: "darkorange", color: "white", fontSize: 13, fontFamily: "sans-serif"
             }}>
-                {props.name}
+                {name}
             </div>
         </div>
     )

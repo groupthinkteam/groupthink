@@ -6,10 +6,7 @@ function ArrowList(props) {
     let store = useStore();
     return (
         <div className="arrows">
-            {Object.entries(store.cards).map(
-                ([id, card]) =>
-                    card.parent && card.parent !== "root" &&
-                    <Arrow key={"arrow".concat(id)} id={"".concat(id)} />)}
+            {Object.keys(store.cards).map((id) => <Arrow key={"arrow".concat(id)} id={"".concat(id)} />)}
         </div>
     )
 }
