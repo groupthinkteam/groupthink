@@ -1,20 +1,19 @@
 import React from "react"
 import Button from "../../components/Button/Button"
 import InlineTextEdit from "../../components/InlineTextEdit/InlineTextEdit"
-import { gsap } from "gsap/all"
+
+import { useStore } from "../../store/hook"
 
 import "../../styles/ProjectCard.scss"
 import "../../styles/custom.scss"
 
 function Card(props) {
-    
-    const createdAt = props.card?.createdAt;
-    const DateNow = Date.now();
-    //console.log("DATES \n", new Date(createdAt).toTimeString(), new Date((DateNow-createdAt)).toUTCString() )
+    let store = useStore();
+    let me = store.projects[props.id]
     if (props.addNew) {
         return (
             <div className="project-card">
-                <Button className="custom_btn" handleClick={props.onAddNew}>
+                <Button className="custom_btn" handleClick={store.addNewProject()}>
                     Create New Project
                 </Button>
             </div>
@@ -23,44 +22,23 @@ function Card(props) {
     else {
         return (
             <div id={props.id} className="project-card">
-                
-                {
-                    props.card.shared ? <div>Shared By :- {props.card.shared.name} <br /> Shared Type : {props.card.shared.type}</div>
-                        : null
-                }
                 <img
                     onClick={() => props.onOpen(props.id)}
-                    src={props.card.thumbnailURL}
+                    src={me.thumbnailURL}
                     alt="project thumbnail" />
-
-                {
-                    props.card.shared === undefined ?
-                        <>
-                            <InlineTextEdit
-                                className="project-card-item"
-                                text={props.card.name}
-                                onChange={(event) => props.onChange(props.id, event.target.value)}
-                                onSave={() => props.onSave(props.id)}
-                            />
-                            <Button
-                                className="project-card-item custom_btn highlight"
-                                style={{ marginBottom: "5px" }}
-                                handleClick={() => props.onDelete(props.id)}>
-                                Delete
-                        </Button>
-                        <p>Last Modified At : {new Date(createdAt).toDateString()}</p>
-                        <p>Last Modified On : {new Date(createdAt).toTimeString()} </p>
-                        </>
-                        : 
-                        <>
-                        Project Name: {props.card.name}
-                        <p>Last Modified At : {new Date(createdAt).toDateString()}</p>
-                        <p>Last Modified On : {new Date(createdAt).toTimeString()} </p>
-                        </>
-                }
-
+                <InlineTextEdit
+                    className="project-card-item"
+                    text={me.name}
+                    onChange={(event) => me.title = event.target.value}
+                    onSave={() => { return }} />
+                <Button
+                    className="project-card-item custom_btn highlight"
+                    style={{ marginBottom: "5px" }}
+                    handleClick={() => store.deleteProject(props.id)}>
+                    Delete
+                </Button>
             </div>
         )
     }
 }
-export default React.memo(Card)
+export default Card

@@ -13,6 +13,12 @@ export var storeObject = {
     userID: "",
     currentUser: null,
     permission: "",
+    get ownProjects() {
+        return Object.keys(this.projects).filter((id) => this.projects[id].shared)
+    },
+    get sharedProjects() {
+        return Object.keys(this.projects).filter((id) => this.projects[id].shared)
+    },
     get projectRef() {
         return database.ref("documents").child(this.projectID)
     },

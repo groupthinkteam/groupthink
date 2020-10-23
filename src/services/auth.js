@@ -13,7 +13,7 @@ export function useAuth() {
     useEffect(() => {
         const unregisterAuthObserver = firebaseAuth().onAuthStateChanged(
             user => {
-                setAuthState({ user, pendingAuth: false, isSignedIn: !!user });
+                setAuthState({ user: user, pendingAuth: false, isSignedIn: !!user });
             }
         )
         return () => unregisterAuthObserver()
