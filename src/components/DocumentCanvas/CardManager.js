@@ -27,17 +27,8 @@ export default function CardManager(props) {
     // store card-related state
     const [cards, setCards] = useState({});
 
-    //project Existence state
-    const [projectExistence, setProjectExistence] = useState(true);
-
-    //isproject Shared state
-    const [isShared, setIsShared] = useState(props.isOwner);
-
-    //isowner State 
-    const [isOwner, setIsOwner] = useState(!props.isOwner);
-
     //permission changed state
-    const [permissionChange, setPermissionChange] = useState(props.permission);
+    const [permission, setPermission] = useState(props.permission);
 
     //state of knowing  project Types
     const [type, setType] = useState();
@@ -46,10 +37,10 @@ export default function CardManager(props) {
     const [activeUser, setActiveUser] = useState({});
 
     //UserList Detail State
-    const [userListDetail , setUserListDetail] = useState(); 
+    const [userList, setUserList] = useState();
 
     //LastActive State 
-    const [lastActive , setLastActive] = useState();
+    const [lastActive, setLastActive] = useState();
 
     //isLocked State
     var lock = true;
@@ -72,12 +63,12 @@ export default function CardManager(props) {
     useEffect(() => {
         // TODO: split the nodes listener into separate ones for "child_added", 
         // "child_removed" and so on reduce size of snapshot received
-        let flag=false;
+        let flag = false;
         const uid = props.currentUser().uid;
         const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
         const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
-        projectRef.child('lastActive').on('value',snap=>{
-            console.log("Last Active of Project is Changed Recieved Payload",snap.key,snap.val());
+        projectRef.child('lastActive').on('value', snap => {
+            console.log("Last Active of Project is Changed Recieved Payload", snap.key, snap.val());
             setLastActive(snap.val());
         })
         projectRef.child("users").on('value', snap => {
@@ -109,10 +100,10 @@ export default function CardManager(props) {
         });
 
         projectRef.child("cursors").on('value', (snap) => {
-            console.log("cursors Details Triggered recieved payload", snap.val() , cursors );
+            console.log("cursors Details Triggered recieved payload", snap.val(), cursors);
             setCursors(snap.val());
         });
-       
+
         projectRef.child(`/users/${props.currentUser().uid}/`).on('child_changed', currentSnap => {
             if (currentSnap.key === 'permission') {
                 console.log("Changed  In Permission :- ", currentSnap.val())
@@ -122,7 +113,7 @@ export default function CardManager(props) {
         projectUnderUserRef.on('child_removed', (snap) => {
             if (snap.key === props.projectID) {
                 console.log('This Child is removed ', props.projectID);
-                setProjectExistence(false)
+                setPermissionChange(false)
             }
             else if (snap.child(props.projectID).hasChild('shared')) {
                 console.log("This Project is Shared")
@@ -135,6 +126,9 @@ export default function CardManager(props) {
                 setIsOwner(true);
             }
         });
+
+
+
         projectUnderUserRef.child(props.projectID).child("shared").on('child_changed', snap => {
             console.log("Type of Project Shared is Changed Recieved Payload", snap.child('type').val());
             setType(snap.child('type').val());
@@ -144,11 +138,10 @@ export default function CardManager(props) {
             if (snap.key === 'isLocked')
                 setIsLocked(snap.val());
         })
-        
-        projectRef.child('users/'+uid).on('child_changed',snap=>{
-            if(snap.key === 'lastUpdatedAt')
-            {
-                projectUnderUserRef.child(props.projectID).update({"createdAt":snap.val()}).then(console.log("Updated Time to User Tree")).catch(err=>err);
+
+        projectRef.child('users/' + uid).on('child_changed', snap => {
+            if (snap.key === 'lastUpdatedAt') {
+                projectUnderUserRef.child(props.projectID).update({ "createdAt": snap.val() }).then(console.log("Updated Time to User Tree")).catch(err => err);
             }
         })
         setIsLoaded(true)
@@ -159,13 +152,13 @@ export default function CardManager(props) {
             projectRef.child("nodes").off('child_changed');
             projectRef.child("center").off('value');
             projectRef.child("container").off('value');
-            projectRef.child("cursors").off('value'); 
+            projectRef.child("cursors").off('value');
             projectRef.child(`/users/${uid}/`).off('child_changed');
             projectUnderUserRef.off('child_removed');
             projectUnderUserRef.child(props.projectID).child("shared").off('child_changed')
             projectUnderUserRef.child(props.projectID).off('child_changed');
             projectRef.child('lastActive').off('value');
-            projectRef.child('users/'+uid).off('child_changed')
+            projectRef.child('users/' + uid).off('child_changed')
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -201,8 +194,8 @@ export default function CardManager(props) {
         updates[parent + "/children/" + newCardKey] = 1;
         updates[newCardKey] = newCard;
         projectRef.update(updates).then(console.log("Added a new child", newCardKey, "under", parent));
-        firebaseDB.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : firebaseTIME})
-        .then(console.log("Updated LastUpdated At")).catch(err=>err)
+        firebaseDB.ref().update({ ["documents/" + props.projectID + "/users/" + uid + "/lastUpdatedAt"]: firebaseTIME })
+            .then(console.log("Updated LastUpdated At")).catch(err => err)
         // update local state
         setCards({
             ...cards,
@@ -302,8 +295,8 @@ export default function CardManager(props) {
             console.log("Its a NOn Storage Card")
         }
         projectRef.update(updates).then(console.log("deleted", id, "successfully"));
-        firebaseDB.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : firebaseTIME})
-        .then(console.log("Updated LastUpdated At")).catch(err=>err)
+        firebaseDB.ref().update({ ["documents/" + props.projectID + "/users/" + uid + "/lastUpdatedAt"]: firebaseTIME })
+            .then(console.log("Updated LastUpdated At")).catch(err => err)
     }
 
     /**
@@ -355,10 +348,11 @@ export default function CardManager(props) {
      * @param {object} newContent - the new content to push to database
     */
     const saveContent = (id, newContent) => {
-        const updates={}
-        updates["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] = firebaseTIME;
-        updates["documents/" + props.projectID + "/nodes/"+id+"/content/"] = newContent;
-        firebaseDB.ref().update(updates).then(console.log("saved new content for", id))
+        const updates = {}
+        updates["/users/" + uid + "/lastUpdatedAt"] = firebaseTIME;
+        updates["/nodes/" + id + "/content/"] = newContent;
+        firebaseDB.ref("documents/" + props.projectID).update(updates)
+            .then(console.log("saved new content for", id))
             .catch(err => console.log("Save COntent Error \n", newContent, "\n saveContent", err));
     }
 
@@ -396,8 +390,8 @@ export default function CardManager(props) {
         updates[id + '/size'] = newTypeCard.size;
         updates[id + '/content'] = newTypeCard.content;
         projectRef.update(updates).then(console.log("Set new type for", id, "to \n", newTypeCard)).catch(err => err);
-        firebaseDB.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : firebaseTIME})
-        .then(console.log("Updated LastUpdated At")).catch(err=>err)
+        firebaseDB.ref().update({ ["documents/" + props.projectID + "/users/" + uid + "/lastUpdatedAt"]: firebaseTIME })
+            .then(console.log("Updated LastUpdated At")).catch(err => err)
         //projectRef.child(id).child("type").set(newType).then(console.log("set new type for", id, "to", newType));
     }
     /** 
@@ -478,11 +472,12 @@ export default function CardManager(props) {
         (x, y) => {
             if (cursors) {
                 const update = {};
-                update[`documents/${props.projectID}/cursors/${uid}/x`] = x;
-                update[`documents/${props.projectID}/cursors/${uid}/y`] = y;
-                update[`documents/${props.projectID}/lastActive/${uid}/`] = firebaseTIME;
-                firebaseDB.ref().update(update).then(console.log("Updated Cursor Position to DB" ))
-                .catch(err => console.log("SaveCursor Position",err))
+                update[x] = x;
+                update[y] = y;
+                firebaseDB.ref(`documents/${props.projectID}/cursors/${uid}/`)
+                    .update(update)
+                    .then(console.log("Updated Cursor Position to DB"))
+                    .catch(err => console.log("SaveCursor Position", err))
             }
         },
         100), [cursors]
@@ -499,9 +494,9 @@ export default function CardManager(props) {
      */
     const isActiveUserInfo = () => {
         firebaseDB.ref(`documents/${props.projectID}/users/${uid}/`).update({
-            isEditingUser : true,
-            lastUpdatedAt : firebaseTIME
-        }).then(console.log("UPDated Active user")).catch(err=>console.log("isActiveUserInfo",err))
+            isEditingUser: true,
+            lastUpdatedAt: firebaseTIME
+        }).then(console.log("UPDated Active user")).catch(err => console.log("isActiveUserInfo", err))
     }
     /**
      * False the isEditing property in room
@@ -519,47 +514,17 @@ export default function CardManager(props) {
      * @returns {Array} Result
      */
     const searchElementsInDocuments = (text) => {
-        const indexes = ['content.text' , 'fileName' ,  'title' , 'content.url']
-        const result = searchElementinDocuments(text, cards ,indexes );
+        const indexes = ['content.text', 'fileName', 'title', 'content.url']
+        const result = searchElementinDocuments(text, cards, indexes);
         return result;
     }
 
-    /**
-     * bundling card api methods for ease of transmission 
-     */
-    let genericAPI = {
-        savePosition: savePosition,
-        changePosition: changePosition,
-        reparentCard: reparentCard,
-        removeCard: removeCard,
-        addChild: addCard,
-        resize: resize,
-        isActiveUserInfo: isActiveUserInfo,
-        removeActiveUser: removeActiveUser
-    }
 
-    let typeAPI = {
-        saveContent: saveContent,
-        changeContent: changeContent,
-        requestUpload: requestUpload,
-        requestDownload: requestDownload,
-        changeType: changeType,
-        resize: resize
-    }
-
-    let arrowAPI = {
-        reparentCard: reparentCard
-    }
-
-    const containerAPI = {
-        saveCursorPosition: saveCursorPosition,
-        searchElement: searchElementsInDocuments
-    }
     return (
         <>
             {
                 isLoaded ?
-                    projectExistence ?
+                    permission ?
                         <CardContainer
                             container={container}
                             cards={cards}
