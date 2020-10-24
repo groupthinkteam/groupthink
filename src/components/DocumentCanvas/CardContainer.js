@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import GenericCard from "./Cards/GenericCard"
-import Cursor from "../Cursor/Cursor";
-import Arrow from "../Arrow/Arrow";
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import "../../styles/CardContainer.scss";
-import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
 import { useStore } from "../../store/hook";
 import ArrowList from "../Arrow/ArrowsList";
 import CursorsList from "../Cursor/CursorsList";
@@ -18,61 +14,20 @@ import CursorsList from "../Cursor/CursorsList";
  */
 function CardContainer(props) {
     let store = useStore()
-    const [zoom, setZoom] = useState(1);
-    const [result, setResult] = useState();
-    const dateTime = Date.now();
-    const updateCursorPos = (event) => {
-        if (props.lastActive && event.target.offsetParent != null) {
-            var flag = false;
-            Object.entries(props.lastActive)
-                .map(([id, values]) => {
-                    //console.log("TESTING ",id,values , "Diff", ((dateTime - Number(values) ) < 60000))
-                    if (id !== props.currentUser().uid && (dateTime - Number(values) < 60000)) {
-                        //console.log("TESTING ",id,values , "Diff", ((dateTime - Number(values) ) < 60000))
-                        flag = true;
-                    }
-                })
 
-            props.containerAPI.saveCursorPosition(
-                event.clientX + event.target.offsetParent.scrollLeft,
-                event.clientY + event.target.offsetParent.scrollTop
-            );
-        }
-
-    }
-    const onChangeSearch = (text) => {
-        const result = props.containerAPI.searchElement(text);
-        setResult(result);
-    }
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
-            {
-                Object.keys(props.cards).length > 1 ?
-                    <>
-                        <input
-                            className="zoom-slider"
-                            style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
-                            type="range"
-                            min="0.5"
-                            max="2.5"
-                            defaultValue="1"
-                            step="0.0001"
-                            onChange={e => setZoom(e.target.value)}
-                        />
-                        <div
-                            style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
-                        >
-                            <InlineTextEdit
-                                onFocus={e => { console.log(e.target.select()); e.target.select() }}
-                                borderColor='black'
-                                onChange={(e) => onChangeSearch(e.target.value)}
-                            />
-                        </div>
-                    </>
-                    : null
-
-            }
+            <input
+                className="zoom-slider"
+                style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
+                type="range"
+                min="0.5"
+                max="2.5"
+                defaultValue="1"
+                step="0.0001"
+                onChange={e => store.zoom = e.target.value}
+            />
             <div className="container-filler"
                 style={{ ...props.container, position: "absolute", zIndex: 9999999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${zoom})` }}
                 onDoubleClick={(e) => {
@@ -90,8 +45,10 @@ function CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    // props.cursors && Object.keys(props.cursors).length >1 )
-                    updateCursorPos(event)
+                    store.saveCursorPosition(
+                        event.clientX + event.target.offsetParent.scrollLeft,
+                        event.clientY + event.target.offsetParent.scrollTop
+                    );
                 }}
             >
 
@@ -102,18 +59,7 @@ function CardContainer(props) {
                         ([id, card]) => {
                             return (
                                 <div key={"wrapperdiv".concat(id)}>
-                                    <GenericCard
-                                        key={id}
-                                        id={id}
-                                        card={card}
-                                        genericAPI={props.genericAPI}
-                                        typeAPI={props.typeAPI}
-                                        isLocked={props.isLocked}
-                                        currentUser={props.currentUser}
-                                        activeUser={props.activeUser}
-                                        result={result}
-                                        userListDetail={props.userListDetail}
-                                    />
+                                    <GenericCard key={id} id={id} />
                                         }
 
                                 </div>

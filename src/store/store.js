@@ -12,6 +12,7 @@ export var storeObject = {
     projectID: null,
     userID: "",
     permission: "",
+    zoom: 1,
     get currentUser() {
         return auth().currentUser
     },
