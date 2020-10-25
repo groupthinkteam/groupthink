@@ -76,7 +76,7 @@ const GenericCard = observer(props=>{
                 onKeyDown={(e) => {
                     console.log("pressed ", e.key);
                     if (e.key === "Delete" || e.key === "Backspace") {
-                        props.genericAPI.removeCard(props.id, "recursive")
+                        store.removeCard(props.id, "recursive")
                     }
                 }}
                 style={{
@@ -84,7 +84,7 @@ const GenericCard = observer(props=>{
                     opacity: 0
                 }}>
                 <div style={{ width: me.size.width, height: me.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                    <CardType typeAPI={props.typeAPI} content={me.content} size={me.size} id={props.id} />
+                    <CardType typeAPI={store} content={me.content} size={me.size} id={props.id} />
                 </div>
             </div>
         </>

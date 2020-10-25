@@ -3,7 +3,7 @@ import React from "react"
 import { useStore } from "../../store/hook"
 import Cursor from "./Cursor"
 
-const CursorsList = observer((props) => {
+function CursorsList(props) {
     let store = useStore();
     return (
         <div className="cursors">
@@ -12,7 +12,7 @@ const CursorsList = observer((props) => {
                 .map(id => <Cursor key={id} id={id} />)}
         </div>
     )
-})
+}
 
-export default CursorsList;
+export default observer(CursorsList);
 

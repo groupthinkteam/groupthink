@@ -10,11 +10,16 @@ gsap.registerPlugin(Draggable)
  * @param {*} props - id, head, tail
  */
 const Arrow = observer((props) => {
+
+    if (props.id === "root") return null;
+
     let [dragging, setDragging] = useState(false);
 
     let store = useStore();
 
     let child = store.cards[props.id]
+    if (child.parent === "root") return null;
+
     let parent = store.cards[child.parent];
 
     let head = {

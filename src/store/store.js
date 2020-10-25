@@ -16,7 +16,7 @@ export var storeObject = {
     userID: "",
     permission: "",
     currentUser: false,
-    zoom : 1,
+    zoom: 1,
     get firebaseConfig() {
         return FIREBASE_CONSTANTS.UI_CONFIG;
     },
@@ -197,21 +197,20 @@ export var storeObject = {
             .set(newSize)
             .then(console.log("set new size for", id, "to", newSize));
     },
-    savecontent(id, newContent) {
-        throttle((id, newContent) =>
-            this.projectRef.child("nodes").child(id).child("content")
-                .set(newContent)
-                .then(console.log("saved new content for", id))
-                .catch(err => console.log("error saving new content for", id, err)),
-            500)(id, newContent);
+    saveContent: throttle(function saveContent(id, newContent) {
+        this.projectRef.child("nodes").child(id).child("content")
+            .set(newContent)
+            .then(console.log("saved new content for", id))
+            .catch(err => console.log("error saving new content for", id, err))
     },
+        500),
     changeContent(id, newContent) {
         console.log("triggered local content change on", id);
         this.cards[id]["content"] = newContent;
-        this.savecontent(id, newContent);
+        this.saveContent(id, newContent);
     },
     changeType(id, newType) {
-        const newCardDefaults = cardTemplate(newType);
+        const newCardDefaults = cardTemplate(newType, { width: 300, height: 300 });
         this.projectRef.child("nodes").child(id)
             .update(newCardDefaults)
             .then(console.log("set new type for", id, "value:", newCardDefaults))
@@ -278,18 +277,16 @@ export var storeObject = {
         projects.on("child_added", (snap) => {
             console.log("CHILD ADDED ", snap.val());
             this.projects[snap.key] = snap.val();
-            //this.sync(this.projects, snap.key, snap.val())
         });
         projects.on("child_changed", (snap) => this.projects[snap.key] = snap.val());
         projects.on("child_removed", (snap) => delete this.projects[snap.key]);
     },
     addDocumentListeners() {
         this.projectRef.child("users").on("value", (snap) => this.users = snap.val());
-        this.projectRef.child("nodes").on("child_added", (snap) => this.sync(this.cards, snap.key, snap.val()));
-        this.projectRef.child("nodes").on("child_changed", (snap) => this.sync(this.cards, snap.key, snap.val()));
+        this.projectRef.child("nodes").on("child_added", (snap) => this.cards[snap.key] = snap.val());
+        this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
         this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
-        this.projectRef.child("container").on("value", (snap) => 
-        {console.log("triggered container listener"); this.container = snap.val()});
+        this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
     },
     addCursorListener() {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());
