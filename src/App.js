@@ -1,5 +1,5 @@
 import React from 'react';
-import AppRoutes from './Router'
+import AppRoutes from './router/index'
 import { StoreProvider } from './store/provider';
 const App = () => {
   return (

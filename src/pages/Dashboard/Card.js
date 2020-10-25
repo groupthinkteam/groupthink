@@ -7,16 +7,23 @@ import { observer } from "mobx-react-lite"
 
 import "../../styles/ProjectCard.scss"
 import "../../styles/custom.scss"
+import { useHistory } from "react-router-dom"
 
 
-const Card = observer(props =>{
+const Card = observer(props => {
     let store = useStore();
     let me = store.projects[props.id]
-    console.log("CARDS ",me, props.id)
+    const history = useHistory();
+
+    const onOpen = () => {
+        store.setProjectID(props.id);
+        history.push("/project/" + props.id)
+    }
+
     if (props.addNew) {
         return (
             <div className="project-card">
-                <Button className="custom_btn" handleClick={()=>store.addNewProject()}>
+                <Button className="custom_btn" handleClick={() => store.addNewProject()}>
                     Create New Project
                 </Button>
             </div>
@@ -26,7 +33,7 @@ const Card = observer(props =>{
         return (
             <div id={props.id} className="project-card">
                 <img
-                    onClick={() => props.onOpen(props.id)}
+                    onClick={onOpen}
                     src={me.thumbnailURL}
                     alt="project thumbnail" />
                 <InlineTextEdit
