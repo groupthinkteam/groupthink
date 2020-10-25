@@ -3,7 +3,7 @@ import React from "react"
 import { useStore } from "../../store/hook"
 import GenericCard from "./GenericCard"
 
-const CardsList = observer(props=> {
+const CardsList = observer(props => {
     let store = useStore();
     return (
         <div className="cards">

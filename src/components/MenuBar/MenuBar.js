@@ -3,8 +3,8 @@ import Button from "../Button/Button"
 //import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
-import SearchBar from "./SearchBar"
 import RoomConnect from "../Voice/RoomConnect"
+
 export default function MenuBar(props) {
     const currentUser = props.currentUser
 
@@ -26,18 +26,13 @@ export default function MenuBar(props) {
                     : null
                 }
                 {/* <div className="menu-center-vertical-filler" /> */}
-                <SearchBar
-                    projectID={props.projectID}
-                    buttonClassName="menu-action-button highlight"
-                    currentUser={currentUser}
-                    isOwner={props.isOwner} />
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">
-                
+
                 {
-                    props.document  ?
+                    props.document ?
                         <>
-                            <RoomConnect currentUser={currentUser}/>
+                            <RoomConnect currentUser={currentUser} />
                             {/* <ShareLink projectID={props.projectID} buttonClassName="menu-action-button highlight"
                                 currentUser={currentUser} isOwner={props.isOwner}
                             /> */}

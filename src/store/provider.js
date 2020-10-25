@@ -13,7 +13,7 @@ configure({
 
 export const StoreContext = React.createContext(null)
 
-export const StoreProvider = observer(({ children }) => {
+export const StoreProvider = observer(function StoreProvider({ children }) {
     const store = useLocalObservable(() => storeObject)
     return (
         <StoreContext.Provider value={store}>

@@ -1,10 +1,12 @@
-import React  from "react";
-import GenericCard from "../Card/GenericCard"
-
-import "../../styles/CardContainer.scss";
+import React from "react";
 import { useStore } from "../../store/hook";
+import { observer } from "mobx-react-lite"
+
 import ArrowList from "../Arrow/ArrowsList";
 import CursorsList from "../Cursor/CursorsList";
+import CardsList from "../Card/CardsList";
+
+import "../../styles/CardContainer.scss";
 
 /**
  * props:
@@ -14,12 +16,12 @@ import CursorsList from "../Cursor/CursorsList";
  */
 function CardContainer(props) {
     let store = useStore()
-    
+
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
             <input
-                className="store.zoom-slider"
+                className="zoom-slider"
                 style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
                 type="range"
                 min="0.5"
@@ -29,14 +31,14 @@ function CardContainer(props) {
                 onChange={e => store.zoom = e.target.value}
             />
             <div className="container-filler"
-                style={{ ...props.container, position: "absolute", zIndex: 9999999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${store.zoom})` }}
+                style={{ ...store.container, position: "absolute", zIndex: 9999999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${store.zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
-                    if (e.target.offsetParent && e.target.offsetParent.className === "card-container" && !props.isLocked) {
+                    if (e.target.offsetParent && e.target.offsetParent.className === "card-container") {
                         var x = Math.floor(e.clientX / store.zoom + e.target.offsetParent.scrollLeft);
                         var y = Math.floor(e.clientY / store.zoom + e.target.offsetParent.scrollTop - 60);
                         console.log("double click at", x, ",", y);
-                        props.genericAPI.addChild({ x: x, y: y }, { width: 310, height: 200 })
+                        store.addCard({ x: x, y: y }, { width: 310, height: 200 }, "root", "blank")
                     }
                     else {
                         console.log("registered a double click on a card and did absolutely nothing about it")
@@ -51,22 +53,12 @@ function CardContainer(props) {
                     );
                 }}
             >
-
                 <ArrowList />
                 <CursorsList />
-                {
-                    props.cards ? Object.entries(props.cards).filter(([id, card]) => id && id !== "root").map(
-                        ([id, _]) => {
-                            return (
-                                <div key={"wrapperdiv".concat(id)}>
-                                    <GenericCard key={id} id={id} />
-                                </div>
-                            )
-                        }
-                    ) : <p>Double Click to Add a Card</p>
-                }
+                <CardsList />
             </div>
         </div>
     )
 }
-export default React.memo(CardContainer)
+
+export default observer(CardContainer)

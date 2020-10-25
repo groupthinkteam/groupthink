@@ -67,7 +67,7 @@ const GenericCard = observer(props=>{
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     )
-    // console.log("USER INFO",isActive)
+    
     return (
         <>
             <div id={props.id} tabIndex={0}

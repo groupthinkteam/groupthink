@@ -1,8 +1,9 @@
+import { observer } from "mobx-react-lite";
 import React from "react"
 import { useStore } from "../../store/hook"
 import Cursor from "./Cursor"
 
-function CursorsList(props) {
+const CursorsList = observer((props) => {
     let store = useStore();
     return (
         <div className="cursors">
@@ -11,7 +12,7 @@ function CursorsList(props) {
                 .map(id => <Cursor key={id} id={id} />)}
         </div>
     )
-}
+})
 
 export default CursorsList;
 

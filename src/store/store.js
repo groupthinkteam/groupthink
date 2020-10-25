@@ -288,7 +288,8 @@ export var storeObject = {
         this.projectRef.child("nodes").on("child_added", (snap) => this.sync(this.cards, snap.key, snap.val()));
         this.projectRef.child("nodes").on("child_changed", (snap) => this.sync(this.cards, snap.key, snap.val()));
         this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
-        this.projectRef.child("container").on("value", (snap) => this.sync(this.container, "", snap.val()));
+        this.projectRef.child("container").on("value", (snap) => 
+        {console.log("triggered container listener"); this.container = snap.val()});
     },
     addCursorListener() {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());

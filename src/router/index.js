@@ -11,7 +11,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Document from "../pages/Document/Document";
 import ErrorsPage from "../pages/Errors/ErrorsPage";
 
-const AppRoutes = observer(() => {
+function AppRoutes(props) {
   const {syncUser,currentUser} = useStore();
   useEffect(
     () => {
@@ -42,5 +42,5 @@ const AppRoutes = observer(() => {
       </Switch>
     </Router>
   );
-})
-export default AppRoutes;
+}
+export default observer(AppRoutes);

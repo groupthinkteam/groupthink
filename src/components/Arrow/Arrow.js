@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { gsap, Draggable } from "gsap/all";
 import { useStore } from "../../store/hook";
+import { observer } from "mobx-react-lite";
 
 gsap.registerPlugin(Draggable)
 
@@ -8,7 +9,7 @@ gsap.registerPlugin(Draggable)
  * connects a child and a parent. lets the user assign a new parent for the child.
  * @param {*} props - id, head, tail
  */
-function Arrow(props) {
+const Arrow = observer((props) => {
     let [dragging, setDragging] = useState(false);
 
     let store = useStore();
@@ -53,7 +54,7 @@ function Arrow(props) {
                 },
             })
         return () => { console.log("about to kill a draggable"); y[0].kill() }
-    }, [store,props.id, tail.x,tail.y])
+    }, [store, props.id, tail.x, tail.y])
 
     let path;
 
@@ -98,6 +99,6 @@ function Arrow(props) {
             </svg>
         </div>
     )
-}
+})
 
 export default Arrow

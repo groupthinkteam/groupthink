@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import gsap from "gsap"
 import { useStore } from "../../store/hook";
+import { observer } from "mobx-react-lite";
 
 const MENUBAR_HEIGHT = 0;
 
-export default function Cursor(props) {
+const Cursor = observer((props) => {
     let store = useStore()
 
     useEffect(() => {
@@ -39,9 +40,6 @@ export default function Cursor(props) {
             </div>
         </div>
     )
+})
 
-
-
-
-
-}
+export default Cursor;
