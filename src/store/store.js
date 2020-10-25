@@ -30,14 +30,13 @@ export var storeObject = {
         return database.ref("documents").child(this.projectID)
     },
     get userRef() {
-        console.log("USER REF ", this.currentUser.uid)
         return database.ref("users").child(this.userID).child("projects")
     },
     get hitTestCards() {
         return Object.keys(this.cards)
     },
     syncUser() {
-        this.userID = auth().currentUser.uid;
+        this.userID = auth().currentUser?.uid;
         this.currentUser = auth().currentUser;
     },
     // dashboard related actions

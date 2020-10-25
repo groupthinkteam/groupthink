@@ -5,6 +5,7 @@ import cardChooser from "../DocumentCanvas/Cards/cardChooser";
 
 import "../../styles/Cards/GenericCard.scss";
 import { useStore } from "../../store/hook";
+import { observer } from "mobx-react-lite";
 
 /**
  * TODO :-
@@ -16,7 +17,7 @@ import { useStore } from "../../store/hook";
 gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
-function GenericCard(props) {
+const GenericCard = observer(props=>{
     let store = useStore();
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
@@ -88,6 +89,6 @@ function GenericCard(props) {
             </div>
         </>
     )
-}
+})
 
 export default React.memo(GenericCard);

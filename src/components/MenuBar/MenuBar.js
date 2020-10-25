@@ -44,7 +44,7 @@ export default function MenuBar(props) {
                         </>
                         : null
                 }
-                <Button className="menu-action-button" handleClick={props.onLogOut}>
+                <Button className="menu-action-button" handleClick={props.signOut}>
                     Log Out
                 </Button>
                 <img alt="" className="menu-bar-user-profile-picture" src={currentUser.photoURL} />

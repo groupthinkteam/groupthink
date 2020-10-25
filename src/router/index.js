@@ -12,23 +12,20 @@ import Document from "../pages/Document/Document";
 import ErrorsPage from "../pages/Errors/ErrorsPage";
 
 const AppRoutes = observer(() => {
-  let store = useStore();
+  const {syncUser,currentUser} = useStore();
   useEffect(
     () => {
-      let unsubscribe = auth().onAuthStateChanged(user => store.syncUser())
+      let unsubscribe = auth().onAuthStateChanged(_ => syncUser())
       return () => unsubscribe()
     }
   )
 
-  let isSignedIn = !!store.currentUser;
+  const isSignedIn = !!currentUser;
 
-  console.log("INDEX  ", isSignedIn, store.currentUser);
+  console.log("INDEX  ", isSignedIn, currentUser?.uid);
   return (
     <Router>
       <Switch>
-        {/* <PrivateRoute isSignedIn={isSignedIn} path="/project/:projectID/:permissionID/:typeID/:nameID">
-          <InvitationCheck />
-        </PrivateRoute> */}
         <PrivateRoute isSignedIn={isSignedIn} path="/project/:projectID">
           <Document />
         </PrivateRoute>
