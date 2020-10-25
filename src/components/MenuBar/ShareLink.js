@@ -1,7 +1,7 @@
 import React, { useState , useEffect} from "react"
 import Button from "../Button/Button"
 import {DropdownButton, Modal, Dropdown } from "react-bootstrap"
-import { firebaseDB, firebaseFunction, firebaseTIME } from "../../services/firebase"
+import { database, functions, servertime } from "../../services/firebase"
 import LinkSharing from "./LinkSharing"
 import * as Crypto from 'crypto-js/aes';
 import CreatableSelect from 'react-select/creatable';
@@ -33,8 +33,8 @@ const ShareLink = (props) => {
     const [users, setUsers] = useState(null);
     
     useEffect(() => {
-        firebaseDB.ref("documents/" + projectID + "/users/").on('value', snap => setUsers(snap.val()));
-        return () => firebaseDB.ref("documents/" + projectID + "/users/").off('value')
+        database.ref("documents/" + projectID + "/users/").on('value', snap => setUsers(snap.val()));
+        return () => database.ref("documents/" + projectID + "/users/").off('value')
     }, [])
 
     
@@ -141,7 +141,7 @@ const ShareLink = (props) => {
         console.log("Send Emails",state.value )
         if(state.value.length>0)
         {
-            var addMsg = firebaseFunction.httpsCallable('sendLinkEmail');
+            var addMsg = functions.httpsCallable('sendLinkEmail');
             Object.entries(state.value).map(([key,val])=>{
                 const updates = {};
                 console.log("ITEM",key,val)
@@ -170,7 +170,7 @@ const ShareLink = (props) => {
         updates[refPaths(uid,"projectUnderUser")+"isLocked"] = isLocked;
         updates[refPaths(uid,"usersUnderDocument")+"permission"] =permi;
         
-        var addMsg = firebaseFunction.httpsCallable('createNewProject')
+        var addMsg = functions.httpsCallable('createNewProject')
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
     }
     /**
@@ -185,7 +185,7 @@ const ShareLink = (props) => {
         updates[refPaths(uid,"projectUnderUser")+`shared`] = null;
         updates[refPaths(uid,"usersUnderDocument")+"permission"] ="rw";
         updates[refPaths(uid,"usersUnderDocument")+"isOwner"] =true;
-        var addMsg = firebaseFunction.httpsCallable('createNewProject')
+        var addMsg = functions.httpsCallable('createNewProject')
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
 
     }
@@ -199,7 +199,7 @@ const ShareLink = (props) => {
         updates[refPaths(uid,"projectUnderUser")] = null;
         updates[refPaths(uid,"usersUnderDocument")] = null;
         updates[refPaths(uid,"cursorUnderDocument")] = null;
-        var addMsg = firebaseFunction.httpsCallable('createNewProject')
+        var addMsg = functions.httpsCallable('createNewProject')
         addMsg(updates).then(result => console.log("Updates Done", result, updates)).catch(err => console.log(err))
     }
     //console.log("EMALS",state)
@@ -353,9 +353,9 @@ const ShareLink = (props) => {
             x : 0,
             y : 0
         }
-        updates[`${path}/users/${uid}/lastUpdatedAt`] = firebaseTIME;
-        updates[`${path}/lastActive/${uid}`]={time: firebaseTIME}
-        await firebaseDB.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
+        updates[`${path}/users/${uid}/lastUpdatedAt`] = servertime;
+        updates[`${path}/lastActive/${uid}`]={time: servertime}
+        await database.ref().update(updates).then(console.log("Created ROOM")).catch(err => err)
 
     }
 

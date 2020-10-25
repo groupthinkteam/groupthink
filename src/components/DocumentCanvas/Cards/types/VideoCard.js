@@ -42,7 +42,6 @@ const VideosCard = (props) =>{
     }
     return (
         <div>
-            
             { props.content.text === undefined ?
                 Object.entries(props.content).map(([fileKey,val])=>{
                     //console.log("FILE SS ", fileKey , val )//
@@ -76,6 +75,6 @@ const VideosCard = (props) =>{
         </div>
 
     )
-    
+
 }
 export default React.memo(VideosCard);

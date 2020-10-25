@@ -1,0 +1,45 @@
+import React from 'react'
+import { Redirect, useLocation} from "react-router-dom"
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
+import "../../styles/login.scss";
+import { useStore } from "../../store/hook"
+import { auth } from '../../services/firebase';
+import { observer } from 'mobx-react-lite';
+
+const LoginPage = observer(() => {
+  const location = useLocation();
+  const store = useStore();
+  let path = "/dashboard";
+  store.authStateListener();
+  // console.log("LOGIN ", store.currentUser, location.state?.from, props.isSignedIn)
+  //----Check if Inivitation Link is there then Redirect to it once Sign IN---
+  if (location.state?.from !== undefined)
+    path = location.state.from.pathname
+  return (
+    store.currentUser ?
+      <Redirect
+        to={{
+          pathname: path,
+          state: { from: location }
+        }}
+      />
+      :
+      <div id="login">
+        <div id="landing">
+          <div className="landing-title">
+            groupthink
+          </div>
+          <div className="landing-subtitle">
+            <b>Unleash your ideas like never before</b>
+          </div>
+          {/* <div id="landing-secondary"> */}
+          <div className="landing-text">
+            <em>groupthink</em> is a real-time collaborative platform that brings the power of the web into a new type of document.
+          </div>
+          {/* </div> */}
+        </div>
+        <StyledFirebaseAuth className="landing-login" uiConfig={store.firebaseConfig} firebaseAuth={auth()} />
+      </div>
+  )
+})
+export default LoginPage;

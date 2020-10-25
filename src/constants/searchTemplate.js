@@ -39,7 +39,7 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
     // create minisearch index
 
     Object.entries(elementToBeSearchIn).map(([key, val]) => {
-        if (key != "root")
+        if (key !== "root")
             switch (val.type) {
                 case "text":
                     makeArrayofProject.push({ id: key, content: val.content });
@@ -47,7 +47,7 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                 case "todo":
                     makeArrayofProject.push({ id: key, title: val.content.title })
                     Object.entries(val.content.items).map(([keys, values]) => {
-                        if (keys != "root")
+                        if (keys !== "root")
                             makeArrayofProject.push({ id: key, content: values, subID: keys })
                     });
                     break;
@@ -55,28 +55,28 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                     makeArrayofProject.push({ id: key, content: val.content });
                     break;
                 case "pdf":
-                    Object.entries(val.content).map(([[subkey, subvalues], values]) => {
-                        console.log("SUBKEY SUBVALUES ", subkey, subvalues, values)
+                    Object.entries(val.content).map(([[_, __], values]) => {
+                        console.log("_ __ ", _, __, values)
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
                     });
                     break;
                 case "audio":
-                    Object.entries(val.content).map(([[subkey, subvalues], values]) => {
+                    Object.entries(val.content).map(([[_, __], values]) => {
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
                     });
                     break;
                 case "VideoFile":
-                    Object.entries(val.content).map(([[subkey, subvalues], values]) => {
+                    Object.entries(val.content).map(([[_, __], values]) => {
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
                     });
                     break;
                 case 'file':
-                    Object.entries(val.content).map(([[subkey, subvalues], values]) => {
+                    Object.entries(val.content).map(([[_, __], values]) => {
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
                     });
                     break;
                 case 'VideoLink':
-                    Object.entries(val.content).map(([[subkey, subvalues], values]) => {
+                    Object.entries(val.content).map(([[_, __], values]) => {
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
                     });
                     break;

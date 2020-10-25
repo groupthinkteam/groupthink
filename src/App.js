@@ -1,12 +1,12 @@
 import React from 'react';
 import AppRoutes from './Router'
-import AppContext from './contexts/AppContext';
+import { StoreProvider } from './store/provider';
 const App = () => {
   return (
     <div className="App">
-      <AppContext.Provider value={{ appname: "groupthink" }}>
+      <StoreProvider>
         <AppRoutes />
-      </AppContext.Provider>
+      </StoreProvider>
     </div>
   );
 }

@@ -35,6 +35,8 @@ export const StoreFileToStorage = (path, file, metadata, callback) => {
                 case 'storage/unknown':
                     console.log(" Unknown error occurred, inspect \n", error.serverResponse)
                     break;
+                default :
+                    break;
             }
         }, // or 'state_changed'
         () => {
@@ -57,7 +59,7 @@ export const GetFileFromStorage = (path, callback) => {
         .then((dir) => {
             //-------Files Exist-------
             if (dir.items.length > 0) {
-                dir.items.forEach((fileRef, index) => {
+                dir.items.forEach((fileRef, _) => {
                     fileRef.getMetadata()
                         .then((data) => {
                             fileRef.getDownloadURL()

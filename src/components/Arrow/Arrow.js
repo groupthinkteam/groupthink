@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { gsap, Draggable } from "gsap/all";
+import { useStore } from "../../store/hook";
 
 gsap.registerPlugin(Draggable)
 
@@ -10,14 +11,27 @@ gsap.registerPlugin(Draggable)
 function Arrow(props) {
     let [dragging, setDragging] = useState(false);
 
+    let store = useStore();
+
+    let child = store.cards[props.id]
+    let parent = store.cards[child.parent];
+
+    let head = {
+        x: parent.position.x + parent.size.width / 2,
+        y: parent.position.y + parent.size.height / 2,
+    }
+    let tail = {
+        x: child.position.x + child.size.width / 2,
+        y: child.position.y - 5
+    }
+
     useEffect(() => {
         let y = Draggable.create("#nub".concat(props.id),
             {
                 type: "top,left",
                 activeCursor: "grab",
                 onDragStart: function () {
-                    // gsap.set("#nub".concat(props.id), { top: (props.tail.y + props.head.y) / 2, left: (props.tail.x + props.head.x) / 2 })
-                    gsap.set("#nub".concat(props.id), { top: props.tail.y, left: props.tail.x })
+                    gsap.set("#nub".concat(props.id), { top: tail.y, left: tail.x })
                     y[0].update()
                 },
                 onDrag: function () {
@@ -27,11 +41,11 @@ function Arrow(props) {
                     // do a hittest
                     // if valid parent make the connection and update position
                     // if not valid, update position to previous
-                    props.hits.forEach(cardID => {
+                    store.hitTestCards.forEach(cardID => {
                         if (y[0].hitTest("#".concat(cardID))) {
                             console.log("i hit", cardID)
                             // call reparent
-                            props.arrowAPI.reparentCard(props.id, cardID)
+                            store.reparentCard(props.id, cardID)
                         }
                     });
                     y[0].update()
@@ -39,15 +53,15 @@ function Arrow(props) {
                 },
             })
         return () => { console.log("about to kill a draggable"); y[0].kill() }
-    }, [props.hits])
+    }, [store])
 
     let path;
 
     if (dragging) {
-        path = updatePath(dragging.x, dragging.y, props.tail.x, props.tail.y)
+        path = updatePath(dragging.x, dragging.y, tail.x, tail.y)
     }
     else {
-        path = updatePath(props.head.x, props.head.y, props.tail.x, props.tail.y - 5)
+        path = updatePath(head.x, head.y, tail.x, tail.y - 5)
     }
 
     function updatePath(x1, y1, x4, y4) {
@@ -73,10 +87,10 @@ function Arrow(props) {
                 <circle
                     style={{ position: "absolute" }}
                     id={"nub".concat(props.id)}
-                    // cx={dragging ? dragging.x : (props.tail.x + props.head.x) / 2}
-                    // cy={dragging ? dragging.y : (props.tail.y + props.head.y) / 2}
-                    cx={dragging ? dragging.x : props.tail.x}
-                    cy={dragging ? dragging.y : props.tail.y}
+                    // cx={dragging ? dragging.x : (tail.x + head.x) / 2}
+                    // cy={dragging ? dragging.y : (tail.y + head.y) / 2}
+                    cx={dragging ? dragging.x : tail.x}
+                    cy={dragging ? dragging.y : tail.y}
                     r="5"
                     stroke="black"
                     strokeWidth="2px"
@@ -86,4 +100,4 @@ function Arrow(props) {
     )
 }
 
-export default React.memo(Arrow)
+export default Arrow

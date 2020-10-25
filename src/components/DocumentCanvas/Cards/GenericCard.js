@@ -4,6 +4,7 @@ import { gsap, Draggable } from "gsap/all";
 import cardChooser from "./cardChooser";
 
 import "../../../styles/Cards/GenericCard.scss";
+import { observer } from "mobx-react-lite";
 
 /**
  * TODO :-
@@ -15,7 +16,7 @@ import "../../../styles/Cards/GenericCard.scss";
 gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
-function GenericCard(props) {
+const  GenericCard = observer(props=>{
 
     const [isActive, setActive] = useState(false)
     const [isDragging, setDragging] = useState(false)
@@ -136,6 +137,5 @@ function GenericCard(props) {
             </div>
         </>
     )
-}
-
+})
 export default React.memo(GenericCard);

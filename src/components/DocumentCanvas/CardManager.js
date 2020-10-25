@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import CardContainer from "./CardContainer";
 import throttle from 'lodash.throttle';
-import { firebaseDB, firebaseFunction, firebaseStorage, firebaseTIME } from "../../services/firebase";
+import { database, functions, firebaseStorage, servertime } from "../../services/firebase";
 import cardTemplate from "../../constants/cardTemplates";
 import { useHistory, useLocation } from "react-router-dom";
 import { Modal } from "react-bootstrap";
@@ -58,7 +58,7 @@ export default function CardManager(props) {
     const [isLocked, setIsLocked] = useState(lock);
 
     // "root/documents/projectID/nodes" reference in firebase db
-    const projectRef = firebaseDB.ref("documents/" + props.projectID + "/nodes");
+    const projectRef = database.ref("documents/" + props.projectID + "/nodes");
     const location = useLocation()
     const history = useHistory();
     const uid = props.currentUser().uid;
@@ -74,8 +74,8 @@ export default function CardManager(props) {
         // "child_removed" and so on reduce size of snapshot received
         let flag=false;
         const uid = props.currentUser().uid;
-        const projectRef = firebaseDB.ref("documents/" + props.projectID + "/");
-        const projectUnderUserRef = firebaseDB.ref(`users/${props.currentUser().uid}/projects/`);
+        const projectRef = database.ref("documents/" + props.projectID + "/");
+        const projectUnderUserRef = database.ref(`users/${props.currentUser().uid}/projects/`);
         projectRef.child('lastActive').on('value',snap=>{
             console.log("Last Active of Project is Changed Recieved Payload",snap.key,snap.val());
             setLastActive(snap.val());
@@ -201,7 +201,7 @@ export default function CardManager(props) {
         updates[parent + "/children/" + newCardKey] = 1;
         updates[newCardKey] = newCard;
         projectRef.update(updates).then(console.log("Added a new child", newCardKey, "under", parent));
-        firebaseDB.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : firebaseTIME})
+        database.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : servertime})
         .then(console.log("Updated LastUpdated At")).catch(err=>err)
         // update local state
         setCards({
@@ -302,7 +302,7 @@ export default function CardManager(props) {
             console.log("Its a NOn Storage Card")
         }
         projectRef.update(updates).then(console.log("deleted", id, "successfully"));
-        firebaseDB.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : firebaseTIME})
+        database.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : servertime})
         .then(console.log("Updated LastUpdated At")).catch(err=>err)
     }
 
@@ -323,7 +323,7 @@ export default function CardManager(props) {
      */
     const savePosition = (id, newPos) => {
         const updates = {};
-        const projectRef = firebaseDB.ref("documents/" + props.projectID);
+        const projectRef = database.ref("documents/" + props.projectID);
         if (newPos.x > containerRef.current.width) {
             console.log("x", newPos.x, "was greater than width", containerRef.current)
             updates["container/width"] = newPos.x + 300;
@@ -356,9 +356,9 @@ export default function CardManager(props) {
     */
     const saveContent = (id, newContent) => {
         const updates={}
-        updates["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] = firebaseTIME;
+        updates["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] = servertime;
         updates["documents/" + props.projectID + "/nodes/"+id+"/content/"] = newContent;
-        firebaseDB.ref().update(updates).then(console.log("saved new content for", id))
+        database.ref().update(updates).then(console.log("saved new content for", id))
             .catch(err => console.log("Save COntent Error \n", newContent, "\n saveContent", err));
     }
 
@@ -396,7 +396,7 @@ export default function CardManager(props) {
         updates[id + '/size'] = newTypeCard.size;
         updates[id + '/content'] = newTypeCard.content;
         projectRef.update(updates).then(console.log("Set new type for", id, "to \n", newTypeCard)).catch(err => err);
-        firebaseDB.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : firebaseTIME})
+        database.ref().update({["documents/"+props.projectID+"/users/"+uid+"/lastUpdatedAt"] : servertime})
         .then(console.log("Updated LastUpdated At")).catch(err=>err)
         //projectRef.child(id).child("type").set(newType).then(console.log("set new type for", id, "to", newType));
     }
@@ -455,7 +455,7 @@ export default function CardManager(props) {
         )
         custom['fpath'] = path;
         
-        var convToBw = firebaseFunction.httpsCallable('imageToBw')
+        var convToBw = functions.httpsCallable('imageToBw')
         convToBw(custom).then((result) => console.log(result)).catch(err => console.log(err))
     }
 
@@ -484,8 +484,8 @@ export default function CardManager(props) {
                 const update = {};
                 update[`documents/${props.projectID}/cursors/${uid}/x`] = x;
                 update[`documents/${props.projectID}/cursors/${uid}/y`] = y;
-                update[`documents/${props.projectID}/lastActive/${uid}/`] = firebaseTIME;
-                firebaseDB.ref().update(update).then(console.log("Updated Cursor Position to DB" ))
+                update[`documents/${props.projectID}/lastActive/${uid}/`] = servertime;
+                database.ref().update(update).then(console.log("Updated Cursor Position to DB" ))
                 .catch(err => console.log("SaveCursor Position",err))
             }
         },
@@ -502,9 +502,9 @@ export default function CardManager(props) {
      * @param {String} uid 
      */
     const isActiveUserInfo = () => {
-        firebaseDB.ref(`documents/${props.projectID}/users/${uid}/`).update({
+        database.ref(`documents/${props.projectID}/users/${uid}/`).update({
             isEditingUser : true,
-            lastUpdatedAt : firebaseTIME
+            lastUpdatedAt : servertime
         }).then(console.log("UPDated Active user")).catch(err=>console.log("isActiveUserInfo",err))
     }
     /**
@@ -515,7 +515,7 @@ export default function CardManager(props) {
         console.log("Remove Active User Called")
         const updates = {};
         updates[`documents/${props.projectID}/users/${uid}/isEditingUser`] = null;
-        firebaseDB.ref().update(updates).then(console.log("Removed Active user")).catch(err => console.log("isActiveUserInfo", err))
+        database.ref().update(updates).then(console.log("Removed Active user")).catch(err => console.log("isActiveUserInfo", err))
     }
     /**
      * Search Element In all cards Content.

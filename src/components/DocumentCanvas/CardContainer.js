@@ -1,11 +1,15 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import GenericCard from "./Cards/GenericCard"
-import Cursor from "./Cursor";
+import Cursor from "../Cursor/Cursor";
 import Arrow from "../Arrow/Arrow";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import "../../styles/CardContainer.scss";
 import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
+import { useStore } from "../../store/hook";
+import ArrowList from "../Arrow/ArrowsList";
+import CursorsList from "../Cursor/CursorsList";
+import { observer } from "mobx-react-lite";
 
 /**
  * props:
@@ -13,34 +17,32 @@ import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
  * @param {*} props 
  * 
  */
-function  CardContainer(props) {
+const CardContainer = observer(props=>{
+    let store = useStore()
     const [zoom, setZoom] = useState(1);
-    const [result,setResult] = useState();
+    const [result, setResult] = useState();
     const dateTime = Date.now();
-    const updateCursorPos = (event) =>{
-        if(props.lastActive && event.target.offsetParent != null)
-        {
-            var flag=false;
+    const updateCursorPos = (event) => {
+        if (props.lastActive && event.target.offsetParent != null) {
+            var flag = false;
             Object.entries(props.lastActive)
-            .map(([id, values]) =>{
-                //console.log("TESTING ",id,values , "Diff", ((dateTime - Number(values) ) < 60000))
-                if( id !== props.currentUser().uid && (dateTime - Number(values) < 60000))
-                {
+                .map(([id, values]) => {
                     //console.log("TESTING ",id,values , "Diff", ((dateTime - Number(values) ) < 60000))
-                    flag=true;
-                }
-            })
-            
+                    if (id !== props.currentUser().uid && (dateTime - Number(values) < 60000)) {
+                        //console.log("TESTING ",id,values , "Diff", ((dateTime - Number(values) ) < 60000))
+                        flag = true;
+                    }
+                })
+
             props.containerAPI.saveCursorPosition(
                 event.clientX + event.target.offsetParent.scrollLeft,
                 event.clientY + event.target.offsetParent.scrollTop
             );
         }
-        
+
     }
-    const onChangeSearch = (text) =>
-    {
-      const result= props.containerAPI.searchElement(text);
+    const onChangeSearch = (text) => {
+        const result = props.containerAPI.searchElement(text);
         setResult(result);
     }
     return (
@@ -49,25 +51,25 @@ function  CardContainer(props) {
             {
                 Object.keys(props.cards).length > 1 ?
                     <>
-                    <input
-                        className="zoom-slider"
-                        style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
-                        type="range"
-                        min="0.5"
-                        max="2.5"
-                        defaultValue="1"
-                        step="0.0001"
-                        onChange={e => setZoom(e.target.value)} 
-                    />
-                    <div
-                    style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
-                    >
-                    <InlineTextEdit 
-                        onFocus={e=>{console.log(e.target.select());e.target.select()}}
-                        borderColor='black'
-                        onChange={(e) => onChangeSearch(e.target.value)}
-                    />
-                    </div>
+                        <input
+                            className="zoom-slider"
+                            style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
+                            type="range"
+                            min="0.5"
+                            max="2.5"
+                            defaultValue="1"
+                            step="0.0001"
+                            onChange={e => setZoom(e.target.value)}
+                        />
+                        <div
+                            style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
+                        >
+                            <InlineTextEdit
+                                onFocus={e => { console.log(e.target.select()); e.target.select() }}
+                                borderColor='black'
+                                onChange={(e) => onChangeSearch(e.target.value)}
+                            />
+                        </div>
                     </>
                     : null
 
@@ -93,94 +95,35 @@ function  CardContainer(props) {
                     updateCursorPos(event)
                 }}
             >
-                
+
+                <ArrowList />
+                <CursorsList />
                 {
                     props.cards ? Object.entries(props.cards).filter(([id, card]) => id && id !== "root").map(
                         ([id, card]) => {
                             return (
                                 <div key={"wrapperdiv".concat(id)}>
-                                    
-                                    <ContextMenuTrigger id={"contextmenu".concat(id)} >
-                                        {
-                                            props.isLocked && card?.type === "blank" ? null :
-                                                <GenericCard
-                                                    key={id}
-                                                    id={id}
-                                                    card={card}
-                                                    genericAPI={props.genericAPI}
-                                                    typeAPI={props.typeAPI}
-                                                    isLocked={props.isLocked}
-                                                    currentUser={props.currentUser}
-                                                    activeUser={props.activeUser}
-                                                    result={result}
-                                                    userListDetail={props.userListDetail}
-                                                />
-                                        }
-                                    </ContextMenuTrigger>
-                                    <ContextMenu id={"contextmenu".concat(id)} className="card-context-menu">
-                                        <MenuItem onClick={() => !props.isLocked ?
-                                            props.genericAPI.addChild(
-                                                {
-                                                    x: card.position.x + 100,
-                                                    y: card.position.y + 100
-                                                },
-                                                {
-                                                    width: card.size.width,
-                                                    height: card.size.height,
-                                                },
-                                                id,
-                                                "blank"
-                                            )
-                                            : null
-                                        }
-                                        >
-                                            add child
-                                        </MenuItem>
-                                        <MenuItem onClick={() => !props.isLocked ? props.genericAPI.removeCard(id, "recursive", card.parent) : null}>
-                                            delete
-                                        </MenuItem>
-                                    </ContextMenu>
-                                    {
-                                        card.parent && card.parent !== "root" &&
-                                        <Arrow
-                                            key={"arrow".concat(id)}
-                                            id={"".concat(id)}
-                                            arrowAPI={props.arrowAPI}
-                                            hits={Object.keys(props.cards)}
-                                            head={{
-                                                x: props.cards[card.parent]["position"].x + props.cards[card.parent]["size"].width / 2,
-                                                y: props.cards[card.parent]["position"].y + props.cards[card.parent]["size"].height / 2,
-                                            }}
-                                            tail={{
-                                                x: card.position.x + card.size.width / 2,
-                                                y: card.position.y - 5
-                                                // x: card.position.x + card.size.width / 2,
-                                                // y: card.position.y + card.size.height / 2
-                                            }}
-                                        />
-                                    }
+                                    <GenericCard
+                                        key={id}
+                                        id={id}
+                                        card={card}
+                                        genericAPI={props.genericAPI}
+                                        typeAPI={props.typeAPI}
+                                        isLocked={props.isLocked}
+                                        currentUser={props.currentUser}
+                                        activeUser={props.activeUser}
+                                        result={result}
+                                        userListDetail={props.userListDetail}
+                                    />
+                                        
+
                                 </div>
                             )
                         }
                     ) : <p>Double Click to Add a Card</p>
                 }
-                {
-                    props.cursors && props.lastActive
-                        ? Object.entries(props.cursors)
-                        .filter(
-                            ([id, values]) => id !== props.currentUser().uid && (dateTime - Number(props.lastActive[`${id}`]) < 60000))
-                            .map(([id, values]) =>
-                                <Cursor key={id}
-                                    id={id}
-                                    name={ props.userListDetail[id]["name"]}
-                                    x={values.x / zoom}
-                                    y={values.y / zoom}
-                                    projectID={props.projectID}
-                                />)
-                        : null
-                }
             </div>
-        </div >
+        </div>
     )
-}
-export default React.memo(CardContainer)
+})
+export default CardContainer;

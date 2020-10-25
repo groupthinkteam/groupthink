@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 import SearchBar from "./SearchBar"
 import RoomConnect from "../Voice/RoomConnect"
 export default function MenuBar(props) {
-    const currentUser = props.currentUser()
+    const currentUser = props.currentUser
 
     return (
         <div className="menu-bar topheader">

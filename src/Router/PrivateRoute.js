@@ -4,17 +4,18 @@ import {
   Redirect,
 } from "react-router-dom";
 
-const PrivateRoute = ({path, children, isAuth, ...rest }) => {
+const PrivateRoute = ({ path, children, isSignedIn, ...rest }) => {
+  console.log("PRIVATE ROUTE")
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        isAuth ? (
+        isSignedIn ? (
           children
         ) : (
             <Redirect
               to={{
-                pathname: "/",
+                pathname: "/login",
                 state: { from: location }
               }}
             />
