@@ -39,8 +39,8 @@ const Card = observer(props => {
                 <InlineTextEdit
                     className="project-card-item"
                     text={me.name}
-                    onChange={(event) => me.title = event.target.value}
-                    onSave={() => { return }} />
+                    onChange={(event) => store.sync("projects", props.id + ".name", event.target.value)}
+                    onSave={(event) => store.renameProject(props.id, event.target.value)} />
                 <Button
                     className="project-card-item custom_btn highlight"
                     style={{ marginBottom: "5px" }}

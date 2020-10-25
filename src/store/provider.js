@@ -1,6 +1,15 @@
 import React from "react"
 import { storeObject } from "./store"
 import { observer, useLocalObservable } from "mobx-react-lite"
+import { configure } from "mobx"
+
+configure({
+    enforceActions: "never",
+    computedRequiresReaction: true,
+    reactionRequiresObservable: true,
+    observableRequiresReaction: true,
+    disableErrorBoundaries: true
+})
 
 export const StoreContext = React.createContext(null)
 

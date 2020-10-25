@@ -20,10 +20,10 @@ export var storeObject = {
         return FIREBASE_CONSTANTS.UI_CONFIG;
     },
     get ownProjects() {
-        return Object.keys(this.projects).filter(id => !this.projects[id].shared )
+        return Object.keys(this.projects).filter(id => !this.projects[id].shared)
     },
     get sharedProjects() {
-        return Object.keys(this.projects).filter(id => this.projects[id].shared )
+        return Object.keys(this.projects).filter(id => this.projects[id].shared)
     },
     get projectRef() {
         return database.ref("documents").child(this.projectID)
@@ -35,11 +35,9 @@ export var storeObject = {
     get hitTestCards() {
         return Object.keys(this.cards)
     },
-    async authStateListener() {
-        await auth().onAuthStateChanged(user => {
-            this.userID = user.uid
-            this.currentUser = user
-        })
+    syncUser() {
+        this.userID = auth().currentUser.uid;
+        this.currentUser = auth().currentUser;
     },
     // dashboard related actions
     addNewProject() {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Redirect, useLocation} from "react-router-dom"
+import { Redirect, useLocation } from "react-router-dom"
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 import "../../styles/login.scss";
 import { useStore } from "../../store/hook"
@@ -10,9 +10,7 @@ const LoginPage = observer(() => {
   const location = useLocation();
   const store = useStore();
   let path = "/dashboard";
-  store.authStateListener();
-  // console.log("LOGIN ", store.currentUser, location.state?.from, props.isSignedIn)
-  //----Check if Inivitation Link is there then Redirect to it once Sign IN---
+
   if (location.state?.from !== undefined)
     path = location.state.from.pathname
   return (
