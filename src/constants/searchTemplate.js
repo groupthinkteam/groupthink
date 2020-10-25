@@ -49,6 +49,7 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                     Object.entries(val.content.items).map(([keys, values]) => {
                         if (keys !== "root")
                             makeArrayofProject.push({ id: key, content: values, subID: keys })
+                            return '';
                     });
                     break;
                 case "link":
@@ -58,26 +59,31 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                     Object.entries(val.content).map(([[_, __], values]) => {
                         console.log("_ __ ", _, __, values)
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        return '';
                     });
                     break;
                 case "audio":
                     Object.entries(val.content).map(([[_, __], values]) => {
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        return '';
                     });
                     break;
                 case "VideoFile":
                     Object.entries(val.content).map(([[_, __], values]) => {
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        return '';
                     });
                     break;
                 case 'file':
                     Object.entries(val.content).map(([[_, __], values]) => {
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        return '';
                     });
                     break;
                 case 'VideoLink':
                     Object.entries(val.content).map(([[_, __], values]) => {
                         makeArrayofProject.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        return '';
                     });
                     break;
                 case "blank":
@@ -88,7 +94,7 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                     makeArrayofProject.push({ id: key, content: val })
                     break;
             }
-
+            return '';    
     })
     if (makeArrayofProject.length > 0)
         miniSearch.addAll(makeArrayofProject)

@@ -51,6 +51,7 @@ const  GenericCard = observer(props=>{
                             break;
                     }
                 }
+                return '';
             })
         else
             setIsSearched(false)

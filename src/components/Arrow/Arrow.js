@@ -53,7 +53,7 @@ function Arrow(props) {
                 },
             })
         return () => { console.log("about to kill a draggable"); y[0].kill() }
-    }, [store])
+    }, [store,props.id, tail.x,tail.y])
 
     let path;
 

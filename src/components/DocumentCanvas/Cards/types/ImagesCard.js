@@ -18,30 +18,32 @@ const ImagesCard = (props) => {
     <>
       {
         Object.entries(props.content).map(([key, val]) => {
-          if(val?.height !== undefined)
-          {
-          const maxDimension = Math.max(val.height, val.width);
-          const multiplier = maxDimension > 500 ? 500 / maxDimension : 1;
-          return (
-            <div key={key}>
-              <img
-                alt={key}
-                src={`${val?.url}`}
-                onClick={handleShow}
-                height={`${Math.floor(val.height * multiplier)}px`}
-                width={`${Math.floor(val.width * multiplier)}px`}
-                onLoad={e => changeSize(Math.floor(val.height * multiplier) + 5, Math.floor(val.width * multiplier) + 5)}
-              />
-              {
-                show && (
-                  <Lightbox
-                    mainSrc={`${val?.url}`}
-                    onCloseRequest={handleClose}
-                  />
-                )
-              }
-            </div>
-          )}
+          if (val?.height !== undefined) {
+            const maxDimension = Math.max(val.height, val.width);
+            const multiplier = maxDimension > 500 ? 500 / maxDimension : 1;
+            return (
+              <div key={key}>
+                <img
+                  alt={key}
+                  src={`${val?.url}`}
+                  onClick={handleShow}
+                  height={`${Math.floor(val.height * multiplier)}px`}
+                  width={`${Math.floor(val.width * multiplier)}px`}
+                  onLoad={e => changeSize(Math.floor(val.height * multiplier) + 5, Math.floor(val.width * multiplier) + 5)}
+                />
+                {
+                  show && (
+                    <Lightbox
+                      mainSrc={`${val?.url}`}
+                      onCloseRequest={handleClose}
+                    />
+                  )
+                }
+              </div>
+            )
+          }
+          else
+          return null;
         })
       }
     </>

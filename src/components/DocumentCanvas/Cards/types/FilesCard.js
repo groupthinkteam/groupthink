@@ -1,5 +1,4 @@
-import React, { useState} from 'react';
-import { ReactTinyLink } from 'react-tiny-link';
+import React from 'react';
 
 /**
  * This File Input's the Files(e.g. `.odt,.doc,.docx`) And Features to download the file .
@@ -15,7 +14,7 @@ const FilesCard = (props) => {
                 return(
                     <div key={fileKey[0]}>
                         File Name : 
-                        <a href={fileKey[1]?.url} target="_blank">{fileKey[0].split(">")[0]}</a>       
+                        <a href={`${fileKey[1]?.url}`} target="_blank" rel="noopener noreferrer">{fileKey[0].split(">")[0]}</a>       
                     </div>
                 )
             })

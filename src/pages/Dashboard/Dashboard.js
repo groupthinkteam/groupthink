@@ -8,14 +8,14 @@ import { observer } from 'mobx-react-lite'
 
 import "../../styles/Projects.scss"
 
-const Dashboard = observer(props => {
+const Dashboard = observer(() => {
   let history = useHistory()
   let store = useStore();
-  console.log("DASHBOARD" , store.ownProjects , store.projects)
+  console.log("DASHBOARD", store.ownProjects, store.projects)
   useEffect(() => {
     store.addDashboardListeners()
     return () => store.removeDashboardListeners()
-  }, [])
+  }, [store])
 
   const onOpen = (id) => {
     store.setProjectID(id);

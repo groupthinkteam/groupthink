@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState}from "react";
 import GenericCard from "./Cards/GenericCard"
-import Cursor from "../Cursor/Cursor";
-import Arrow from "../Arrow/Arrow";
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import "../../styles/CardContainer.scss";
 import InlineTextEdit from "../InlineTextEdit/InlineTextEdit";
-import { useStore } from "../../store/hook";
+//import { useStore } from "../../store/hook";
 import ArrowList from "../Arrow/ArrowsList";
 import CursorsList from "../Cursor/CursorsList";
 import { observer } from "mobx-react-lite";
@@ -18,20 +15,21 @@ import { observer } from "mobx-react-lite";
  * 
  */
 const CardContainer = observer(props=>{
-    let store = useStore()
+    //let store = useStore()
     const [zoom, setZoom] = useState(1);
     const [result, setResult] = useState();
     const dateTime = Date.now();
     const updateCursorPos = (event) => {
         if (props.lastActive && event.target.offsetParent != null) {
-            var flag = false;
+            //var flag = false;
             Object.entries(props.lastActive)
                 .map(([id, values]) => {
                     //console.log("TESTING ",id,values , "Diff", ((dateTime - Number(values) ) < 60000))
                     if (id !== props.currentUser().uid && (dateTime - Number(values) < 60000)) {
                         //console.log("TESTING ",id,values , "Diff", ((dateTime - Number(values) ) < 60000))
-                        flag = true;
+                        //flag = true;
                     }
+                    return '';
                 })
 
             props.containerAPI.saveCursorPosition(

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player/lazy';
-import { metadataOfLinks } from '../Detector';
 /**
  * This is an Offline Link Card Shows Videos And Audio Player .
  * @param {*} props - Property of File .
@@ -9,7 +8,7 @@ import { metadataOfLinks } from '../Detector';
 //const APIKEY = 'AIzaSyAjOQlUVvfpaPFKw_dsjVF-ZO9xAFFwLJc'
 const OnlineVideoCard = (props) => {
     //let multiplier,maxDimension;
-    const [maxDimension,setMaxDimension]=useState();
+    //const [maxDimension,setMaxDimension]=useState();
     const [multiplier,setMultiplier]=useState();
     const [dimension,setDimension] = useState();
     useEffect(()=>{
@@ -21,7 +20,7 @@ const OnlineVideoCard = (props) => {
             let height= typeof props.content.metadata?.height ==='number' ?props.content.metadata?.height:350;
             let width=typeof props.content.metadata?.width ==='number' ?props.content.metadata?.width:350;
             let  temp = Math.max(height,width)
-            setMaxDimension(temp);
+            //setMaxDimension(temp);
             setDimension({width:width , height:height})
             setMultiplier(temp >= 350 ? 350 / temp : 1);
             temp = temp >= 350 ? 350 / temp : 1 ;
@@ -30,7 +29,7 @@ const OnlineVideoCard = (props) => {
             changeSize(Math.floor(height * temp) + 35 , Math.floor(width  * temp))
         }
     
-    },[])
+    },[props.content.metadata.error ,props.content.metadata.height,props.content.metadata.width,props.id,props.typeAPI ])
     //console.log("PROPS ",props.content.metadata , maxDimension,multiplier,parseInt(props.content.metadata?.width),Math.floor(parseInt(props.content.metadata?.height) * multiplier) + 5)
     return (
         <>

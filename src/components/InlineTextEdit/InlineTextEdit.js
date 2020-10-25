@@ -16,9 +16,7 @@ function InlineTextEdit(props) {
     }
     if(props.style)
     {
-        Object.entries(props.style).map(([key,value])=>{
-            prevStyle={...prevStyle,[key]:value};
-        })
+        Object.entries(props.style).map(([key,value])=>prevStyle={...prevStyle,[key]:value})
     }    
     return (
         

@@ -121,7 +121,7 @@ const videoDimension = (file,callback)=>{
     var video = document.createElement('video');
     video.onloadedmetadata = () => {
         console.log("Video loaded!");
-        console.log("width: " + video.videoWidth + "\n" + "height: " + video.videoHeight);
+        console.log("width: " + video.videoWidth + "\n height: " + video.videoHeight);
         const imageHeight = video.videoHeight;
         const imageWidth = video.videoWidth;
         callback( {height:imageHeight , width:imageWidth})

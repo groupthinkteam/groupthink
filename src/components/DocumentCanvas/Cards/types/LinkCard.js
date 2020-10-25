@@ -9,7 +9,6 @@ const LinkCard = (props) => {
     
     const [maxDimension,setMaxDimension]=useState();
     const [multiplier,setMultiplier]=useState();
-    const [dimension,setDimension] = useState();
     useEffect(()=>{
         const changeSize = (height, width) => {
             props.typeAPI.resize(props.id, { width: width, height: height })
@@ -21,14 +20,13 @@ const LinkCard = (props) => {
             let width=typeof props.content.metadata?.width ==='number' ?props.content.metadata?.width:350;
             let  temp = Math.max(height,width)
             setMaxDimension(temp);
-            setDimension({width:width , height:height})
             setMultiplier(temp >= 350 ? 350 / temp : 1);
             temp = temp >= 350 ? 350 / temp : 1 ;
             console.log("CHNAGES ",temp,Math.floor(height * temp) + 35);
             console.log("CHNAGES ",Math.floor(width  * temp));
             changeSize(Math.floor(height * temp) + 35 , Math.floor(width  * temp))
         }
-    },[])
+    },[props.content.metadata.error, props.content.metadata.height, props.content.metadata.width, props.id, props.typeAPI])
     console.log("props.content.metadata ",props.content.metadata , maxDimension , multiplier);
     return (
         <>

@@ -74,7 +74,7 @@ function BlankCard(props) {
     }
 
     const upload = (files) => {
-        let file = files[0] ,imageHeight=null , imageWidth=null , aspectRatio = null ,target=null;
+        let file = files[0] ,imageHeight=null , imageWidth=null , aspectRatio = null ;
         const type = typeDetector(file?.type);
        
         detectDimension(type,file,data=>{
@@ -108,7 +108,7 @@ function BlankCard(props) {
 
     const onDrop = useCallback(acceptedFiles => {
         upload(acceptedFiles)
-    }, [])
+    },[])
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
     if (uploadState) {

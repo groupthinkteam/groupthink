@@ -18,12 +18,12 @@ const PDFCard = (props) => {
       [fileState.fileName]:
       { 
         ...props.content[fileName] ,
-        ["metadata"]: 
+        "metadata": 
         {
           ...props.content[fileName]["metadata"],
           name:fileState.fileName
         },
-        ["url"] : url
+        "url" : url
       },
       [fileName]:null
     });

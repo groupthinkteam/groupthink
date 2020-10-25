@@ -19,12 +19,12 @@ const VideosCard = (props) =>{
           [videoState.fileName]:
           { 
             ...props.content[fileName] ,
-            ["metadata"]: 
+            "metadata": 
             {
               ...props.content[fileName]["metadata"],
               name:videoState.fileName
             },
-            ["url"] : url , 
+            "url" : url , 
             height:videoState.height,
             width:videoState.width
           },
