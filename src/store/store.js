@@ -7,7 +7,6 @@ import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
 
 export var storeObject = {
-
     projects: {},
     cards: {},
     users: {},
@@ -37,11 +36,9 @@ export var storeObject = {
         return Object.keys(this.cards)
     },
     async authStateListener() {
-        console.log("AUTH STATE CHANGE")
         await auth().onAuthStateChanged(user => {
             this.userID = user.uid
             this.currentUser = user
-            console.log("USER ", user.uid, this.currentUser)
         })
     },
     // dashboard related actions
@@ -82,6 +79,7 @@ export var storeObject = {
             .then((snap) => {
                 let updates = {}
                 Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id] = null)
+                console.log("updates", updates)
                 database.ref("users").update(updates)
                     .then(database.ref("documents").child(id).set(null))
             }
@@ -285,7 +283,7 @@ export var storeObject = {
             //this.sync(this.projects, snap.key, snap.val())
         });
         projects.on("child_changed", (snap) => this.projects[snap.key] = snap.val());
-        projects.on("child_removed", (snap) => this.projects[snap.key] = snap.val());
+        projects.on("child_removed", (snap) => delete this.projects[snap.key]);
     },
     addDocumentListeners() {
         this.projectRef.child("users").on("value", (snap) => this.users = snap.val());

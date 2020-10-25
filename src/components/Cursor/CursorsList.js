@@ -14,3 +14,18 @@ function CursorsList(props) {
 }
 
 export default CursorsList;
+
+const x = {
+    documents: {
+        projectA: {
+            nodes: {},
+            users: {
+                user1: {},
+                userB: {
+                    permission: "rw",
+                    accessCode: "key-from-link"
+                }
+            }
+        }
+    }
+}
