@@ -54,7 +54,7 @@ export var storeObject = {
             },
             users: {
                 [this.currentUser.uid]: {
-                    "permission": "admin",
+                    "permission": 2,
                     "email": this.currentUser.email,
                     "photoURL": this.currentUser.photoURL,
                     "name": this.currentUser.displayName,
@@ -64,7 +64,7 @@ export var storeObject = {
         }
         const newProjectID = database.ref("documents").push(template).key
         this.userRef.child(newProjectID).set({
-            access: "admin",
+            access: 2,
             name: "New Project",
             thumbnailURL: thumbnailURL,
             createdAt: servertime,
@@ -243,7 +243,7 @@ export var storeObject = {
         let custom = {
             ...metadata,
             customMetadata: {
-                [this.userID]: this.permission
+                [this.userID]: this.users[this.userID].permission
             }
         }
         console.log("metadata sent was", custom)
@@ -291,8 +291,10 @@ export var storeObject = {
     addCursorListener() {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());
     },
-    removeDashboardListeners() {
-        database.ref("users").child(this.userID).child("projects").orderByChild("createdAt").off();
+    async removeDashboardListeners() {
+        if (this.userID) {
+            database.ref("users").child(this.userID).child("projects").orderByChild("createdAt").off();
+        }
     },
     removeDocumentListeners() {
         this.projectRef.child("users").off();
