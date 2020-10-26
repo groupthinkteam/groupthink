@@ -13,14 +13,12 @@ const Dashboard = observer(() => {
   const location = useLocation();
   useEffect(() => {
     store.addDashboardListeners()
-    return () => store.removeDashboardListeners()
+    return store.removeDashboardListeners
   }, [store.addDashboardListeners, store.removeDashboardListeners,store])
 
   const signOut = () => {
-    console.log("SIGNOUT ")
-    store.signout();
+    store.removeDashboardListeners().then(store.signout);
     history.push('/login', { from: location });
-
   }
   return (
     <div className="dashboard-page">
