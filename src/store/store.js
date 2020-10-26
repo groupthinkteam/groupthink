@@ -27,17 +27,33 @@ export var storeObject = {
         return Object.keys(this.projects).filter(id => this.projects[id].shared)
     },
     get projectRef() {
+        //console.log("PROJECT REF ",this.projectID)
+        if(this.projectID)
         return database.ref("documents").child(this.projectID)
+        else
+        return this.projectID
     },
     get userRef() {
+        console.log("User REF ",auth().currentUser?.uid,this.userID)
+        if(this.userID.length>1)
         return database.ref("users").child(this.userID).child("projects")
+        else
+        return this.userID
     },
     get hitTestCards() {
         return Object.keys(this.cards)
     },
     syncUser() {
-        this.userID = auth().currentUser?.uid;
-        this.currentUser = auth().currentUser;
+        if(auth().currentUser?.uid)
+        {
+            this.userID = auth().currentUser?.uid;
+            this.currentUser = auth().currentUser;
+            console.log("SYNC USER ",this.userID,this.currentUser,auth().currentUser?.uid);
+        }
+        else{
+            this.userID="";
+            this.currentUser= false;
+        }
     },
     // dashboard related actions
     addNewProject() {
@@ -273,31 +289,37 @@ export var storeObject = {
     },
     // listener manipulation
     addDashboardListeners() {
-        const projects = this.userRef.orderByChild("createdAt");
-        projects.on("child_added", (snap) => {
-            console.log("CHILD ADDED ", snap.val());
-            this.projects[snap.key] = snap.val();
-        });
-        projects.on("child_changed", (snap) => this.projects[snap.key] = snap.val());
-        projects.on("child_removed", (snap) => delete this.projects[snap.key]);
+        if(this.userRef && this.userID.length>1){
+            const projects = this.userRef.orderByChild("createdAt");
+            projects.on("child_added", (snap) => this.projects[snap.key] = snap.val());
+            projects.on("child_changed", (snap) => this.projects[snap.key] = snap.val());
+            projects.on("child_removed", (snap) => delete this.projects[snap.key]);
+        }
     },
     addDocumentListeners() {
-        this.projectRef.child("users").on("value", (snap) => this.users = snap.val());
-        this.projectRef.child("nodes").on("child_added", (snap) => this.cards[snap.key] = snap.val());
-        this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
-        this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
-        this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
+        if(this.projectRef && this.userID.length>1)
+        {
+            this.projectRef.child("users").on("value", (snap) => this.users = snap.val());
+            this.projectRef.child("nodes").on("child_added", (snap) => this.cards[snap.key] = snap.val());
+            this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
+            this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
+            this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
+        }
     },
     addCursorListener() {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());
     },
     removeDashboardListeners() {
+        if(this.userID.length>1)
         database.ref("users").child(this.userID).child("projects").orderByChild("createdAt").off();
     },
     removeDocumentListeners() {
-        this.projectRef.child("users").off();
-        this.projectRef.child("nodes").off();
-        this.projectRef.child("container").off();
+        if(this.projectRef)
+        {
+            this.projectRef.child("users").off();
+            this.projectRef.child("nodes").off();
+            this.projectRef.child("container").off();
+        }
     },
     removeCursorListener() {
         this.projectRef.child("cursors").off()

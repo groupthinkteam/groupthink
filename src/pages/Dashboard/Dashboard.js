@@ -14,9 +14,10 @@ const Dashboard = observer(() => {
   useEffect(() => {
     store.addDashboardListeners()
     return () => store.removeDashboardListeners()
-  }, [store.addDashboardListeners, store.removeDashboardListeners])
+  }, [store.addDashboardListeners, store.removeDashboardListeners,store])
 
   const signOut = () => {
+    console.log("SIGNOUT ")
     store.signout();
     history.push('/login', { from: location });
 
