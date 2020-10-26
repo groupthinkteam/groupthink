@@ -49,9 +49,9 @@ export var storeObject = {
             this.currentUser = false;
         }
     },
-    async isProjectValid(id,callback){
-        console.log("isPROJECTVALID ",this.userRef.once('value').then(snap=>snap.hasChild(id)))
-        callback( await this.userRef.once('value').then(snap=>snap.hasChild(id)));
+    async isProjectValid(id, callback) {
+        console.log("isPROJECTVALID ", this.userRef.once('value').then(snap => snap.hasChild(id)))
+        callback(await this.userRef.once('value').then(snap => snap.hasChild(id)));
     },
     // dashboard related actions
     addNewProject() {
@@ -68,7 +68,7 @@ export var storeObject = {
             },
             users: {
                 [this.currentUser.uid]: {
-                    "permission": 2,
+                    "permission": 2, /*> r = 0  rw = 1 admin = 2*/
                     "email": this.currentUser.email,
                     "photoURL": this.currentUser.photoURL,
                     "name": this.currentUser.displayName,
@@ -285,17 +285,16 @@ export var storeObject = {
     sync(property, path, value) {
         set(this[property], path, value)
     },
-    highlightSearched(result , belongsTo)
-    {
-        if(belongsTo === 'projects' && result.length>0)//orDashboard
+    highlightSearched(result, belongsTo) {
+        if (belongsTo === 'projects' && result.length > 0)//orDashboard
         {
-            Object.entries(result).map(([_,val])=>{
-                console.log("Result Got in Store ",result)
-                this.projects[val.id] = { 
-                    ...this.projects[val.id] , 
-                    [val.id] : {
+            Object.entries(result).map(([_, val]) => {
+                console.log("Result Got in Store ", result)
+                this.projects[val.id] = {
+                    ...this.projects[val.id],
+                    [val.id]: {
                         ...this.projects[val.id],
-                        "highlight" : true
+                        "highlight": true
                     }
                 }
                 return '';
@@ -334,7 +333,7 @@ export var storeObject = {
     removeCursorListener() {
         this.projectRef.child("cursors").off()
     },
-    
+
     // auth related actions
     signout() {
         auth().signOut()

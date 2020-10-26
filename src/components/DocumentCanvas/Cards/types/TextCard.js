@@ -1,6 +1,6 @@
 import React from "react";
-import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit"
-import Highlight from 'react-highlighter';
+import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
+
 /**
 * This File Saves Text And Shows it from Database .   
 * @param {*} props - Property of File .
@@ -19,7 +19,6 @@ function TextCard(props) {
                 disabled={props.isLocked}
                 search={props.highlightText?.text}
             />
-            <Highlight search={props.highlightText?.text}>{props.content.text}</Highlight>
         </div>
     )
 }

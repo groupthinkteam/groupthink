@@ -7,17 +7,17 @@ import { observer } from "mobx-react-lite"
 
 import "../../styles/ProjectCard.scss"
 import "../../styles/custom.scss"
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 
 
 const Card = observer(props => {
     let {projects , addNewProject , sync , renameProject , deleteProject,setProjectID} = useStore();
     let me = projects[props.id]
     const history = useHistory();
-
+    const location= useLocation();
     const onOpen = () => {
         setProjectID(props.id);
-        history.push("/project/" + props.id)
+        history.push("/project/" + props.id , {from : location})
     }
 
     if (props.addNew) {

@@ -8,13 +8,13 @@ import { observer } from 'mobx-react-lite';
 
 const LoginPage = observer(() => {
   const location = useLocation();
-  const store = useStore();
+  const {currentUser,firebaseConfig} = useStore();
   let path = "/dashboard";
-  console.log("LOGIN ",store.currentUser)
+  console.log("LOGIN ")
   if (location.state?.from !== undefined)
     path = location.state.from.pathname
   return (
-    store.currentUser ?
+    currentUser ?
       <Redirect
         to={{
           pathname: path,
@@ -36,7 +36,7 @@ const LoginPage = observer(() => {
           </div>
           {/* </div> */}
         </div>
-        <StyledFirebaseAuth className="landing-login" uiConfig={store.firebaseConfig} firebaseAuth={auth()} />
+        <StyledFirebaseAuth className="landing-login" uiConfig={firebaseConfig} firebaseAuth={auth()} />
       </div>
   )
 })
