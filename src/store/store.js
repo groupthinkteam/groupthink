@@ -68,7 +68,7 @@ export var storeObject = {
             },
             users: {
                 [this.currentUser.uid]: {
-                    "permission": 2, /*> r = 0  rw = 1 admin = 2*/
+                    "permission": "admin", /*> r = 0  rw = 1 admin = 2*/
                     "email": this.currentUser.email,
                     "photoURL": this.currentUser.photoURL,
                     "name": this.currentUser.displayName,
@@ -78,7 +78,7 @@ export var storeObject = {
         }
         const newProjectID = database.ref("documents").push(template).key
         this.userRef.child(newProjectID).set({
-            access: 2,
+            access: "admin",
             name: "New Project",
             thumbnailURL: thumbnailURL,
             createdAt: servertime,
