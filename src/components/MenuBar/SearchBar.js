@@ -18,11 +18,13 @@ const SearchBar = observer(props => {
         console.log("SEARCH ",text)
         if(props.document)
         {
-            searchElementinDocuments(text,store.cards,['content.name','content.title','text'])
+            const result = searchElementinDocuments(text,store.cards,['content.name','content.title','text'])
+            store.highlightSearched(result,'document');
         }
         else
         {
-            searchElementinDocuments(text,store.projects,['content.name']);
+            const result = searchElementinDocuments(text,store.projects,['content.name']);
+            store.highlightSearched(result,'projects');
         }
         
     }

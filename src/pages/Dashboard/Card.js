@@ -31,7 +31,7 @@ const Card = observer(props => {
     }
     else {
         return (
-            <div id={props.id} className="project-card">
+            <div id={props.id} className={(me.highlight ? "project-card highlight" : "project-card")}>
                 <img
                     onClick={onOpen}
                     src={me.thumbnailURL}

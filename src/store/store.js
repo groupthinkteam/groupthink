@@ -285,6 +285,23 @@ export var storeObject = {
     sync(property, path, value) {
         set(this[property], path, value)
     },
+    highlightSearched(result , belongsTo)
+    {
+        if(belongsTo === 'projects' && result.length>0)//orDashboard
+        {
+            Object.entries(result).map(([_,val])=>{
+                console.log("Result Got in Store ",result)
+                this.projects[val.id] = { 
+                    ...this.projects[val.id] , 
+                    [val.id] : {
+                        ...this.projects[val.id],
+                        "highlight" : true
+                    }
+                }
+                return '';
+            })
+        }
+    },
     // listener manipulation
     addDashboardListeners() {
         if (this.userRef && this.userID.length > 1) {
