@@ -4,6 +4,7 @@ import Button from "../Button/Button"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
 import RoomConnect from "../Voice/RoomConnect"
+import SearchBar from "./SearchBar"
 
 export default function MenuBar(props) {
     const currentUser = props.currentUser
@@ -13,9 +14,8 @@ export default function MenuBar(props) {
             <div className="menu-bar-panel menu-bar-panel-left">
                 <div className="site-title">
                     <Link to="/dashboard">
-                        {/* <img className="menu-bar-logo" alt="groupthink logo" src={require("../../assets/logo.jpg")} /> */}
-                    groupthink
-                </Link>
+                        groupthink
+                    </Link>
                 </div>
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
@@ -25,7 +25,9 @@ export default function MenuBar(props) {
                     </div>
                     : null
                 }
-                {/* <div className="menu-center-vertical-filler" /> */}
+                <div className="menu-center-vertical-filler" >
+                    <SearchBar/>
+                </div>
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">
 

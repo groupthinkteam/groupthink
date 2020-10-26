@@ -9,15 +9,15 @@ import { observer } from 'mobx-react-lite';
 const LoginPage = observer(() => {
   const location = useLocation();
   const store = useStore();
-  // let path = "/dashboard";
+  let path = "/dashboard";
 
-  // if (location.state?.from !== undefined)
-  //   path = location.state.from.pathname
+  if (location.state?.from !== undefined)
+    path = location.state.from.pathname
   return (
     store.currentUser ?
       <Redirect
         to={{
-          pathname: "/dashboard",
+          pathname: path,
           state: { from: location }
         }}
       />
