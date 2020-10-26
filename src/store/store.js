@@ -286,20 +286,10 @@ export var storeObject = {
         set(this[property], path, value)
     },
     highlightSearched(result, belongsTo) {
-        if (belongsTo === 'projects' && result.length > 0)//orDashboard
-        {
-            Object.entries(result).map(([_, val]) => {
-                console.log("Result Got in Store ", result)
-                this.projects[val.id] = {
-                    ...this.projects[val.id],
-                    [val.id]: {
-                        ...this.projects[val.id],
-                        "highlight": true
-                    }
-                }
-                return '';
+        if (belongsTo === 'projects' && result.length > 0)
+            Object.entries(result).forEach(([_, val]) => {
+                this.projects[val.id].highlight = true;
             })
-        }
     },
     // listener manipulation
     addDashboardListeners() {
