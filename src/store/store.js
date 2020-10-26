@@ -27,33 +27,31 @@ export var storeObject = {
         return Object.keys(this.projects).filter(id => this.projects[id].shared)
     },
     get projectRef() {
-        //console.log("PROJECT REF ",this.projectID)
-        if(this.projectID)
         return database.ref("documents").child(this.projectID)
-        else
-        return this.projectID
     },
     get userRef() {
-        console.log("User REF ",auth().currentUser?.uid,this.userID)
-        if(this.userID.length>1)
-        return database.ref("users").child(this.userID).child("projects")
+        if (this.userID.length > 1)
+            return database.ref("users").child(this.userID).child("projects")
         else
-        return this.userID
+            return this.userID
     },
     get hitTestCards() {
         return Object.keys(this.cards)
     },
     syncUser() {
-        if(auth().currentUser?.uid)
-        {
+        if (auth().currentUser?.uid) {
             this.userID = auth().currentUser?.uid;
             this.currentUser = auth().currentUser;
-            console.log("SYNC USER ",this.userID,this.currentUser,auth().currentUser?.uid);
+            console.log("SYNC USER ", this.userID, this.currentUser, auth().currentUser?.uid);
         }
-        else{
-            this.userID="";
-            this.currentUser= false;
+        else {
+            this.userID = "";
+            this.currentUser = false;
         }
+    },
+    async isProjectValid(id,callback){
+        console.log("isPROJECTVALID ",this.userRef.once('value').then(snap=>snap.hasChild(id)))
+        callback( await this.userRef.once('value').then(snap=>snap.hasChild(id)));
     },
     // dashboard related actions
     addNewProject() {
@@ -289,7 +287,7 @@ export var storeObject = {
     },
     // listener manipulation
     addDashboardListeners() {
-        if(this.userRef && this.userID.length>1){
+        if (this.userRef && this.userID.length > 1) {
             const projects = this.userRef.orderByChild("createdAt");
             projects.on("child_added", (snap) => this.projects[snap.key] = snap.val());
             projects.on("child_changed", (snap) => this.projects[snap.key] = snap.val());
@@ -297,33 +295,29 @@ export var storeObject = {
         }
     },
     addDocumentListeners() {
-        if(this.projectRef && this.userID.length>1)
-        {
-            this.projectRef.child("users").on("value", (snap) => this.users = snap.val());
-            this.projectRef.child("nodes").on("child_added", (snap) => this.cards[snap.key] = snap.val());
-            this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
-            this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
-            this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
-        }
+        this.projectRef.child("users").on("value", (snap) => this.users = snap.val());
+        this.projectRef.child("nodes").on("child_added", (snap) => this.cards[snap.key] = snap.val());
+        this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
+        this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
+        this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
+
     },
     addCursorListener() {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());
     },
     removeDashboardListeners() {
-        if(this.userID.length>1)
-        database.ref("users").child(this.userID).child("projects").orderByChild("createdAt").off();
+        if (this.userID.length > 1)
+            database.ref("users").child(this.userID).child("projects").orderByChild("createdAt").off();
     },
     removeDocumentListeners() {
-        if(this.projectRef)
-        {
-            this.projectRef.child("users").off();
-            this.projectRef.child("nodes").off();
-            this.projectRef.child("container").off();
-        }
+        this.projectRef.child("users").off();
+        this.projectRef.child("nodes").off();
+        this.projectRef.child("container").off();
     },
     removeCursorListener() {
         this.projectRef.child("cursors").off()
     },
+    
     // auth related actions
     signout() {
         auth().signOut()

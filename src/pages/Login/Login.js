@@ -10,7 +10,7 @@ const LoginPage = observer(() => {
   const location = useLocation();
   const store = useStore();
   let path = "/dashboard";
-
+  console.log("LOGIN ",store.currentUser)
   if (location.state?.from !== undefined)
     path = location.state.from.pathname
   return (

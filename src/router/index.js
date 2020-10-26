@@ -15,6 +15,7 @@ function AppRoutes(props) {
   const {syncUser,currentUser} = useStore();
   useEffect(
     () => {
+      console.log("INDEX  ", isSignedIn, currentUser?.uid);
       let unsubscribe = auth().onAuthStateChanged(_ => syncUser())
       return () => unsubscribe()
     }
@@ -22,7 +23,7 @@ function AppRoutes(props) {
 
   const isSignedIn = !!currentUser;
 
-  console.log("INDEX  ", isSignedIn, currentUser?.uid);
+  
   return (
     <Router>
       <Switch>
