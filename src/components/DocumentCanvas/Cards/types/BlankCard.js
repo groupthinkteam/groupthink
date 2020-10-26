@@ -5,7 +5,7 @@ import Button from "../../../Button/Button";
 import "../../../../styles/Cards/BlankCard.scss";
 
 import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
-import { detectDimension, extensionDetector, metadataOfLinks, typeDetector } from "../Detector";
+import { detectDimension, getTypeFromURL, metadataOfLinks, typeDetector } from "../Detector";
 
 /**
  * @description The BlankCard type provides the UI for a newly-added card. It 
@@ -61,7 +61,7 @@ function BlankCard(props) {
     }
 
     const onSave = async() => {
-        const outcome = extensionDetector(props.content.text);
+        const outcome = getTypeFromURL(props.content.text);
         if (outcome === 'NoLink') { props.typeAPI.saveContent(props.id, { text: props.content.text }) }
         else{
             metadataOfLinks(props.content.text,metadata=>{

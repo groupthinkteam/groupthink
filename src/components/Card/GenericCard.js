@@ -20,6 +20,7 @@ gsap.registerPlugin(Draggable);
 const GenericCard = observer(props=>{
     let store = useStore();
     let me = store.cards[props.id];
+    console.log(me)
     const CardType = cardChooser(me.type);
     const cardRef = useRef(null);
 
@@ -84,7 +85,7 @@ const GenericCard = observer(props=>{
                     opacity: 0
                 }}>
                 <div style={{ width: me.size.width, height: me.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                    <CardType typeAPI={store} content={me.content} size={me.size} id={props.id} />
+                    <CardType typeAPI={store} content={{...me.content}} size={{...me.size}} id={props.id} />
                 </div>
             </div>
         </>
