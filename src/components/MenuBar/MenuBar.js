@@ -26,7 +26,7 @@ export default function MenuBar(props) {
                     : null
                 }
                 <div className="menu-center-vertical-filler" >
-                    <SearchBar/>
+                    <SearchBar document={props?.document} dashboard={props?.dashboard}/>
                 </div>
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">

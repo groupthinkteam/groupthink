@@ -101,6 +101,7 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
 
     const results = miniSearch.search(text, { fuzzy: 0.2 });
 
-    console.log("THE SEARCH ELEMENTS ", results, text, makeArrayofProject);
+    console.log("THE SEARCH ELEMENTS ",  text," \n In \n", makeArrayofProject);
+    console.log("RESULT ", results);
     return results;
 }
