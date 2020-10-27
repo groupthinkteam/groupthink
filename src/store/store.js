@@ -87,15 +87,15 @@ export var storeObject = {
     deleteProject(id) {
         database.ref("garbagecollection").child(id).set(servertime);
         database.ref("documents").child(id).child("users")
-            .once("value")
-            .then((snap) => {
-                let updates = {}
-                Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id] = null)
-                console.log("updates", updates)
-                database.ref("users").update(updates)
-                    .then(database.ref("documents").child(id).set(null))
-            }
-            )
+        .once("value")
+        .then((snap) => {
+            let updates = {}
+            Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id] = null)
+            console.log("updates", updates)
+            database.ref("users").update(updates)
+            .then(database.ref("documents").child(id).set(null))
+        });
+
     },
     renameProject(id, title) {
         database.ref("documents").child(id).child("metadata").child("name").set(title)
@@ -223,8 +223,8 @@ export var storeObject = {
         this.cards[id]["content"] = newContent;
         this.saveContent(id, newContent);
     },
-    changeType(id, newType) {
-        const newCardDefaults = cardTemplate(newType, { width: 300, height: 300 });
+    changeType(id, newType , size) {
+        const newCardDefaults = cardTemplate(newType, size);
         this.projectRef.child("nodes").child(id)
             .update(newCardDefaults)
             .then(console.log("set new type for", id, "value:", newCardDefaults))

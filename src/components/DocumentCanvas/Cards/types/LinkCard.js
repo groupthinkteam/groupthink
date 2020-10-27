@@ -26,7 +26,7 @@ const LinkCard = (props) => {
             console.log("CHNAGES ",Math.floor(width  * temp));
             changeSize(Math.floor(height * temp) + 35 , Math.floor(width  * temp))
         }
-    },[props.content.metadata.error, props.content.metadata.height, props.content.metadata.width, props.id, props.typeAPI])
+    },[props.content.metadata, props.content.metadata.height, props.content.metadata.width, props.id, props.typeAPI])
     console.log("props.content.metadata ",props.content.metadata , maxDimension , multiplier);
     return (
         <>

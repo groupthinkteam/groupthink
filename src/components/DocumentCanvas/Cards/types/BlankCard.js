@@ -65,15 +65,13 @@ function BlankCard(props) {
         if (outcome === 'NoLink') { props.typeAPI.saveContent(props.id, { text: props.content.text }) }
         else{
             metadataOfLinks(props.content.text,metadata=>{
-                
-                props.typeAPI.changeType(props.id, outcome, types[outcome])
-                props.typeAPI.saveContent(props.id, { url:metadata.url, metadata: metadata});
+                props.typeAPI.saveContent(props.id,{ url:props.content.text, metadata: metadata} );
             })
-            
+            props.typeAPI.changeType(props.id, outcome, types[outcome])
         }
     }
 
-    const upload = (files) => {
+    const upload =useCallback( (files) => {
         let file = files[0] ,imageHeight=null , imageWidth=null , aspectRatio = null ;
         const type = typeDetector(file?.type);
        
@@ -104,11 +102,11 @@ function BlankCard(props) {
                     )
                 }
             });
-    }
+    },[props.id,props.typeAPI,types])
 
     const onDrop = useCallback(acceptedFiles => {
         upload(acceptedFiles)
-    },[])
+    },[upload])
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
     if (uploadState) {

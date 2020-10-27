@@ -9,7 +9,7 @@ const AudioCard = (props) => {
     return (
         <div>
             { props.content.text === undefined ?
-                Object.entries(props.content).map((fileKey,val)=>{
+                Object.entries(props.content).map((fileKey,_)=>{
                     //console.log(fileKey[0] , fileKey[1]?.url )//
                     return (
                         <div key={fileKey[0]}>

@@ -76,7 +76,7 @@ const GenericCard = observer(props=>{
                 ref={cardRef}
                 onKeyDown={(e) => {
                     console.log("pressed ", e.key);
-                    if (e.key === "Delete" || e.key === "Backspace") {
+                    if (e.key === "Delete") {
                         store.removeCard(props.id, "recursive")
                     }
                 }}
