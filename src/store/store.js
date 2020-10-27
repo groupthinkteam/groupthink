@@ -42,7 +42,6 @@ export var storeObject = {
         if (auth().currentUser?.uid) {
             this.userID = auth().currentUser?.uid;
             this.currentUser = auth().currentUser;
-            console.log("SYNC USER ", this.userID, this.currentUser, auth().currentUser?.uid);
         }
         else {
             this.userID = "";
@@ -50,7 +49,6 @@ export var storeObject = {
         }
     },
     async isProjectValid(id, callback) {
-        console.log("isPROJECTVALID ", this.userRef.once('value').then(snap => snap.hasChild(id)))
         callback(await this.userRef.once('value').then(snap => snap.hasChild(id)));
     },
     // dashboard related actions
@@ -91,7 +89,6 @@ export var storeObject = {
         .then((snap) => {
             let updates = {}
             Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id] = null)
-            console.log("updates", updates)
             database.ref("users").update(updates)
             .then(database.ref("documents").child(id).set(null))
         });

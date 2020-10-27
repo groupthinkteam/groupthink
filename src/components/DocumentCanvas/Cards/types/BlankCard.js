@@ -60,27 +60,25 @@ function BlankCard(props) {
         props.typeAPI.changeContent(props.id, { text: e.target.value })
     }
 
-    const onSave = async() => {
+    const onSave = async () => {
         const outcome = getTypeFromURL(props.content.text);
         if (outcome === 'NoLink') { props.typeAPI.saveContent(props.id, { text: props.content.text }) }
-        else{
-            metadataOfLinks(props.content.text,metadata=>{
-                props.typeAPI.saveContent(props.id,{ url:props.content.text, metadata: metadata} );
+        else {
+            metadataOfLinks(props.content.text, metadata => {
+                props.typeAPI.saveContent(props.id, { url: props.content.text, metadata: metadata });
             })
             props.typeAPI.changeType(props.id, outcome, types[outcome])
         }
     }
 
-    const upload =useCallback( (files) => {
-        let file = files[0] ,imageHeight=null , imageWidth=null , aspectRatio = null ;
+    const upload = useCallback((files) => {
+        let file = files[0], imageHeight = null, imageWidth = null, aspectRatio = null;
         const type = typeDetector(file?.type);
-       
-        detectDimension(type,file,data=>{
-            imageHeight=data.height;
-            imageWidth=data.width;
-            console.log("TEST ",data);
+
+        detectDimension(type, file, data => {
+            imageHeight = data.height;
+            imageWidth = data.width;
         });
-        console.log("FILE",file)
         let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
         var typemeta = {
             contentType: file.type
@@ -95,61 +93,59 @@ function BlankCard(props) {
                         (url, metadata) => {
                             props.typeAPI.changeType(props.id, type, types[type])
                             props.typeAPI.saveContent(props.id, {
-                                [metadata.name]: { url: url , metadata: metadata , height:imageHeight , width:imageWidth , aspectRatio:aspectRatio},
+                                [metadata.name]: { url: url, metadata: metadata, height: imageHeight, width: imageWidth, aspectRatio: aspectRatio },
                                 "text": null
                             })
                         }
                     )
                 }
             });
-    },[props.id,props.typeAPI,types])
+    }, [props.id, props.typeAPI, types])
 
     const onDrop = useCallback(acceptedFiles => {
         upload(acceptedFiles)
-    },[upload])
+    }, [upload])
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
     if (uploadState) {
         gsap.to("#uploadfiller".concat(props.id), { height: uploadState + "%" })
     }
-    console.log("hello my name is dev sethsjdalksad", uploadState)
-    console.log(uploadState)
 
     return (
         uploadState
             ? <div style={{ position: "relative", height: "100%", width: "100%", display: "flex", flexFlow: "column nowrap", justifyContent: "flex-end" }}>
                 <div id={"uploadfiller".concat(props.id)} style={{ width: "100%", height: 0, backgroundColor: "lavenderblush" }} />
-                <div style={{position: "absolute", top: "50%"}}> Uploading </div>
+                <div style={{ position: "absolute", top: "50%" }}> Uploading </div>
             </div>
             :
             <div>
-                    <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
-                        Text
+                <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
+                    Text
             </Button>
-                    <Button handleClick={() => props.typeAPI.changeType(props.id, "todo", types["todo"])}>
-                        Todo
+                <Button handleClick={() => props.typeAPI.changeType(props.id, "todo", types["todo"])}>
+                    Todo
             </Button>
-                    <Button handleClick={() => inputFile.current.click()}>
-                        Upload
+                <Button handleClick={() => inputFile.current.click()}>
+                    Upload
             </Button>
-                    <input type="file"
-                        onChange={(e) => upload(e.target.files)}
-                        ref={inputFile}
-                        style={{ display: 'none' }} />
-                    <div {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        {
-                            isDragActive ?
-                                <p>Drop the file here ...</p> :
-                                <p>Drag and Drop a file, or Browse</p>
-                        }
-                    </div>
-                    <InlineTextEdit
-                        onChange={e => onChange(e)}
-                        onSave={onSave}
-                        placeholder="Paste a link here..."
-                    />
+                <input type="file"
+                    onChange={(e) => upload(e.target.files)}
+                    ref={inputFile}
+                    style={{ display: 'none' }} />
+                <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    {
+                        isDragActive ?
+                            <p>Drop the file here ...</p> :
+                            <p>Drag and Drop a file, or Browse</p>
+                    }
                 </div>
+                <InlineTextEdit
+                    onChange={e => onChange(e)}
+                    onSave={onSave}
+                    placeholder="Paste a link here..."
+                />
+            </div>
     )
 }
 
