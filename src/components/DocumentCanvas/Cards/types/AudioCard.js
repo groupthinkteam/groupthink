@@ -9,13 +9,13 @@ const AudioCard = (props) => {
     return (
         <div>
             { props.content.text === undefined ?
-                Object.entries(props.content).map((fileKey,_)=>{
-                    //console.log(fileKey[0] , fileKey[1]?.url )//
+                Object.entries(props.content).map(([fileKey,val])=>{
+                    //console.log(fileKey , fileKey[1]?.url )//
                     return (
-                        <div key={fileKey[0]}>
-                        File Name : {fileKey[0].split(">")[0]}
+                        <div key={fileKey}>
+                        File Name : {fileKey.split(">")[0]}
                         <AudioPlayer
-                            src={fileKey[1]?.url}
+                            src={val.url}
                             showDownloadProgress="false"
                             preload="metadata"
                             style={{width:props.size.width , marginTop:'5px'}}

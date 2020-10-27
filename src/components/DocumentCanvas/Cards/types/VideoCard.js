@@ -30,6 +30,7 @@ const VideosCard = (props) =>{
           },
           [fileName]:null
         });
+        
     }
     const onLoadDiv = (fileName,url,height,width) =>{
         setVideo({

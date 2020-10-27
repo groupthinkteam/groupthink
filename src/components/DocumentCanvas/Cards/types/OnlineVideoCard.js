@@ -41,7 +41,7 @@ const OnlineVideoCard = (props) => {
                         width={`${Math.floor(parseInt(dimension.width) * multiplier)}px`}
                         height={`${Math.floor(parseInt(dimension.height )* multiplier)}px`} 
                         controls={true}
-                        //light={true}
+                        light={true}
                     />
                     <a style={{color:'red'}} href={props.content.metadata.url}>{props.content.metadata.title}</a>
                 </div>

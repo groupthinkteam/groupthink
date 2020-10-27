@@ -13,7 +13,7 @@ const LinkCard = (props) => {
         const changeSize = (height, width) => {
             props.typeAPI.resize(props.id, { width: width, height: height })
         }
-        console.log('HFDUI ', typeof props.content.metadata?.error)
+        console.log('Metadata Error ', typeof props.content.metadata?.error)
         if( props.content.metadata?.height !== undefined )
         {
             let height= typeof props.content.metadata?.height ==='number' ?props.content.metadata?.height:350;
