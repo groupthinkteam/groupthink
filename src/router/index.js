@@ -12,7 +12,7 @@ import Document from "../pages/Document/Document";
 import ErrorsPage from "../pages/Errors/ErrorsPage";
 
 function AppRoutes(props) {
-  const {syncUser,currentUser} = useStore();
+  const { syncUser, currentUser } = useStore();
   useEffect(
     () => {
       console.log("INDEX  ", isSignedIn, currentUser?.uid);
@@ -23,7 +23,6 @@ function AppRoutes(props) {
 
   const isSignedIn = !!currentUser;
 
-  
   return (
     <Router>
       <Switch>

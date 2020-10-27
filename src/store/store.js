@@ -48,7 +48,7 @@ export var storeObject = {
             this.currentUser = false;
         }
     },
-    async isProjectValid(id, ) {
+    async isProjectValid(id,) {
         (await this.userRef.once('value').then(snap => snap.hasChild(id)));
     },
     // dashboard related actions
@@ -267,7 +267,7 @@ export var storeObject = {
             () => { statu("complete"); unsubscribe(); } // on completion
         )
     },
-    requestDownload(downloadPath, ) {
+    requestDownload(downloadPath,) {
         const path = "root/" + this.projectID + "/" + downloadPath;
         let requestedPathRef = storage().ref(path)
         requestedPathRef.getDownloadURL()
@@ -299,46 +299,33 @@ export var storeObject = {
         return (newSharedKey);
     },
     createSharedUser(projectID, keyId, permission) {
-
-        let projectMetadata, access;
-        database.ref("documents").child(projectID).child("metadata").on('value', (snap) => {
-            projectMetadata = snap.val();
-        });
-
+        let success = true;
         const updates = {};
         updates[this.userID] = {
             "permission": permission,
-            "accesscode": keyId,
+            "access": keyId,
             "email": this.currentUser.email,
             "photoURL": this.currentUser.photoURL,
             "name": this.currentUser.displayName,
         }
         database.ref("documents").child(projectID).child("users").child(this.userID).update(updates)
-            .then(() => { access = true })
-            .catch(()=>access=false);
-
-        //Add user to userTree
-        if (access) {
-            this.userRef.child(projectID).set({
-                access: permission,
-                name: projectMetadata.name,
-                thumbnailURL: projectMetadata.thumbnailURL,
-                createdAt: servertime,
-                shared: true
-            }).then(console.log("You are Added to Users Tree"))
-                .catch(err => console.log("Error in creating user  ", err));
-
-            //Add LastActive
-
-            database.ref("documents").child(projectID).child("lastActive").update({ [this.userID]: servertime })
-                .then(console.log("Added lastActive"))
-                .catch(err => console.log("Error in lastActive  ", err));
-            
-            
-        }
-
-        return access
-
+            .then(() => {
+                database.ref("documents").child(projectID).child("metadata")
+                    .once('value')
+                    .then((snap) => {
+                        let projectMetadata = snap.val();
+                        this.userRef.child(projectID).set({
+                            access: permission,
+                            name: projectMetadata.name,
+                            thumbnailURL: projectMetadata.thumbnailURL,
+                            createdAt: servertime,
+                            shared: true
+                        })
+                            .catch(err => console.log("Error in creating user  ", err));
+                        // this.updateLastActive();
+                    })
+            }).catch(() => success = false);
+        return success;
     },
     // listener manipulation
     addDashboardListeners() {
@@ -355,7 +342,6 @@ export var storeObject = {
         this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
         this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
         this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
-
     },
     addCursorListener() {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());

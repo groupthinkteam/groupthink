@@ -11,42 +11,38 @@ function Document() {
   let store = useStore();
   const history = useHistory();
   const location = useLocation();
-  const {projectID,keyID}=useParams();
+  const { projectID, keyID, permission } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
   useEffect(() => {
-    console.log("DATA LOADED IN DOCUMENT KEY: ",keyID,"\n PROJECT \n",projectID);
-    if(keyID)
-    {
+    console.log("DATA LOADED IN DOCUMENT KEY: ", keyID, "\n PROJECT \n", projectID);
+    if (keyID) {
       //TODO:- Remove check and use in Index
-      const isUserCreated =  store.createSharedUser(projectID,keyID);
-      if(isUserCreated)
-      history.push('/projects/'+projectID , {from:location});
+      let success = store.createSharedUser(projectID, keyID, permission)
+      if (success)
+        history.push('/project/' + projectID, { from: location });
       else
-      history.push('/error', { from: location })
+        history.push('/error', { from: location })
     }
-    else{
-      store.isProjectValid(projectID,isValid=>{
-        console.log("DATA ",isValid)
-        if(isValid)
-        {
-          setTimeout(() => setIsLoaded(true), 4000)
-          store.projectID=projectID
-          store.addDocumentListeners()
-          return () => store.removeDocumentListeners()
-        }
-        else
-        {
-          history.push('/dashboard',{from:location});
-        }
-      })
+    else {
+      let valid = store.isProjectValid(projectID);
+      console.log("valid")
+      if (valid) {
+        setTimeout(() => setIsLoaded(true), 4000)
+        store.projectID = projectID
+        store.addDocumentListeners()
+        return () => store.removeDocumentListeners()
+      }
+      else {
+        console.log("this is happening")
+        history.push('/dashboard', { from: location });
+      }
     }
-  }, [store,projectID,history,location,keyID])
+  }, [store, projectID, history, location, keyID])
 
   const signOut = () => {
     console.log("SIGNOUT ")
     store.signout();
-    history.push('/login',{from:location});
-
+    history.push('/login', { from: location });
   }
 
   if (!isloaded) {
@@ -54,7 +50,7 @@ function Document() {
   }
   return (
     <div>
-      <MenuBar document currentUser={store.currentUser} signOut={signOut} projectID={projectID}/>
+      <MenuBar document currentUser={store.currentUser} signOut={signOut} projectID={projectID} />
       <CardContainer />
     </div>
   );
