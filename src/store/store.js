@@ -42,16 +42,14 @@ export var storeObject = {
         if (auth().currentUser?.uid) {
             this.userID = auth().currentUser?.uid;
             this.currentUser = auth().currentUser;
-            console.log("SYNC USER ", this.userID, this.currentUser, auth().currentUser?.uid);
         }
         else {
             this.userID = "";
             this.currentUser = false;
         }
     },
-    async isProjectValid(id, callback) {
-        console.log("isPROJECTVALID ", this.userRef.once('value').then(snap => snap.hasChild(id)))
-        callback(await this.userRef.once('value').then(snap => snap.hasChild(id)));
+    async isProjectValid(id, ) {
+        (await this.userRef.once('value').then(snap => snap.hasChild(id)));
     },
     // dashboard related actions
     addNewProject() {
@@ -87,14 +85,13 @@ export var storeObject = {
     deleteProject(id) {
         database.ref("garbagecollection").child(id).set(servertime);
         database.ref("documents").child(id).child("users")
-        .once("value")
-        .then((snap) => {
-            let updates = {}
-            Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id] = null)
-            console.log("updates", updates)
-            database.ref("users").update(updates)
-            .then(database.ref("documents").child(id).set(null))
-        });
+            .once("value")
+            .then((snap) => {
+                let updates = {}
+                Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id] = null)
+                database.ref("users").update(updates)
+                    .then(database.ref("documents").child(id).set(null))
+            });
 
     },
     renameProject(id, title) {
@@ -223,7 +220,7 @@ export var storeObject = {
         this.cards[id]["content"] = newContent;
         this.saveContent(id, newContent);
     },
-    changeType(id, newType , size) {
+    changeType(id, newType, size) {
         const newCardDefaults = cardTemplate(newType, size);
         this.projectRef.child("nodes").child(id)
             .update(newCardDefaults)
@@ -253,7 +250,7 @@ export var storeObject = {
         }
         console.log("didn't reparent because it was just not a valid request. do better next time.")
     },
-    requestUpload(uploadPath, file, metadata, statusCallback) {
+    requestUpload(uploadPath, file, metadata, statu) {
         let custom = {
             ...metadata,
             customMetadata: {
@@ -265,18 +262,18 @@ export var storeObject = {
         let requestedPathRef = storage().ref(path);
         let uploadTask = requestedPathRef.put(file, custom);
         let unsubscribe = uploadTask.on(storage.TaskEvent.STATE_CHANGED,
-            (nextSnapshot) => statusCallback(nextSnapshot.bytesTransferred / nextSnapshot.totalBytes * 100, uploadTask), // on upload progress
+            (nextSnapshot) => statu(nextSnapshot.bytesTransferred / nextSnapshot.totalBytes * 100, uploadTask), // on upload progress
             null, // error handling -- nonexistent!
-            () => { statusCallback("complete"); unsubscribe(); } // on completion
+            () => { statu("complete"); unsubscribe(); } // on completion
         )
     },
-    requestDownload(downloadPath, callback) {
+    requestDownload(downloadPath, ) {
         const path = "root/" + this.projectID + "/" + downloadPath;
         let requestedPathRef = storage().ref(path)
         requestedPathRef.getDownloadURL()
             .then((url) => {
                 requestedPathRef.getMetadata()
-                    .then((metadata) => callback(url, JSON.parse(JSON.stringify(metadata))))
+                    .then((metadata) => (url, JSON.parse(JSON.stringify(metadata))))
                     .catch((reason) => console.log("failed to fetch metadata for", path, "because", reason))
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
@@ -290,6 +287,58 @@ export var storeObject = {
             Object.entries(result).forEach(([_, val]) => {
                 this.projects[val.id].highlight = true;
             })
+    },
+    addKeyToShare(permission) {
+        const newSharedKey = this.projectRef.child("sharing").push().key;
+        const updates = {};
+        updates[newSharedKey] = permission;
+        this.projectRef.child("sharing")
+            .update(updates)
+            .then(console.log("successfully Added key ", newSharedKey))
+            .catch((reason) => console.log("error in updating key because", reason));
+        return (newSharedKey);
+    },
+    createSharedUser(projectID, keyId, permission) {
+
+        let projectMetadata, access;
+        database.ref("documents").child(projectID).child("metadata").on('value', (snap) => {
+            projectMetadata = snap.val();
+        });
+
+        const updates = {};
+        updates[this.userID] = {
+            "permission": permission,
+            "accesscode": keyId,
+            "email": this.currentUser.email,
+            "photoURL": this.currentUser.photoURL,
+            "name": this.currentUser.displayName,
+        }
+        database.ref("documents").child(projectID).child("users").child(this.userID).update(updates)
+            .then(() => { access = true })
+            .catch(()=>access=false);
+
+        //Add user to userTree
+        if (access) {
+            this.userRef.child(projectID).set({
+                access: permission,
+                name: projectMetadata.name,
+                thumbnailURL: projectMetadata.thumbnailURL,
+                createdAt: servertime,
+                shared: true
+            }).then(console.log("You are Added to Users Tree"))
+                .catch(err => console.log("Error in creating user  ", err));
+
+            //Add LastActive
+
+            database.ref("documents").child(projectID).child("lastActive").update({ [this.userID]: servertime })
+                .then(console.log("Added lastActive"))
+                .catch(err => console.log("Error in lastActive  ", err));
+            
+            
+        }
+
+        return access
+
     },
     // listener manipulation
     addDashboardListeners() {

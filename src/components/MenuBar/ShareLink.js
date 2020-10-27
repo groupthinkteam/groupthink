@@ -24,14 +24,8 @@ const ShareLink = observer(props => {
     const openLink = () => {
         if (linkType !== undefined && permission !== undefined) {
             setLink(true)
-            // if (linkType === "private") {
-            //     createRoom(props.projectID, props.currentUser.uid, props.currentUser.displayName)
-            //     .then("Room Made").catch(err => err)
-            // }
-            // else {
-            //     createPublic(props.projectID, permission, props.currentUser.uid, props.currentUser.displayName)
-            // }
-            setURL(String(window.location) + "/" +permission+"/"+linkType+"/")
+            const newKey = store.addKeyToShare(permission)
+            setURL(String(window.location)+"/shared/"+newKey+"/"+permission);
         }
         else
             setLink(false)

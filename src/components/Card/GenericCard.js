@@ -20,7 +20,6 @@ gsap.registerPlugin(Draggable);
 const GenericCard = observer(props=>{
     let store = useStore();
     let me = store.cards[props.id];
-    console.log(me)
     const CardType = cardChooser(me.type);
     const cardRef = useRef(null);
 
@@ -35,7 +34,6 @@ const GenericCard = observer(props=>{
         () => {
             // warning: can't use arrow functions here since that messes up the "this" binding
             function drag() {
-                console.log("now that was a drag");
                 me.position = { x: this.x, y: this.y }
             }
             function dragStop() {

@@ -3,6 +3,10 @@
     box-sizing: border-box;
     border-radius: 6px;
     box-shadow: 0px 1px 2px 0px rgba(51,61,78,0.25);
+    &:focus, &:focus-within {
+        outline: none;
+        border: 2px solid black;
+    }
     &.active-card {
         border: 2px solid black;
     }

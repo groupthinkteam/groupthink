@@ -11,24 +11,36 @@ function Document() {
   let store = useStore();
   const history = useHistory();
   const location = useLocation();
-  const {projectID}=useParams();
+  const {projectID,keyID}=useParams();
   const [isloaded, setIsLoaded] = useState(false);
   useEffect(() => {
-    store.isProjectValid(projectID,data=>{
-      console.log("DATA ",data)
-      if(data)
-      {
-        setTimeout(() => setIsLoaded(true), 4000)
-        store.projectID=projectID
-        store.addDocumentListeners()
-        return () => store.removeDocumentListeners()
-      }
+    console.log("DATA LOADED IN DOCUMENT KEY: ",keyID,"\n PROJECT \n",projectID);
+    if(keyID)
+    {
+      //TODO:- Remove check and use in Index
+      const isUserCreated =  store.createSharedUser(projectID,keyID);
+      if(isUserCreated)
+      history.push('/projects/'+projectID , {from:location});
       else
-      {
-        history.push('/dashboard',{from:location});
-      }
-    })
-  }, [store,projectID,history,location])
+      history.push('/error', { from: location })
+    }
+    else{
+      store.isProjectValid(projectID,isValid=>{
+        console.log("DATA ",isValid)
+        if(isValid)
+        {
+          setTimeout(() => setIsLoaded(true), 4000)
+          store.projectID=projectID
+          store.addDocumentListeners()
+          return () => store.removeDocumentListeners()
+        }
+        else
+        {
+          history.push('/dashboard',{from:location});
+        }
+      })
+    }
+  }, [store,projectID,history,location,keyID])
 
   const signOut = () => {
     console.log("SIGNOUT ")
