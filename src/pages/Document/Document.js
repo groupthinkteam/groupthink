@@ -42,7 +42,7 @@ function Document() {
   }
   return (
     <div>
-      <MenuBar document currentUser={store.currentUser} signOut={signOut} />
+      <MenuBar document currentUser={store.currentUser} signOut={signOut} projectID={projectID}/>
       <CardContainer />
     </div>
   );

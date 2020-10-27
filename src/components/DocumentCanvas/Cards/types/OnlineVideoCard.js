@@ -29,7 +29,7 @@ const OnlineVideoCard = (props) => {
             changeSize(Math.floor(height * temp) + 50 , Math.floor(width  * temp))
         }
     
-    },[props.content.metadata ,props.content.metadata.height,props.content.metadata.width,props.id,props.typeAPI , props.content.text])
+    },[props.content.metadata ,props.id,props.typeAPI , props.content.text])
     //console.log("PROPS ",props.content.metadata , maxDimension,multiplier,parseInt(props.content.metadata?.width),Math.floor(parseInt(props.content.metadata?.height) * multiplier) + 5)
     return (
         <>
@@ -41,7 +41,6 @@ const OnlineVideoCard = (props) => {
                         width={`${Math.floor(parseInt(dimension.width) * multiplier)}px`}
                         height={`${Math.floor(parseInt(dimension.height )* multiplier)}px`} 
                         controls={true}
-                        light={true}
                     />
                     <a style={{color:'red'}} href={props.content.metadata.url}>{props.content.metadata.title}</a>
                 </div>

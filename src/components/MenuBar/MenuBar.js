@@ -1,6 +1,6 @@
 import React from "react"
 import Button from "../Button/Button"
-//import ShareLink from "./ShareLink"
+import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
 import RoomConnect from "../Voice/RoomConnect"
@@ -35,9 +35,9 @@ export default function MenuBar(props) {
                     props.document ?
                         <>
                             <RoomConnect currentUser={currentUser} />
-                            {/* <ShareLink projectID={props.projectID} buttonClassName="menu-action-button highlight"
-                                currentUser={currentUser} isOwner={props.isOwner}
-                            /> */}
+                            <ShareLink projectID={props.projectID} buttonClassName="menu-action-button highlight"
+                                currentUser={currentUser} 
+                            />
                         </>
                         : null
                 }
