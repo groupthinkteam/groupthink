@@ -15,27 +15,17 @@ function Document() {
   const [isloaded, setIsLoaded] = useState(false);
   useEffect(() => {
     console.log("DATA LOADED IN DOCUMENT KEY: ", keyID, "\n PROJECT \n", projectID);
-    if (keyID) {
-      //TODO:- Remove check and use in Index
-      let success = store.createSharedUser(projectID, keyID, permission)
-      if (success)
-        history.push('/project/' + projectID, { from: location });
-      else
-        history.push('/error', { from: location })
+    store.isProjectValid(projectID);
+    console.log("valid", store.validproject)
+    if (store.validproject) {
+      setTimeout(() => setIsLoaded(true), 4000)
+      store.projectID = projectID
+      store.addDocumentListeners()
+      return () => store.removeDocumentListeners()
     }
     else {
-      store.isProjectValid(projectID);
-      console.log("valid", store.validproject)
-      if (store.validproject) {
-        setTimeout(() => setIsLoaded(true), 4000)
-        store.projectID = projectID
-        store.addDocumentListeners()
-        return () => store.removeDocumentListeners()
-      }
-      else {
-        console.log("this is happening")
-        history.push('/dashboard', { from: location });
-      }
+      console.log("this is happening")
+      history.push('/dashboard', { from: location });
     }
   }, [store, projectID, history, location, keyID, permission])
 
