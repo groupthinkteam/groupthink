@@ -299,7 +299,6 @@ export var storeObject = {
         return (newSharedKey);
     },
     createSharedUser(projectID, keyId, permission, callback) {
-        console.log("shared user was called")
         let updates = {};
         updates[this.userID] = {
             "permission": permission,
@@ -308,7 +307,8 @@ export var storeObject = {
             "photoURL": this.currentUser.photoURL,
             "name": this.currentUser.displayName,
         }
-        database.ref("documents").child(projectID).child("users").child(this.userID)
+        console.log("shared user was called, payload is", updates, this.currentUser.uid)
+        database.ref("documents").child(projectID).child("users")
             .update(updates)
             .then(() => {
                 console.log("added new user to document")
@@ -329,7 +329,7 @@ export var storeObject = {
                         })
                             .catch(err => console.log("error updating user's profile with new document", err));
                     })
-            }).catch(() => callback(false));
+            }).catch((error) => { console.log("failed to update because", error); callback(false) });
     },
     // listener manipulation
     addDashboardListeners() {
