@@ -15,7 +15,7 @@ import MiniSearch from 'minisearch';
  *  name : 'XYZ' 
  * }
  * //Need to find name then 
- * indexes = [content.name] //indexes should be like this
+ * indexes = ['name'] //indexes should be like this
  * 
  * //CASE 2 : For Nested 
  * {
@@ -23,15 +23,15 @@ import MiniSearch from 'minisearch';
  *  author : {name : 'XYZ' }
  * }
  * //Need to find name then 
- * indexes = [content.author.name] //indexes should be like this
+ * indexes = ['name'] //indexes should be like this
  */
 export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => {
     const projectArray = [];
     let miniSearch = new MiniSearch({
         fields: indexes,
-        extractField: (document, fieldName) => {
-            // Access nested fields
-            return fieldName.split('.').reduce((doc, key) => doc && doc[key], document)
+        searchOptions: {
+            fuzzy: 0.2,
+            prefix:true
         }
     });
 
@@ -42,66 +42,72 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
         if (key !== "root")
             switch (val.type) {
                 case "text":
-                    projectArray.push({ id: key, content: val.content });
+                    projectArray.push({ id: key, text: val.content.text });
                     break;
                 case "todo":
                     projectArray.push({ id: key, title: val.content.title })
                     Object.entries(val.content.items).map(([keys, values]) => {
                         if (keys !== "root")
-                            projectArray.push({ id: key, content: values })
-                            return '';
+                            projectArray.push({ id: key, text: values.text })
+                        return '';
                     });
                     break;
                 case "link":
-                    projectArray.push({ id: key, content: val.content });
+                    projectArray.push({ id: key, url: val.content.url });
                     break;
                 case "pdf":
                     Object.entries(val.content).map(([[_, __], values]) => {
                         console.log("_ __ ", _, __, values)
-                        projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] });
+                        projectArray.push({ id: key, extention: values.metadata?.contentType });
                         return '';
                     });
                     break;
                 case "audio":
                     Object.entries(val.content).map(([[_, __], values]) => {
                         projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, extention: values.metadata?.contentType });
                         return '';
                     });
                     break;
                 case "VideoFile":
                     Object.entries(val.content).map(([[_, __], values]) => {
                         projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, extention: values.metadata?.contentType });
                         return '';
                     });
                     break;
                 case 'file':
                     Object.entries(val.content).map(([[_, __], values]) => {
                         projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, extention: values.metadata?.contentType });
                         return '';
                     });
                     break;
                 case 'VideoLink':
                     Object.entries(val.content).map(([[_, __], values]) => {
                         projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, extention: values.metadata?.contentType });
                         return '';
                     });
                     break;
                 case "blank":
-                    projectArray.push({ id: key, content: val.content });
+                    projectArray.push({ id: key, text: val.content.text });
                     break;
                 default:
                     //This is For Search in Cards Other than documents/projectID/nodes/
-                    projectArray.push({ id: key, content: val })
+                    projectArray.push({ id: key, name: val.name })
                     break;
             }
-            return '';    
+        return '';
     })
     if (projectArray.length > 0)
         miniSearch.addAll(projectArray)
 
-    const results = miniSearch.search(text, { fuzzy: 0.2 });
-
-    console.log("THE SEARCH ELEMENTS ",  text," \n In \n", projectArray);
+    const results = miniSearch.search(text);
+    const suggestions = miniSearch.autoSuggest(text);
+    console.log("THE SEARCH ELEMENTS ", text, " \n In \n", projectArray);
     console.log("RESULT ", results);
-    return results;
+    
+    return [results,suggestions] ;
 }

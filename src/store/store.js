@@ -277,7 +277,7 @@ export var storeObject = {
         requestedPathRef.getDownloadURL()
             .then((url) => {
                 requestedPathRef.getMetadata()
-                    .then((metadata) => (url, JSON.parse(JSON.stringify(metadata))))
+                    .then((metadata) => ((url, JSON.parse(JSON.stringify(metadata)))))
                     .catch((reason) => console.log("failed to fetch metadata for", path, "because", reason))
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))

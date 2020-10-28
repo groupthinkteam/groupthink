@@ -4,7 +4,7 @@ import { useStore } from "../../store/hook";
 import Button from '../Button/Button';
 import { Modal } from 'react-bootstrap';
 
-const ShareLink = observer(props => {
+const ShareLink = (props) => {
     const store = useStore();
     const [link, setLink] = useState(false)
     const [linkType, setLinkType] = useState();
@@ -72,5 +72,5 @@ const ShareLink = observer(props => {
             </Modal>
         </>
     )
-});
-export default ShareLink;
+};
+export default observer(ShareLink);

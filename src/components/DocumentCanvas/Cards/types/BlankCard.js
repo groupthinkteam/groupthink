@@ -110,7 +110,7 @@ function BlankCard(props) {
     if (uploadState) {
         gsap.to("#uploadfiller".concat(props.id), { height: uploadState + "%" })
     }
-
+    
     return (
         uploadState
             ? <div style={{ position: "relative", height: "100%", width: "100%", display: "flex", flexFlow: "column nowrap", justifyContent: "flex-end" }}>
@@ -149,4 +149,4 @@ function BlankCard(props) {
     )
 }
 
-export default React.memo(BlankCard)
+export default React.memo(BlankCard);
