@@ -24,9 +24,9 @@ function Document() {
         history.push('/error', { from: location })
     }
     else {
-      let valid = store.isProjectValid(projectID);
-      console.log("valid")
-      if (valid) {
+      store.isProjectValid(projectID);
+      console.log("valid", store.validproject)
+      if (store.validproject) {
         setTimeout(() => setIsLoaded(true), 4000)
         store.projectID = projectID
         store.addDocumentListeners()
@@ -37,7 +37,7 @@ function Document() {
         history.push('/dashboard', { from: location });
       }
     }
-  }, [store, projectID, history, location, keyID])
+  }, [store, projectID, history, location, keyID, permission])
 
   const signOut = () => {
     console.log("SIGNOUT ")

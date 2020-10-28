@@ -26,8 +26,8 @@ function AppRoutes(props) {
   return (
     <Router>
       <Switch>
-        <PrivateRoute isSignedIn={isSignedIn} path="/project/:projectID/shared/:keyID/:permission">
-          <Document />
+        <PrivateRoute isSignedIn={isSignedIn} path="/shared/:projectID/:keyID/:permission">
+          <Document/>
         </PrivateRoute>
         <PrivateRoute isSignedIn={isSignedIn} path="/project/:projectID">
           <Document />

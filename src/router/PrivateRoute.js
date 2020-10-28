@@ -5,7 +5,8 @@ import {
 } from "react-router-dom";
 
 const PrivateRoute = ({ path, children, isSignedIn, ...rest }) => {
-  console.log("PRIVATE ROUTE",isSignedIn)
+  console.log("PRIVATE ROUTE", isSignedIn)
+
   return (
     <Route
       {...rest}

@@ -17,6 +17,7 @@ export var storeObject = {
     permission: "",
     currentUser: false,
     zoom: 1,
+    validproject: '',
     get firebaseConfig() {
         return FIREBASE_CONSTANTS.UI_CONFIG;
     },
@@ -48,8 +49,11 @@ export var storeObject = {
             this.currentUser = false;
         }
     },
-    async isProjectValid(id,) {
-        (await this.userRef.once('value').then(snap => snap.hasChild(id)));
+    async isProjectValid(id) {
+        await this.userRef.once('value')
+            .then(snap => { snap.hasChild(id) ? this.validproject = true : this.validproject = false })
+            .catch(error => console.log("While Validating Project", error));
+        console.log("Valid Inside Function ", this.validproject);
     },
     // dashboard related actions
     addNewProject() {
@@ -267,7 +271,7 @@ export var storeObject = {
             () => { statu("complete"); unsubscribe(); } // on completion
         )
     },
-    requestDownload(downloadPath,) {
+    requestDownload(downloadPath, ) {
         const path = "root/" + this.projectID + "/" + downloadPath;
         let requestedPathRef = storage().ref(path)
         requestedPathRef.getDownloadURL()
@@ -310,6 +314,7 @@ export var storeObject = {
         }
         database.ref("documents").child(projectID).child("users").child(this.userID).update(updates)
             .then(() => {
+                console.log("User Added in Document ", updates)
                 database.ref("documents").child(projectID).child("metadata")
                     .once('value')
                     .then((snap) => {
@@ -321,10 +326,11 @@ export var storeObject = {
                             createdAt: servertime,
                             shared: true
                         })
+                            .then(console.log("Your Profile is created "))
                             .catch(err => console.log("Error in creating user  ", err));
                         // this.updateLastActive();
                     })
-            }).catch(() => success = false);
+            }).catch(error => { success = false; console.log("ERROR While Creating User ", updates, error) });
         return success;
     },
     // listener manipulation
