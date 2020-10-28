@@ -11,9 +11,9 @@ function Document() {
   let store = useStore();
   const history = useHistory();
   const location = useLocation();
-  const { projectID, keyID, permission } = useParams();
+  const { projectID, keyID } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
-  
+
   useEffect(() => {
     console.log("DATA LOADED IN DOCUMENT KEY: ", keyID, "\n PROJECT \n", projectID);
     setTimeout(() => setIsLoaded(true), 4000)
@@ -21,6 +21,15 @@ function Document() {
     store.addDocumentListeners()
     return () => store.removeDocumentListeners()
   }, [store, projectID, history, location, keyID])
+
+  const userCount = store.userCount
+
+  useEffect(() => {
+    if (store.userCount > 1) {
+      store.addCursorListener()
+    }
+    return () => store.removeCursorListener()
+  }, [store, userCount])
 
   const signOut = () => {
     console.log("SIGNOUT ")

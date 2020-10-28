@@ -40,6 +40,9 @@ export var storeObject = {
     get hitTestCards() {
         return Object.keys(this.cards)
     },
+    get userCount() {
+        return Object.keys(this.users).length
+    },
     syncUser() {
         if (auth().currentUser?.uid) {
             this.currentUser = auth().currentUser;
