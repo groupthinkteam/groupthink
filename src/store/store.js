@@ -13,7 +13,9 @@ export var storeObject = {
     cursors: {},
     container: {},
     projectID: null,
-    userID: "",
+    get userID() {
+        return this.currentUser && this.currentUser.uid
+    },
     permission: "",
     currentUser: false,
     zoom: 1,
@@ -40,11 +42,9 @@ export var storeObject = {
     },
     syncUser() {
         if (auth().currentUser?.uid) {
-            this.userID = auth().currentUser?.uid;
             this.currentUser = auth().currentUser;
         }
         else {
-            this.userID = "";
             this.currentUser = false;
         }
     },
@@ -250,7 +250,7 @@ export var storeObject = {
         }
         console.log("didn't reparent because it was just not a valid request. do better next time.")
     },
-    requestUpload(uploadPath, file, metadata, statu) {
+    requestUpload(uploadPath, file, metadata, statusCallback) {
         let custom = {
             ...metadata,
             customMetadata: {
@@ -262,18 +262,18 @@ export var storeObject = {
         let requestedPathRef = storage().ref(path);
         let uploadTask = requestedPathRef.put(file, custom);
         let unsubscribe = uploadTask.on(storage.TaskEvent.STATE_CHANGED,
-            (nextSnapshot) => statu(nextSnapshot.bytesTransferred / nextSnapshot.totalBytes * 100, uploadTask), // on upload progress
+            (nextSnapshot) => statusCallback(nextSnapshot.bytesTransferred / nextSnapshot.totalBytes * 100, uploadTask), // on upload progress
             null, // error handling -- nonexistent!
-            () => { statu("complete"); unsubscribe(); } // on completion
+            () => { statusCallback("complete"); unsubscribe(); } // on completion
         )
     },
-    requestDownload(downloadPath,) {
+    requestDownload(downloadPath, callback) {
         const path = "root/" + this.projectID + "/" + downloadPath;
         let requestedPathRef = storage().ref(path)
         requestedPathRef.getDownloadURL()
             .then((url) => {
                 requestedPathRef.getMetadata()
-                    .then((metadata) => (url, JSON.parse(JSON.stringify(metadata))))
+                    .then((metadata) => callback(url, JSON.parse(JSON.stringify(metadata))))
                     .catch((reason) => console.log("failed to fetch metadata for", path, "because", reason))
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
@@ -290,7 +290,7 @@ export var storeObject = {
     },
     addKeyToShare(permission) {
         const newSharedKey = this.projectRef.child("sharing").push().key;
-        const updates = {};
+        let updates = {};
         updates[newSharedKey] = permission;
         this.projectRef.child("sharing")
             .update(updates)
@@ -298,9 +298,9 @@ export var storeObject = {
             .catch((reason) => console.log("error in updating key because", reason));
         return (newSharedKey);
     },
-    createSharedUser(projectID, keyId, permission) {
-        let success = true;
-        const updates = {};
+    createSharedUser(projectID, keyId, permission, callback) {
+        console.log("shared user was called")
+        let updates = {};
         updates[this.userID] = {
             "permission": permission,
             "access": keyId,
@@ -308,11 +308,14 @@ export var storeObject = {
             "photoURL": this.currentUser.photoURL,
             "name": this.currentUser.displayName,
         }
-        database.ref("documents").child(projectID).child("users").child(this.userID).update(updates)
+        database.ref("documents").child(projectID).child("users").child(this.userID)
+            .update(updates)
             .then(() => {
+                console.log("added new user to document")
                 database.ref("documents").child(projectID).child("metadata")
                     .once('value')
                     .then((snap) => {
+                        console.log("retrived metadata from document")
                         let projectMetadata = snap.val();
                         this.userRef.child(projectID).set({
                             access: permission,
@@ -320,12 +323,13 @@ export var storeObject = {
                             thumbnailURL: projectMetadata.thumbnailURL,
                             createdAt: servertime,
                             shared: true
+                        }).then(() => {
+                            console.log("updated user's profile with new document");
+                            callback(true)
                         })
-                            .catch(err => console.log("Error in creating user  ", err));
-                        // this.updateLastActive();
+                            .catch(err => console.log("error updating user's profile with new document", err));
                     })
-            }).catch(() => success = false);
-        return success;
+            }).catch(() => callback(false));
     },
     // listener manipulation
     addDashboardListeners() {

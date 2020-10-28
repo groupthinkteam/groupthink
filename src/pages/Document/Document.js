@@ -13,30 +13,13 @@ function Document() {
   const location = useLocation();
   const { projectID, keyID, permission } = useParams();
   const [isloaded, setIsLoaded] = useState(false);
+  
   useEffect(() => {
     console.log("DATA LOADED IN DOCUMENT KEY: ", keyID, "\n PROJECT \n", projectID);
-    if (keyID) {
-      //TODO:- Remove check and use in Index
-      let success = store.createSharedUser(projectID, keyID, permission)
-      if (success)
-        history.push('/project/' + projectID, { from: location });
-      else
-        history.push('/error', { from: location })
-    }
-    else {
-      let valid = store.isProjectValid(projectID);
-      console.log("valid")
-      if (valid) {
-        setTimeout(() => setIsLoaded(true), 4000)
-        store.projectID = projectID
-        store.addDocumentListeners()
-        return () => store.removeDocumentListeners()
-      }
-      else {
-        console.log("this is happening")
-        history.push('/dashboard', { from: location });
-      }
-    }
+    setTimeout(() => setIsLoaded(true), 4000)
+    store.projectID = projectID
+    store.addDocumentListeners()
+    return () => store.removeDocumentListeners()
   }, [store, projectID, history, location, keyID])
 
   const signOut = () => {
