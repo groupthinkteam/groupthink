@@ -1,6 +1,4 @@
-
 import React, { useState } from 'react';
-//import MiniSearch from 'minisearch';
 import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 
 import "../../styles/SearchBar.scss";

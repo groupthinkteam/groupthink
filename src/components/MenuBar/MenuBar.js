@@ -4,7 +4,7 @@ import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
 import RoomConnect from "../Voice/RoomConnect"
-import SearchBar from "./SearchBar"
+import SearchBar from "../Search/SearchBar"
 
 export default function MenuBar(props) {
     const currentUser = props.currentUser
