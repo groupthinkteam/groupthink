@@ -5,7 +5,7 @@ import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 
 import "../../styles/SearchBar.scss";
 import { observer } from 'mobx-react-lite';
-import {useStore} from '../../store/hook'
+import { useStore } from '../../store/hook'
 import { searchElementinDocuments } from '../../constants/searchTemplate';
 
 /**
@@ -15,18 +15,15 @@ import { searchElementinDocuments } from '../../constants/searchTemplate';
 const SearchBar = observer(props => {
     const store = useStore();
     const searchElement = (text) => {
-        console.log("SEARCH ",text)
-        if(props.document)
-        {
-            const result = searchElementinDocuments(text,store.cards,['content.name','content.title','text'])
-            store.highlightSearched(result,'document');
+        console.log("SEARCH ", text)
+        if (props.document) {
+            const result = searchElementinDocuments(text, store.cards, ['content.name', 'content.title', 'text'])
+            store.highlightSearched(result, 'document');
         }
-        else
-        {
-            const result = searchElementinDocuments(text,store.projects,['content.name']);
-            store.highlightSearched(result,'projects');
+        else {
+            const result = searchElementinDocuments(text, store.projects, ['content.name']);
+            store.highlightSearched(result, 'projects');
         }
-        
     }
     return (
         <div className="menu-bar-searchbox">
