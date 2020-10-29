@@ -25,7 +25,7 @@ function AppRoutes(props) {
   return (
     <Router>
       <Switch>
-        <Route path="/project/:projectID/shared/:keyID/:permission"
+        <Route path="/shared/:projectID/:keyID/:permission"
           render={({ location }) =>
             isSignedIn ? (
               <PrivateRoute isSignedIn={isSignedIn} invitation validateInvitation={createSharedUser} path="/project/:projectID/shared/:keyID/:permission">
