@@ -1,30 +1,37 @@
-import React  from 'react'
+import { observer } from 'mobx-react-lite';
+import React from 'react'
 import {
   Route,
   Redirect,
-  useLocation,
+  useParams,
   useHistory
 } from "react-router-dom";
-import { observer } from 'mobx-react-lite';
 import { useStore } from '../store/hook';
 
-const PrivateRoute = ({ path, children, isSignedIn, ...rest }) => {
-  const store = useStore();
-  const history = useHistory();
-  const location = useLocation();
-  console.log("PRIVATE ROUTE", isSignedIn);
-  if (path === '/shared/:projectID/:keyID/:permission'&&isSignedIn) {
-    const params = window.location.pathname.split("/");
-    const projectID = params[2];
-    const keyID = params[3];
-    const permission = params[4];
-    console.log("GOING IN STORE WITH PARAMS ", params, projectID, keyID, permission);
-    let success = store.createSharedUser(projectID, keyID, permission)
-    if (success)
-      history.push('/project/' + projectID, { from: location });
-    else
-      history.push('/error', { from: location })
+const PrivateRoute = ({ path, children, isSignedIn, invitation, validateInvitation, ...rest }) => {
+  const history = useHistory()
+  let { projectID, keyID, permission } = useParams();
+  console.log("params", projectID, keyID, permission)
+  let store = useStore()
+  if (invitation) {
+    console.log("invitation true")
+    if (keyID) {
+      console.log("keyid true", keyID)
+      store.createSharedUser(projectID, keyID, permission, (success) => {
+        console.log("callback was called")
+        if (success) {
+          console.log("success")
+          history.push("/project/" + projectID)
+        }
+        else {
+          console.log("fail")
+          history.push("/error")
+        }
+      })
+    }
+    return <p>Checking your invite...</p>
   }
+
   return (
     <Route
       {...rest}

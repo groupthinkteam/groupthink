@@ -7,9 +7,11 @@ function CursorsList(props) {
     let store = useStore();
     return (
         <div className="cursors">
-            {Object.keys(store.cursors)
-                .filter(id => id !== store.currentUser.uid && (Date.now() - store.lastActive[id] < 60000))
-                .map(id => <Cursor key={id} id={id} />)}
+            {store.cursors ? Object.keys(store.cursors)
+                .filter(id => id !== store.currentUser.uid && (Date.now() - store.users[id].lastActive < 60000))
+                .map(id => <Cursor key={id} id={id} />)
+                : null
+            }
         </div>
     )
 }

@@ -12,7 +12,7 @@ import Document from "../pages/Document/Document";
 import ErrorsPage from "../pages/Errors/ErrorsPage";
 
 function AppRoutes(props) {
-  const { syncUser, currentUser } = useStore();
+  const { syncUser, currentUser, createSharedUser } = useStore();
   useEffect(
     () => {
       console.log("INDEX  ", isSignedIn, currentUser?.uid);
@@ -20,19 +20,31 @@ function AppRoutes(props) {
       return () => unsubscribe()
     }
   )
-
-  const isSignedIn = !!currentUser;
+  let isSignedIn = !!currentUser;
 
   return (
     <Router>
       <Switch>
-        <PrivateRoute isSignedIn={isSignedIn} path="/shared/:projectID/:keyID/:permission">
-          <Document/>
-        </PrivateRoute>
+        <Route path="/shared/:projectID/:keyID/:permission"
+          render={({ location }) =>
+            isSignedIn ? (
+              <PrivateRoute isSignedIn={isSignedIn} invitation validateInvitation={createSharedUser} path="/shared/:projectID/:keyID/:permission">
+                <Document />
+              </PrivateRoute>
+            ) : (
+                <Redirect
+                  to={{
+                    pathname: "/login",
+                    state: { from: location }
+                  }}
+                />
+              )
+          }>
+        </Route>
         <PrivateRoute isSignedIn={isSignedIn} path="/project/:projectID">
           <Document />
         </PrivateRoute>
-        <Route path="/login" isSignedIn={isSignedIn}  >
+        <Route path="/login" isSignedIn={isSignedIn}>
           <LoginPage />
         </Route>
         <PrivateRoute isSignedIn={isSignedIn} path="/dashboard">
@@ -41,7 +53,7 @@ function AppRoutes(props) {
         <Route path="/error">
           <ErrorsPage />
         </Route>
-        <Redirect to="/login" />
+        {/* <Redirect to="/login" /> */}
       </Switch>
     </Router>
   );
