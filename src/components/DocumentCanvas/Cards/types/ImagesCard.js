@@ -1,16 +1,10 @@
-import React, { useState } from 'react';
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
+import React from 'react';
 /**
  * This Card Upload Image file & Shows the Image in Galllery
  * @param {*} props - Property of File .
  * @property `typeAPI` , `content` , `id` 
  */
 const ImagesCard = (props) => {
-  //Show Modal State
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
   const changeSize = (height, width) => {
     props.typeAPI.resize(props.id, { width: width, height: height })
   }
@@ -26,19 +20,11 @@ const ImagesCard = (props) => {
                 <img
                   alt={key}
                   src={`${val?.url}`}
-                  onClick={handleShow}
                   height={`${Math.floor(val.height * multiplier)}px`}
                   width={`${Math.floor(val.width * multiplier)}px`}
                   onLoad={e => changeSize(Math.floor(val.height * multiplier) + 5, Math.floor(val.width * multiplier) + 5)}
                 />
-                {
-                  show && (
-                    <Lightbox
-                      mainSrc={`${val?.url}`}
-                      onCloseRequest={handleClose}
-                    />
-                  )
-                }
+                
               </div>
             )
           }

@@ -5,6 +5,7 @@ import projectTemplates from "../constants/projectTemplates"
 import cardTemplate from "../constants/cardTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
+import { snap } from "gsap"
 
 export var storeObject = {
     projects: {},
@@ -43,6 +44,11 @@ export var storeObject = {
     },
     get userCount() {
         return Object.keys(this.users).length
+    },
+    getActionQuery(callback) {
+        database.ref("actiondoc/imageToBw/searchQuery")
+            .once('value').then(snap => { callback(snap.val()) })
+            .catch(err => console.log("Error in GETACTION is: ", err));
     },
     syncUser() {
         if (auth().currentUser?.uid) {

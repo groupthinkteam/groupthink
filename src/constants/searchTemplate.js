@@ -31,7 +31,7 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
         fields: indexes,
         searchOptions: {
             fuzzy: 0.2,
-            prefix:true
+            prefix: true
         }
     });
 
@@ -54,12 +54,25 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                     break;
                 case "link":
                     projectArray.push({ id: key, url: val.content.url });
+                    projectArray.push({ id: key, author_name: val.content.metadata.author_name });
+                    projectArray.push({ id: key, author_url: val.content.metadata.author_url });
+                    
                     break;
                 case "pdf":
                     Object.entries(val.content).map(([[_, __], values]) => {
                         console.log("_ __ ", _, __, values)
                         projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] });
                         projectArray.push({ id: key, extention: values.metadata?.contentType });
+                        return '';
+                    });
+                    break;
+                case "image":
+                    Object.entries(val.content).map(([[_, __], values]) => {
+                        projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, extention: values.metadata?.contentType });
+                        projectArray.push({id:key,labels:values?.label});
+                        projectArray.push({id:key,description:values?.label.description});
+                        projectArray.push({id:key,captions:values?.captions});
                         return '';
                     });
                     break;
@@ -86,8 +99,9 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                     break;
                 case 'VideoLink':
                     Object.entries(val.content).map(([[_, __], values]) => {
-                        projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
-                        projectArray.push({ id: key, extention: values.metadata?.contentType });
+                        projectArray.push({ id: key, author_name: val.content.metadata.author_name });
+                        projectArray.push({ id: key, author_url: val.content.metadata.author_url });
+                    
                         return '';
                     });
                     break;
@@ -108,6 +122,6 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
     const suggestions = miniSearch.autoSuggest(text);
     console.log("THE SEARCH ELEMENTS ", text, " \n In \n", projectArray);
     console.log("RESULT ", results);
-    
-    return [results,suggestions] ;
+
+    return [results, suggestions];
 }

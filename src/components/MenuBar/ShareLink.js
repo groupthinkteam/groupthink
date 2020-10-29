@@ -25,7 +25,7 @@ const ShareLink = (props) => {
         if (linkType !== undefined && permission !== undefined) {
             setLink(true)
             const newKey = store.addKeyToShare(permission)
-            setURL(String(window.location.origin) + "/shared/" + props.projectID + "/" + newKey + "/" + permission);
+            setURL([String(window.location.origin), "shared", store.projectID, newKey, permission].join("/"));
         }
         else
             setLink(false)
