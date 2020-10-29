@@ -8,15 +8,9 @@ import CardsList from "../Card/CardsList";
 
 import "../../styles/CardContainer.scss";
 
-/**
- * props:
- * 
- * @param {*} props 
- * 
- */
 function CardContainer(props) {
     let store = useStore()
-    console.log("CardContainer ",store.container)
+    console.log("CardContainer ", store.container)
     return (
         <div className="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
@@ -47,11 +41,12 @@ function CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move")
                     event.persist();
-                    if(event.target.offsetParent?.scrollLeft)
-                    store.saveCursorPosition(
-                        event.clientX + event.target.offsetParent.scrollLeft,
-                        event.clientY + event.target.offsetParent.scrollTop
-                    );
+                    if (event.target.offsetParent && event.target.offsetParent.className === "card-container") {
+                        store.saveCursorPosition(
+                            event.clientX + event.target.offsetParent.scrollLeft,
+                            event.clientY + event.target.offsetParent.scrollTop - 60
+                        );
+                    }
                 }}
             >
                 <ArrowList />

@@ -24,12 +24,12 @@ const ImagesCard = (props) => {
                   width={`${Math.floor(val.width * multiplier)}px`}
                   onLoad={e => changeSize(Math.floor(val.height * multiplier) + 5, Math.floor(val.width * multiplier) + 5)}
                 />
-                
+
               </div>
             )
           }
           else
-          return null;
+            return null;
         })
       }
     </>

@@ -22,14 +22,10 @@ function Document() {
     return () => store.removeDocumentListeners()
   }, [store, projectID, history, location, keyID])
 
-  const userCount = store.userCount
-
   useEffect(() => {
-    if (store.userCount > 1) {
-      store.addCursorListener()
-    }
+    store.addCursorListener()
     return () => store.removeCursorListener()
-  }, [store, userCount])
+  }, [store])
 
   const signOut = () => {
     console.log("SIGNOUT ")
@@ -42,7 +38,7 @@ function Document() {
   }
   return (
     <div>
-      <MenuBar document currentUser={store.currentUser} signOut={signOut} projectID={projectID} />
+      <MenuBar document documentName={store.metadata && store.metadata.name} currentUser={store.currentUser} signOut={signOut} projectID={projectID} />
       <CardContainer />
     </div>
   );

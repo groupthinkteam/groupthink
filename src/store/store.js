@@ -14,6 +14,7 @@ export var storeObject = {
     cursors: {},
     container: {},
     projectID: null,
+    projectMetadata: null,
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -119,20 +120,18 @@ export var storeObject = {
             )
     },
     // document related actions
-    saveCursorPosition(x, y) {
-        throttle((x, y) => {
-            this.projectRef.child("cursors").child(this.userID)
-                .set({ x: x, y: y })
-                .then(console.log("Updated Cursor Position to DB"))
-                .catch(err => console.log("SaveCursor Position", err))
-        }, 200)(x, y)
-    },
-    updateLastActive() {
-        throttle(() => {
+    saveCursorPosition: throttle(function saveCursorPosition(x, y) {
+        this.updateLastActive()
+        this.projectRef.child("cursors").child(this.userID)
+            .set({ x: x, y: y })
+            .then(() => console.log("sent new cursor position to others"))
+            .catch(err => console.log("error sending cursor position to others", err))
+    }, 100),
+    updateLastActive: throttle(function updateLastActive() {
+        this.projectRef &&
             this.projectRef.child("users").child(this.userID).child("lastUpdatedAt")
-                .set("servertime")
-        }, 5000)()
-    },
+                .set(servertime)
+    }, 5000),
     setProjectID(newProjectID) {
         this.projectID = newProjectID;
         if (this.projectID) this.addDocumentListeners();
@@ -163,9 +162,11 @@ export var storeObject = {
         updates[parent + "/children/" + newCardKey] = 1;
         updates[newCardKey] = newCard;
         this.projectRef.child("nodes").update(updates)
-            .then(console.log("Added a new child", newCardKey, "under", parent));
+            .then(() => console.log("Added a new child", newCardKey, "under", parent));
+        this.updateLastActive()
     },
     removeCard(id, strategy, newParent) {
+        this.updateLastActive()
         const updates = {};
         updates[id] = null;
         updates[this.cards[id]["parent"] + "/children/" + id] = null;
@@ -203,6 +204,7 @@ export var storeObject = {
         this.cards[id]["position"] = newPos;
     },
     savePosition(id, newPos) {
+        this.updateLastActive()
         let updates = {};
         if (newPos.x > this.container.width) {
             console.log("x", newPos.x, "was greater than width")
@@ -217,11 +219,13 @@ export var storeObject = {
             .then(console.log("set new position for", id, "to", newPos));
     },
     resize(id, newSize) {
+        this.updateLastActive()
         this.projectRef.child("nodes").child(id).child("size")
             .set(newSize)
             .then(console.log("set new size for", id, "to", newSize));
     },
     saveContent: throttle(function saveContent(id, newContent) {
+        this.updateLastActive()
         this.projectRef.child("nodes").child(id).child("content")
             .set(newContent)
             .then(console.log("saved new content for", id))
@@ -234,6 +238,7 @@ export var storeObject = {
         this.saveContent(id, newContent);
     },
     changeType(id, newType, size) {
+        this.updateLastActive()
         const newCardDefaults = cardTemplate(newType, size);
         this.projectRef.child("nodes").child(id)
             .update(newCardDefaults)
@@ -241,6 +246,7 @@ export var storeObject = {
             .catch(err => err);
     },
     reparentCard(id, newParent) {
+        this.updateLastActive()
         console.log("reparent requested for", id, "newparent", newParent)
 
         function checkValidity(ancestor) {
@@ -312,6 +318,7 @@ export var storeObject = {
         return (newSharedKey);
     },
     createSharedUser(projectID, keyId, permission, callback) {
+        this.updateLastActive()
         let updates = {};
         updates[this.userID] = {
             "permission": permission,
@@ -359,6 +366,7 @@ export var storeObject = {
         this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
         this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
         this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
+        this.projectRef.child("metadata").on("value", (snap) => this.projectMetadata = snap.val());
     },
     addCursorListener() {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());
@@ -371,6 +379,7 @@ export var storeObject = {
         this.projectRef.child("users").off();
         this.projectRef.child("nodes").off();
         this.projectRef.child("container").off();
+        this.projectRef.child("metadata").off();
     },
     removeCursorListener() {
         this.projectRef.child("cursors").off()

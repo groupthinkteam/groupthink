@@ -56,7 +56,7 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                     projectArray.push({ id: key, url: val.content.url });
                     projectArray.push({ id: key, author_name: val.content.metadata.author_name });
                     projectArray.push({ id: key, author_url: val.content.metadata.author_url });
-                    
+
                     break;
                 case "pdf":
                     Object.entries(val.content).map(([[_, __], values]) => {
@@ -70,9 +70,9 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                     Object.entries(val.content).map(([[_, __], values]) => {
                         projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
                         projectArray.push({ id: key, extention: values.metadata?.contentType });
-                        projectArray.push({id:key,labels:values?.label});
-                        projectArray.push({id:key,description:values?.label.description});
-                        projectArray.push({id:key,captions:values?.captions});
+                        projectArray.push({ id: key, labels: values?.label });
+                        projectArray.push({ id: key, description: values?.label.description });
+                        projectArray.push({ id: key, captions: values?.captions });
                         return '';
                     });
                     break;
@@ -101,7 +101,7 @@ export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => 
                     Object.entries(val.content).map(([[_, __], values]) => {
                         projectArray.push({ id: key, author_name: val.content.metadata.author_name });
                         projectArray.push({ id: key, author_url: val.content.metadata.author_url });
-                    
+
                         return '';
                     });
                     break;
