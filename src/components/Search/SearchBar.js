@@ -5,14 +5,15 @@ import "../../styles/SearchBar.scss";
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/hook'
 import { searchElementinDocuments } from '../../constants/searchTemplate';
-import SearchedItem from './SearchItem';
+import SearchedItem from './SearchDropdown';
 /**
  * 
  * @param {*} props - index and callback
  */
 const SearchBar = (props) => {
     const store = useStore();
-    const [results, setResults] = useState({ result: [], suggest: [] });
+    const [results, setResults] = useState({ matches: [], suggest: [] });
+    const [dropdown, setDropdown] = useState(false);
     const searchElement = (text) => {
         console.log("SEARCH ", text)
         if (props.document) {
@@ -26,18 +27,20 @@ const SearchBar = (props) => {
             );
             console.log("AUTO SUGGEST ", suggestions);
 
-
-            setResults({ result: result, suggest: suggestions });
+            setResults({ matches: result, suggest: suggestions });
+            setDropdown(result.length > 0);
             store.highlightSearched(result, 'document');
         }
         else {
             const [result, suggestions] = searchElementinDocuments(text, store.projects, ['name']);
             console.log("AUTO SUGGEST ", suggestions);
-            setResults({ result: result, suggest: suggestions });
+            setResults({ matches: result, suggest: suggestions });
+
             store.highlightSearched(result, 'projects');
         }
 
     }
+    console.log("DRP ", dropdown)
     return (
         <div className="menu-bar-searchbox ">
             <img className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
@@ -47,10 +50,11 @@ const SearchBar = (props) => {
                 onChange={(e) => searchElement(e.target.value)}
             />
             {
-                results.result.length > 0 ?
-                    <SearchedItem results={results} className="dropdown-content" />
-                    : null
+                results.matches.length && <SearchedItem results={results} className="dropdown-content" dropdown={dropdown} setDropdown={setDropdown} />
+
             }
+
+
         </div>
     )
 }
