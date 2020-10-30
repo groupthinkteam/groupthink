@@ -4,11 +4,14 @@ import { useStore } from '../../store/hook';
 import { gsap, ScrollToPlugin } from "gsap/all"
 
 import SearchItem from "./SearchItem";
+import { useHistory, useLocation } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollToPlugin)
 
 const SearchDropdown = (props) => {
     const store = useStore();
+    const history = useHistory();
+    const location = useLocation();
     const [currentMatch, setCurrentMatch] = useState(0)
 
     const scrollToID = (id) => {
@@ -22,7 +25,9 @@ const SearchDropdown = (props) => {
         props.setDropdown(false);
     }
 
-    scrollToID(props.results.matches[currentMatch].id)
+    const openProject = (id) => {
+        history.push('/project/' + id, { from: location })
+    }
 
     let searchItems = []
     for (let i = 0; i < props.results.matches.length; i++) {
@@ -30,16 +35,19 @@ const SearchDropdown = (props) => {
         const terms = match.terms[0];
         const field = match.match[terms][0];
         searchItems.push(
-            (<SearchItem key={i} id={i} field={field} onClick={() => setCurrentMatch(i)} />)
+            (<SearchItem key={i} id={match.id} field={field} onClick={() => { props.document ? setCurrentMatch(i) : openProject(match.id) }} />)
         )
     }
+
+    if (props.document)
+        scrollToID(props.results.matches[currentMatch].id)
 
     return (
         <>
             <div className={props.className}>
-            {
-              props.dropdown ? searchItems :null
-            }
+                {
+                    searchItems
+                }
             </div>
             {currentMatch + 1}/{props.results.matches.length}
             <button onClick={() => setCurrentMatch((old) => (old + 1) % props.results.matches.length)}>

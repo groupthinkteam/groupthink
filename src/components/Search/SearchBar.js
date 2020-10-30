@@ -31,16 +31,12 @@ const SearchBar = (props) => {
             setDropdown(result.length > 0 || actionResult.length > 0);
         }
         else {
-            const indexes = [
-                'name', 'extension', 'title', 'text', 'url', "description",
-                'fileName', 'labels', 'captions', 'author_url', 'author_name'
-            ];
+            const indexes = ['name'];
 
             const searchObject = new SearchElements(indexes);
-            const [result, suggestions] = searchObject.getResult(text, store.cards);
+            const [result, suggestions] = searchObject.getResult(text, store.projects);
 
             setResults({ matches: result, suggest: suggestions });
-
             store.highlightSearched(result, 'projects');
         }
 
@@ -54,7 +50,12 @@ const SearchBar = (props) => {
                 onChange={(e) => searchValues(e.target.value)}
             />
             {
-                results.matches.length && <SearchedItem results={results} className="dropdown-content" dropdown={dropdown} setDropdown={setDropdown} />
+                results.matches.length && 
+                <SearchedItem 
+                    results={results} document={props.document} dashboard={props.dashboard}
+                    className="dropdown-content" dropdown={dropdown} 
+                    setDropdown={setDropdown} 
+                />
             }
 
 
