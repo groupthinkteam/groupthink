@@ -17,7 +17,6 @@ const SearchDropdown = (props) => {
         let y = store.cards[id].position.y - height;
         x = x < 0 ? 0 : x;
         y = y < 0 ? 0 : y;
-        console.log(x, y, id)
         gsap.to("#card-container", { duration: 2, scrollTo: { x: x, y: y } });
 
         props.setDropdown(false);
@@ -27,19 +26,22 @@ const SearchDropdown = (props) => {
 
     let searchItems = []
     for (let i = 0; i < props.results.matches.length; i++) {
-        let match = props.results.matches[i]
+        let match = props.results.matches[i];
+        const terms = match.terms[0];
+        const field = match.match[terms][0];
         searchItems.push(
-            <SearchItem key={match.id} id={match.id} field={null} onClick={() => setCurrentMatch(i)} />
+            (<SearchItem key={i} id={i} field={field} onClick={() => setCurrentMatch(i)} />)
         )
     }
 
     return (
         <>
             <div className={props.className}>
-                {
-                   searchItems
-                }
+            {
+              props.dropdown ? searchItems :null
+            }
             </div>
+            {currentMatch + 1}/{props.results.matches.length}
             <button onClick={() => setCurrentMatch((old) => (old + 1) % props.results.matches.length)}>
                 Next
             </button>

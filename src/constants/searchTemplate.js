@@ -1,127 +1,113 @@
 import MiniSearch from 'minisearch';
-/**
- * This File Searches the text from the given element from which is need to be serched
- * @param {String} text - The text that has to be searched
- * @param {Object} elementToBeSearchIn  - The Object/ Element from which it needs to be searched
- * @param {Array} indexes - The index on basis of which search is done.
- * @returns {Array} - Searched Outcomes
- * 
- * Note:- for any new index to search then it will be under content
- * @example 
- * //CASE 1 :
- * elementoBeSearch = {
- * {
- *  id : 1
- *  name : 'XYZ' 
- * }
- * //Need to find name then 
- * indexes = ['name'] //indexes should be like this
- * 
- * //CASE 2 : For Nested 
- * {
- *  id:1
- *  author : {name : 'XYZ' }
- * }
- * //Need to find name then 
- * indexes = ['name'] //indexes should be like this
- */
-export const searchElementinDocuments = (text, elementToBeSearchIn, indexes) => {
-    const projectArray = [];
-    let miniSearch = new MiniSearch({
-        fields: indexes,
-        searchOptions: {
-            fuzzy: 0.2,
-            prefix: true
-        }
-    });
 
-    // card manager -> minisearch import
-    // create minisearch index
+export default class SearchElements {
 
-    Object.entries(elementToBeSearchIn).map(([key, val]) => {
-        if (key !== "root")
-            switch (val.type) {
-                case "text":
-                    projectArray.push({ id: key, text: val.content.text });
-                    break;
-                case "todo":
-                    projectArray.push({ id: key, title: val.content.title })
-                    Object.entries(val.content.items).map(([keys, values]) => {
-                        if (keys !== "root")
-                            projectArray.push({ id: key, text: values.text })
-                        return '';
-                    });
-                    break;
-                case "link":
-                    projectArray.push({ id: key, url: val.content.url });
-                    projectArray.push({ id: key, author_name: val.content.metadata.author_name });
-                    projectArray.push({ id: key, author_url: val.content.metadata.author_url });
-
-                    break;
-                case "pdf":
-                    Object.entries(val.content).map(([[_, __], values]) => {
-                        console.log("_ __ ", _, __, values)
-                        projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] });
-                        projectArray.push({ id: key, extention: values.metadata?.contentType });
-                        return '';
-                    });
-                    break;
-                case "image":
-                    Object.entries(val.content).map(([[_, __], values]) => {
-                        projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
-                        projectArray.push({ id: key, extention: values.metadata?.contentType });
-                        projectArray.push({ id: key, labels: values?.label });
-                        projectArray.push({ id: key, description: values?.label.description });
-                        projectArray.push({ id: key, captions: values?.captions });
-                        return '';
-                    });
-                    break;
-                case "audio":
-                    Object.entries(val.content).map(([[_, __], values]) => {
-                        projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
-                        projectArray.push({ id: key, extention: values.metadata?.contentType });
-                        return '';
-                    });
-                    break;
-                case "VideoFile":
-                    Object.entries(val.content).map(([[_, __], values]) => {
-                        projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
-                        projectArray.push({ id: key, extention: values.metadata?.contentType });
-                        return '';
-                    });
-                    break;
-                case 'file':
-                    Object.entries(val.content).map(([[_, __], values]) => {
-                        projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
-                        projectArray.push({ id: key, extention: values.metadata?.contentType });
-                        return '';
-                    });
-                    break;
-                case 'VideoLink':
-                    Object.entries(val.content).map(([[_, __], values]) => {
+    constructor(indexes) {
+        this.miniSearch = new MiniSearch({
+            fields: indexes,
+            searchOptions: {
+                fuzzy: 0.2,
+                prefix: true
+            }
+        });
+        this.serializedActionIndex = '{ "index": { "_tree": { "b": { "lack": { "": { "0": { "df": 1, "ds": { "0": 1 } } } }, "": { "0": { "df": 1, "ds": { "0": 1 } } } }, "w": { "hite": { "": { "0": { "df": 1, "ds": { "0": 1 } } } }, "": { "0": { "df": 1, "ds": { "0": 1 } } } }, "grayscale": { "": { "0": { "df": 1, "ds": { "0": 1 } } } }, "monochrome": { "": { "0": { "df": 1, "ds": { "0": 1 } } } }, "publication": { "": { "0": { "df": 1, "ds": { "1": 1 } } } }, "research": { "": { "0": { "df": 1, "ds": { "1": 1 } } } }, "c": { "itation": { "": { "0": { "df": 1, "ds": { "1": 1 } } } }, "onvert": { "": { "0": { "df": 1, "ds": { "1": 1 } } } } }, "ieee": { "": { "0": { "df": 1, "ds": { "1": 1 } } } }, "a": { "nd": { "": { "0": { "df": 1, "ds": { "0": 1 } } } }, "pa": { "": { "0": { "df": 1, "ds": { "1": 1 } } } }, "rticle": { "": { "0": { "df": 1, "ds": { "1": 1 } } } } } }, "_prefix": "" }, "documentCount": 2, "nextId": 2, "documentIds": { "0": 1, "1": 2 }, "fieldIds": { "searchQuery": 0 }, "fieldLength": { "0": { "0": 7 }, "1": { "0": 7 } }, "averageFieldLength": { "0": 7 }, "storedFields": {} }'
+        this.actionSearch = new MiniSearch.loadJSON(this.serializedActionIndex, {
+            fields: ['searchQuery'], searchOptions: {
+                fuzzy: 0.2,
+                prefix: true
+            },
+            storeFields:['actionName']
+            
+        });
+    }
+    getActionSearchResult(text) {
+        return [this.actionSearch.search(text) , this.actionSearch.autoSuggest(text)]
+    }
+    getResult(text, elementToBeSearchIn) {
+        const projectArray = [];
+        Object.entries(elementToBeSearchIn).map(([key, val]) => {
+            if (key !== "root")
+                switch (val.type) {
+                    case "text":
+                        projectArray.push({ id: key, text: val.content.text });
+                        break;
+                    case "todo":
+                        projectArray.push({ id: key, title: val.content.title })
+                        Object.entries(val.content.items).map(([keys, values]) => {
+                            if (keys !== "root")
+                                projectArray.push({ id: key, text: values.text })
+                            return '';
+                        });
+                        break;
+                    case "link":
+                        projectArray.push({ id: key, url: val.content.url });
                         projectArray.push({ id: key, author_name: val.content.metadata.author_name });
                         projectArray.push({ id: key, author_url: val.content.metadata.author_url });
 
-                        return '';
-                    });
-                    break;
-                case "blank":
-                    projectArray.push({ id: key, text: val.content.text });
-                    break;
-                default:
-                    //This is For Search in Cards Other than documents/projectID/nodes/
-                    projectArray.push({ id: key, name: val.name })
-                    break;
-            }
-        return '';
-    })
-    if (projectArray.length > 0)
-        miniSearch.addAll(projectArray)
+                        break;
+                    case "pdf":
+                        Object.entries(val.content).map(([[_, __], values]) => {
+                            console.log("_ __ ", _, __, values)
+                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] });
+                            projectArray.push({ id: key, extention: values.metadata?.contentType });
+                            return '';
+                        });
+                        break;
+                    case "image":
+                        Object.entries(val.content).map(([[_, __], values]) => {
+                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                            projectArray.push({ id: key, extention: values.metadata?.contentType });
+                            projectArray.push({ id: key, labels: values?.label });
+                            projectArray.push({ id: key, description: values?.label.description });
+                            projectArray.push({ id: key, captions: values?.captions });
+                            return '';
+                        });
+                        break;
+                    case "audio":
+                        Object.entries(val.content).map(([[_, __], values]) => {
+                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                            projectArray.push({ id: key, extention: values.metadata?.contentType });
+                            return '';
+                        });
+                        break;
+                    case "VideoFile":
+                        Object.entries(val.content).map(([[_, __], values]) => {
+                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                            projectArray.push({ id: key, extention: values.metadata?.contentType });
+                            return '';
+                        });
+                        break;
+                    case 'file':
+                        Object.entries(val.content).map(([[_, __], values]) => {
+                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
+                            projectArray.push({ id: key, extention: values.metadata?.contentType });
+                            return '';
+                        });
+                        break;
+                    case 'VideoLink':
+                        Object.entries(val.content).map(([[_, __], values]) => {
+                            projectArray.push({ id: key, author_name: val.content.metadata.author_name });
+                            projectArray.push({ id: key, author_url: val.content.metadata.author_url });
 
-    const results = miniSearch.search(text);
-    const suggestions = miniSearch.autoSuggest(text);
-    console.log("THE SEARCH ELEMENTS ", text, " \n In \n", projectArray);
-    console.log("RESULT ", results);
+                            return '';
+                        });
+                        break;
+                    case "blank":
+                        projectArray.push({ id: key, text: val.content.text });
+                        break;
+                    default:
+                        //This is For Search in Cards Other than documents/projectID/nodes/
+                        projectArray.push({ id: key, name: val.name })
+                        break;
+                }
+            return '';
+        })
+        if (projectArray.length > 0)
+            this.miniSearch.addAll(projectArray)
 
-    return [results, suggestions];
+        const results = this.miniSearch.search(text);
+        const suggestions = this.miniSearch.autoSuggest(text);
+
+        return [results, suggestions];
+    }
 }
