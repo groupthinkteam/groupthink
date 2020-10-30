@@ -13,6 +13,7 @@ import SearchedItem from './SearchDropdown';
 const SearchBar = (props) => {
     const store = useStore();
     const [results, setResults] = useState({ matches: [], suggest: [] });
+    const [actionResult, setActionResult] = useState({ matches: [], suggest: [] });
     const [dropdown, setDropdown] = useState(false);
     const searchValues = (text) => {
         if (props.document) {
@@ -26,8 +27,8 @@ const SearchBar = (props) => {
 
             const [result, suggestions] = searchObject.getResult(text, store.cards);
             const [actionResult, actionSuggestion] = searchObject.getActionSearchResult(text);
-
-            setResults({ matches: result.concat(actionResult), suggest: suggestions.concat(actionSuggestion) });
+            setActionResult({ matches: actionResult, suggest: actionSuggestion });
+            setResults({ matches: result, suggest: suggestions });
             setDropdown(result.length > 0 || actionResult.length > 0);
         }
         else {
@@ -50,11 +51,11 @@ const SearchBar = (props) => {
                 onChange={(e) => searchValues(e.target.value)}
             />
             {
-                results.matches.length && 
-                <SearchedItem 
-                    results={results} document={props.document} dashboard={props.dashboard}
-                    className="dropdown-content" dropdown={dropdown} 
-                    setDropdown={setDropdown} 
+                (results.matches.length || actionResult.matches.length) &&
+                <SearchedItem
+                    results={results} actionResult={actionResult} document={props.document} dashboard={props.dashboard}
+                    className="dropdown-content" dropdown={dropdown}
+                    setDropdown={setDropdown}
                 />
             }
 

@@ -29,25 +29,44 @@ const SearchDropdown = (props) => {
         history.push('/project/' + id, { from: location })
     }
 
-    let searchItems = []
+    const searchItems = [];
     for (let i = 0; i < props.results.matches.length; i++) {
         let match = props.results.matches[i];
         const terms = match.terms[0];
         const field = match.match[terms][0];
         searchItems.push(
-            (<SearchItem key={i} id={match.id} field={field} onClick={() => { props.document ? setCurrentMatch(i) : openProject(match.id) }} />)
+            (
+                <SearchItem key={i} id={match.id} field={field}
+                    onClick={() => { props.document ? setCurrentMatch(i) : openProject(match.id) }}
+                />
+            )
         )
     }
 
-    if (props.document)
-        scrollToID(props.results.matches[currentMatch].id)
+
+    const actionItems = [];
+    for (let i = 0; i < props.actionResult.matches.length; i++) {
+        let match = props.actionResult.matches[i];
+        const terms = match.terms[0];
+        const field = match.match[terms][0];
+        actionItems.push(
+            (
+                <SearchItem key={i} id={match.id} field={field}
+                //Relevant Action onClick={() => {  }} 
+                />
+            )
+        )
+    }
+
+
+    if (props.document && props.results.matches[currentMatch]?.id)
+        scrollToID(props.results.matches[currentMatch]?.id)
 
     return (
         <>
             <div className={props.className}>
-                {
-                    searchItems
-                }
+                {searchItems}
+                {actionItems}
             </div>
             {currentMatch + 1}/{props.results.matches.length}
             <button onClick={() => setCurrentMatch((old) => (old + 1) % props.results.matches.length)}>

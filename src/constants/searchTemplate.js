@@ -16,12 +16,12 @@ export default class SearchElements {
                 fuzzy: 0.2,
                 prefix: true
             },
-            storeFields:['actionName']
-            
+            storeFields: ['actionName']
+
         });
     }
     getActionSearchResult(text) {
-        return [this.actionSearch.search(text) , this.actionSearch.autoSuggest(text)]
+        return [this.actionSearch.search(text), this.actionSearch.autoSuggest(text)]
     }
     getResult(text, elementToBeSearchIn) {
         const projectArray = [];
