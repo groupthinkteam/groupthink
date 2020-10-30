@@ -5,6 +5,7 @@ import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
 import RoomConnect from "../Voice/RoomConnect"
 import SearchBar from "../Search/SearchBar"
+import PersonaList from "../PersonaList/PersonaList"
 
 export default function MenuBar(props) {
     const currentUser = props.currentUser
@@ -30,10 +31,10 @@ export default function MenuBar(props) {
                 </div>
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">
-
                 {
                     props.document ?
                         <>
+                            <PersonaList />
                             <RoomConnect currentUser={currentUser} />
                             <ShareLink projectID={props.projectID} buttonClassName="menu-action-button highlight"
                                 currentUser={currentUser} 
