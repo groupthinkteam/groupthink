@@ -12,7 +12,7 @@ function CardContainer(props) {
     let store = useStore()
     console.log("CardContainer ", store.container)
     return (
-        <div className="card-container"
+        <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
             <input
                 className="zoom-slider"

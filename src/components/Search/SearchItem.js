@@ -1,20 +1,17 @@
-import React from 'react';
-const SearchedItem = (props) => {
-    return (
-        <div className={props.className}>
-            {
-                Object.entries(props.results.result).map(([_, val]) =>
-                    <div key={_}>
+import React from "react"
 
-                        <span className="container" style={{ columns: 2 }}>ID:{val.id}</span>
-                        <span>
-                            Field : {val.match[val.terms[0]][0]}
-                        </span>
-                        <hr />
-                    </div>
-                )
-            }
+export default function SearchItem(props) {
+    return (
+        <div id={props.id}>
+            <span className="container"
+                style={{ columns: 2, cursor: 'pointer' }}
+                onClick={props.onClick}>
+                ID:{props.id}
+            </span>
+            <span>
+                Field : {props.field}
+            </span>
+            <hr />
         </div>
     )
 }
-export default SearchedItem;

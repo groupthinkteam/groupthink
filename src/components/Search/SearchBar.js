@@ -4,36 +4,40 @@ import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 import "../../styles/SearchBar.scss";
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/hook'
-import { searchElementinDocuments } from '../../constants/searchTemplate';
-import SearchedItem from './SearchItem';
+import SearchElements from '../../constants/searchTemplate';
+import SearchedItem from './SearchDropdown';
 /**
  * 
  * @param {*} props - index and callback
  */
 const SearchBar = (props) => {
     const store = useStore();
-    const [results, setResults] = useState({ result: [], suggest: [] });
-    const searchElement = (text) => {
-        console.log("SEARCH ", text)
+    const [results, setResults] = useState({ matches: [], suggest: [] });
+    const [actionResult, setActionResult] = useState({ matches: [], suggest: [] });
+    const [dropdown, setDropdown] = useState(false);
+    const searchValues = (text) => {
         if (props.document) {
+            const indexes = [
+                'name', 'extension', 'title', 'text', 'url', "description",
+                'fileName', 'labels', 'captions', 'author_url', 'author_name'
+            ];
+            //store.getActionQuery(data => {console.log("ACTION ",data,MiniSearch.loadJSON(serverData,{fields:['searchQuery']}))});
 
-            store.getActionQuery(data => console.log("ACTION QUERY ", data));
-            const [result, suggestions] = searchElementinDocuments(text, store.cards,
-                [
-                    'name', 'extension', 'title', 'text', 'url', "description",
-                    'fileName', 'labels', 'captions', 'author_url', 'author_name'
-                ]
-            );
-            console.log("AUTO SUGGEST ", suggestions);
+            const searchObject = new SearchElements(indexes);
 
-
-            setResults({ result: result, suggest: suggestions });
-            store.highlightSearched(result, 'document');
+            const [result, suggestions] = searchObject.getResult(text, store.cards);
+            const [actionResult, actionSuggestion] = searchObject.getActionSearchResult(text);
+            setActionResult({ matches: actionResult, suggest: actionSuggestion });
+            setResults({ matches: result, suggest: suggestions });
+            setDropdown(result.length > 0 || actionResult.length > 0);
         }
         else {
-            const [result, suggestions] = searchElementinDocuments(text, store.projects, ['name']);
-            console.log("AUTO SUGGEST ", suggestions);
-            setResults({ result: result, suggest: suggestions });
+            const indexes = ['name'];
+
+            const searchObject = new SearchElements(indexes);
+            const [result, suggestions] = searchObject.getResult(text, store.projects);
+
+            setResults({ matches: result, suggest: suggestions });
             store.highlightSearched(result, 'projects');
         }
 
@@ -44,13 +48,18 @@ const SearchBar = (props) => {
             <InlineTextEdit
                 borderColor='black'
                 placeholder="Search for an item or action"
-                onChange={(e) => searchElement(e.target.value)}
+                onChange={(e) => searchValues(e.target.value)}
             />
             {
-                results.result.length > 0 ?
-                    <SearchedItem results={results} className="dropdown-content" />
-                    : null
+                (results.matches.length || actionResult.matches.length) &&
+                <SearchedItem
+                    results={results} actionResult={actionResult} document={props.document} dashboard={props.dashboard}
+                    className="dropdown-content" dropdown={dropdown}
+                    setDropdown={setDropdown}
+                />
             }
+
+
         </div>
     )
 }

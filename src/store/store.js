@@ -49,7 +49,7 @@ export var storeObject = {
         return Object.keys(this.users).length
     },
     getActionQuery(callback) {
-        database.ref("actiondoc/imageToBw/searchQuery")
+        database.ref("actionsearch")
             .once('value').then(snap => { callback(snap.val()) })
             .catch(err => console.log("Error in GETACTION is: ", err));
     },
