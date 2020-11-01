@@ -17,7 +17,7 @@ import { observer } from "mobx-react-lite";
 gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
-const GenericCard = observer(props=>{
+const GenericCard = observer(props => {
     let store = useStore();
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
@@ -66,7 +66,7 @@ const GenericCard = observer(props=>{
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     )
-    
+
     return (
         <>
             <div id={props.id} tabIndex={0}
@@ -80,11 +80,11 @@ const GenericCard = observer(props=>{
                 }}
                 style={{
                     position: "absolute",
-                    opacity: 0
+                    opacity: 0,
+                    width: me.size.width,
+                    height: me.size.height
                 }}>
-                <div style={{ width: me.size.width, height: me.size.height, position: "absolute", top: 0, boxShadow: "0 1px 2px 0 rgba(51,61,78,0.25)" }}>
-                    <CardType typeAPI={store} content={{...me.content}} size={{...me.size}} id={props.id} />
-                </div>
+                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} id={props.id} />
             </div>
         </>
     )

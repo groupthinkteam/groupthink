@@ -58,17 +58,24 @@ function BlankCard(props) {
 
     const onChange = (e) => {
         props.typeAPI.changeContent(props.id, { text: e.target.value })
+        if (e.target.value === "") return;
+        else {
+            const outcome = getTypeFromURL(props.content.text);
+            if (outcome === 'NoLink') {
+                props.typeAPI.saveContent(props.id, { text: props.content.text })
+                props.typeAPI.changeType(props.id, "text", types["text"])
+            }
+            else {
+                metadataOfLinks(props.content.text, metadata => {
+                    props.typeAPI.saveContent(props.id, { url: props.content.text, metadata: metadata });
+                })
+                props.typeAPI.changeType(props.id, outcome, types[outcome])
+            }
+        }
     }
 
-    const onSave = async () => {
-        const outcome = getTypeFromURL(props.content.text);
-        if (outcome === 'NoLink') { props.typeAPI.saveContent(props.id, { text: props.content.text }) }
-        else {
-            metadataOfLinks(props.content.text, metadata => {
-                props.typeAPI.saveContent(props.id, { url: props.content.text, metadata: metadata });
-            })
-            props.typeAPI.changeType(props.id, outcome, types[outcome])
-        }
+    const onSave = () => {
+        return;
     }
 
     const upload = useCallback((files) => {
@@ -93,8 +100,11 @@ function BlankCard(props) {
                         (url, metadata) => {
                             props.typeAPI.changeType(props.id, type, types[type])
                             props.typeAPI.saveContent(props.id, {
-                                [metadata.name]: { url: url, metadata: metadata, height: imageHeight, width: imageWidth, aspectRatio: aspectRatio },
-                                "text": null
+                                url: url,
+                                metadata: metadata,
+                                height: imageHeight,
+                                width: imageWidth,
+                                aspectRatio: aspectRatio
                             })
                         }
                     )
@@ -102,15 +112,10 @@ function BlankCard(props) {
             });
     }, [props.id, props.typeAPI, types])
 
-    const onDrop = useCallback(acceptedFiles => {
-        upload(acceptedFiles)
-    }, [upload])
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-
     if (uploadState) {
         gsap.to("#uploadfiller".concat(props.id), { height: uploadState + "%" })
     }
-    
+
     return (
         uploadState
             ? <div style={{ position: "relative", height: "100%", width: "100%", display: "flex", flexFlow: "column nowrap", justifyContent: "flex-end" }}>
@@ -119,33 +124,19 @@ function BlankCard(props) {
             </div>
             :
             <div>
-                <Button handleClick={() => props.typeAPI.changeType(props.id, "text", types["text"])}>
-                    Text
-            </Button>
-                <Button handleClick={() => props.typeAPI.changeType(props.id, "todo", types["todo"])}>
-                    Todo
-            </Button>
-                <Button handleClick={() => inputFile.current.click()}>
+                <InlineTextEdit
+                    onChange={e => onChange(e)}
+                    onSave={onSave}
+                    placeholder="Start typing, paste a link, or..."
+                />
+                <span onClick={() => inputFile.current.click()}>
                     Upload
-            </Button>
+                </span>
                 <input type="file"
                     onChange={(e) => upload(e.target.files)}
                     ref={inputFile}
                     style={{ display: 'none' }} />
-                <div {...getRootProps()}>
-                    <input {...getInputProps()} />
-                    {
-                        isDragActive ?
-                            <p>Drop the file here ...</p> :
-                            <p>Drag and Drop a file, or Browse</p>
-                    }
-                </div>
-                <InlineTextEdit
-                    onChange={e => onChange(e)}
-                    onSave={onSave}
-                    placeholder="Paste a link here..."
-                />
-            </div>
+            </div >
     )
 }
 

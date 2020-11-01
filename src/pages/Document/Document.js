@@ -15,7 +15,7 @@ function Document() {
   const [isloaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    console.log("DATA LOADED IN DOCUMENT KEY: ", keyID, "\n PROJECT \n", projectID);
+    console.log("opening project", projectID);
     setTimeout(() => setIsLoaded(true), 4000)
     store.projectID = projectID
     store.addDocumentListeners()
@@ -38,7 +38,7 @@ function Document() {
   }
   return (
     <div>
-      <MenuBar document documentName={store.metadata && store.metadata.name} currentUser={store.currentUser} signOut={signOut} projectID={projectID} />
+      <MenuBar document documentName={store.projectName} currentUser={store.currentUser} signOut={signOut} projectID={projectID} />
       <CardContainer />
     </div>
   );

@@ -53,7 +53,7 @@ function AppRoutes(props) {
         <Route path="/error">
           <ErrorsPage />
         </Route>
-        {/* <Redirect to="/login" /> */}
+        <Redirect to="/login" />
       </Switch>
     </Router>
   );

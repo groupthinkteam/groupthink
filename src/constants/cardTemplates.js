@@ -60,16 +60,16 @@ const cardTemplate = (type, size) => {
     const textCardTemplate = {
         type: type,
         size: size,
-        content: {
-            text: ""
-        }
+        // content: {
+        //     text: ""
+        // }
     }
     const blankCardTemplate = {
         type: type,
         size: size,
-        content: {
-            text: `This is a ${type} Card`
-        }
+        // content: {
+        //     text: `This is a ${type} Card`
+        // }
     }
     const todoCardTemplate = {
         type: type,

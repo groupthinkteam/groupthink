@@ -13,11 +13,11 @@ const Dashboard = observer(() => {
   const location = useLocation();
   useEffect(() => {
     store.addDashboardListeners()
-    return store.removeDashboardListeners
-  }, [store.addDashboardListeners, store.removeDashboardListeners,store])
+    return () => store.removeDashboardListeners()
+  }, [store])
 
   const signOut = () => {
-    store.removeDashboardListeners().then(store.signout);
+    store.signout();
     history.push('/login', { from: location });
   }
   return (

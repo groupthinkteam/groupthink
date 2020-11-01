@@ -6,7 +6,6 @@ import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
 * @param {*} props - Property of File .
 * @property `typeAPI` , `content` , `id`*/
 function TextCard(props) {
-    console.log("Searchable Text ",props.content.searchable_text);
     const onSave = () => props.typeAPI.saveContent(props.id, { text: props.content.text })
     const onChange = (event) => props.typeAPI.changeContent(props.id, { text: event.target.value })
     return (
@@ -17,7 +16,6 @@ function TextCard(props) {
                 text={props.content.text}
                 lwidth={"100px"}
                 disabled={props.isLocked}
-                search={props.highlightText?.text}
             />
         </div>
     )

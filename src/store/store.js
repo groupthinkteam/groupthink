@@ -5,7 +5,6 @@ import projectTemplates from "../constants/projectTemplates"
 import cardTemplate from "../constants/cardTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
-import { snap } from "gsap"
 
 export var storeObject = {
     projects: {},
@@ -22,6 +21,9 @@ export var storeObject = {
     currentUser: false,
     zoom: 1,
     validproject: '',
+    get projectName(){
+        return this.projectMetadata && this.projectMetadata.name
+    },
     get firebaseConfig() {
         return FIREBASE_CONSTANTS.UI_CONFIG;
     },
@@ -97,16 +99,16 @@ export var storeObject = {
         })
     },
     deleteProject(id) {
-        database.ref("garbagecollection").child(id).set(servertime);
-        database.ref("documents").child(id).child("users")
-            .once("value")
-            .then((snap) => {
-                let updates = {}
-                Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id] = null)
-                database.ref("users").update(updates)
-                    .then(database.ref("documents").child(id).set(null))
-            });
-
+        database.ref("garbagecollection").child(id).set(servertime).then(() => {
+            database.ref("documents").child(id).child("users")
+                .once("value")
+                .then((snap) => {
+                    let updates = {}
+                    Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id] = null)
+                    database.ref("users").update(updates)
+                        .then(database.ref("documents").child(id).set(null))
+                });
+        })
     },
     renameProject(id, title) {
         database.ref("documents").child(id).child("metadata").child("name").set(title)
@@ -124,7 +126,7 @@ export var storeObject = {
         this.updateLastActive()
         this.projectRef.child("cursors").child(this.userID)
             .set({ x: x, y: y })
-            .then(() => console.log("sent new cursor position to others"))
+            .then(() => { })
             .catch(err => console.log("error sending cursor position to others", err))
     }, 100),
     updateLastActive: throttle(function updateLastActive() {
@@ -147,7 +149,7 @@ export var storeObject = {
             size: size,
             position: position,
             content: {
-                text: `This is a ${type} Card`
+                text: ""
             },
             parent: parent
         }

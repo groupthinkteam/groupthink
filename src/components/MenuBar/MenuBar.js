@@ -26,9 +26,8 @@ export default function MenuBar(props) {
                     </div>
                     : null
                 }
-                <div className="menu-center-vertical-filler" >
-                    <SearchBar document={props?.document} dashboard={props?.dashboard}/>
-                </div>
+                <div className="menu-center-vertical-filler" />
+                <SearchBar document={props?.document} dashboard={props?.dashboard} />
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">
                 {
@@ -37,7 +36,7 @@ export default function MenuBar(props) {
                             <PersonaList />
                             <RoomConnect currentUser={currentUser} />
                             <ShareLink projectID={props.projectID} buttonClassName="menu-action-button highlight"
-                                currentUser={currentUser} 
+                                currentUser={currentUser}
                             />
                         </>
                         : null
@@ -46,8 +45,6 @@ export default function MenuBar(props) {
                     Log Out
                 </Button>
                 <img alt="" className="menu-bar-user-profile-picture" src={currentUser.photoURL} />
-                {/* <div className="menu-bar-user-name">
-                </div> */}
             </div>
         </div>
     );

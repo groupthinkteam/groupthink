@@ -11,14 +11,12 @@ import { useStore } from '../store/hook';
 const PrivateRoute = ({ path, children, isSignedIn, invitation, validateInvitation, ...rest }) => {
   const history = useHistory()
   let { projectID, keyID, permission } = useParams();
-  console.log("params", projectID, keyID, permission)
   let store = useStore()
   if (invitation) {
-    console.log("invitation true")
+    console.log("invitation is valid")
     if (keyID) {
       console.log("keyid true", keyID)
       store.createSharedUser(projectID, keyID, permission, (success) => {
-        console.log("callback was called")
         if (success) {
           console.log("success")
           history.push("/project/" + projectID)
