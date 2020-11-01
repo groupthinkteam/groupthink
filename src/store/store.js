@@ -2,7 +2,6 @@ import set from "lodash.set"
 import throttle from "lodash.throttle"
 import { database, storage, auth, servertime } from "../services/firebase"
 import projectTemplates from "../constants/projectTemplates"
-import cardTemplate from "../constants/cardTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
 
@@ -239,12 +238,16 @@ export var storeObject = {
         this.cards[id]["content"] = newContent;
         this.saveContent(id, newContent);
     },
-    changeType(id, newType, size) {
-        this.updateLastActive()
-        const newCardDefaults = cardTemplate(newType, size);
+    changeType(id, newType, size,content) {
+        this.updateLastActive();
+        const newCardDefaults = {
+            type: newType,
+            size: size,
+            content: content,
+        };
         this.projectRef.child("nodes").child(id)
             .update(newCardDefaults)
-            .then(console.log("set new type for", id, "value:", newCardDefaults))
+            .then(console.log("set",content, "new type for", id, "value:", newCardDefaults))
             .catch(err => err);
     },
     reparentCard(id, newParent) {

@@ -1,5 +1,4 @@
 import OnlineVideoCard from "./types/OnlineVideoCard";
-import PDFCard from "./types/PDFCard";
 import ImagesCard from "./types/ImagesCard";
 import FilesCard from "./types/FilesCard";
 import VideosCard from "./types/VideoCard";
@@ -21,7 +20,6 @@ import TodoCard from "./types/TodoCard";
  */
 // returns a CardType component based on "type"
 export default function cardChooser(type) {
-
     switch (type) {
         case "blank":
             return BlankCard;
@@ -41,8 +39,6 @@ export default function cardChooser(type) {
             return AudioCard;
         case "link":
             return LinkCard;
-        case "pdf":
-            return PDFCard;
         case "file":
             return FilesCard;
         default:

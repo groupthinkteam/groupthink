@@ -20,22 +20,14 @@ export const getTypeFromURL = (url) => {
  * @param {String} contentType contentType of file whose type is going to be detect.
  * @returns {String} `file` If nothing from predefined set . Also If it's video the Return `VideoFile` . 
  */
-export const typeDetector = (contentType) => {
-    const fileSet = ["image", "video", "audio", "pdf"]
-    let demoType = 'file';
-    const fileType = contentType.split("/");
-    console.log(fileType, fileType.length)
-    for (let i = fileType.length - 1; i >= 0; i--) {
-        if (fileSet.indexOf(fileType[i]) !== -1) {
-            demoType = fileType[i]
-        }
-        else continue;
+export const getTypeFromMetadata = (contentType) => {
+    const fileType = contentType.split("/")[0];
+    const fileSet = {
+        image: "image",
+        video: "VideoFile",
+        audio: "audio",
     }
-    console.log(contentType, demoType)
-    if (demoType === 'video')
-        return 'VideoFile';
-    else
-        return demoType;
+    return fileSet[fileType] || "file"
 }
 
 /**
@@ -43,7 +35,7 @@ export const typeDetector = (contentType) => {
  * @param {String} link The Link WHose metadata is to be figured out
  * @param {Object} callback Gives callback of returned metadata
  */
-export const metadataOfLinks = (link, callback) => {
+export const getMetadataFromURL = (link, callback) => {
     const linkFetch = `https://noembed.com/embed?url=${link}&maxwidth=350&maxheight=350`;
     fetch(linkFetch)
         .then(function (response) {
@@ -60,8 +52,11 @@ export const metadataOfLinks = (link, callback) => {
         .catch(error => {
             console.error(error);
         });
-
-
+}
+export const resizeDimension = (height, width) => {
+    const maxDimension = Math.max(height, width);
+    const multiplier = maxDimension > 450 ? 450 / maxDimension : 1;
+    return [Math.floor(height * multiplier), Math.floor(width * multiplier)]
 }
 /**
  * This Function Detects Dimension of Given File and Send data as Callback
@@ -92,25 +87,17 @@ const imageDimension = (file, callback) => {
 
         //Set the Base64 string return from FileReader as source.
         image.src = e.target.result;
-        console.log("COMPARE ", e);
         //Validate the File Height and Width.
         image.onload = function () {
-            var height = this.height;
-            var width = this.width;
-            const aspectRatio = height / width;
-            console.log("Uploaded image has valid Height and Width.", height, width);
-            callback({ height: height, width: width, aspectRatio: aspectRatio })
+            console.log("Uploaded image has valid Height and Width.", this.height, this.width);
+            callback({ height: this.height, width: this.width })
         }
     }
 }
 const videoDimension = (file, callback) => {
     var video = document.createElement('video');
     video.onloadedmetadata = () => {
-        console.log("Video loaded!");
-        console.log("width: " + video.videoWidth + "\n height: " + video.videoHeight);
-        const imageHeight = video.videoHeight;
-        const imageWidth = video.videoWidth;
-        callback({ height: imageHeight, width: imageWidth })
+        callback({ height: video.videoHeight, width: video.videoWidth })
     };
     video.onerror = () => {
         alert("Error!");

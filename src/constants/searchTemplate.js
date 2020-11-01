@@ -41,56 +41,34 @@ export default class SearchElements {
                         break;
                     case "link":
                         projectArray.push({ id: key, url: val.content.url });
-                        projectArray.push({ id: key, author_name: val.content.metadata.author_name });
-                        projectArray.push({ id: key, author_url: val.content.metadata.author_url });
-
-                        break;
-                    case "pdf":
-                        Object.entries(val.content).map(([[_, __], values]) => {
-                            console.log("_ __ ", _, __, values)
-                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] });
-                            projectArray.push({ id: key, extention: values.metadata?.contentType });
-                            return '';
-                        });
                         break;
                     case "image":
-                        Object.entries(val.content).map(([[_, __], values]) => {
-                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
-                            projectArray.push({ id: key, extention: values.metadata?.contentType });
-                            projectArray.push({ id: key, labels: values?.label });
-                            projectArray.push({ id: key, description: values?.label.description });
-                            projectArray.push({ id: key, captions: values?.captions });
-                            return '';
-                        });
+
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, extention: val.content.metadata?.contentType });
+                        projectArray.push({ id: key, labels: val.content?.label });
+                        projectArray.push({ id: key, description: val.content.label.description });
+                        projectArray.push({ id: key, captions: val.content.captions });
+
                         break;
                     case "audio":
-                        Object.entries(val.content).map(([[_, __], values]) => {
-                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
-                            projectArray.push({ id: key, extention: values.metadata?.contentType });
-                            return '';
-                        });
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, extention: val.content.metadata?.contentType });
+
                         break;
                     case "VideoFile":
-                        Object.entries(val.content).map(([[_, __], values]) => {
-                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
-                            projectArray.push({ id: key, extention: values.metadata?.contentType });
-                            return '';
-                        });
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, extention: val.content.metadata?.contentType });
+
                         break;
                     case 'file':
-                        Object.entries(val.content).map(([[_, __], values]) => {
-                            projectArray.push({ id: key, fileName: values.metadata?.name.split(">")[0] })
-                            projectArray.push({ id: key, extention: values.metadata?.contentType });
-                            return '';
-                        });
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, extention: val.content.metadata?.contentType });
+
                         break;
                     case 'VideoLink':
-                        Object.entries(val.content).map(([[_, __], values]) => {
-                            projectArray.push({ id: key, author_name: val.content.metadata.author_name });
-                            projectArray.push({ id: key, author_url: val.content.metadata.author_url });
-
-                            return '';
-                        });
+                        projectArray.push({ id: key, author_name: val.content.metadata.author_name });
+                        projectArray.push({ id: key, author_url: val.content.metadata.author_url });
                         break;
                     case "blank":
                         projectArray.push({ id: key, text: val.content.text });

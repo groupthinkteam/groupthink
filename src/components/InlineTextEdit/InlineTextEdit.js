@@ -30,7 +30,6 @@ function InlineTextEdit(props) {
             disabled={props.disabled}
             spellCheck="false"
             onFocus={props.onFocus}
-            autoFocus={props.forceFocus}
             href={props.href}
             target={props.target}
         />

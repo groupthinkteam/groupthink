@@ -1,11 +1,9 @@
 import React, { useState, useCallback, useRef } from "react";
-import { useDropzone } from 'react-dropzone';
 import { gsap } from "gsap/all";
-import Button from "../../../Button/Button";
 import "../../../../styles/Cards/BlankCard.scss";
 
 import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
-import { detectDimension, getTypeFromURL, metadataOfLinks, typeDetector } from "../Detector";
+import { detectDimension, getTypeFromURL, getMetadataFromURL, getTypeFromMetadata, resizeDimension } from "../cardTypeUtils";
 
 /**
  * @description The BlankCard type provides the UI for a newly-added card. It 
@@ -39,10 +37,6 @@ function BlankCard(props) {
             height: 250,
             width: 350
         },
-        pdf: {
-            height: 208,
-            width: 300
-        },
         audio: {
             height: 142,
             width: 300
@@ -57,19 +51,26 @@ function BlankCard(props) {
     let [uploadState, setUploadState] = useState(false)
 
     const onChange = (e) => {
-        props.typeAPI.changeContent(props.id, { text: e.target.value })
+        e.persist()
         if (e.target.value === "") return;
         else {
-            const outcome = getTypeFromURL(props.content.text);
+            const outcome = getTypeFromURL(e.target.value);
             if (outcome === 'NoLink') {
-                props.typeAPI.saveContent(props.id, { text: props.content.text })
-                props.typeAPI.changeType(props.id, "text", types["text"])
+                props.typeAPI.changeType(props.id, "text", types["text"], { text: e.target.value })
+            }
+            else if (outcome === 'VideoLink') {
+                getMetadataFromURL(e.target.value, metadata => {
+                    const [height, width] = resizeDimension(metadata.height, metadata.width)
+                    props.typeAPI.changeType(
+                        props.id,
+                        'VideoLink',
+                        { height: height, width: width },
+                        { url: e.target.value, metadata: metadata }
+                    )
+                })
             }
             else {
-                metadataOfLinks(props.content.text, metadata => {
-                    props.typeAPI.saveContent(props.id, { url: props.content.text, metadata: metadata });
-                })
-                props.typeAPI.changeType(props.id, outcome, types[outcome])
+                props.typeAPI.changeType(props.id, "link", types["link"], { url: e.target.value })
             }
         }
     }
@@ -79,14 +80,16 @@ function BlankCard(props) {
     }
 
     const upload = useCallback((files) => {
-        let file = files[0], imageHeight = null, imageWidth = null, aspectRatio = null;
-        const type = typeDetector(file?.type);
+        let file = files[0], displayHeight = null, displayWidth = null, originalHeight = null, originalWidth = null;;
+        const type = getTypeFromMetadata(file?.type);
 
         detectDimension(type, file, data => {
-            imageHeight = data.height;
-            imageWidth = data.width;
+            originalHeight = data.height;
+            originalWidth = data.width;
+            [displayHeight, displayWidth] = resizeDimension(originalHeight, originalWidth);
         });
-        let uploadPath = props.id + "/" + file.name.split(".")[0] + ">" + file.lastModified + "/";
+
+        let uploadPath = props.id + "/" + file.name;
         var typemeta = {
             contentType: file.type
         };
@@ -98,19 +101,20 @@ function BlankCard(props) {
                     props.typeAPI.requestDownload(
                         uploadPath,
                         (url, metadata) => {
-                            props.typeAPI.changeType(props.id, type, types[type])
-                            props.typeAPI.saveContent(props.id, {
+                            props.typeAPI.changeType(props.id, type,types[type] || {
+                                height: displayHeight,
+                                width: displayWidth
+                            }, {
                                 url: url,
                                 metadata: metadata,
-                                height: imageHeight,
-                                width: imageWidth,
-                                aspectRatio: aspectRatio
+                                height: originalHeight,
+                                width: originalWidth
                             })
                         }
                     )
                 }
             });
-    }, [props.id, props.typeAPI, types])
+    }, [props.id, props.typeAPI,types])
 
     if (uploadState) {
         gsap.to("#uploadfiller".concat(props.id), { height: uploadState + "%" })
