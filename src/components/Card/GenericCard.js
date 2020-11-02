@@ -17,7 +17,7 @@ import { observer } from "mobx-react-lite";
 gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
-const GenericCard = observer(props => {
+const GenericCard = props => {
     let store = useStore();
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
@@ -88,6 +88,6 @@ const GenericCard = observer(props => {
             </div>
         </>
     )
-})
+}
 
-export default React.memo(GenericCard);
+export default observer(GenericCard);
