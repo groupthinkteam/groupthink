@@ -1,19 +1,17 @@
 import React from 'react';
 import InlineTextEdit from '../../../InlineTextEdit/InlineTextEdit';
-/**
- * This Card Upload Image file & Shows the Image in Galllery
- * @param {*} props - Property of File .
- * @property `typeAPI` , `content` , `id` 
- */
+
+import "../../../../styles/Cards/ImagesCard.scss"
+
 const ImagesCard = (props) => {
   return (
     <div className="image-card" key={"imagecard".concat(props.id)}>
-      <div className="image-card-image">
+      <div className="image-card-image" style={{height: props.size.height - 12, width: props.size.width - 12}}>
         <img
           alt={props.content.caption || "none"}
           src={props.content.url}
-          height={`${props.size.height}px`}
-          width={`${props.size.width}px`}
+          // height={`${props.size.height}px`}
+          // width={`${props.size.width}px`}
         />
       </div>
       <div className="image-card-caption">
