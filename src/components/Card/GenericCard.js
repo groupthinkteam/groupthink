@@ -85,8 +85,8 @@ const GenericCard = props => {
                 }}>
                 {
                     store.currentActive === props.id?  //&& store.userCount >1 ?
-                        Object.entries(store.users).map(([key, val]) =>
-                            <div key={key}>
+                        Object.entries(store.users).map(([uid, val]) =>
+                            <div key={uid}>
                                 <img className='generic-card-text-profile-pic' alt="User PIC" src={val.photoURL} />
                             </div>
                         )

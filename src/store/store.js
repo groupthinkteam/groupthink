@@ -46,7 +46,7 @@ export var storeObject = {
         return Object.keys(this.cards)
     },
     get userCount() {
-        return Object.keys(this.users).length
+        return this.users ? Object.keys(this.users).length : 0
     },
     getActionQuery(callback) {
         database.ref("actionsearch")
@@ -363,7 +363,7 @@ export var storeObject = {
             .then(console.log("This User is Editing"))
             .catch(error => console.log("Error raised in addUserEditing because ", error))
     },
-    removeUserEditing(){
+    removeUserEditing() {
         this.projectRef.child('users').child(this.userID)
             .update({ isEditing: null })
             .then(console.log("This User is Editing"))
@@ -398,6 +398,13 @@ export var storeObject = {
         this.projectRef.child("nodes").off();
         this.projectRef.child("container").off();
         this.projectRef.child("metadata").off();
+
+        this.cards = {}
+        this.users = {}
+        this.cursors = {}
+        this.container = {}
+        // projectID = null
+
     },
     removeCursorListener() {
         this.projectRef.child("cursors").off()
