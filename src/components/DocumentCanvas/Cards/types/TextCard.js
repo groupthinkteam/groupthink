@@ -14,8 +14,8 @@ function TextCard(props) {
     let store = useStore()
     let textEditRef = useRef();
 
-    if(store.currentActive === props.id) {
-        textEditRef.current.focus()
+    if(store.currentActive === props.id && textEditRef.current) {
+        textEditRef.current.focus();
     }
 
     return (

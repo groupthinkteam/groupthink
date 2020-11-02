@@ -50,7 +50,7 @@ const GenericCard = props => {
                 {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
-                    dragClickables: true,
+                    dragClickables: me.type === 'text',
                     onClick: () => { store.currentActive = props.id; cardRef.current.focus() },
                     onDragStart: dragStart,
                     onDrag: drag,
@@ -58,9 +58,9 @@ const GenericCard = props => {
                     cursor: "grab",
                     activeCursor: "grabbing"
                 })
-            return () => y[0].kill()
+            return () => y[0].kill();
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []
+        }, [me.type]
     )
 
     return (
