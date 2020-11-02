@@ -1,20 +1,29 @@
 import React from 'react';
 import * as pretty from 'prettysize';
+
+import "../../../../styles/Cards/FileCard.scss"
+
 /**
  * This File Input's the Files(e.g. `.odt,.doc,.docx`) And Features to download the file .
  * @param {*} props 
  */
-const FilesCard = ({content}) => {
-
+const FilesCard = ({ content }) => {
     return (
-        <div>
-            File Name :
+        <div className="file-card">
             <a href={`${content.url}`} target="_blank" rel="noopener noreferrer">
-                {content.metadata.name}
+                <div className="file-card-name">
+                    {content.metadata.name}
+                </div>
             </a>
-            Last Modified : {new Date(content.metadata.updated).toDateString()}
-            Size : {pretty(content.metadata.size)}
-        </div>
+            <div className="file-card-info">
+                <div>
+                    {(new Date(content.metadata.updated).toDateString())}
+                </div>
+                <div>
+                    {pretty(content.metadata.size)}
+                </div>
+            </div>
+        </div >
     )
 }
 export default React.memo(FilesCard);

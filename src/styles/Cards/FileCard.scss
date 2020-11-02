@@ -1,0 +1,28 @@
+.file-card {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 10px 10px 10px 10px;
+    .file-card-name {
+        font-family: "Open Sans";
+        font-style: normal;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 24px;
+        color: #1e7eef;
+    }
+    .file-card-info {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: normal;
+        font-size: 10px;
+        line-height: 16px;
+        color: #DEDEDE;
+        width: 100%;
+    }
+}
