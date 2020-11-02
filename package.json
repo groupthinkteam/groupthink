@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@andyet/simplewebrtc": "^1.29.0",
+    "@popperjs/core": "^2.5.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -41,6 +42,7 @@
     "react-native-pdf-thumbnail": "^1.0.1",
     "react-photo-gallery": "^8.0.0",
     "react-player": "^2.6.1",
+    "react-popper": "^2.2.3",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
@@ -49,6 +51,7 @@
     "react-textarea-autosize": "^8.2.0",
     "react-tiny-link": "^3.6.0",
     "react-video-js-player": "^1.1.1",
+    "styled-components": "^5.2.1",
     "use-throttle": "^0.0.3"
   },
   "scripts": {

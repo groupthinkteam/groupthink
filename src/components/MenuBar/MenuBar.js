@@ -6,6 +6,8 @@ import { Link } from "react-router-dom"
 import RoomConnect from "../Voice/RoomConnect"
 import SearchBar from "../Search/SearchBar"
 import PersonaList from "../PersonaList/PersonaList"
+import UserMenu from "../UserMenu/UserMenu"
+
 
 export default function MenuBar(props) {
     const currentUser = props.currentUser
@@ -41,10 +43,13 @@ export default function MenuBar(props) {
                         </>
                         : null
                 }
-                <Button className="menu-action-button" handleClick={props.signOut}>
-                    Log Out
-                </Button>
-                <img alt="" className="menu-bar-user-profile-picture" src={currentUser.photoURL} />
+                        <UserMenu photoURL={currentUser.photoURL}
+                        username={currentUser.displayName} 
+                        imageClass="menu-bar-user-profile-picture" 
+                        logOutClass="menu-action-button"
+                        signOut={props.signOut}
+                        />
+                        
             </div>
         </div>
     );
