@@ -357,15 +357,15 @@ export var storeObject = {
                     })
             }).catch((error) => { console.log("failed to update because", error); callback(false) });
     },
-    addUserEditing() {
-        this.projectRef.child('users').child(this.userID)
-            .update({ isEditing: true })
-            .then(console.log("This User is Editing"))
-            .catch(error => console.log("Error raised in addUserEditing because ", error))
+    addUserEditing(id) {
+        this.projectRef.child('nodes').child(id).child("editing")
+            .set({ [this.userID]: servertime })
+            .then(console.log("this user is editing card", id))
+            .catch(error => console.log("error raised in addUserEditing because ", error))
     },
-    removeUserEditing() {
-        this.projectRef.child('users').child(this.userID)
-            .update({ isEditing: null })
+    removeUserEditing(id) {
+        this.projectRef.child('nodes').child(id).child("editing")
+            .set(null)
             .then(console.log("This User is Editing"))
             .catch(error => console.log("Error raised in addUserEditing because ", error))
     },
@@ -403,8 +403,6 @@ export var storeObject = {
         this.users = {}
         this.cursors = {}
         this.container = {}
-        // projectID = null
-
     },
     removeCursorListener() {
         this.projectRef.child("cursors").off()

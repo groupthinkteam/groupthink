@@ -23,10 +23,26 @@
 .inline-input {
     background-color: transparent;
 }
-.generic-card-text-profile-pic {
-    height: 30px;
-    width: 30px;
-    border: 2px solid black;
-    border-radius: 20px;
-    margin-right: 10px;
+
+.generic-card-active-user-list {
+    position: absolute;
+    top: -30px;
+    left: -2px;
+    background-color: white;
+    border: 2px solid #1e7eef;
+    border-bottom: 0px solid black;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 3px 3px 3px 3px;
+    .generic-card-text-profile-pic {
+        height: 25px;
+        width: 25px;
+        border: 2px solid black;
+        border-radius: 15px;
+        margin-right: 3px;
+    }
 }

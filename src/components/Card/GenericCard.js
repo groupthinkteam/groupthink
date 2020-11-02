@@ -51,7 +51,7 @@ const GenericCard = props => {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
                     dragClickables: me.type === 'text',
-                    onClick: () => { store.addUserEditing(); cardRef.current.focus() },
+                    onClick: () => { cardRef.current.focus() },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -63,14 +63,23 @@ const GenericCard = props => {
         }, [me.type]
     )
 
+    let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
+
     return (
         <>
-
             <div id={props.id} tabIndex={0}
                 className="generic-card"
                 ref={cardRef}
-                onBlur={e => store.currentActive === props.id ? store.currentActive = null : null}
-                onFocus={e => { store.currentActive = props.id }}
+                onBlur={_ => {
+                    if (store.currentActive === props.id) {
+                        store.currentActive = null;
+                        // store.removeUserEditing(props.id)
+                    }
+                }}
+                onFocus={_ => {
+                    store.currentActive = props.id;
+                    store.addUserEditing(props.id)
+                }}
                 onKeyDown={(e) => {
                     console.log("pressed ", e.key);
                     if (e.key === "Delete") {
@@ -81,16 +90,15 @@ const GenericCard = props => {
                     position: "absolute",
                     opacity: 0,
                     width: me.size.width,
-                    height: me.size.height
+                    height: me.size.height,
+                    borderTopLeftRadius: me.editingUser ? "0px" : "6px"
                 }}>
                 {
-                    store.currentActive === props.id?  //&& store.userCount >1 ?
-                        Object.entries(store.users).map(([uid, val]) =>
-                            <div key={uid}>
-                                <img className='generic-card-text-profile-pic' alt="User PIC" src={val.photoURL} />
-                            </div>
-                        )
-                        : null
+                    editingUser &&
+                    <div className="generic-card-active-user-list">
+                        <img className='generic-card-text-profile-pic' alt={editingUser.name} src={editingUser.photoURL} />
+                        {editingUser.name} is editing...
+                    </div>
                 }
                 <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} id={props.id} />
             </div>
