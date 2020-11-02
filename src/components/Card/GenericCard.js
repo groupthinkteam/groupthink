@@ -51,7 +51,7 @@ const GenericCard = props => {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
                     dragClickables: me.type === 'text',
-                    onClick: () => { store.currentActive = props.id; cardRef.current.focus() },
+                    onClick: () => { store.addUserEditing(); cardRef.current.focus() },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -65,9 +65,12 @@ const GenericCard = props => {
 
     return (
         <>
+
             <div id={props.id} tabIndex={0}
                 className="generic-card"
                 ref={cardRef}
+                onBlur={e => store.currentActive === props.id ? store.currentActive = null : null}
+                onFocus={e => { store.currentActive = props.id }}
                 onKeyDown={(e) => {
                     console.log("pressed ", e.key);
                     if (e.key === "Delete") {
@@ -80,6 +83,15 @@ const GenericCard = props => {
                     width: me.size.width,
                     height: me.size.height
                 }}>
+                {
+                    store.currentActive === props.id?  //&& store.userCount >1 ?
+                        Object.entries(store.users).map(([key, val]) =>
+                            <div key={key}>
+                                <img className='generic-card-text-profile-pic' alt="User PIC" src={val.photoURL} />
+                            </div>
+                        )
+                        : null
+                }
                 <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} id={props.id} />
             </div>
         </>

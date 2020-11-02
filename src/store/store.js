@@ -21,7 +21,7 @@ export var storeObject = {
     currentUser: false,
     zoom: 1,
     validproject: '',
-    get projectName(){
+    get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },
     get firebaseConfig() {
@@ -239,7 +239,7 @@ export var storeObject = {
         this.cards[id]["content"] = newContent;
         this.saveContent(id, newContent);
     },
-    changeType(id, newType, size,content) {
+    changeType(id, newType, size, content) {
         this.updateLastActive();
         const newCardDefaults = {
             type: newType,
@@ -248,7 +248,7 @@ export var storeObject = {
         };
         this.projectRef.child("nodes").child(id)
             .update(newCardDefaults)
-            .then(console.log("set",content, "new type for", id, "value:", newCardDefaults))
+            .then(console.log("set", content, "new type for", id, "value:", newCardDefaults))
             .catch(err => err);
     },
     reparentCard(id, newParent) {
@@ -356,6 +356,18 @@ export var storeObject = {
                             .catch(err => console.log("error updating user's profile with new document", err));
                     })
             }).catch((error) => { console.log("failed to update because", error); callback(false) });
+    },
+    addUserEditing() {
+        this.projectRef.child('users').child(this.userID)
+            .update({ isEditing: true })
+            .then(console.log("This User is Editing"))
+            .catch(error => console.log("Error raised in addUserEditing because ", error))
+    },
+    removeUserEditing(){
+        this.projectRef.child('users').child(this.userID)
+            .update({ isEditing: null })
+            .then(console.log("This User is Editing"))
+            .catch(error => console.log("Error raised in addUserEditing because ", error))
     },
     // listener manipulation
     addDashboardListeners() {

@@ -36,7 +36,7 @@ const SearchDropdown = (props) => {
         const field = match.match[terms][0];
         searchItems.push(
             (
-                <SearchItem key={i} id={match.id} field={field}
+                <SearchItem key={i} id={match.id} field={field} match={terms}
                     onClick={() => { props.document ? setCurrentMatch(i) : openProject(match.id) }}
                 />
             )

@@ -21,12 +21,14 @@ const SearchBar = (props) => {
                 'name', 'extension', 'title', 'text', 'url', "description",
                 'fileName', 'labels', 'captions', 'author_url', 'author_name'
             ];
-            //store.getActionQuery(data => {console.log("ACTION ",data,MiniSearch.loadJSON(serverData,{fields:['searchQuery']}))});
+            
 
             const searchObject = new SearchElements(indexes);
 
             const [result, suggestions] = searchObject.getResult(text, store.cards);
             const [actionResult, actionSuggestion] = searchObject.getActionSearchResult(text);
+            
+            console.log("SUggetion",suggestions);
             setActionResult({ matches: actionResult, suggest: actionSuggestion });
             setResults({ matches: result, suggest: suggestions });
             setDropdown(result.length > 0 || actionResult.length > 0);

@@ -44,31 +44,31 @@ export default class SearchElements {
                         break;
                     case "image":
 
-                        projectArray.push({ id: key, fileName: val.content.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name})
                         projectArray.push({ id: key, extention: val.content.metadata?.contentType });
-                        projectArray.push({ id: key, labels: val.content?.label });
-                        projectArray.push({ id: key, description: val.content.label.description });
+                        projectArray.push({ id: key, description: val.content.label?.description });
                         projectArray.push({ id: key, captions: val.content.captions });
 
                         break;
                     case "audio":
-                        projectArray.push({ id: key, fileName: val.content.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name})
                         projectArray.push({ id: key, extention: val.content.metadata?.contentType });
 
                         break;
                     case "VideoFile":
-                        projectArray.push({ id: key, fileName: val.content.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name})
                         projectArray.push({ id: key, extention: val.content.metadata?.contentType });
 
                         break;
                     case 'file':
-                        projectArray.push({ id: key, fileName: val.content.metadata?.name.split(">")[0] })
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name})
                         projectArray.push({ id: key, extention: val.content.metadata?.contentType });
 
                         break;
                     case 'VideoLink':
                         projectArray.push({ id: key, author_name: val.content.metadata.author_name });
                         projectArray.push({ id: key, author_url: val.content.metadata.author_url });
+                        projectArray.push({ id: key, title: val.content.metadata.title });
                         break;
                     case "blank":
                         projectArray.push({ id: key, text: val.content.text });

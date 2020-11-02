@@ -11,6 +11,9 @@ export default function SearchItem(props) {
             <span>
                 Field : {props.field}
             </span>
+            <span>
+                Match : {props.match}
+            </span>
             <hr />
         </div>
     )
