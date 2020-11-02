@@ -10,10 +10,10 @@ function TextCard(props) {
     const onChange = (event) => props.typeAPI.changeContent(props.id, { text: event.target.value })
 
     let textEditRef = useRef();
-
+    console.log(textEditRef.current);
    
     return (
-        <div className="text-node" onFocus={e=>console.log("Focused Div")}
+        <div className="text-node"  onClick={()=>textEditRef.current.focus()}
         style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
             <InlineTextEdit
                 onChange={(e) => onChange(e)}

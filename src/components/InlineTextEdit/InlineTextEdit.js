@@ -2,7 +2,8 @@ import React from "react"
 import TextareaAutosize from "react-textarea-autosize"
 import "../../styles/InlineTextEdit.scss"
 
-function InlineTextEdit(props) {
+function InlineTextEdit(props,ref) {
+    
     let prevStyle = { 
         margin: props.margin || "5px 5px 5px 5px", 
         fontWeight: props.bold ? "bold" : "normal", 
@@ -32,8 +33,9 @@ function InlineTextEdit(props) {
             onFocus={props.onFocus}
             href={props.href}
             target={props.target}
+            ref={ref}
         />
     )
 }
-
-export default React.memo(InlineTextEdit)
+const ForwardRef = React.forwardRef(InlineTextEdit);
+export default React.memo(ForwardRef);
