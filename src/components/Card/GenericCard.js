@@ -7,11 +7,7 @@ import "../../styles/Cards/GenericCard.scss";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
 
-/**
- * TODO :-
- * Check Multiple Uploaded File Renders in single card
- * Files Card Having Different Name ...Correction Needed
- */
+
 
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable);
@@ -54,8 +50,8 @@ const GenericCard = observer(props => {
                 {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
-                    dragClickables: false,
-                    onClick: () => { cardRef.current.focus() },
+                    dragClickables: true,
+                    onClick: () => { store.currentActive = props.id; cardRef.current.focus() },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,

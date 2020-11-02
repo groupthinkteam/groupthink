@@ -13,6 +13,7 @@ export var storeObject = {
     container: {},
     projectID: null,
     projectMetadata: null,
+    currentActive: null,
     get userID() {
         return this.currentUser && this.currentUser.uid
     },

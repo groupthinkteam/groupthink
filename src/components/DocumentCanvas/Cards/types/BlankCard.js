@@ -12,7 +12,7 @@ import { detectDimension, getTypeFromURL, getMetadataFromURL, getTypeFromMetadat
  * @param {*} props 
  */
 function BlankCard(props) {
-    const types = {
+    const defaultSize = {
         text: {
             height: 200,
             width: 280
@@ -24,18 +24,6 @@ function BlankCard(props) {
         file: {
             height: 100,
             width: 280
-        },
-        image: {
-            height: 250,
-            width: 350
-        },
-        VideoFile: {
-            height: 200,
-            width: 350
-        },
-        VideoLink: {
-            height: 250,
-            width: 350
         },
         audio: {
             height: 142,
@@ -56,7 +44,7 @@ function BlankCard(props) {
         else {
             const outcome = getTypeFromURL(e.target.value);
             if (outcome === 'NoLink') {
-                props.typeAPI.changeType(props.id, "text", types["text"], { text: e.target.value })
+                props.typeAPI.changeType(props.id, "text", defaultSize["text"], { text: e.target.value })
             }
             else if (outcome === 'VideoLink') {
                 getMetadataFromURL(e.target.value, metadata => {
@@ -70,7 +58,7 @@ function BlankCard(props) {
                 })
             }
             else {
-                props.typeAPI.changeType(props.id, "link", types["link"], { url: e.target.value })
+                props.typeAPI.changeType(props.id, "link", defaultSize["link"], { url: e.target.value })
             }
         }
     }
@@ -101,7 +89,7 @@ function BlankCard(props) {
                     props.typeAPI.requestDownload(
                         uploadPath,
                         (url, metadata) => {
-                            props.typeAPI.changeType(props.id, type,types[type] || {
+                            props.typeAPI.changeType(props.id, type, defaultSize[type] || {
                                 height: displayHeight,
                                 width: displayWidth
                             }, {
@@ -114,7 +102,7 @@ function BlankCard(props) {
                     )
                 }
             });
-    }, [props.id, props.typeAPI,types])
+    }, [props.id, props.typeAPI, defaultSize])
 
     if (uploadState) {
         gsap.to("#uploadfiller".concat(props.id), { height: uploadState + "%" })
