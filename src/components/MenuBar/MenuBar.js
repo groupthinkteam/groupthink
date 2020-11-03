@@ -1,5 +1,4 @@
 import React from "react"
-import Button from "../Button/Button"
 import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
@@ -43,13 +42,13 @@ export default function MenuBar(props) {
                         </>
                         : null
                 }
-                        <UserMenu photoURL={currentUser.photoURL}
-                        username={currentUser.displayName} 
-                        imageClass="menu-bar-user-profile-picture" 
-                        logOutClass="menu-action-button"
-                        signOut={props.signOut}
-                        />
-                        
+                <UserMenu photoURL={currentUser.photoURL}
+                    username={currentUser.displayName}
+                    imageClass="menu-bar-user-profile-picture"
+                    logOutClass="menu-action-button"
+                    signOut={props.signOut}
+                />
+
             </div>
         </div>
     );

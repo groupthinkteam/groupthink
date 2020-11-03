@@ -41,9 +41,22 @@ function AppRoutes(props) {
               )
           }>
         </Route>
-        <PrivateRoute isSignedIn={isSignedIn} path="/project/:projectID">
-          <Document />
-        </PrivateRoute>
+        <Route path="/project/:projectID"
+          render={({ location }) =>
+            isSignedIn ? (
+              <PrivateRoute isSignedIn={isSignedIn} document path="/project/:projectID">
+                <Document />
+              </PrivateRoute>
+            ) : (
+                <Redirect
+                  to={{
+                    pathname: "/login",
+                    state: { from: location }
+                  }}
+                />
+              )
+          }>
+        </Route>
         <Route path="/login" isSignedIn={isSignedIn}>
           <LoginPage />
         </Route>

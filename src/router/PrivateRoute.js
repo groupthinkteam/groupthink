@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { useStore } from '../store/hook';
 
-const PrivateRoute = ({ path, children, isSignedIn, invitation, validateInvitation, ...rest }) => {
+const PrivateRoute = ({ path, children, isSignedIn, invitation, validateInvitation,document, ...rest }) => {
   const history = useHistory()
   let { projectID, keyID, permission } = useParams();
   let store = useStore()
@@ -29,7 +29,15 @@ const PrivateRoute = ({ path, children, isSignedIn, invitation, validateInvitati
     }
     return <p>Checking your invite...</p>
   }
-
+  if(document)
+  {
+    store.isProjectValid(projectID,success=>{
+      if (!success){
+        console.log("Invalid Project ")
+        history.push("/dashboard")
+      }
+    })
+  }
   return (
     <Route
       {...rest}

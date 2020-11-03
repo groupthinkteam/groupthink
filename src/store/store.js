@@ -61,11 +61,10 @@ export var storeObject = {
             this.currentUser = false;
         }
     },
-    async isProjectValid(id) {
-        await this.userRef.once('value')
-            .then(snap => { snap.hasChild(id) ? this.validproject = true : this.validproject = false })
+    isProjectValid(id,callback) {
+        this.userRef.once('value')
+            .then(snap => { callback(snap.hasChild(id))})
             .catch(error => console.log("While Validating Project", error));
-        console.log("Valid Inside Function ", this.validproject);
     },
     // dashboard related actions
     addNewProject() {

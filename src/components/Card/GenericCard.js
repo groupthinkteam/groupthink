@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap, Draggable } from "gsap/all";
 
 import cardChooser from "../DocumentCanvas/Cards/cardChooser";
@@ -6,8 +6,6 @@ import cardChooser from "../DocumentCanvas/Cards/cardChooser";
 import "../../styles/Cards/GenericCard.scss";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
-
-
 
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable);
@@ -18,6 +16,7 @@ const GenericCard = props => {
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
     const cardRef = useRef(null);
+    const [rightClick, setRightClick] = useState(false);
 
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
@@ -51,7 +50,7 @@ const GenericCard = props => {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
                     dragClickables: me.type === 'text',
-                    onClick: () => { cardRef.current.focus() },
+                    onClick: (e) => { setRightClick(e.button === 2); cardRef.current.focus() },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -62,7 +61,6 @@ const GenericCard = props => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type]
     )
-
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
 
     return (
@@ -100,10 +98,28 @@ const GenericCard = props => {
                         {editingUser.name} is editing...
                     </div>
                 }
+                {
+                    rightClick && store.currentActive === props.id && (
+                        <div className="context-menu">
+                            <li onClick={() => {
+                                store.addCard({ x: me.position.x, y: me.size.height + + 60 }, { width: 310, height: 200 }, props.id, 'blank')
+                                setRightClick(!rightClick);
+                            }}
+                            >Add Child</li>
+                            <li onClick={() => {
+                                store.removeCard(props.id, "recursive");
+                                setRightClick(!rightClick);
+                            }}>
+                                Delete
+                            </li>
+                        </div>
+                    )
+                }
                 <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} id={props.id} />
             </div>
         </>
     )
 }
+
 
 export default observer(GenericCard);
