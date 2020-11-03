@@ -50,8 +50,8 @@ const GenericCard = props => {
                 {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
-                    dragClickables: me.type === 'text',
-                    onClick: () => { cardRef.current.focus() },
+                    dragClickables: store.currentActive !== props.id,
+                    onClick: () => { console.log("onclick genericcard"); cardRef.current.focus() },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -60,7 +60,7 @@ const GenericCard = props => {
                 })
             return () => y[0].kill();
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [me.type]
+        }, [me.type, store.currentActive]
     )
 
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
