@@ -19,9 +19,6 @@
 }
 
 .menu-bar-project-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 3px 12px 6px 12px;
     position: relative;
     border-bottom-left-radius: 10px;
@@ -35,6 +32,10 @@
     background-color: #5fa2f1;
     text-decoration: none;
     line-height: 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .menu-bar-panel {

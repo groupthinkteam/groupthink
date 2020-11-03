@@ -4,19 +4,16 @@ import InlineTextEdit from '../../../InlineTextEdit/InlineTextEdit';
 import "../../../../styles/Cards/ImagesCard.scss"
 
 const ImagesCard = (props) => {
-  let aspect = props.size.height / props.size.width;
   return (
     <div className="image-card" key={"imagecard".concat(props.id)}>
-      <div className="image-card-image" style={{ height: props.size.height - 12 * aspect, width: props.size.width - 12 }}>
+      <div className="image-card-image" style={{ height: props.content.displayHeight, width: props.content.displayWidth }}>
         <img
           alt={props.content.caption || "none"}
           src={props.content.url}
-        // height={`${props.size.height}px`}
-        // width={`${props.size.width}px`}
         />
       </div>
       <div className="image-card-caption">
-        <InlineTextEdit />
+        <InlineTextEdit placeholder="add a caption..." />
       </div>
     </div>
   )

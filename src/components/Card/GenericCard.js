@@ -49,7 +49,7 @@ const GenericCard = props => {
                 {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
-                    dragClickables: me.type === 'text',
+                    dragClickables: store.currentActive !== props.id,
                     onClick: (e) => { setRightClick(e.button === 2); cardRef.current.focus() },
                     onDragStart: dragStart,
                     onDrag: drag,
@@ -102,7 +102,7 @@ const GenericCard = props => {
                     rightClick && store.currentActive === props.id && (
                         <div className="context-menu">
                             <li onClick={() => {
-                                store.addCard({ x: me.position.x+220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
+                                store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
                                 setRightClick(!rightClick);
                             }}
                             >Add Child</li>
