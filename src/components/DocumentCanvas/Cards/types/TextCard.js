@@ -1,6 +1,9 @@
-import React, { useRef} from "react";
-import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
+import React from "react";
+import { observer } from "mobx-react-lite";
 import { useStore } from "../../../../store/hook";
+
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css'
 
 /**
 * This File Saves Text And Shows it from Database .   
@@ -9,27 +12,13 @@ import { useStore } from "../../../../store/hook";
 
 
 function TextCard(props) {
-    const onSave = () => props.typeAPI.saveContent(props.id, { text: props.content.text })
-    const onChange = (event) => props.typeAPI.changeContent(props.id, { text: event.target.value })
     let store = useStore()
-    let textEditRef = useRef();
-
-    if(store.currentActive === props.id && textEditRef.current) {
-        textEditRef.current.focus();
-    }
+    let me = store.cards[props.id]
 
     return (
-        <div className="text-node" onClick={()=>textEditRef.current.focus()} 
-        style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
-            <InlineTextEdit
-                onChange={(e) => onChange(e)}
-                onSave={onSave}
-                text={props.content.text}
-                lwidth={"100px"}
-                ref={textEditRef}
-                disabled={props.isLocked}
-            />
+        <div className="text-node" style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
+            <ReactQuill value={me.content.text} onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }} />
         </div>
     )
 }
-export default React.memo(TextCard);
+export default observer(TextCard);

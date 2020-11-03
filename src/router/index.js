@@ -66,7 +66,7 @@ function AppRoutes(props) {
         <Route path="/error">
           <ErrorsPage />
         </Route>
-        <Redirect to="/login" />
+        <Redirect to={isSignedIn ? "/dashboard" : "/login"} />
       </Switch>
     </Router>
   );

@@ -16,7 +16,7 @@ function Document() {
 
   useEffect(() => {
     console.log("opening project", projectID);
-    setTimeout(() => setIsLoaded(true), 4000)
+    setTimeout(() => setIsLoaded(true), 300)
     store.projectID = projectID
     store.addDocumentListeners()
     return () => store.removeDocumentListeners()

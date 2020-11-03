@@ -27,6 +27,7 @@ function InlineTextEdit(props, ref) {
             className="inline-input"
             placeholder={props.placeholder || "Type something here..."}
             value={props.text}
+            onClick={(e) => console.log("clicked textedit")}
             onChange={props.onChange}
             onBlur={props.onSave}
             disabled={props.disabled}

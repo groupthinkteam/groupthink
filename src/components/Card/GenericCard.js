@@ -59,7 +59,7 @@ const GenericCard = props => {
                 })
             return () => y[0].kill();
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [me.type]
+        }, [me.type, store.currentActive]
     )
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
 
@@ -102,7 +102,7 @@ const GenericCard = props => {
                     rightClick && store.currentActive === props.id && (
                         <div className="context-menu">
                             <li onClick={() => {
-                                store.addCard({ x: me.position.x, y: me.size.height + + 60 }, { width: 310, height: 200 }, props.id, 'blank')
+                                store.addCard({ x: me.position.x+220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
                                 setRightClick(!rightClick);
                             }}
                             >Add Child</li>
