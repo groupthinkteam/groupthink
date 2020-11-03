@@ -13,7 +13,11 @@ const ImagesCard = (props) => {
         />
       </div>
       <div className="image-card-caption">
-        <InlineTextEdit placeholder="add a caption..." />
+        <InlineTextEdit
+          style={{ "font-style": "italic" }}
+          placeholder={"Add a caption. " + (props.content.label ? "e.g. " + props.content.label.description : "")}
+          text={props.content.caption}
+          onChange={(e) => { props.typeAPI.changeContent(props.id, { ...props.content, caption: e.target.value }) }} />
       </div>
     </div>
   )

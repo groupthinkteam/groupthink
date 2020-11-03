@@ -15,7 +15,6 @@ function InlineTextEdit(props, ref) {
         cursor: "initial",
         borderColor: props.borderColor,
         overflow: "visible"
-
     }
     if (props.style) {
         Object.entries(props.style).map(([key, value]) => prevStyle = { ...prevStyle, [key]: value })
