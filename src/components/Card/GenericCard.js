@@ -49,8 +49,9 @@ const GenericCard = props => {
                 {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
-                    dragClickables: store.currentActive !== props.id,
-                    onClick: (e) => { setRightClick(e.button === 2); cardRef.current.focus() },
+                    // dragClickables: store.currentActive !== props.id,
+                    dragClickables: false,
+                    onClick: (e) => { setRightClick(e.button === 2); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -84,12 +85,14 @@ const GenericCard = props => {
                         store.removeCard(props.id, "recursive")
                     }
                 }}
+                tabindex="-1"
                 style={{
                     position: "absolute",
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    borderTopLeftRadius: me.editingUser ? "0px" : "6px"
+                    borderTopLeftRadius: me.editingUser ? "0px" : "6px",
+                    tabIndex: -1,
                 }}>
                 {
                     editingUser &&

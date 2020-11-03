@@ -16,6 +16,14 @@
     position: relative;
 }
 
+.search-dropdown {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow: auto;
+}
+
 .dropdown-content {
     display: block;
     position: absolute;

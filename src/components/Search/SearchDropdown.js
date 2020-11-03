@@ -63,9 +63,11 @@ const SearchDropdown = (props) => {
         scrollToID(props.results.matches[currentMatch]?.id)
 
     return (
-        <>
-            <div className={props.className}>
+        <div className="search-bar">
+            <div className="search-dropdown">
+                items
                 {searchItems}
+                actions
                 {actionItems}
             </div>
             {currentMatch + 1}/{props.results.matches.length}
@@ -75,7 +77,7 @@ const SearchDropdown = (props) => {
             <button onClick={() => setCurrentMatch((old) => Math.abs(old - 1) % props.results.matches.length)}>
                 Prev
             </button>
-        </>
+        </div>
     )
 }
 export default observer(SearchDropdown);

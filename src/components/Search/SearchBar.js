@@ -21,14 +21,13 @@ const SearchBar = (props) => {
                 'name', 'extension', 'title', 'text', 'url', "description",
                 'fileName', 'labels', 'captions', 'author_url', 'author_name'
             ];
-            
 
             const searchObject = new SearchElements(indexes);
 
             const [result, suggestions] = searchObject.getResult(text, store.cards);
             const [actionResult, actionSuggestion] = searchObject.getActionSearchResult(text);
-            
-            console.log("SUggetion",suggestions);
+
+            console.log("Suggestion", suggestions);
             setActionResult({ matches: actionResult, suggest: actionSuggestion });
             setResults({ matches: result, suggest: suggestions });
             setDropdown(result.length > 0 || actionResult.length > 0);
@@ -56,7 +55,7 @@ const SearchBar = (props) => {
                 (results.matches.length || actionResult.matches.length) &&
                 <SearchedItem
                     results={results} actionResult={actionResult} document={props.document} dashboard={props.dashboard}
-                    className="dropdown-content" dropdown={dropdown}
+                    dropdown={dropdown}
                     setDropdown={setDropdown}
                 />
             }
