@@ -1,20 +1,11 @@
 import React from "react"
 
 export default function SearchItem(props) {
+    console.log("matched", props.id)
     return (
-        <div id={props.id}>
-            <span className="container"
-                style={{ columns: 2, cursor: 'pointer' }}
-                onClick={props.onClick}>
-                ID:{props.id}
-            </span>
-            <span>
-                Field : {props.field}
-            </span>
-            <span>
-                Match : {props.match}
-            </span>
-            <hr />
+        <div id={props.id} className="search-result-item" onClick={props.onClick}>
+            <div className="matched-keywords">{props.match}</div>
+            <hr className="search-result-separator"/>
         </div>
     )
 }

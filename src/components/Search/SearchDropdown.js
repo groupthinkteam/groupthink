@@ -13,15 +13,22 @@ const SearchDropdown = (props) => {
     const history = useHistory();
     const location = useLocation();
     const [currentMatch, setCurrentMatch] = useState(0)
+    const [previousMatchID, setPreviousMatchID] = useState(null)
 
     const scrollToID = (id) => {
-        let height = document.getElementById("card-container").style.height;
-        let x = store.cards[id].position.x - window.innerWidth;
-        let y = store.cards[id].position.y - height;
-        x = x < 0 ? 0 : x;
-        y = y < 0 ? 0 : y;
-        gsap.to("#card-container", { duration: 2, scrollTo: { x: x, y: y } });
-
+        if (id !== previousMatchID) {
+            let height = document.getElementById("card-container").style.height;
+            let x = store.cards[id].position.x - window.innerWidth - 100;
+            let y = store.cards[id].position.y - height - 100;
+            x = x < 0 ? 0 : x;
+            y = y < 0 ? 0 : y;
+            let tl = gsap.timeline();
+            tl.to("#card-container", { duration: 0.3, scrollTo: { x: x, y: y } });
+            tl.to("#".concat(id), { scale: 1.3, duration: 0.3 });
+            tl.to("#".concat(id), { scale: 1.0, duration: 0.1 })
+            tl.play()
+            setPreviousMatchID(id)
+        }
         props.setDropdown(false);
     }
 
@@ -63,11 +70,9 @@ const SearchDropdown = (props) => {
         scrollToID(props.results.matches[currentMatch]?.id)
 
     return (
-        <div className="search-bar">
-            <div className="search-dropdown">
-                items
+        <div className="search-dropdown">
+            <div className="search-results">
                 {searchItems}
-                actions
                 {actionItems}
             </div>
             {currentMatch + 1}/{props.results.matches.length}
