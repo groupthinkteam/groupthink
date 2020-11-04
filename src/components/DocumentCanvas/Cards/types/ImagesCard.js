@@ -1,16 +1,28 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import InlineTextEdit from '../../../InlineTextEdit/InlineTextEdit';
 
 import "../../../../styles/Cards/ImagesCard.scss";
-import MenuCard from "./MenuCard";
+import CardMenu from "../../../PopperMenu/PopperMenu";
 
 const ImagesCard = (props) => {
   //let aspect = props.size.height / props.size.width;
+  const [showPopper, setShowPopper] = useState(false);
   const buttonRef = useRef(null);
+
   return (
     <div className="image-card" key={"imagecard".concat(props.id)} ref={buttonRef}>
-
-      <MenuCard reference={buttonRef}>
+      <div style={{ position: "absolute", padding: '10px', right: '20px' }} onClick={() => setShowPopper(!showPopper)}>
+        <div className="barmenu"></div>
+        <div className="barmenu"></div>
+        <div className="barmenu"></div>
+      </div>
+      <CardMenu buttonref={buttonRef}
+        position="right-start"
+        offset={[0, 4]}
+        tooltipclass="tooltips"
+        arrowclass="arrow"
+        showpopper={showPopper}
+      >
         <a href target="blank" style={{ color: "black" }}>change image</a>
         <br />
         <a href="/dashboard" style={{ color: "black" }}>edit</a>
@@ -19,7 +31,7 @@ const ImagesCard = (props) => {
         <a href target="blank" style={{ color: "red" }}>delete</a>
         <hr />
 
-      </MenuCard>
+      </CardMenu>
       <div className="image-card-image" style={{ height: props.content.displayHeight, width: props.content.displayWidth }}>
 
         <img
