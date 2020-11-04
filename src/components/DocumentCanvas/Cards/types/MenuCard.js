@@ -35,8 +35,10 @@ const MenuCard = (props) => {
             placement: "right-start"
         }
     );
+
     return (
         <>
+            
             <div  style={{ position: "absolute", padding: '10px', right: '20px' }} onClick={() => setShowPopper(!showPopper)}>
                 <div className="barmenu"></div>
                 <div className="barmenu"></div>

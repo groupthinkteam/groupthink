@@ -3,14 +3,21 @@ import InlineTextEdit from '../../../InlineTextEdit/InlineTextEdit';
 
 import "../../../../styles/Cards/ImagesCard.scss";
 import MenuCard from "./MenuCard";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../../../../store/hook";
 
 const ImagesCard = (props) => {
   //let aspect = props.size.height / props.size.width;
-  const buttonRef = useRef(null);
+  const imageCardRef = useRef(null);
+  const textEditRef = useRef(null);
+  const store = useStore();
+  if (store.currentActive === props.id && textEditRef.current) {
+    textEditRef.current.focus();
+  }
   return (
-    <div className="image-card" key={"imagecard".concat(props.id)} ref={buttonRef}>
+    <div className="image-card" key={"imagecard".concat(props.id)} ref={imageCardRef}>
 
-      <MenuCard reference={buttonRef}>
+      <MenuCard reference={imageCardRef}>
         <a href target="blank" style={{ color: "black" }}>change image</a>
         <br />
         <a href="/dashboard" style={{ color: "black" }}>edit</a>
@@ -28,11 +35,16 @@ const ImagesCard = (props) => {
         />
 
       </div>
+      {/* {
+        store.currentActive === props.id ?
+        :null
+      } */}
       <div className="image-card-caption">
         <InlineTextEdit
           style={{ "font-style": "italic" }}
           placeholder={"Add a caption. " + (props.content.label ? "e.g. " + props.content.label.description : "")}
           text={props.content.caption}
+          ref={textEditRef}
           onChange={(e) => { props.typeAPI.changeContent(props.id, { ...props.content, caption: e.target.value }) }} />
       </div>
 
@@ -40,4 +52,4 @@ const ImagesCard = (props) => {
   )
 }
 
-export default React.memo(ImagesCard);
+export default React.memo(observer(ImagesCard));

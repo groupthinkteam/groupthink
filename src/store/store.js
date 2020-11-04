@@ -365,7 +365,7 @@ export var storeObject = {
     removeUserEditing(id) {
         this.projectRef.child('nodes').child(id).child("editing")
             .set(null)
-            .then(console.log("This User is Editing"))
+            .then(console.log("This User is Now Not Editing"))
             .catch(error => console.log("Error raised in addUserEditing because ", error))
     },
     // listener manipulation
