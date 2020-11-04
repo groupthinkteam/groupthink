@@ -1,0 +1,10 @@
+.video-card {
+    padding: 10px 10px 0px 10px;
+    .video-card-title {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 90%;
+    }
+}

@@ -61,9 +61,9 @@ export var storeObject = {
             this.currentUser = false;
         }
     },
-    isProjectValid(id,callback) {
+    isProjectValid(id, callback) {
         this.userRef.once('value')
-            .then(snap => { callback(snap.hasChild(id))})
+            .then(snap => { callback(snap.hasChild(id)) })
             .catch(error => console.log("While Validating Project", error));
     },
     // dashboard related actions
@@ -323,7 +323,6 @@ export var storeObject = {
         return (newSharedKey);
     },
     createSharedUser(projectID, keyId, permission, callback) {
-        this.updateLastActive()
         let updates = {};
         updates[this.userID] = {
             "permission": permission,
@@ -336,6 +335,7 @@ export var storeObject = {
         database.ref("documents").child(projectID).child("users")
             .update(updates)
             .then(() => {
+                this.projectID = projectID
                 console.log("added new user to document")
                 database.ref("documents").child(projectID).child("metadata")
                     .once('value')

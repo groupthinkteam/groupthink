@@ -22,9 +22,9 @@ export default function MenuBar(props) {
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 {props.documentName ?
-                    <div className="menu-bar-project-title">
-                        {("" + props.documentName).length > 40 ? ("" + props.documentName).substring(0, 37).concat("...") : props.documentName}
-                    </div>
+                    <span className="menu-bar-project-title">
+                    {props.documentName}
+                    </span>
                     : null
                 }
                 <div className="menu-center-vertical-filler" />

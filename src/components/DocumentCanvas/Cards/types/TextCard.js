@@ -17,7 +17,7 @@ function TextCard(props) {
 
     return (
         <div className="text-node" style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
-            <ReactQuill value={me.content.text} onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }} />
+            <ReactQuill theme="snow" value={me.content.text} onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }} />
         </div>
     )
 }

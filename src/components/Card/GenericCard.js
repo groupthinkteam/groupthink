@@ -49,8 +49,9 @@ const GenericCard = props => {
                 {
                     autoScroll: 1,
                     trigger: "#".concat(props.id),
-                    dragClickables: me.type === 'text',
-                    onClick: (e) => { setRightClick(e.button === 2); cardRef.current.focus() },
+                    // dragClickables: store.currentActive !== props.id,
+                    dragClickables: false,
+                    onClick: (e) => { setRightClick(e.button === 2); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -84,12 +85,14 @@ const GenericCard = props => {
                         store.removeCard(props.id, "recursive")
                     }
                 }}
+                tabindex="-1"
                 style={{
                     position: "absolute",
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    borderTopLeftRadius: me.editingUser ? "0px" : "6px"
+                    borderTopLeftRadius: me.editingUser ? "0px" : "6px",
+                    tabIndex: -1,
                 }}>
                 {
                     editingUser &&
@@ -102,7 +105,7 @@ const GenericCard = props => {
                     rightClick && store.currentActive === props.id && (
                         <div className="context-menu">
                             <li onClick={() => {
-                                store.addCard({ x: me.position.x+220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
+                                store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
                                 setRightClick(!rightClick);
                             }}
                             >Add Child</li>

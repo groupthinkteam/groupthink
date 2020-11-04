@@ -52,8 +52,8 @@ function BlankCard(props) {
                     props.typeAPI.changeType(
                         props.id,
                         'VideoLink',
-                        { height: height, width: width },
-                        { url: e.target.value, metadata: metadata }
+                        { height: height + 40, width: width + 20 },
+                        { url: e.target.value, metadata: metadata, displayHeight: height, displayWidth: width }
                     )
                 })
             }
@@ -90,13 +90,15 @@ function BlankCard(props) {
                         uploadPath,
                         (url, metadata) => {
                             props.typeAPI.changeType(props.id, type, defaultSize[type] || {
-                                height: displayHeight,
-                                width: displayWidth
+                                height: displayHeight + 60,
+                                width: displayWidth + 20,
                             }, {
                                 url: url,
                                 metadata: metadata,
                                 height: originalHeight,
-                                width: originalWidth
+                                width: originalWidth,
+                                displayHeight: displayHeight,
+                                displayWidth: displayWidth,
                             })
                         }
                     )

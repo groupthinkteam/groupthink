@@ -48,15 +48,20 @@ const ImagesCard = (props) => {
         <div className="barmenu"></div>
       </div>
      
-      <div className="image-card-image" style={{ height: props.size.height - 12 * aspect, width: props.size.width - 12 }} >
+      <div className="image-card-image" style={{ height: props.content.displayHeight, width: props.content.displayWidth }}>
 
         <img
           alt={props.content.caption || "none"}
           src={props.content.url}
-        // height={`${props.size.height}px`}
-        // width={`${props.size.width}px`}
         />
 
+      </div>
+      <div className="image-card-caption">
+        <InlineTextEdit
+          style={{ "font-style": "italic" }}
+          placeholder={"Add a caption. " + (props.content.label ? "e.g. " + props.content.label.description : "")}
+          text={props.content.caption}
+          onChange={(e) => { props.typeAPI.changeContent(props.id, { ...props.content, caption: e.target.value }) }} />
       </div>
       {showPopper ?
         <div
@@ -79,9 +84,7 @@ const ImagesCard = (props) => {
 
         </div>
         : null}
-      <div className="image-card-caption">
-        <InlineTextEdit />
-      </div>
+      
     </div>
   )
 }
