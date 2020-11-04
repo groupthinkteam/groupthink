@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import RoomConnect from "../Voice/RoomConnect"
 import SearchBar from "../Search/SearchBar"
 import PersonaList from "../PersonaList/PersonaList"
-import UserMenu from "../UserMenu/UserMenu"
+import UserMenu from "./UserMenu"
 
 
 export default function MenuBar(props) {

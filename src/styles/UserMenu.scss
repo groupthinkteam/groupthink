@@ -1,46 +1,8 @@
-.tooltips {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid black;
-  border-radius: 5px;
-  background-color: white;
-  padding: 10px;
-  text-align: center;
-}
 
-.arrow,
-.arrow::before {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-}
-
-.arrow::before {
-  content: " ";
-  background-color: white;
-  box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: -15px;
-  left: 0;
-  transform: rotate(45deg);
-  width: 10px;
-  height: 10px;
-}
-
-
-.tooltips[data-popper-placement^='top']>#arrow {
-  bottom: -20px;
-}
 
 .profimage {
   border-radius: 50%;
   height: 100px;
   width: 100px;
 
-}
-
-.barmenu {
-  width: 20px;
-  height: 2px;
-  background-color: black;
-  margin: 6px 0;
 }

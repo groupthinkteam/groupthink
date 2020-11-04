@@ -51,7 +51,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: (e) => {console.log("CLICKeD ",props.id , e.button); setRightClick(e.button === 2); },
+                    onClick: (e) => { setRightClick(e.button === 2); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -70,7 +70,6 @@ const GenericCard = props => {
                 className="generic-card"
                 ref={cardRef}
                 onBlur={e => {
-                    console.log("BLUR")
                     if (store.currentActive === props.id) {
                         store.currentActive = null;
                     }
@@ -78,10 +77,8 @@ const GenericCard = props => {
                     store.removeUserEditing(props.id)
                 }}
                 onFocus={e => {
-                    console.log("FOCUS")
                     store.currentActive = props.id;
                     store.addUserEditing(props.id)
-                    console.log(e.eventPhase)
                     e.stopPropagation();
                 }}
                 onKeyDown={(e) => {
