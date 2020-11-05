@@ -51,7 +51,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: (e) => { setRightClick(e.button === 2); cardRef.current.focus(); },
+                    onClick: (e) => { setRightClick(e.button === 2); cardRef.current.focus();},
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
