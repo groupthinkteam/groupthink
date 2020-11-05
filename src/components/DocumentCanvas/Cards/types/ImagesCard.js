@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import InlineTextEdit from '../../../InlineTextEdit/InlineTextEdit';
 
 import "../../../../styles/Cards/ImagesCard.scss";
@@ -11,9 +11,11 @@ const ImagesCard = (props) => {
   const buttonRef = useRef(null);
   const textEditRef = useRef(null);
   const store = useStore();
-  if (store.currentActive === props.id && textEditRef.current) {
-    textEditRef.current.focus();
-  }
+  useEffect(()=>{
+    if (store.currentActive === props.id && textEditRef.current) {
+      textEditRef.current.focus();
+    }
+  });
   return (
     <div className="image-card" key={"imagecard".concat(props.id)} ref={buttonRef}>
       <div style={{ position: "absolute", padding: '10px', right: '20px' }} onClick={() => setShowPopper(!showPopper)}>

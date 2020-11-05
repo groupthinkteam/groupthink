@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../../../store/hook";
 
@@ -12,12 +12,17 @@ import 'react-quill/dist/quill.snow.css'
 
 
 function TextCard(props) {
-    let store = useStore()
-    let me = store.cards[props.id]
-
+    const store = useStore();
+    const quillRef = useRef(null);
+    const me = store.cards[props.id];
+    useEffect(()=>{
+        if (store.currentActive === props.id && quillRef.current) {
+            quillRef.current.focus();
+        }
+    });
     return (
         <div className="text-node" style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
-            <ReactQuill theme="snow" value={me.content.text} onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }} />
+            <ReactQuill ref={quillRef} theme="snow" value={me.content.text} onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }} />
         </div>
     )
 }
