@@ -52,7 +52,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: (e) => { setRightClick({ isClicked: e.button === 2, x: e.clientX, y: e.clientY }); cardRef.current.focus(); },
+                    onClick: (e) => { setRightClick({ isClicked: e.button === 2, x: e.pageX, y: e.pageY }); cardRef.current.focus(); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -105,7 +105,7 @@ const GenericCard = props => {
                     </div>
                 }
                 {
-                    (rightClick.isClicked && store.currentActive === props.id) &&
+                    //(rightClick.isClicked && store.currentActive === props.id) &&
                     (
                         <div className="context-menu" style={{ left: rightClick.x + "px", top: rightClick.y + "px" }}>
                             <li onClick={() => {
