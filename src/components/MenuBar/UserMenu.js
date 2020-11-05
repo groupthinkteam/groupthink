@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef , useEffect} from "react";
 import PopperMenu from '../PopperMenu/PopperMenu'
 import '../../styles/UserMenu.scss'
 
@@ -6,7 +6,17 @@ const UserMenu = (props) => {
 
     const [showPopper, setShowPopper] = useState(false);
     const buttonRef = useRef(null);
-
+    useEffect(() => {
+        function handleClickOutside(event) {
+          if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+            setShowPopper(false);
+          }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [buttonRef]);
     return (
 
 

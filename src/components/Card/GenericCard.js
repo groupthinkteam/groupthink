@@ -16,7 +16,8 @@ const GenericCard = props => {
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
     const cardRef = useRef(null);
-    const [rightClick, setRightClick] = useState(false);
+    const [rightClick, setRightClick] = useState({ isClicked: false, x: 0, y: 0 });
+    //const [clickAxis , setClickAxis] = useState();
 
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
@@ -51,7 +52,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: (e) => { setRightClick(e.button === 2); cardRef.current.focus();},
+                    onClick: (e) => { setRightClick({ isClicked: e.button === 2, x: e.clientX, y: e.clientY }); cardRef.current.focus(); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -63,7 +64,7 @@ const GenericCard = props => {
         }, [me.type, store.currentActive]
     )
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
-
+    console.log(rightClick)
     return (
         <>
             <div id={props.id} tabIndex={0}
@@ -104,12 +105,13 @@ const GenericCard = props => {
                     </div>
                 }
                 {
-                    rightClick && store.currentActive === props.id && (
-                        <div className="context-menu">
+                    (rightClick.isClicked && store.currentActive === props.id) &&
+                    (
+                        <div className="context-menu" style={{ left: rightClick.x + "px", top: rightClick.y + "px" }}>
                             <li onClick={() => {
                                 store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
                                 setRightClick(!rightClick);
-                            }}
+                            }}  
                             >Add Child</li>
                             <li onClick={() => {
                                 store.removeCard(props.id, "recursive");
