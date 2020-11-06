@@ -105,7 +105,7 @@ const GenericCard = props => {
                     </div>
                 }
                 {
-                    //(rightClick.isClicked && store.currentActive === props.id) &&
+                    (rightClick.isClicked && store.currentActive === props.id) &&
                     (
                         <div className="context-menu" style={{ left: rightClick.x + "px", top: rightClick.y + "px" }}>
                             <li onClick={() => {

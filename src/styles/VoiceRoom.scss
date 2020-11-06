@@ -3,7 +3,8 @@
     //position: absolute;
     width: 46px;
     height: 46px;
-    left: 1305px;
+    margin: 5px;
+    //left: 1305px;
     top: 8px;background: #FFFFFF;
     /* gt call green */
     box-sizing: border-box;
@@ -12,6 +13,7 @@
         border: 2px solid #42AE1D;
     }
     &.disconnect{
+        
         border: 2px solid #E83E31;
     }
 }
