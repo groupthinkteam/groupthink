@@ -1,21 +1,30 @@
 import React, { useRef, useState, useEffect } from "react";
 import InlineTextEdit from '../../../InlineTextEdit/InlineTextEdit';
-
 import "../../../../styles/Cards/ImagesCard.scss";
 import CardMenu from "../../../PopperMenu/PopperMenu";
-import {useStore} from '../../../../store/hook';
+import { useStore } from '../../../../store/hook';
 import { observer } from "mobx-react-lite";
+import { functions } from "../../../../services/firebase";
 const ImagesCard = (props) => {
   //let aspect = props.size.height / props.size.width;
   const [showPopper, setShowPopper] = useState(false);
   const buttonRef = useRef(null);
   const textEditRef = useRef(null);
   const store = useStore();
-  useEffect(()=>{
+  useEffect(() => {
     if (store.currentActive === props.id && textEditRef.current) {
       textEditRef.current.focus();
     }
   });
+  const convImage = () => {
+    const imageData = {
+      fpath: props.content.metadata.fullPath,
+      contentType: props.content.metadata.contentType,
+      customMetadata: props.content.metadata.customMetadata
+    }
+    var convToBw = functions.httpsCallable('imageToBw')
+    convToBw(imageData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
+  }
   return (
     <div className="image-card" key={"imagecard".concat(props.id)} ref={buttonRef}>
       <div style={{ position: "absolute", padding: '10px', right: '20px' }} onClick={() => setShowPopper(!showPopper)}>
@@ -37,10 +46,10 @@ const ImagesCard = (props) => {
         <hr />
         <a href="true" target="blank" style={{ color: "red" }}>delete</a>
         <hr />
+        <button onClick={() => convImage()}>Convert to B/W</button>
 
       </CardMenu>
       <div className="image-card-image" style={{ height: props.content.displayHeight, width: props.content.displayWidth }}>
-
         <img
           alt={props.content.caption || "none"}
           src={props.content.url}
@@ -65,3 +74,4 @@ const ImagesCard = (props) => {
 }
 
 export default React.memo(observer(ImagesCard));
+
