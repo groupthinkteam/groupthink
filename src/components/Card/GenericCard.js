@@ -6,7 +6,7 @@ import cardChooser from "../DocumentCanvas/Cards/cardChooser";
 import "../../styles/Cards/GenericCard.scss";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
-
+import CardMenu from '../PopperMenu/PopperMenu';
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable);
 
@@ -16,8 +16,8 @@ const GenericCard = props => {
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
     const cardRef = useRef(null);
+    const [showpopper, setShowPopper] = useState(false);
     const [rightClick, setRightClick] = useState({ isClicked: false, x: 0, y: 0 });
-    //const [clickAxis , setClickAxis] = useState();
 
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
@@ -62,9 +62,21 @@ const GenericCard = props => {
             return () => y[0].kill();
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive]
-    )
+    );
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (cardRef.current  && !cardRef.current.contains(event.target) ) {
+                setShowPopper(false);
+                setRightClick({isClicked:false,x:0,y:0})
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [cardRef]);
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
-    console.log(rightClick)
+
     return (
         <>
             <div id={props.id} tabIndex={0}
@@ -79,7 +91,7 @@ const GenericCard = props => {
                 }}
                 onFocus={e => {
                     store.currentActive = props.id;
-                    store.addUserEditing(props.id)
+                    store.addUserEditing(props.id);
                     e.stopPropagation();
                 }}
                 onKeyDown={(e) => {
@@ -104,25 +116,45 @@ const GenericCard = props => {
                         {editingUser.name} is editing...
                     </div>
                 }
-                {
-                    (rightClick.isClicked && store.currentActive === props.id) &&
-                    (
-                        <div className="context-menu" style={{ left: rightClick.x + "px", top: rightClick.y + "px" }}>
-                            <li onClick={() => {
-                                store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
-                                setRightClick(!rightClick);
-                            }}  
-                            >Add Child</li>
-                            <li onClick={() => {
-                                store.removeCard(props.id, "recursive");
-                                setRightClick(!rightClick);
-                            }}>
-                                Delete
-                            </li>
-                        </div>
-                    )
-                }
-                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} id={props.id} />
+                <div style={{ position: "absolute", padding: '10px', right: '20px' }} onClick={() => setShowPopper(!showpopper)}>
+                    <div className="barmenu"></div>
+                    <div className="barmenu"></div>
+                    <div className="barmenu"></div>
+                </div>
+                <CardMenu buttonref={cardRef}
+                    position="right-start"
+                    offset={[0, 4]}
+                    tooltipclass="tooltips"
+                    arrowclass="arrow"
+                    showpopper={showpopper || rightClick.isClicked}
+                >
+                    <div> 
+                        {/* //style={rightClick.isClicked ? { left: rightClick.x + "px", top: rightClick.y + "px" } : null}> */}
+                        <p onClick={() => {
+                            store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
+                           }}
+                        >
+                            Add Child
+                        </p>
+
+                        <a href="true" target="blank" style={{ color: "black" }}>change image</a>
+                        <br />
+                        <a href="/dashboard" style={{ color: "black" }}>edit</a>
+
+                        <hr />
+                        <p onClick={() => {
+                            store.removeCard(props.id, "recursive");
+                        }} style={{ color: "red" }}>
+                            delete
+                        </p>
+                        <hr />
+                        <button onClick={() => console.log("clicked Black and white")}>
+                            Convert to B/W
+                        </button>
+                    </div>
+
+                </CardMenu>
+                <CardType position={me.position}  typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} id={props.id} />
             </div>
         </>
     )
