@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap, Draggable } from "gsap/all";
 
 import cardChooser from "../DocumentCanvas/Cards/cardChooser";
-
+import '../../styles/PopperMenu.scss';
 import "../../styles/Cards/GenericCard.scss";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
@@ -52,7 +52,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: (e) => { setRightClick({ isClicked: e.button === 2, x: e.pageX, y: e.pageY }); cardRef.current.focus(); },
+                    onClick: (e) => { setRightClick({ isClicked: e.button === 2, x: e.clientX, y: e.clientY }); cardRef.current.focus(); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -62,12 +62,24 @@ const GenericCard = props => {
             return () => y[0].kill();
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive]
-    )
+    );
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (cardRef.current  && !cardRef.current.contains(event.target) ) {
+                setRightClick({isClicked:false,x:0,y:0})
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [cardRef]);
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
+    const clickDefault =()=> setRightClick({isClicked:false,x:0,y:0})
     console.log(rightClick)
     return (
         <>
-            <div id={props.id} tabIndex={0}
+            <div id={props.id} //tabIndex={0}
                 className="generic-card"
                 ref={cardRef}
                 onBlur={e => {
@@ -104,25 +116,7 @@ const GenericCard = props => {
                         {editingUser.name} is editing...
                     </div>
                 }
-                {
-                    (rightClick.isClicked && store.currentActive === props.id) &&
-                    (
-                        <div className="context-menu" style={{ left: rightClick.x + "px", top: rightClick.y + "px" }}>
-                            <li onClick={() => {
-                                store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
-                                setRightClick(!rightClick);
-                            }}  
-                            >Add Child</li>
-                            <li onClick={() => {
-                                store.removeCard(props.id, "recursive");
-                                setRightClick(!rightClick);
-                            }}>
-                                Delete
-                            </li>
-                        </div>
-                    )
-                }
-                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} id={props.id} />
+                <CardType defaultClick={clickDefault}  rightClick={rightClick} typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
             </div>
         </>
     )

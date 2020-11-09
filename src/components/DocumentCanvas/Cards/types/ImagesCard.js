@@ -16,6 +16,23 @@ const ImagesCard = (props) => {
       textEditRef.current.focus();
     }
   });
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+        setShowPopper(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [buttonRef]);
+
+  // if (props.rightClick.isClicked && showPopper) {
+  //   setShowPopper(false);
+  // }
+
   const convImage = () => {
     const imageData = {
       fpath: props.content.metadata.fullPath,
@@ -25,13 +42,35 @@ const ImagesCard = (props) => {
     var convToBw = functions.httpsCallable('imageToBw')
     convToBw(imageData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
   }
+  const menuList = (
+    <div>
+      <a href="true" target="blank" style={{ color: "black" }}>change image</a>
+      <br />
+      <a href="/dashboard" style={{ color: "black" }}>edit</a>
+      <hr />
+      <p style={{ color: 'green', cursor: 'pointer' }} onClick={() => {
+        store.addCard({ x: props.position.x + 220, y: props.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
+      }}
+      >
+        Add Child
+      </p>
+      <hr />
+      <p style={{ cursor: 'pointer', color: "red" }} onClick={() => {
+        store.removeCard(props.id, "recursive");
+      }}>
+        Delete
+      </p>
+      <hr />
+      <button onClick={(e) => convImage()}>Convert to B/W</button>
+    </div>
+  )
+
   return (
     <div className="image-card" key={"imagecard".concat(props.id)} ref={buttonRef}>
-      <div style={{ position: "absolute", padding: '10px', right: '20px' }} onClick={() => setShowPopper(!showPopper)}>
-        <div className="barmenu"></div>
-        <div className="barmenu"></div>
-        <div className="barmenu"></div>
+      <div style={{ position: "absolute", padding: '10px', right: '33px', width: '35px' }} onClick={() => { props.defaultClick(); setShowPopper(!showPopper); }}>
+        <img alt='Menu' width="35px" src={require('../../../../assets/kebabMenu.png')} />
       </div>
+
       <CardMenu buttonref={buttonRef}
         position="right-start"
         offset={[0, 4]}
@@ -39,27 +78,21 @@ const ImagesCard = (props) => {
         arrowclass="arrow"
         showpopper={showPopper}
       >
-        <a href="true" target="blank" style={{ color: "black" }}>change image</a>
-        <br />
-        <a href="/dashboard" style={{ color: "black" }}>edit</a>
-
-        <hr />
-        <a href="true" target="blank" style={{ color: "red" }}>delete</a>
-        <hr />
-        <button onClick={() => convImage()}>Convert to B/W</button>
-
+        {menuList}
       </CardMenu>
+      {
+        props.rightClick.isClicked && (
+          <div className="tooltips" style={{ position: "absolute", left: props.rightClick.x + "px", top: props.rightClick.y + "px" }}>
+            {menuList}
+          </div>
+        )
+      }
       <div className="image-card-image" style={{ height: props.content.displayHeight, width: props.content.displayWidth }}>
         <img
           alt={props.content.caption || "none"}
           src={props.content.url}
         />
-
       </div>
-      {/* {
-        store.currentActive === props.id ?
-        :null
-      } */}
       <div className="image-card-caption">
         <InlineTextEdit
           style={{ "fontStyle": "italic" }}
@@ -74,4 +107,3 @@ const ImagesCard = (props) => {
 }
 
 export default React.memo(observer(ImagesCard));
-
