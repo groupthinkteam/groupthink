@@ -5,8 +5,10 @@ import '../../styles/PopperMenu.scss';
 const PopperMenu = (props) => {
     const popperRef = useRef(null);
     const [arrowRef, setArrowRef] = useState(null);
-    const { styles, attributes } = usePopper(
-        props.buttonref.current,
+    let [pos, setPos] = useState({ x: 0, y: 0 });
+
+    const { styles, attributes, forceUpdate } = usePopper(
+        props.buttonref,
         popperRef.current,
         {
             modifiers: [
@@ -26,6 +28,14 @@ const PopperMenu = (props) => {
             placement: props.position
         }
     );
+    if (props.pos) {
+        if (props.pos.x !== pos.x || props.pos.y !== pos.y) {
+            if (typeof forceUpdate === "function") {
+                forceUpdate()
+                setPos(props.pos)
+            }
+        }
+    }
 
     return (
         <>
@@ -36,6 +46,7 @@ const PopperMenu = (props) => {
                     className={props.tooltipclass}
                     style={styles.popper}
                     {...attributes.popper}
+                    onBlur={() => props.onBlur()}
                 >
                     <div ref={setArrowRef} style={styles.arrow} id="arrow" className={props.arrowclass} />
                     {props.children}

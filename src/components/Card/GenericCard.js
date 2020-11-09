@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap, Draggable } from "gsap/all";
 
+import { useStore } from "../../store/hook";
+import { observer } from "mobx-react-lite";
+
 import cardChooser from "../DocumentCanvas/Cards/cardChooser";
 import '../../styles/PopperMenu.scss';
 import "../../styles/Cards/GenericCard.scss";
-import { useStore } from "../../store/hook";
-import { observer } from "mobx-react-lite";
+import CardMenu from "../PopperMenu/PopperMenu";
 
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable);
@@ -16,8 +18,9 @@ const GenericCard = props => {
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
     const cardRef = useRef(null);
-    const [rightClick, setRightClick] = useState({ isClicked: false, x: 0, y: 0 });
-    //const [clickAxis , setClickAxis] = useState();
+    let blankRef = useRef(null);
+
+    let [contextMenu, setContextMenu] = useState(null);
 
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
@@ -26,6 +29,7 @@ const GenericCard = props => {
     useEffect(
         () => { gsap.set("#".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
         , [props.id, me.position])
+    // init draggable
     useEffect(
         () => {
             // warning: can't use arrow functions here since that messes up the "this" binding
@@ -49,10 +53,11 @@ const GenericCard = props => {
                 "#".concat(props.id),
                 {
                     autoScroll: 1,
+                    allowContextMenu: true,
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: (e) => { setRightClick({ isClicked: e.button === 2, x: e.clientX, y: e.clientY }); cardRef.current.focus(); },
+                    onClick: (e) => { cardRef.current.focus(); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -63,25 +68,24 @@ const GenericCard = props => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive]
     );
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (cardRef.current  && !cardRef.current.contains(event.target) ) {
-                setRightClick({isClicked:false,x:0,y:0})
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [cardRef]);
+
+    console.log("blankref", blankRef)
+    console.log("contextmenu", contextMenu)
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
-    const clickDefault =()=> setRightClick({isClicked:false,x:0,y:0})
-    console.log(rightClick)
+
     return (
         <>
-            <div id={props.id} //tabIndex={0}
+            <div id={props.id}
                 className="generic-card"
                 ref={cardRef}
+                onContextMenu={(event) => {
+                    event.preventDefault();
+                    if (event.currentTarget.offsetParent && event.currentTarget.offsetParent.className === "container-filler") {
+                        let x = event.clientX + event.currentTarget.offsetParent.scrollLeft - me.position.x;
+                        let y = event.clientY + event.currentTarget.offsetParent.scrollTop - 60 - me.position.y;
+                        setContextMenu({ x: x, y: y })
+                    }
+                }}
                 onBlur={e => {
                     if (store.currentActive === props.id) {
                         store.currentActive = null;
@@ -100,7 +104,6 @@ const GenericCard = props => {
                         store.removeCard(props.id, "recursive")
                     }
                 }}
-                tabindex="-1"
                 style={{
                     position: "absolute",
                     opacity: 0,
@@ -116,11 +119,27 @@ const GenericCard = props => {
                         {editingUser.name} is editing...
                     </div>
                 }
-                <CardType defaultClick={clickDefault}  rightClick={rightClick} typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
+                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
+                <div className="blank-filler" ref={blankRef}
+                    style={contextMenu ? { position: "absolute", top: contextMenu.y, left: contextMenu.x, height: 10, width: 10, backgroundColor: "black" } : { position: "absolute" }} />
+                {contextMenu && blankRef.current ?
+                    <CardMenu
+                        buttonref={blankRef.current}
+                        position="right-start"
+                        offset={[0, 0]}
+                        tooltipclass="tooltips"
+                        arrowclass="arrow"
+                        showpopper={true}
+                        onBlur={(e) => { console.log("called blur", e); setContextMenu(null) }}
+                        pos={contextMenu}
+                    >
+                        Hello
+                    </CardMenu>
+                    : null
+                }
             </div>
         </>
     )
 }
-
 
 export default observer(GenericCard);
