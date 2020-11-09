@@ -7,7 +7,8 @@ import { observer } from "mobx-react-lite";
 import cardChooser from "../DocumentCanvas/Cards/cardChooser";
 import '../../styles/PopperMenu.scss';
 import "../../styles/Cards/GenericCard.scss";
-import CardMenu from "../PopperMenu/PopperMenu";
+import MenuCard from "../DocumentCanvas/Cards/MenuList/MenuCard";
+import menuListChooser from "../DocumentCanvas/Cards/menuListChooser";
 
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable);
@@ -17,10 +18,11 @@ const GenericCard = props => {
     let store = useStore();
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
+    const MenuListType = menuListChooser(me.type);
     const cardRef = useRef(null);
-    let blankRef = useRef(null);
-
-    let [contextMenu, setContextMenu] = useState(null);
+    const blankRef = useRef(null);
+    const [showPopper,setShowPopper] = useState(false);
+    const [contextMenu, setContextMenu] = useState(null);
 
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
@@ -57,7 +59,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: (e) => { cardRef.current.focus(); },
+                    onClick: () => {setShowPopper(false); setContextMenu(null); cardRef.current.focus(); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -70,6 +72,7 @@ const GenericCard = props => {
     );
 
     console.log("blankref", blankRef)
+    console.log("Show Popper ",showPopper)
     console.log("contextmenu", contextMenu)
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
 
@@ -84,6 +87,7 @@ const GenericCard = props => {
                         let x = event.clientX + event.currentTarget.offsetParent.scrollLeft - me.position.x;
                         let y = event.clientY + event.currentTarget.offsetParent.scrollTop - 60 - me.position.y;
                         setContextMenu({ x: x, y: y })
+                        setShowPopper(false);
                     }
                 }}
                 onBlur={e => {
@@ -111,7 +115,11 @@ const GenericCard = props => {
                     height: me.size.height,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
-                }}>
+                }}
+            >
+                <div style={{ position: "absolute", padding: '10px', right: '17px', width: '35px' }} onClick={() => { setContextMenu(null); setShowPopper(!showPopper); }}>
+                    <img alt='Menu' width="35px" src={require('../../assets/kebabMenu.png')} />
+                </div>
                 {
                     editingUser &&
                     <div className="generic-card-active-user-list">
@@ -119,24 +127,43 @@ const GenericCard = props => {
                         {editingUser.name} is editing...
                     </div>
                 }
-                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
                 <div className="blank-filler" ref={blankRef}
                     style={contextMenu ? { position: "absolute", top: contextMenu.y, left: contextMenu.x, height: 10, width: 10, backgroundColor: "black" } : { position: "absolute" }} />
-                {contextMenu && blankRef.current ?
-                    <CardMenu
-                        buttonref={blankRef.current}
+                {contextMenu || showPopper?
+                    <MenuCard
+                        buttonref={showPopper ? cardRef.current: blankRef.current  }
                         position="right-start"
-                        offset={[0, 0]}
+                        offset={[0, 4]}
                         tooltipclass="tooltips"
                         arrowclass="arrow"
-                        showpopper={true}
-                        onBlur={(e) => { console.log("called blur", e); setContextMenu(null) }}
+                        showpopper={true }
                         pos={contextMenu}
                     >
-                        Hello
-                    </CardMenu>
+                        <div>
+                            <MenuListType id={props.id} content={{ ...me.content }}/>
+                            <a href="/dashboard" style={{ color: "black" }}>edit</a>
+                            <hr />
+                            <p style={{ color: 'green', cursor: 'pointer' }} onClick={() => {
+                                store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
+                                setContextMenu(null);
+                            }}
+                            >
+                                Add Child
+                            </p>
+                            <hr />
+                            <p style={{ cursor: 'pointer', color: "red" }} onClick={() => {
+                                store.removeCard(props.id, "recursive");
+                                setContextMenu(null);
+                            }}>
+                                Delete
+                            </p>
+                            <hr />
+                        </div>
+                    </MenuCard>
                     : null
                 }
+                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
+                
             </div>
         </>
     )

@@ -6,8 +6,6 @@ import { observer } from "mobx-react-lite";
 
 const ImagesCard = (props) => {
   //let aspect = props.size.height / props.size.width;
-  const [showPopper, setShowPopper] = useState(false);
-  const buttonRef = useRef(null);
   const textEditRef = useRef(null);
   const store = useStore();
   useEffect(() => {
@@ -17,10 +15,7 @@ const ImagesCard = (props) => {
   });
 
   return (
-    <div className="image-card" key={"imagecard".concat(props.id)} ref={buttonRef}>
-      <div style={{ position: "absolute", padding: '10px', right: '33px', width: '35px' }} onClick={() => { props.defaultClick(); setShowPopper(!showPopper); }}>
-        <img alt='Menu' width="35px" src={require('../../../../assets/kebabMenu.png')} />
-      </div>
+    <div className="image-card" key={"imagecard".concat(props.id)}>
       <div className="image-card-image" style={{ height: props.content.displayHeight, width: props.content.displayWidth }}>
         <img
           alt={props.content.caption || "none"}

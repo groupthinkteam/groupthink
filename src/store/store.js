@@ -1,6 +1,6 @@
 import set from "lodash.set"
 import throttle from "lodash.throttle"
-import { database, storage, auth, servertime } from "../services/firebase"
+import { database, storage, auth, servertime ,functions} from "../services/firebase"
 import projectTemplates from "../constants/projectTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
@@ -301,6 +301,15 @@ export var storeObject = {
                     .catch((reason) => console.log("failed to fetch metadata for", path, "because", reason))
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
+    },
+    convertImageToBW(fullPath,contentType,customMetadata){
+        const imageData = {
+            fpath: fullPath,
+            contentType: contentType,
+            customMetadata: customMetadata
+        }
+        var convToBw = functions.httpsCallable('imageToBw')
+        convToBw(imageData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
     },
     // update any property of store (for use with listeners)
     sync(property, path, value) {
