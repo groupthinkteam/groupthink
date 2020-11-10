@@ -60,7 +60,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: () => {setContextMenu(null);   setShowPopper(false); cardRef.current.focus(); },
+                    onClick: () => {  cardRef.current.focus(); setContextMenu(null); setShowPopper(false); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -72,20 +72,17 @@ const GenericCard = props => {
         }, [me.type, store.currentActive]
     );
 
-    // console.log("blankref", blankRef)
-    // console.log("Show Popper ", showPopper)
-    // console.log("contextmenu", contextMenu)
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
 
     return (
         <>
-            <div id={props.id}
+            <div id={props.id} tabIndex={0}
                 className="generic-card"
                 ref={cardRef}
                 onContextMenu={(event) => {
                     event.preventDefault();
                     var cardContainerElement = document.querySelector('.card-container');
-                    let x = event.clientX + cardContainerElement.scrollLeft - me.position.x   ;
+                    let x = event.clientX + cardContainerElement.scrollLeft - me.position.x;
                     let y = event.clientY + cardContainerElement.scrollTop - 60 - me.position.y;
                     setContextMenu({ x: Math.abs(x), y: Math.abs(y) })
                     setShowPopper(false);
@@ -129,25 +126,31 @@ const GenericCard = props => {
                     </div>
                 }
                 <div className="blank-filler" ref={blankRef}
-                    style={contextMenu ? { position: "absolute", top: contextMenu.y, left: contextMenu.x, height: 10, width: 10, backgroundColor: "black" } : { position: "absolute" }} />
-                {contextMenu || showPopper ?
+                    style={
+                        contextMenu ?
+                            { position: "absolute", top: contextMenu.y, left: contextMenu.x}//, height: 10, width: 10, backgroundColor: "black" }
+                            : { position: "absolute" }
+                    }
+                />
+                {(contextMenu || showPopper) && store.currentActive === props.id ?
                     <MenuCard
                         buttonref={showPopper ? cardRef.current : blankRef.current}
                         position="right-start"
                         offset={[0, 4]}
                         tooltipclass="tooltips"
                         arrowclass="arrow"
-                        showpopper={true}
+                        showpopper={true}//{store.currentActive === props.id}
                         pos={contextMenu}
                     >
                         <div>
-                            <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store}/>
-                            <ReplaceFileList type={me.type} id={props.id} typeAPI={store}/>
+                            <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store} />
+                            <ReplaceFileList type={me.type} id={props.id} typeAPI={store} />
                             <a href="/dashboard" style={{ color: "black" }}>edit</a>
                             <hr />
                             <p style={{ color: 'green', cursor: 'pointer' }} onClick={() => {
                                 store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
                                 setContextMenu(null);
+                                setShowPopper(false);
                             }}
                             >
                                 Add Child
@@ -156,6 +159,7 @@ const GenericCard = props => {
                             <p style={{ cursor: 'pointer', color: "red" }} onClick={() => {
                                 store.removeCard(props.id, "recursive");
                                 setContextMenu(null);
+                                setShowPopper(false);
                             }}>
                                 Delete
                             </p>

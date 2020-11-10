@@ -253,12 +253,15 @@ export var storeObject = {
     },
     reparentCard(id, newParent) {
         this.updateLastActive()
-        console.log("reparent requested for", id, "newparent", newParent)
+        console.log("reparent requested for", id, "newparent", newParent);
 
+        const throwParent = (ancestor) => { return this.cards[ancestor]["parent"] }
+        
         function checkValidity(ancestor) {
             if (ancestor === "root") return true;
             if (ancestor === id) return false;
-            return checkValidity(this.cards[ancestor]["parent"]);
+            const parent = throwParent(ancestor)
+            return checkValidity(parent);
         }
 
         if (checkValidity(newParent)) {

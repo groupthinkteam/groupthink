@@ -6,33 +6,34 @@ import { observer } from "mobx-react-lite";
 gsap.registerPlugin(Draggable)
 
 /**
- * connects a child and a parent. lets the user assign a new parent for the child.
+ * connects a child and a parent. consts the user assign a new parent for the child.
  * @param {*} props - id, head, tail
  */
 const Arrow = observer((props) => {
 
     if (props.id === "root") return null;
 
-    let [dragging, setDragging] = useState(false);
+    const [dragging, setDragging] = useState(false);
 
-    let store = useStore();
+    const store = useStore();
 
-    let child = store.cards[props.id]
+    const child = store.cards[props.id];
+    
     if (child.parent === "root") return null;
 
-    let parent = store.cards[child.parent];
+    const parent = store.cards[child.parent];
 
-    let head = {
+    const head = {
         x: parent.position.x + parent.size.width / 2,
         y: parent.position.y + parent.size.height / 2,
     }
-    let tail = {
+    const tail = {
         x: child.position.x + child.size.width / 2,
         y: child.position.y - 5
     }
 
     useEffect(() => {
-        let y = Draggable.create("#nub".concat(props.id),
+        const y = Draggable.create("#nub".concat(props.id),
             {
                 type: "top,left",
                 activeCursor: "grab",
@@ -77,19 +78,20 @@ const Arrow = observer((props) => {
         var dx = Math.abs(x4 - x1) * bezierWeight;
         var x2 = x1 - dx;
         var x3 = x4 + dx;
+        
         return `M${x1} ${y1} C ${x2} ${y1} ${x3} ${y4} ${x4} ${y4}`;
     }
 
     return (
-        <div style={{ position: "absolute", height: 0, width: 0, top: 0, left: 0, overflow: "visible", zIndex: -1 }}>
-            <svg style={{ position: "absolute", width: 0, height: 0, overflow: "visible" }}>
+        <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
+            <svg style={{ position: "absolute", overflow: "visible" }}>
                 <path
                     strokeWidth="3"
                     fill="none"
                     stroke="#ff8577"
                     d={path} />
             </svg>
-            <svg style={{ position: "absolute", overflow: "visible", width: 0, height: 0 }}>
+            <svg style={{ position: "absolute", overflow: "visible" }}>
                 <circle
                     style={{ position: "absolute" }}
                     id={"nub".concat(props.id)}
