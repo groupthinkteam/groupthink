@@ -4,7 +4,6 @@ import { database, storage, auth, servertime, functions } from "../services/fire
 import projectTemplates from "../constants/projectTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
-import { snap } from "gsap/all"
 
 export var storeObject = {
     projects: {},
@@ -168,7 +167,7 @@ export var storeObject = {
         this.updateLastActive()
     },
     removeCard(id, strategy, newParent) {
-        this.updateLastActive()
+        this.updateLastActive();
         const updates = {};
         updates[id] = null;
         updates[this.cards[id]["parent"] + "/children/" + id] = null;
@@ -189,6 +188,7 @@ export var storeObject = {
 
         switch (strategy) {
             case "recursive":
+                console.log("RECURSIVE ",this.cards[id]["children"])
                 if (this.cards[id]["children"])
                     depthFirstTraversal(Object.keys(this.cards[id]["children"]));
                 break;
@@ -200,7 +200,7 @@ export var storeObject = {
                 break;
         }
         this.projectRef.child("nodes").update(updates)
-            .then(console.log("deleted", id, "successfully"));
+            .then(console.log("deleted", id, "successfully")).catch(error=>console.log("couldn't reparent because ",error));
     },
     changePosition(id, newPos) {
         this.cards[id]["position"] = newPos;
