@@ -21,7 +21,7 @@ const GenericCard = props => {
     const MenuListType = menuListChooser(me.type);
     const cardRef = useRef(null);
     const blankRef = useRef(null);
-    const [showPopper,setShowPopper] = useState(false);
+    const [showPopper, setShowPopper] = useState(false);
     const [contextMenu, setContextMenu] = useState(null);
 
     // if size changes, animate it
@@ -59,7 +59,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: () => {setShowPopper(false); setContextMenu(null); cardRef.current.focus(); },
+                    onClick: () => {setContextMenu(null);   setShowPopper(false); cardRef.current.focus(); },
                     onDragStart: dragStart,
                     onDrag: drag,
                     onDragEnd: dragStop,
@@ -71,9 +71,9 @@ const GenericCard = props => {
         }, [me.type, store.currentActive]
     );
 
-    console.log("blankref", blankRef)
-    console.log("Show Popper ",showPopper)
-    console.log("contextmenu", contextMenu)
+    // console.log("blankref", blankRef)
+    // console.log("Show Popper ", showPopper)
+    // console.log("contextmenu", contextMenu)
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
 
     return (
@@ -83,12 +83,12 @@ const GenericCard = props => {
                 ref={cardRef}
                 onContextMenu={(event) => {
                     event.preventDefault();
-                    if (event.currentTarget.offsetParent && event.currentTarget.offsetParent.className === "container-filler") {
-                        let x = event.clientX + event.currentTarget.offsetParent.scrollLeft - me.position.x;
-                        let y = event.clientY + event.currentTarget.offsetParent.scrollTop - 60 - me.position.y;
-                        setContextMenu({ x: x, y: y })
-                        setShowPopper(false);
-                    }
+                    var cardContainerElement = document.querySelector('.card-container');
+                    let x = event.clientX + cardContainerElement.scrollLeft - me.position.x   ;
+                    let y = event.clientY + cardContainerElement.scrollTop - 60 - me.position.y;
+                    setContextMenu({ x: Math.abs(x), y: Math.abs(y) })
+                    setShowPopper(false);
+
                 }}
                 onBlur={e => {
                     if (store.currentActive === props.id) {
@@ -129,18 +129,18 @@ const GenericCard = props => {
                 }
                 <div className="blank-filler" ref={blankRef}
                     style={contextMenu ? { position: "absolute", top: contextMenu.y, left: contextMenu.x, height: 10, width: 10, backgroundColor: "black" } : { position: "absolute" }} />
-                {contextMenu || showPopper?
+                {contextMenu || showPopper ?
                     <MenuCard
-                        buttonref={showPopper ? cardRef.current: blankRef.current  }
+                        buttonref={showPopper ? cardRef.current : blankRef.current}
                         position="right-start"
                         offset={[0, 4]}
                         tooltipclass="tooltips"
                         arrowclass="arrow"
-                        showpopper={true }
+                        showpopper={true}
                         pos={contextMenu}
                     >
                         <div>
-                            <MenuListType id={props.id} content={{ ...me.content }}/>
+                            <MenuListType id={props.id} content={{ ...me.content }} />
                             <a href="/dashboard" style={{ color: "black" }}>edit</a>
                             <hr />
                             <p style={{ color: 'green', cursor: 'pointer' }} onClick={() => {
@@ -163,7 +163,7 @@ const GenericCard = props => {
                     : null
                 }
                 <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
-                
+
             </div>
         </>
     )
