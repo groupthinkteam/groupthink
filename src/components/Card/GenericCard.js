@@ -9,6 +9,7 @@ import '../../styles/PopperMenu.scss';
 import "../../styles/Cards/GenericCard.scss";
 import MenuCard from "../DocumentCanvas/Cards/MenuList/MenuCard";
 import menuListChooser from "../DocumentCanvas/Cards/menuListChooser";
+import ReplaceFileList from "../DocumentCanvas/Cards/MenuList/ReplaceFileList";
 
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable);
@@ -140,7 +141,8 @@ const GenericCard = props => {
                         pos={contextMenu}
                     >
                         <div>
-                            <MenuListType id={props.id} content={{ ...me.content }} />
+                            <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store}/>
+                            <ReplaceFileList type={me.type} id={props.id} typeAPI={store}/>
                             <a href="/dashboard" style={{ color: "black" }}>edit</a>
                             <hr />
                             <p style={{ color: 'green', cursor: 'pointer' }} onClick={() => {

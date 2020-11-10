@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef,  useEffect } from "react";
 import InlineTextEdit from '../../../InlineTextEdit/InlineTextEdit';
 import "../../../../styles/Cards/ImagesCard.scss";
 import { useStore } from '../../../../store/hook';
