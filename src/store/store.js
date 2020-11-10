@@ -1,6 +1,6 @@
 import set from "lodash.set"
 import throttle from "lodash.throttle"
-import { database, storage, auth, servertime ,functions} from "../services/firebase"
+import { database, storage, auth, servertime, functions } from "../services/firebase"
 import projectTemplates from "../constants/projectTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
@@ -252,12 +252,15 @@ export var storeObject = {
     },
     reparentCard(id, newParent) {
         this.updateLastActive()
-        console.log("reparent requested for", id, "newparent", newParent)
+        console.log("reparent requested for", id, "newparent", newParent);
 
+        const throwParent = (ancestor) => { return this.cards[ancestor]["parent"] }
+        
         function checkValidity(ancestor) {
             if (ancestor === "root") return true;
             if (ancestor === id) return false;
-            return checkValidity(this.cards[ancestor]["parent"]);
+            const parent = throwParent(ancestor)
+            return checkValidity(parent);
         }
 
         if (checkValidity(newParent)) {
@@ -302,7 +305,7 @@ export var storeObject = {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
-    convertImageToBW(fullPath,contentType,customMetadata){
+    convertImageToBW(fullPath, contentType, customMetadata) {
         const imageData = {
             fpath: fullPath,
             contentType: contentType,

@@ -150,6 +150,7 @@ const GenericCard = props => {
                             <p style={{ color: 'green', cursor: 'pointer' }} onClick={() => {
                                 store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank')
                                 setContextMenu(null);
+                                setShowPopper(false);
                             }}
                             >
                                 Add Child
@@ -158,6 +159,7 @@ const GenericCard = props => {
                             <p style={{ cursor: 'pointer', color: "red" }} onClick={() => {
                                 store.removeCard(props.id, "recursive");
                                 setContextMenu(null);
+                                setShowPopper(false);
                             }}>
                                 Delete
                             </p>
