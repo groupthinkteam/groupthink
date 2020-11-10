@@ -1,9 +1,10 @@
 import set from "lodash.set"
 import throttle from "lodash.throttle"
-import { database, storage, auth, servertime ,functions} from "../services/firebase"
+import { database, storage, auth, servertime, functions } from "../services/firebase"
 import projectTemplates from "../constants/projectTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
+import { snap } from "gsap/all"
 
 export var storeObject = {
     projects: {},
@@ -302,7 +303,7 @@ export var storeObject = {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
-    convertImageToBW(fullPath,contentType,customMetadata){
+    convertImageToBW(fullPath, contentType, customMetadata) {
         const imageData = {
             fpath: fullPath,
             contentType: contentType,
@@ -310,6 +311,37 @@ export var storeObject = {
         }
         var convToBw = functions.httpsCallable('imageToBw')
         convToBw(imageData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
+    },
+    convertLinksToCitation(id) {
+        var fullText = []
+
+        var convToCite = functions.httpsCallable('linkToCitation')
+        this.projectRef.child('nodes').child(id).child('content').child('text').once('value').then((snapshot) => {
+            fullText = snapshot.val();
+            console.log("full text: ", fullText);
+            var linksArr = this.linksFromText(fullText);
+            if (linksArr.length === 0)
+            {
+                return console.log("no links found")
+            }
+            const linksData = {
+                projectId: this.projectID,
+                cardId: id,
+                link: linksArr,
+                fullText: fullText,
+                style: 'apa'
+            }
+            console.log("links data: ", linksData)
+            return convToCite(linksData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
+        })
+
+    },
+    linksFromText(stri) {
+        const regexp = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
+        const str = String(stri);
+        console.log(stri)
+        const array = [...str.match(regexp)];
+        return array
     },
     // update any property of store (for use with listeners)
     sync(property, path, value) {
