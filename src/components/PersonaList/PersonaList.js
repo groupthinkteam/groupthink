@@ -14,10 +14,10 @@ function PersonaList(props) {
                     ([userID, _]) => userID !== store.currentUser.uid && Date.now() - store.users[userID].lastUpdatedAt < 60000
                 ).map(
                     ([userID, values]) =>
-                        <div key={"persona".concat(userID)} className="persona-item">
+                       {console.log("JOINED ",values.joinedCall); return <div key={"persona".concat(userID)} style={values.joinedCall ? {backgroundColor:'green'}:null} className="persona-item">
                             <img alt={values.displayName} src={values.photoURL} />
                             {values.displayName}
-                        </div>
+                        </div>}
                 )}
         </div>
     )

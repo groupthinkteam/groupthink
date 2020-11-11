@@ -188,7 +188,7 @@ export var storeObject = {
 
         switch (strategy) {
             case "recursive":
-                console.log("RECURSIVE ",this.cards[id]["children"])
+                console.log("RECURSIVE ", this.cards[id]["children"])
                 if (this.cards[id]["children"])
                     depthFirstTraversal(Object.keys(this.cards[id]["children"]));
                 break;
@@ -200,7 +200,7 @@ export var storeObject = {
                 break;
         }
         this.projectRef.child("nodes").update(updates)
-            .then(console.log("deleted", id, "successfully")).catch(error=>console.log("couldn't reparent because ",error));
+            .then(console.log("deleted", id, "successfully")).catch(error => console.log("couldn't reparent because ", error));
     },
     changePosition(id, newPos) {
         this.cards[id]["position"] = newPos;
@@ -256,7 +256,7 @@ export var storeObject = {
         console.log("reparent requested for", id, "newparent", newParent);
 
         const throwParent = (ancestor) => { return this.cards[ancestor]["parent"] }
-        
+
         function checkValidity(ancestor) {
             if (ancestor === "root") return true;
             if (ancestor === id) return false;
@@ -323,8 +323,7 @@ export var storeObject = {
             fullText = snapshot.val();
             console.log("full text: ", fullText);
             var linksArr = this.linksFromText(fullText);
-            if (linksArr.length === 0)
-            {
+            if (linksArr.length === 0) {
                 return console.log("no links found")
             }
             const linksData = {
@@ -411,6 +410,18 @@ export var storeObject = {
             .set(null)
             .then(console.log("This User is Now Not Editing"))
             .catch(error => console.log("Error raised in addUserEditing because ", error))
+    },
+    addUserCallInfo(info) {
+        this.projectRef.child('users').child(this.userID)
+            .update({ joinedCall: true }) //TODO: can add speaking Feature
+            .then(console.log("This User has Joined Call"))
+            .catch(error => console.log("Error raised in addUserCallInfo because ", error))
+    },
+    removeUserCallInfo(info) {
+        this.projectRef.child('users').child(this.userID)
+            .update({ joinedCall: null })
+            .then(console.log("This User has Joined Call"))
+            .catch(error => console.log("Error raised in removeUserCallInfo because ", error))
     },
     // listener manipulation
     addDashboardListeners() {
