@@ -24,7 +24,10 @@ const GenericCard = props => {
     const blankRef = useRef(null);
     const [showPopper, setShowPopper] = useState(false);
     const [contextMenu, setContextMenu] = useState(null);
-
+    const closeContextMenu = () => {
+        setShowPopper(false);
+        setContextMenu(null);
+    }
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
 
@@ -71,6 +74,17 @@ const GenericCard = props => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive]
     );
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (cardRef.current && !cardRef.current.contains(event.target)) {
+                closeContextMenu();
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [cardRef]);
 
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
 
@@ -84,16 +98,13 @@ const GenericCard = props => {
                     var cardContainerElement = document.querySelector('.card-container');
                     let x = event.clientX + cardContainerElement.scrollLeft - me.position.x;
                     let y = event.clientY + cardContainerElement.scrollTop - 60 - me.position.y;
-                    if (store.currentActive === props.id) {
-                        setContextMenu({ x: Math.abs(x), y: Math.abs(y) })
-                        setShowPopper(false);
-                    }
-
+                    setContextMenu({ x: Math.abs(x), y: Math.abs(y) })
+                    setShowPopper(false);
                 }}
-                onBlur={e => {
+                onBlur={(e) => {
+                    console.log("ONBLUR")
                     if (store.currentActive === props.id) {
                         store.currentActive = null;
-                        //setContextMenu(null); setShowPopper(false);
                     }
                     e.stopPropagation();
                     store.removeUserEditing(props.id)
@@ -131,7 +142,7 @@ const GenericCard = props => {
                 <div className="blank-filler" ref={blankRef}
                     style={
                         contextMenu ?
-                            { position: "absolute", top: contextMenu.y, left: contextMenu.x }//, height: 10, width: 10, backgroundColor: "black" }
+                            { position: "absolute", top: contextMenu.y, left: contextMenu.x }
                             : { position: "absolute" }
                     }
                 />
@@ -153,8 +164,7 @@ const GenericCard = props => {
                             <hr />
                             <p style={{ color: 'green', cursor: 'pointer' }} onClick={() => {
                                 store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank');
-                                setContextMenu(null);
-                                setShowPopper(false);
+                                closeContextMenu();
                             }}
                             >
                                 Add Child
@@ -162,8 +172,7 @@ const GenericCard = props => {
                             <hr />
                             <p style={{ cursor: 'pointer', color: "red" }} onClick={() => {
                                 store.removeCard(props.id, "recursive", store.cards[props.id]["parent"]);
-                                setContextMenu(null);
-                                setShowPopper(false);
+                                closeContextMenu();
                             }}>
                                 Delete
                             </p>
