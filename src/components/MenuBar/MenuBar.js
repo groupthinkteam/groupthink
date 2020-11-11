@@ -16,32 +16,33 @@ export default function MenuBar(props) {
             <div className="menu-bar-panel menu-bar-panel-left">
                 <div className="site-title">
                     <Link to="/dashboard">
-                        groupthink
+                        g
                     </Link>
                 </div>
+                <SearchBar document={props?.document} dashboard={props?.dashboard} />
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 {props.documentName ?
                     <span className="menu-bar-project-title">
-                    {props.documentName}
+                        {props.documentName}
                     </span>
                     : null
                 }
-                <div className="menu-center-vertical-filler" />
-                <SearchBar document={props?.document} dashboard={props?.dashboard} />
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">
                 {
                     props.document ?
                         <>
-                            <PersonaList />
                             <RoomConnect currentUser={currentUser} />
+                            <PersonaList />
+                            <div className="menu-bar-separator" />
                             <ShareLink projectID={props.projectID} buttonClassName="menu-action-button highlight"
                                 currentUser={currentUser}
                             />
                         </>
                         : null
                 }
+                <div className="menu-bar-separator" />
                 <UserMenu photoURL={currentUser.photoURL}
                     username={currentUser.displayName}
                     imageClass="menu-bar-user-profile-picture"

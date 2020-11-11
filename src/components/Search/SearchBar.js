@@ -48,18 +48,20 @@ const SearchBar = (props) => {
             <div className="search-input">
                 <img className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
                 <InlineTextEdit
+                    style={{fontSize: "12px"}}
                     borderColor='black'
                     placeholder="Search for an item or action"
                     onChange={(e) => searchValues(e.target.value)}
                 />
             </div>
             {
-                (results.matches.length || actionResult.matches.length) &&
-                <SearchDropdown
-                    results={results} actionResult={actionResult} document={props.document} dashboard={props.dashboard}
-                    dropdown={dropdown}
-                    setDropdown={setDropdown}
-                />
+                (results.matches.length || actionResult.matches.length)
+                    ? <SearchDropdown
+                        results={results} actionResult={actionResult} document={props.document} dashboard={props.dashboard}
+                        dropdown={dropdown}
+                        setDropdown={setDropdown}
+                    />
+                    : null
             }
         </div>
     )

@@ -55,7 +55,7 @@ export const getMetadataFromURL = (link, callback) => {
 }
 export const resizeDimension = (height, width) => {
     const maxDimension = Math.max(height, width);
-    const multiplier = maxDimension > 450 ? 450 / maxDimension : 1;
+    const multiplier = maxDimension > 250 ? 250 / maxDimension : 1;
     return [Math.floor(height * multiplier), Math.floor(width * multiplier)]
 }
 /**

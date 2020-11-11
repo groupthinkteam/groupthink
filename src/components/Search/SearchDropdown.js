@@ -75,7 +75,7 @@ const SearchDropdown = (props) => {
                 {searchItems}
                 {actionItems}
             </div>
-            {currentMatch + 1}/{props.results.matches.length}
+            {/* {currentMatch + 1}/{props.results.matches.length} */}
             <button onClick={() => setCurrentMatch((old) => (old + 1) % props.results.matches.length)}>
                 Next
             </button>
