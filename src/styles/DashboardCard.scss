@@ -2,15 +2,16 @@
     width: 100%;
     // height: 100px;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     padding: 10px 0px 10px 10px;
-    .card-title {
-        font-family: "Roboto";
-        font-style: normal;
-        font-weight: normal;
-        font-size: 18px;
-        line-height: 24px;
-        cursor: pointer;
-        height: fit-content;
-    }
+}
+
+.card-title {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 24px;
+    cursor: pointer;
+    height: fit-content;
 }
