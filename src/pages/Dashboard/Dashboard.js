@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react'
-import MenuBar from '../../components/MenuBar/MenuBar'
-import Card from "./Card"
+import React, { useState, useEffect } from 'react'
+import DashboardCard from "./DashboardCard"
 import { observer } from 'mobx-react-lite'
 
-import "../../styles/Projects.scss"
+import "../../styles/Dashboard.scss"
 import { useStore } from '../../store/hook'
 import { useHistory, useLocation } from 'react-router-dom'
+import SearchBar from '../../components/Search/SearchBar'
 
 const Dashboard = observer(() => {
   let store = useStore();
   const history = useHistory();
   const location = useLocation();
+
+  let [currentView, setCurrentView] = useState("all")
+
   useEffect(() => {
     store.addDashboardListeners()
     return () => store.removeDashboardListeners()
@@ -20,31 +23,40 @@ const Dashboard = observer(() => {
     store.signout();
     history.push('/login', { from: location });
   }
+
   return (
     <div className="dashboard-page">
-      <MenuBar dashboard currentUser={store.currentUser} signOut={signOut} />
-      <div className="project-view-container">
-        <div className="project-container-title">Your Projects</div >
-        <div className="project-card-container">
-          <Card addNew />
-          {store.ownProjects.length > 0
-            ? store.ownProjects.map((id) => <Card key={id} id={id} />)
-            : <div className="project-container-nodata">
-              You have not created any projects yet. What are you waiting for? Click "Add a Project" to begin.
-            </div>
-          }
-        </div>
-        <div className="project-container-title">Shared With You</div>
-        <div className="project-card-container">
-          {store.sharedProjects.length > 0
-            ? store.sharedProjects.map((id) => <Card key={id} id={id} />)
-            : <div className="project-container-nodata">
-              No one has shared a project with you yet. SAD!
-            </div>
-          }
+      <div className="top-bar">
+        <div className="site-title">groupthink</div>
+        <div className="user-welcome">
+          <div className="welcome-text">
+            <span className="welcome-bold">Welcome,</span> <br />
+            <span className="user-name">{store.currentUser.displayName}</span>
+          </div>
+          <div className="profile-picture">
+            <img alt={store.currentUser.displayName} src={store.currentUser.photoURL} />
+          </div>
         </div>
       </div>
-    </div>
+      <div className="main-section">
+        <div className="project-section">
+          <div className="project-section-header">
+            <div className="dashboard-title">
+              Dashboard
+            </div>
+            <SearchBar dashboard />
+          </div>
+          <div className="project-section-content">
+            {store.ownProjects.length > 0
+              ? store.ownProjects.map((id) => <DashboardCard key={id} id={id} />)
+              : null
+            }
+          </div>
+        </div>
+        <div className="recent-activity-section">
+        </div>
+      </div>
+    </div >
   )
 })
 export default Dashboard;

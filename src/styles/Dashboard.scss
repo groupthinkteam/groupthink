@@ -1,0 +1,88 @@
+.dashboard-page {
+    background-color: white;
+    .top-bar {
+        margin: 30px 30px 10px 30px;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        .site-title {
+            font-family: "B612 Mono";
+            font-style: normal;
+            font-weight: normal;
+            font-size: 34px;
+            line-height: 27px;
+
+            display: flex;
+            align-items: center;
+            text-align: center;
+            width: fit-content;
+
+            padding: 25px 15px 25px 15px;
+
+            /* gt solid white */
+            color: #ffffff;
+            /* gt orange */
+            background: #ff6b43;
+        }
+        .user-welcome {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            .welcome-text {
+                display: flex;
+                flex-flow: column nowrap;
+                align-items: flex-end;
+                font-family: "Roboto";
+                font-style: normal;
+                font-weight: normal;
+                font-size: 24px;
+                line-height: 30px;
+                .user-name {
+                    font-weight: 700;
+                }
+            }
+            .profile-picture {
+                margin-left: 20px;
+                img {
+                    height: 75px;
+                    width: 75px;
+                    border-radius: 50px;
+                }
+            }
+        }
+    }
+    .main-section {
+        margin-left: 100px;
+        margin-right: 100px;
+        margin-top: 50px;
+        // border: 2px solid black;
+        .project-section {
+            .project-section-header {
+                display: flex;
+                flex-flow: row nowrap;
+                .dashboard-title {
+                    font-family: "Roboto", "Open Sans";
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 24px;
+                    line-height: 24px;
+
+                    display: flex;
+                    align-items: center;
+
+                    /* gt solid black */
+                    color: #000000;
+                    margin-right: 20px;
+                }
+            }
+            .project-section-content {
+                display: flex;
+                flex-flow: column nowrap;
+                border: 2px solid black;
+                border-radius: 6px;
+                margin-top: 7px;
+            }
+        }
+    }
+}
