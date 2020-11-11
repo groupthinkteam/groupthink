@@ -33,7 +33,7 @@ export default function MenuBar(props) {
                 {
                     props.document ?
                         <>
-                            <RoomConnect currentUser={currentUser} />
+                            <RoomConnect projectID={props.projectID} currentUser={currentUser} />
                             <PersonaList />
                             <div className="menu-bar-separator" />
                             <ShareLink projectID={props.projectID} buttonClassName="menu-action-button highlight"

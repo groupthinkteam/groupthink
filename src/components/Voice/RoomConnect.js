@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import * as SWRTC from '@andyet/simplewebrtc';
 import '../../styles/VoiceRoom.scss';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../store/hook';
 
 const API_KEY = '120319f9263e8477a01064c0';
-const ROOM_NAME = "document_id";
+
 const ROOM_PASSWORD = 'default';
 const CONFIG_URL = `https://api.simplewebrtc.com/config/guest/${API_KEY}`;
 const store = SWRTC.createStore();
 
 const RoomConnect = (props) => {
+  const ROOM_NAME = props.projectID;
   const [isJoined, setIsJoined] = useState(false);
+  const globalStore = useStore();
+  useEffect(()=>{
+    if(isJoined)
+    {
+      globalStore.addUserCallInfo();
+    }
+    else{
+      globalStore.removeUserCallInfo();
+    }
+  },[isJoined,globalStore])
   return (
     <div className="voice-room">
       <Provider store={store}>
-        <SWRTC.Provider configUrl={CONFIG_URL} displayName={props.currentUser.displayName}>
+        <SWRTC.Provider configUrl={CONFIG_URL} userData={props.currentUser} displayName={props.currentUser.displayName}>
           <SWRTC.Connecting>
             <p>Connecting...</p>
           </SWRTC.Connecting>
@@ -57,11 +70,12 @@ const RoomConnect = (props) => {
 }
 
 function PeerItem(props) {
+  //Method in peer : joinedCall & speaking
   return (
-    <div className="peer-item" style={{ border: "2px solid black" }}>
+    <div key={props.peer.id} className="peer-item" style={{ border: "2px solid black" }}>
       Peer Name: {props.peer.displayName} {props.peer.speaking ? "is speaking" : null}
     </div>
   )
 }
 
-export default RoomConnect;
+export default observer( RoomConnect);

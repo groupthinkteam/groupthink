@@ -107,11 +107,11 @@ const GenericCard = props => {
                         store.currentActive = null;
                     }
                     e.stopPropagation();
-                    store.removeUserEditing(props.id)
+                    store.removeUserEditing(props.id,'editing')
                 }}
                 onFocus={e => {
                     store.currentActive = props.id;
-                    store.addUserEditing(props.id)
+                    store.addUserEditing(props.id,'editing')
                     e.stopPropagation();
                 }}
                 onKeyDown={(e) => {

@@ -5,12 +5,16 @@ import { useStore } from '../../../../store/hook';
 const TextCardList = (props) => {
     const store = useStore();
     const cardId = props.id;
-    const convLinks = () => {
-        store.convertLinksToCitation(cardId);
+    const convLinks = (citationStyle) => {
+        store.convertLinksToCitation(cardId, citationStyle);
     }
     return (
         <div>
-            <button onClick={() => convLinks()}>Get Citations</button>
+            <button onClick={() => convLinks("apa")}>APA Citations</button>
+            <hr/>
+            <button onClick={() => convLinks("harvard1")}>Harvard Citations</button>
+            <hr/>
+            <button onClick={() => convLinks("vancouver")}>Vancouver</button>
             <hr/>
         </div>
     )

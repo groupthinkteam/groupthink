@@ -315,9 +315,8 @@ export var storeObject = {
         var convToBw = functions.httpsCallable('imageToBw')
         convToBw(imageData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
     },
-    convertLinksToCitation(id) {
+    convertLinksToCitation(id, citeStyle) {
         var fullText = []
-
         var convToCite = functions.httpsCallable('linkToCitation')
         this.projectRef.child('nodes').child(id).child('content').child('text').once('value').then((snapshot) => {
             fullText = snapshot.val();
@@ -331,7 +330,7 @@ export var storeObject = {
                 cardId: id,
                 link: linksArr,
                 fullText: fullText,
-                style: 'apa'
+                style: citeStyle
             }
             console.log("links data: ", linksData)
             return convToCite(linksData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
@@ -410,6 +409,18 @@ export var storeObject = {
             .set(null)
             .then(console.log("This User is Now Not Editing"))
             .catch(error => console.log("Error raised in addUserEditing because ", error))
+    },
+    addUserCallInfo(info) {
+        this.projectRef.child('users').child(this.userID)
+            .update({ joinedCall: true }) //TODO: can add speaking Feature
+            .then(console.log("This User has Joined Call"))
+            .catch(error => console.log("Error raised in addUserCallInfo because ", error))
+    },
+    removeUserCallInfo(info) {
+        this.projectRef.child('users').child(this.userID)
+            .update({ joinedCall: null })
+            .then(console.log("This User has Joined Call"))
+            .catch(error => console.log("Error raised in removeUserCallInfo because ", error))
     },
     // listener manipulation
     addDashboardListeners() {
