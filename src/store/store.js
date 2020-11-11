@@ -315,9 +315,8 @@ export var storeObject = {
         var convToBw = functions.httpsCallable('imageToBw')
         convToBw(imageData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
     },
-    convertLinksToCitation(id) {
+    convertLinksToCitation(id, citeStyle) {
         var fullText = []
-
         var convToCite = functions.httpsCallable('linkToCitation')
         this.projectRef.child('nodes').child(id).child('content').child('text').once('value').then((snapshot) => {
             fullText = snapshot.val();
@@ -332,7 +331,7 @@ export var storeObject = {
                 cardId: id,
                 link: linksArr,
                 fullText: fullText,
-                style: 'apa'
+                style: citeStyle
             }
             console.log("links data: ", linksData)
             return convToCite(linksData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
