@@ -29,7 +29,7 @@ export default class SearchElements {
             if (key !== "root")
                 switch (val.type) {
                     case "text":
-                        projectArray.push({ id: key, text: val.content.text.replace(/<[^>]+>/g, '') });
+                        projectArray.push({ id: key, text: val.content.text.replace(/<[^>]+>/g,' ').replace(/^\s+|\s+$/g, '').split(/\s+/) });
                         break;
                     case "todo":
                         projectArray.push({ id: key, title: val.content.title })
