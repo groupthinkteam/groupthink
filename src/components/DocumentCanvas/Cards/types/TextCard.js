@@ -18,11 +18,14 @@ function TextCard(props) {
     useEffect(()=>{
         if (store.currentActive === props.id && quillRef.current) {
             quillRef.current.focus();
+            var quillEditor = quillRef.current.getEditor();
+            quillEditor.setSelection(quillEditor.getSelection().index + 10, 0);
         }
-    });
+        
+    },[props.id,store.currentActive]);
     return (
         <div className="text-node" style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
-            <ReactQuill ref={quillRef} theme="snow" value={me.content.text} onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }} />
+            <ReactQuill  ref={quillRef} theme="snow" value={me.content.text} onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }} />
         </div>
     )
 }
