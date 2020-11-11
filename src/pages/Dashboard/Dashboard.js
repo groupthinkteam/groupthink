@@ -17,7 +17,7 @@ const Dashboard = observer(() => {
   useEffect(() => {
     store.addDashboardListeners()
     return () => store.removeDashboardListeners()
-  }, [store])
+  }, [])
 
   const signOut = () => {
     store.signout();
@@ -47,6 +47,7 @@ const Dashboard = observer(() => {
             <SearchBar dashboard />
           </div>
           <div className="project-section-content">
+            <button onClick={() => store.addNewProject()}>Create New Project</button>
             {store.ownProjects.length > 0
               ? store.ownProjects.map((id) => <DashboardCard key={id} id={id} />)
               : null

@@ -1,5 +1,6 @@
 .dashboard-page {
     background-color: white;
+    overflow: scroll;
     .top-bar {
         margin: 30px 30px 10px 30px;
         display: flex;
@@ -56,6 +57,8 @@
         margin-left: 100px;
         margin-right: 100px;
         margin-top: 50px;
+        height: 10%;
+        overflow: scroll;
         // border: 2px solid black;
         .project-section {
             .project-section-header {
@@ -79,6 +82,7 @@
             .project-section-content {
                 display: flex;
                 flex-flow: column nowrap;
+                overflow: auto;
                 border: 2px solid black;
                 border-radius: 6px;
                 margin-top: 7px;

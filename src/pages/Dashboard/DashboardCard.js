@@ -11,46 +11,38 @@ import { useHistory, useLocation } from "react-router-dom"
 
 
 const DashboardCard = props => {
-    let { projects, addNewProject, sync, renameProject, deleteProject, setProjectID } = useStore();
+    let { projects, deleteProject, setProjectID } = useStore();
     let me = projects[props.id]
     const history = useHistory();
     const location = useLocation();
+
     const onOpen = () => {
         setProjectID(props.id);
         history.push("/project/" + props.id, { from: location })
     }
-
-    if (props.addNew) {
-        return (
-            <div className="project-card">
-                <Button className="custom_btn" handleClick={() => addNewProject()}>
-                    Create New Project
-                </Button>
+    
+    if (!me.metadata) return null;
+    return (
+        <div id={props.id} className={"dashboard-card"}>
+            <div className="card-title" onClick={onOpen}>
+                {me.metadata.name}
             </div>
-        )
-    }
-    else {
-        return (
-            <div id={props.id} className={"dashboard-card"}>
-                <div className="card-title" onClick={onOpen}>
-                    {me.name}
-                </div>
-                <Button
-                    className="custom_btn"
-                    handleClick={onOpen}>
-                    Open
-                </Button>
-                {/* <InlineTextEdit
+            <Button
+                className="custom_btn"
+                handleClick={onOpen}>
+                Open
+            </Button>
+            {/* <InlineTextEdit
                     text={me.name}
                     onChange={(event) => sync("projects", props.id + ".name", event.target.value)}
                     onSave={(event) => renameProject(props.id, event.target.value)} /> */}
-                <Button
-                    className="custom_btn"
-                    handleClick={() => deleteProject(props.id)}>
-                    Delete
-                </Button>
-            </div>
-        )
-    }
+            <Button
+                className="custom_btn"
+                handleClick={() => deleteProject(props.id)}>
+                Delete
+            </Button>
+        </div>
+    )
 }
+
 export default observer(DashboardCard)

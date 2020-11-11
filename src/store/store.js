@@ -188,7 +188,7 @@ export var storeObject = {
 
         switch (strategy) {
             case "recursive":
-                console.log("RECURSIVE ",this.cards[id]["children"])
+                console.log("RECURSIVE ", this.cards[id]["children"])
                 if (this.cards[id]["children"])
                     depthFirstTraversal(Object.keys(this.cards[id]["children"]));
                 break;
@@ -200,7 +200,7 @@ export var storeObject = {
                 break;
         }
         this.projectRef.child("nodes").update(updates)
-            .then(console.log("deleted", id, "successfully")).catch(error=>console.log("couldn't reparent because ",error));
+            .then(console.log("deleted", id, "successfully")).catch(error => console.log("couldn't reparent because ", error));
     },
     changePosition(id, newPos) {
         this.cards[id]["position"] = newPos;
@@ -256,7 +256,7 @@ export var storeObject = {
         console.log("reparent requested for", id, "newparent", newParent);
 
         const throwParent = (ancestor) => { return this.cards[ancestor]["parent"] }
-        
+
         function checkValidity(ancestor) {
             if (ancestor === "root") return true;
             if (ancestor === id) return false;
@@ -323,8 +323,7 @@ export var storeObject = {
             fullText = snapshot.val();
             console.log("full text: ", fullText);
             var linksArr = this.linksFromText(fullText);
-            if (linksArr.length === 0)
-            {
+            if (linksArr.length === 0) {
                 return console.log("no links found")
             }
             const linksData = {
@@ -415,10 +414,16 @@ export var storeObject = {
     // listener manipulation
     addDashboardListeners() {
         if (this.userRef && this.userID.length > 1) {
-            const projects = this.userRef.orderByChild("createdAt");
-            projects.on("child_added", (snap) => this.projects[snap.key] = snap.val());
-            projects.on("child_changed", (snap) => this.projects[snap.key] = snap.val());
-            projects.on("child_removed", (snap) => delete this.projects[snap.key]);
+            this.userRef.on("value", (snap) => {
+                this.projects = snap.val() || {};
+                if (Object.keys(this.projects)) {
+                    Object.keys(this.projects).forEach((projectID) => {
+                        database.ref("documents").child(projectID).child("metadata").once("value")
+                            .then((snap) => this.projects[projectID].metadata = snap.val())
+                            .catch((error) => console.log("error fetching metadata for", projectID, "because", error))
+                    })
+                }
+            });
         }
     },
     addDocumentListeners() {
@@ -434,7 +439,7 @@ export var storeObject = {
     },
     removeDashboardListeners() {
         if (this.userID.length > 1)
-            database.ref("users").child(this.userID).child("projects").orderByChild("createdAt").off();
+            database.ref("users").child(this.userID).child("projects").off();
     },
     removeDocumentListeners() {
         this.projectRef.child("users").off();
