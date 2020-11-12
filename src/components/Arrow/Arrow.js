@@ -23,14 +23,14 @@ const Arrow = observer((props) => {
     if (child.parent === "root") return null;
 
     const parent = store.cards[child.parent];
-
+    console.log(child.parent , parent,store.cards)
     const head = {
-        x: parent.position.x + parent.size.width / 2 ,
-        y: parent.position.y + parent.size.height ,
+        x: parent.position.x + parent.size.width / 2,
+        y: parent.position.y + parent.size.height+5,
     }
     const tail = {
         x: child.position.x + child.size.width / 2,
-        y: child.position.y - 5
+        y: child.position.y 
     }
     const midPoint = {
         x: (tail.x + head.x) / 2,
@@ -38,96 +38,107 @@ const Arrow = observer((props) => {
     }
 
     useEffect(() => {
-        const y = Draggable.create("#head".concat(props.id),
+        const headId = Draggable.create("#head".concat(props.id),
             {
                 type: "top,left",
                 activeCursor: "grab",
                 onDragStart: function () {
                     gsap.set("#head".concat(props.id), { top: head.y, left: head.x })
-                    y[0].update()
+                    headId[0].update()
                 },
                 onDrag: function () {
                     setHeadDragging({ x: this.x, y: this.y })
                 },
                 onDragEnd: function () {
-                    y[0].update()
+                    headId[0].update()
                     setHeadDragging(false)
                 },
-            })
-        return () => {  y[0].kill() }
+            });
+        return () => { if(headId[0])headId[0].kill();}
     }, [store, props.id, head.x, head.y])
     useEffect(() => {
-        const y = Draggable.create("#mid".concat(props.id),
+        const mid = Draggable.create("#mid".concat(props.id),
             {
                 type: "top,left",
                 cursor: 'pointer',
                 activeCursor: "pointer",
                 onDragStart: function () {
                     gsap.set("#mid".concat(props.id), { top: midPoint.y, left: midPoint.x })
-                    y[0].update()
-                },
-                onClick: () => {
-                    //TODO :- Collapse Function
+                    mid[0].update()
                 }
             })
-        return () => { y[0].kill() }
+        return () => {if(mid[0]) mid[0].kill() }
     }, [store, props.id, midPoint.x, midPoint.y]);
 
     useEffect(() => {
-        const y = Draggable.create("#tailPath".concat(props.id),
+        const tailPath = Draggable.create("#tailPath".concat(props.id),
             {
                 type: "top,left",
                 cursor: 'pointer',
                 activeCursor: "pointer",
                 onDragStart: function () {
-                    gsap.set("#tailPath".concat(props.id), { top: tail.y, left: tail.x  });
-                    y[0].update()
+                    gsap.set("#tailPath".concat(props.id), { top: tail.y, left: tail.x });
+                    tailPath[0].update()
                 },
                 onDrag: function () {
-                    setLinePathDragging({ x: this.x, y: this.y ,path:'tailPath'})
+                    setLinePathDragging({ x: this.x, y: this.y, path: 'tailPath' })
                 },
                 onDragEnd: function () {
-                    y[0].update();
+                    store.hitTestCards.forEach(cardID => {
+                        if (tailPath[0].hitTest("#".concat(cardID))) {
+                            console.log("i hit", cardID)
+                            // call reparent
+                            store.reparentCard(props.id, cardID)
+                        }
+                    });
+                    tailPath[0].update();
                     setLinePathDragging(false);
                 },
                 onClick: () => {
                     //TODO :- Collapse Function
                 }
             })
-        return () => { y[0].kill() }
+        return () => {if(tailPath[0])tailPath[0].kill()  }
     }, [store, props.id, tail.x, tail.y]);
     useEffect(() => {
-        const y = Draggable.create("#headPath".concat(props.id),
+        const headPath = Draggable.create("#headPath".concat(props.id),
             {
                 type: "top,left",
                 cursor: 'pointer',
                 activeCursor: "pointer",
                 onDragStart: function () {
-                    gsap.set("#headPath".concat(props.id), { top: head.y, left: head.x  });
-                    y[0].update()
+                    gsap.set("#headPath".concat(props.id), { top: head.y, left: head.x });
+                    headPath[0].update()
                 },
                 onDrag: function () {
                     setLinePathDragging({ x: this.x, y: this.y })
                 },
                 onDragEnd: function () {
-                    y[0].update();
+                    // store.hitTestCards.forEach(cardID => {
+                    //     if (headPath[0].hitTest("#".concat(cardID))) {
+                    //         console.log("i hit", cardID)
+                    //         // call reparent
+                    //         store.reparentCard(props.id, cardID)
+                    //     }
+                    // });
+                    headPath[0].update();
                     setLinePathDragging(false);
                 },
                 onClick: () => {
                     //TODO :- Collapse Function
                 }
             })
-        return () => { y[0].kill() }
+        return () => { if(headPath[0])headPath[0].kill()}
     }, [store, props.id, head.x, head.y]);
 
     useEffect(() => {
-        const y = Draggable.create("#tail".concat(props.id),
+        const tailId = Draggable.create("#tail".concat(props.id),
             {
                 type: "top,left",
                 activeCursor: "grab",
                 onDragStart: function () {
                     gsap.set("#tail".concat(props.id), { top: tail.y, left: tail.x })
-                    y[0].update()
+                    tailId[0].update();
                 },
                 onDrag: function () {
                     setTailDragging({ x: this.x, y: this.y })
@@ -136,24 +147,22 @@ const Arrow = observer((props) => {
                     // do a hittest
                     // if valid parent make the connection and update position
                     // if not valid, update position to previous
-                    // store.hitTestCards.forEach(cardID => {
-                    //     if (y[0].hitTest("#".concat(cardID))) {
-                    //         console.log("i hit", cardID)
-                    //         // call reparent
-                    //         store.reparentCard(props.id, cardID)
-                    //     }
-                    // });
-                    y[0].update()
+                    store.hitTestCards.forEach(cardID => {
+                        if (tailId[0].hitTest("#".concat(cardID))) {
+                            console.log("i hit", cardID)
+                            // call reparent
+                            store.reparentCard(props.id, cardID)
+                        }
+                    });
+                    tailId[0].update();
                     setTailDragging(false)
                 },
             })
-        return () => { y[0].kill() }
+        return () => {if(tailId[0])tailId[0].kill() }
     }, [store, props.id, tail.x, tail.y])
 
     let tailPath, headPath;
-    console.log("TAIL DRAgging ", tailDragging);
-    console.log("HEAD ", headDragging)
-    console.log("LINE ",linePathDragging)
+
     if (tailDragging) {
         tailPath = updatePath(tailDragging.x, tailDragging.y, midPoint.x, midPoint.y, 'tail')
         headPath = updatePath(head.x, head.y, midPoint.x, midPoint.y - 5)
@@ -162,20 +171,19 @@ const Arrow = observer((props) => {
         headPath = updatePath(headDragging.x, headDragging.y, midPoint.x, midPoint.y);
         tailPath = updatePath(midPoint.x, midPoint.y, tail.x, tail.y - 5)
     }
-    else if(linePathDragging){
-        headPath = updatePath(linePathDragging.x, linePathDragging.y,linePathDragging.path? head.x: tail.x,linePathDragging.path? head.y : tail.y,'tail');
-        tailPath = updatePath(linePathDragging.x, linePathDragging.y, linePathDragging.path? head.x: tail.x,linePathDragging.path? head.y : tail.y ,'tail');
-    
+    else if (linePathDragging) {
+        headPath = updatePath(linePathDragging.x, linePathDragging.y, linePathDragging.path ? tail.x : head.x, linePathDragging.path ? tail.y : head.y, 'tail');
+        tailPath = updatePath(linePathDragging.x, linePathDragging.y, linePathDragging.path ? tail.x : head.x, linePathDragging.path ? tail.y : head.y, 'tail');
+
     }
     else {
-        headPath = updatePath(head.x, head.y, midPoint.x, midPoint.y , 'tail')
+        headPath = updatePath(head.x, head.y, midPoint.x, midPoint.y, 'tail')
         tailPath = updatePath(midPoint.x, midPoint.y, tail.x, tail.y)
     }
 
     function updatePath(x1, y1, x4, y4, path) {
         // Amount to offset control points
         var bezierWeight = path ? 0 : 0.1;
-
         var dx = Math.abs(x4 - x1) * bezierWeight;
         var x2 = x1 - dx;
         var x3 = x4 + dx;
@@ -185,18 +193,18 @@ const Arrow = observer((props) => {
 
     return (
         <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
-            <svg style={{opacity:0.4, position: "absolute", overflow: "visible" }}>
+            <svg style={{ opacity: 0.4, position: "absolute", overflow: "visible" }}>
                 <path
                     id={"headPath".concat(props.id)}
-                    strokeWidth="3"
+                    strokeWidth="5"
                     fill="none"
                     stroke="blue"
                     d={headPath} />
             </svg>
-            <svg style={{opacity:0.4, position: "absolute", overflow: "visible" }}>
+            <svg style={{ opacity: 0.4, position: "absolute", overflow: "visible" }}>
                 <path
                     id={"tailPath".concat(props.id)}
-                    strokeWidth="3"
+                    strokeWidth="5"
                     fill="none"
                     stroke="#ff8577"
                     d={tailPath} />
@@ -205,7 +213,7 @@ const Arrow = observer((props) => {
                 <circle
                     style={{ position: "absolute" }}
                     id={"mid".concat(props.id)}
-                    cx={linePathDragging ? linePathDragging.x : midPoint.x }
+                    cx={linePathDragging ? linePathDragging.x : midPoint.x}
                     cy={linePathDragging ? linePathDragging.y : midPoint.y}
                     r="5"
                     stroke="black"
