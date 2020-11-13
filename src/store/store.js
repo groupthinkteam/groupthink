@@ -398,6 +398,20 @@ export var storeObject = {
                     })
             }).catch((error) => { console.log("failed to update because", error); callback(false) });
     },
+    collapseCard(id)
+    {
+        this.projectRef.child('nodes').child(id).child("collapse")
+            .set(true)
+            .then(console.log("this card is collapsed", id))
+            .catch(error => console.log("error raised in addUserEditing because ", error))
+    },
+    expandCard(id)
+    {
+        this.projectRef.child('nodes').child(id).child("collapse")
+            .set(null)
+            .then(console.log("this card is expand", id))
+            .catch(error => console.log("error raised in addUserEditing because ", error))
+    },
     addUserEditing(id) {
         this.projectRef.child('nodes').child(id).child("editing")
             .set({ [this.userID]: servertime })
