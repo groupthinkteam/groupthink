@@ -46,13 +46,18 @@ const Dashboard = observer(() => {
       <div className="main-section">
         <div className="project-section">
           <div className="project-section-header">
-            <div className="dashboard-title">
-              Dashboard
+            <div className="header-left-container">
+              <div className="dashboard-title">
+                Your Projects
+            </div>
+              <button className="addnew" onClick={() => store.addNewProject((id) => onOpen(id))}>
+                + Create
+            </button>
             </div>
             <SearchBar dashboard />
           </div>
+
           <div className="project-section-content">
-            <button onClick={() => store.addNewProject((id) => onOpen(id))}>Create New Project</button>
             {store.ownProjects.length > 0
               ? store.ownProjects.map((id) => <DashboardCard key={id} id={id} onOpen={() => onOpen(id)} />)
               : null
