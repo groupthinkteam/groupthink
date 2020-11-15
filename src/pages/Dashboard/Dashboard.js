@@ -19,6 +19,11 @@ const Dashboard = observer(() => {
     return () => store.removeDashboardListeners()
   }, [])
 
+  const onOpen = (id) => {
+    store.setProjectID(id);
+    history.push("/project/" + id, { from: location })
+  }
+
   const signOut = () => {
     store.signout();
     history.push('/login', { from: location });
@@ -47,9 +52,9 @@ const Dashboard = observer(() => {
             <SearchBar dashboard />
           </div>
           <div className="project-section-content">
-            <button onClick={() => store.addNewProject()}>Create New Project</button>
+            <button onClick={() => store.addNewProject((id) => onOpen(id))}>Create New Project</button>
             {store.ownProjects.length > 0
-              ? store.ownProjects.map((id) => <DashboardCard key={id} id={id} />)
+              ? store.ownProjects.map((id) => <DashboardCard key={id} id={id} onOpen={() => onOpen(id)} />)
               : null
             }
           </div>

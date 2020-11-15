@@ -21,6 +21,16 @@
     &.searched-card {
         border: 2px solid green;
     }
+
+    .kebab {
+        position: absolute;
+        top: 0px;
+        right: -5px;
+        outline: none;
+        border: none;
+        background-color: transparent;
+    }
+
 }
 
 .inline-input {

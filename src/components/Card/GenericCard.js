@@ -129,9 +129,9 @@ const GenericCard = props => {
                     tabIndex: -1,
                 }}
             >
-                <div style={{ zIndex: 1, position: "absolute", padding: '10px', right: '17px', width: '35px' }} onClick={() => { setContextMenu(null); setShowPopper(!showPopper); }}>
-                    <img alt='Menu' width="35px" src={require('../../assets/kebabMenu.png')} />
-                </div>
+                <button className="kebab" onClick={() => { setContextMenu(null); setShowPopper(!showPopper); }}>
+                    <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
+                </button>
                 {
                     editingUser &&
                     <div className="generic-card-active-user-list">

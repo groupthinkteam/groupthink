@@ -16,7 +16,7 @@ function CardContainer(props) {
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
             <input
                 className="zoom-slider"
-                style={{ position: "fixed", top: "60px", left: "10px", zIndex: 9999999999 }}
+                style={{ position: "fixed", top: "40px", left: "10px", zIndex: 9999999999 }}
                 type="range"
                 min="0.5"
                 max="2.5"

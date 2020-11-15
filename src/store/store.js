@@ -67,7 +67,7 @@ export var storeObject = {
             .catch(error => console.log("While Validating Project", error));
     },
     // dashboard related actions
-    addNewProject() {
+    addNewProject(callback) {
         const thumbnails = [require("../assets/1.webp"), require("../assets/2.webp"), require("../assets/3.webp"), require("../assets/4.webp")]
         const thumbnailURL = thumbnails[Math.floor(Math.random() * thumbnails.length)]
         const template = {
@@ -95,7 +95,7 @@ export var storeObject = {
             name: "New Project",
             thumbnailURL: thumbnailURL,
             createdAt: servertime,
-        })
+        }).then(() => callback(newProjectID))
     },
     deleteProject(id) {
         database.ref("garbagecollection").child(id).set(servertime).then(() => {
@@ -425,16 +425,14 @@ export var storeObject = {
     // listener manipulation
     addDashboardListeners() {
         if (this.userRef && this.userID.length > 1) {
-            this.userRef.on("value", (snap) => {
-                this.projects = snap.val() || {};
-                if (Object.keys(this.projects)) {
-                    Object.keys(this.projects).forEach((projectID) => {
-                        database.ref("documents").child(projectID).child("metadata").once("value")
-                            .then((snap) => this.projects[projectID].metadata = snap.val())
-                            .catch((error) => console.log("error fetching metadata for", projectID, "because", error))
-                    })
-                }
-            });
+            this.userRef.on("child_added", (snap) => {
+                database.ref("documents").child(snap.key).child("metadata")
+                    .on("value", (meta) => this.projects[snap.key] = { ...snap.val(), metadata: meta.val() });
+            })
+            this.userRef.on("child_removed", (snap) => {
+                database.ref("documents").child(snap.key).child("metadata").off();
+                delete this.projects[snap.key];
+            })
         }
     },
     addDocumentListeners() {
@@ -449,8 +447,12 @@ export var storeObject = {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());
     },
     removeDashboardListeners() {
-        if (this.userID.length > 1)
-            database.ref("users").child(this.userID).child("projects").off();
+        if (this.userID.length > 1) {
+            this.userRef.off();
+            Object.keys(this.projects)
+                .forEach((key) =>
+                    database.ref("documents").child(key).child("metadata").off())
+        }
     },
     removeDocumentListeners() {
         this.projectRef.child("users").off();
