@@ -30,7 +30,7 @@ function CardContainer(props) {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent && e.target.offsetParent.className === "card-container") {
                         var x = Math.floor(e.clientX / store.zoom + e.target.offsetParent.scrollLeft);
-                        var y = Math.floor(e.clientY / store.zoom + e.target.offsetParent.scrollTop - 60);
+                        var y = Math.floor(e.clientY / store.zoom + e.target.offsetParent.scrollTop - 40);
                         console.log("double click at", x, ",", y);
                         store.addCard({ x: x, y: y }, { width: 310, height: 200 }, "root", "blank")
                     }
@@ -44,7 +44,7 @@ function CardContainer(props) {
                     if (event.target.offsetParent && event.target.offsetParent.className === "card-container") {
                         store.saveCursorPosition(
                             event.clientX + event.target.offsetParent.scrollLeft,
-                            event.clientY + event.target.offsetParent.scrollTop - 60
+                            event.clientY + event.target.offsetParent.scrollTop - 40
                         );
                     }
                 }}

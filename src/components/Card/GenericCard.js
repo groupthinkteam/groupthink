@@ -97,7 +97,7 @@ const GenericCard = props => {
                     event.preventDefault();
                     var cardContainerElement = document.querySelector('.card-container');
                     let x = event.clientX + cardContainerElement.scrollLeft - me.position.x;
-                    let y = event.clientY + cardContainerElement.scrollTop - 60 - me.position.y;
+                    let y = event.clientY + cardContainerElement.scrollTop - 40 - me.position.y;
                     setContextMenu({ x: Math.abs(x), y: Math.abs(y) })
                     setShowPopper(false);
                 }}
