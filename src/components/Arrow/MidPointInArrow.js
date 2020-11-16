@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { gsap, Draggable } from "gsap/all";
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/hook';
@@ -6,34 +6,21 @@ import { useStore } from '../../store/hook';
 gsap.registerPlugin(Draggable)
 
 const MidPointInArrow = (props) => {
-    const [collapse, setCollapse] = useState(false);
     const { id, midPoint, linePathDragging } = props;
     const store = useStore();
-    const childArray = [];
-
-    const collapseChildren = (childrenId,startegy) => {
-        if (childrenId) {
-            childArray.push(childrenId);
-            const children = store.cards[childrenId];
-            startegy? store.expandCard(childrenId) : store.collapseCard(childrenId);
-            if (children.children) {
-                Object.keys(children.children).map(childId=>collapseChildren(childId))
-            }
-            else{
-                return false
-            }
-        }
+    const collapseChildren = useCallback((childrenId) => {
+        const currentCard = store.cards[childrenId];
+        if (childrenId !== id)
+            currentCard?.isCollapse ?
+                store.expandCard(childrenId) : store.collapseCard(childrenId);
         else {
-            return false
+            store.collapsedID[id] ?
+                store.expandCard(id, 'main') : store.collapseCard(id, 'main')
         }
-    }
-    
-    if (collapse ) {
-        collapseChildren(props.id);
-    }
-    else {
-        //collapseChildren(props.id,'expand');
-    }
+        if (currentCard?.children) {
+            Object.keys(currentCard.children).map(childId => collapseChildren(childId))
+        }
+    }, [id, store])
 
     useEffect(() => {
         const mid = Draggable.create("#mid".concat(id),
@@ -45,14 +32,14 @@ const MidPointInArrow = (props) => {
                     gsap.set("#mid".concat(id), { top: midPoint.y, left: midPoint.x })
                     mid[0].update()
                 },
-                onClick: function () { console.log("MID CALLED"); setCollapse(!collapse); }
+                onClick: function () { console.log("MID CALLED"); collapseChildren(id) }
             })
         return () => { if (mid[0]) mid[0].kill() }
-    }, [id, midPoint.x, midPoint.y, collapse]);
+    }, [id, midPoint.x, midPoint.y, collapseChildren]);
     return (
         <svg style={{ position: "absolute", overflow: "visible" }}>
-            { collapse ? "-" : "+"}
             <circle
+                onClick={() => { console.log("CIRCLE IS CLICKED") }}
                 style={{ position: "absolute" }}
                 id={"mid".concat(id)}
                 cx={linePathDragging ? linePathDragging.x : midPoint.x}
@@ -60,7 +47,7 @@ const MidPointInArrow = (props) => {
                 r="5"
                 stroke="black"
                 strokeWidth="2px"
-                fill="#0fa958" />
+                fill={linePathDragging ? "blue" : "#0fa958"} />
         </svg>
     )
 }

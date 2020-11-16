@@ -1,10 +1,10 @@
-import React ,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { gsap, Draggable } from "gsap/all";
 
 gsap.registerPlugin(Draggable)
 
 const HeadArrow = (props) => {
-    const { id, head, setLinePathDragging, headPath } = props;
+    const { id, head, setLinePathDragging,  linePathDragging } = props;
     useEffect(() => {
         const headPath = Draggable.create("#headPath".concat(id),
             {
@@ -17,7 +17,7 @@ const HeadArrow = (props) => {
                 },
                 onDrag: function () {
                     console.log("HEAD DRAG")
-                    setLinePathDragging({ x: this.x, y: this.y })
+                    setLinePathDragging({ x: this.x, y: this.y, head: true })
                 },
                 onDragEnd: function () {
                     console.log("HEAD DRAG END")
@@ -30,15 +30,24 @@ const HeadArrow = (props) => {
             })
         return () => { if (headPath[0]) headPath[0].kill() }
     }, [head.x, head.y, id, setLinePathDragging]);
+    
+      
     return (
-        <svg style={{ opacity: 0.4, position: "absolute", overflow: "visible" }}>
-            <path
-                id={"headPath".concat(id)}
-                strokeWidth="5"
-                fill="none"
-                stroke="blue"
-                d={headPath} />
-        </svg>
+        <>
+            
+            <svg style={{ display:linePathDragging?.tail ? 'none':'', position: "absolute", overflow: "visible" }} >
+                <circle
+                    style={{ position: "absolute" }}
+                    id={"headPath".concat(id)}
+                    cx={linePathDragging ? linePathDragging.x : head.x}
+                    cy={linePathDragging ? linePathDragging.y : head.y}
+                    r="5"
+                    stroke="black"
+                    strokeWidth="2px"
+                    fill={linePathDragging ? "blue" :"#0fa958"}
+                />
+            </svg>
+        </>
     )
 }
 export default HeadArrow;

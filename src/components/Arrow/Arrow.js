@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { gsap, Draggable } from "gsap/all";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
@@ -12,56 +12,46 @@ gsap.registerPlugin(Draggable)
  * connects a child and a parent. consts the user assign a new parent for the child.
  * @param {*} props - id, head, tail
  */
-const Arrow = observer((props) => {
-
-    if (props.id === "root") return null;
-
+const Arrow = (props) => {
+    
     const [linePathDragging, setLinePathDragging] = useState(false);
     const store = useStore();
-
+    if (props.id === "root") return null;
     const child = store.cards[props.id];
 
     if (child.parent === "root") return null;
-    
+    if(child.isCollapse) return null;
     const parent = store.cards[child.parent];
 
     const head = {
         x: parent.position.x + parent.size.width / 2,
-        y: parent.position.y + parent.size.height + 5,
+        y: parent.position.y + parent.size.height + 9,
     }
     const tail = {
         x: child.position.x + child.size.width / 2,
-        y: child.position.y
+        y: child.position.y - 7
     }
     const midPoint = {
         x: (tail.x + head.x) / 2,
         y: (tail.y + head.y) / 2
     }
 
-    const reparentCard = useCallback((tailId) => {
-        store.hitTestCards.forEach(cardID => {
-            if (tailId[0].hitTest("#".concat(cardID))) {
-                console.log("i hit", cardID)
-                // call reparent
-                store.reparentCard(props.id, cardID)
-            }
-        });
-    }, [props.id, store]);
+    let path;
 
-    let tailPath, headPath;
-
-    if (linePathDragging) {
-        headPath = updatePath(linePathDragging.x, linePathDragging.y, linePathDragging.path ? tail.x : head.x, linePathDragging.path ? tail.y : head.y, 'tail');
-        tailPath = updatePath(linePathDragging.x, linePathDragging.y, linePathDragging.path ? tail.x : head.x, linePathDragging.path ? tail.y : head.y, 'tail');
+    if (linePathDragging?.tail) {
+        path = updatePath(linePathDragging.x, linePathDragging.y, tail.x, tail.y)
+    }
+    else if (linePathDragging?.head) {
+        path = updatePath(linePathDragging.x, linePathDragging.y, head.x, head.y)
     }
     else {
-        headPath = updatePath(head.x, head.y, midPoint.x, midPoint.y, 'tail')
-        tailPath = updatePath(midPoint.x, midPoint.y, tail.x, tail.y)
+        path = updatePath(head.x, head.y, tail.x, tail.y - 5)
     }
 
-    function updatePath(x1, y1, x4, y4, path) {
+
+    function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
-        var bezierWeight = path ? 0 : 0.1;
+        var bezierWeight = 0;
         var dx = Math.abs(x4 - x1) * bezierWeight;
         var x2 = x1 - dx;
         var x3 = x4 + dx;
@@ -71,13 +61,19 @@ const Arrow = observer((props) => {
     console.log("ARROW ", linePathDragging)
     return (
         <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
+            <svg style={{ opacity: 0.4, position: "absolute", overflow: "visible" }}>
+                <path
+                    strokeWidth="5"
+                    fill="none"
+                    stroke={linePathDragging ? "blue" : "green"}
+                    d={path} />
+            </svg>
             <HeadArrow
                 id={props.id}
                 head={head}
-                headPath={headPath}
                 setLinePathDragging={setLinePathDragging}
             />
-            <MidPointInArrow 
+            <MidPointInArrow
                 id={props.id}
                 midPoint={midPoint}
                 linePathDragging={linePathDragging}
@@ -85,12 +81,10 @@ const Arrow = observer((props) => {
             <TailArrow
                 id={props.id}
                 tail={tail}
-                tailPath={tailPath}
                 setLinePathDragging={setLinePathDragging}
-                reparentCard={reparentCard}
             />
         </div>
     )
-});
+};
 
-export default Arrow
+export default observer(Arrow)
