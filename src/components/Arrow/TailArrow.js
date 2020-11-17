@@ -25,20 +25,17 @@ const TailArrow = (props) => {
                 },
                 onDragEnd: function () {
                     console.log("TAIL DRAG END")
-                    store.hitTestCards.every(cardID => {
+                    store.hitTestCards.filter(cardID=>cardID!==id).every(cardID => {
                         console.log("    ", cardID)
                         if (this.hitTest("#".concat(cardID))) {
                             console.log("i hit", cardID)
                             // call reparent
-                            store.reparentCard(id, cardID);
+                            store.reparentCard(id, cardID)
                             return false
                         }
-                        else{
-                            console.log("DRAGGED ON CARD_FILLER")
                             return true
-                        }
                     });
-                    tailArrows[0].update();
+                    // tailArrows[0].update();
                     setLinePathDragging(false);
                 },
                 onClick: () => {
@@ -51,6 +48,7 @@ const TailArrow = (props) => {
         
             <svg  style={{ zIndex: -1, position: "absolute", overflow: "visible" }}>
                 <circle
+                    id={"tail".concat(props.id)}
                     style={{ position: "absolute" }}
                     cx={linePathDragging ? linePathDragging.x : tail.x}
                     cy={linePathDragging ? linePathDragging.y : tail.y}

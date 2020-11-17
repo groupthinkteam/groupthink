@@ -24,13 +24,15 @@ const HeadArrow = (props) => {
                 },
                 onDragEnd: function () {
                     console.log("HEAD DRAG END")
-                    store.hitTestCards.forEach(cardID => {
+                    store.hitTestCards.every(cardID => {
                         console.log("CARDID ",cardID,headArrow[0].hitTest(`#${cardID}`))
-                        if(headArrow[0].hitTest("#".concat(cardID))) {
+                        if(this.hitTest("#".concat(cardID))) {
                             console.log("i hit", cardID)
                             // call reparent
                             store.reparentCard(id, cardID)
+                            return false
                         }
+                        return true
                     });
                     headArrow[0].update();
                     setLinePathDragging(false);

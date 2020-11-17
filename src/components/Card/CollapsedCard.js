@@ -2,14 +2,14 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect,useRef } from 'react';
 import { useStore } from '../../store/hook';
 import { gsap, Draggable } from "gsap/all";
-
+import "../../styles/Cards/GenericCard.scss";
 gsap.registerPlugin(Draggable);
 
 const CollapsedCard = (props) =>{
     const store = useStore();
     const me = store.cards[props.id];
     const cardRef = useRef(null);
-    let count = 0;
+    let count = 1;
     const countCollapseCard = (id) =>{
         const currentCard = store.cards[id];
         if(currentCard?.children)
@@ -57,7 +57,7 @@ const CollapsedCard = (props) =>{
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: () => { cardRef.current.focus(); },
+                    onClick: () => { },
                     onDragStart: dragStart,
                     onDrag: function drag() {
                         
@@ -69,11 +69,11 @@ const CollapsedCard = (props) =>{
                 })
             return () => y[0].kill();
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [me.type, store.currentActive]
+        }, []
     );
 
     return (
-        <div id={props.id} ref={cardRef} style={{
+        <div id={props.id}  className="generic-card" style={{
             position: "absolute",
             opacity: 0,
             width: '200px',
@@ -82,7 +82,7 @@ const CollapsedCard = (props) =>{
             tabIndex: -1,
             backgroundColor:'white'
         }}>
-            {countCollapseCard(props.id)+1} Cards are Collapsed
+            {countCollapseCard(props.id)} Cards are Collapsed
         </div>
     )
 }
