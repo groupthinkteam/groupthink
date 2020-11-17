@@ -10,13 +10,13 @@ const CollapsedCard = (props) =>{
     const me = store.cards[props.id];
     const cardRef = useRef(null);
     let count = 0;
-    const countCollapse = (id) =>{
+    const countCollapseCard = (id) =>{
         const currentCard = store.cards[id];
         if(currentCard?.children)
         {
             count = count+Object.keys(currentCard.children).length
             Object.keys(currentCard.children).forEach(cardID=>{
-                countCollapse(cardID)
+                countCollapseCard(cardID)
             });
             return count;
         }
@@ -29,7 +29,8 @@ const CollapsedCard = (props) =>{
     useEffect(()=>{ gsap.set("#collapsed".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
     , [props.id, me.position])
     // if size changes, animate it
-    useEffect(() => { gsap.set("#collapsed".concat(props.id), me.size) }, [me, props.id])
+    useEffect(() => { gsap.set("#collapsed".concat(props.id),{width: me.size.width,
+    height: '50px'}) }, [me, props.id])
 
     useEffect(
         () => {
@@ -59,6 +60,7 @@ const CollapsedCard = (props) =>{
                     onClick: () => { cardRef.current.focus(); },
                     onDragStart: dragStart,
                     onDrag: function drag() {
+                        
                         store.changePosition(props.id,{x: this.x, y: this.y })
                     },
                     onDragEnd: dragStop,
@@ -74,12 +76,13 @@ const CollapsedCard = (props) =>{
         <div id={'collapsed'.concat(props.id)} style={{
             position: "absolute",
             opacity: 0,
-            width: me.size.width,
-            height: me.size.height,
+            width: '200px',
+            height: '50px',
             borderTopLeftRadius: me.editingUser ? "0px" : "6px",
-            tabIndex: -1
+            tabIndex: -1,
+            backgroundColor:'white'
         }}>
-            {countCollapse(props.id)+1} Cards are Collapsed
+            {countCollapseCard(props.id)+1} Cards are Collapsed
         </div>
     )
 }

@@ -127,7 +127,8 @@ const GenericCard = props => {
                     width: me.size.width,
                     height: me.size.height,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
-                    tabIndex: -1
+                    tabIndex: -1,
+                    zIndex:1
                 }}
             >
                 <div style={{ zIndex: 1, position: "absolute", padding: '10px', right: '17px', width: '35px' }} onClick={() => { setContextMenu(null); setShowPopper(!showPopper); }}>

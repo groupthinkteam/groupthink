@@ -6,8 +6,10 @@ import { useStore } from '../../store/hook';
 gsap.registerPlugin(Draggable)
 
 const MidPointInArrow = (props) => {
+
     const { id, midPoint, linePathDragging } = props;
     const store = useStore();
+
     const collapseChildren = useCallback((childrenId) => {
         const currentCard = store.cards[childrenId];
         if (childrenId !== id)
@@ -32,14 +34,13 @@ const MidPointInArrow = (props) => {
                     gsap.set("#mid".concat(id), { top: midPoint.y, left: midPoint.x })
                     mid[0].update()
                 },
-                onClick: function () { console.log("MID CALLED"); collapseChildren(id) }
+                onClick: function () { collapseChildren(id) }
             })
         return () => { if (mid[0]) mid[0].kill() }
     }, [id, midPoint.x, midPoint.y, collapseChildren]);
     return (
-        <svg style={{ position: "absolute", overflow: "visible" }}>
+        <svg style={{ position: "absolute", overflow: "visible",zIndex:-1 }}>
             <circle
-                onClick={() => { console.log("CIRCLE IS CLICKED") }}
                 style={{ position: "absolute" }}
                 id={"mid".concat(id)}
                 cx={linePathDragging ? linePathDragging.x : midPoint.x}

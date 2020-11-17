@@ -20,7 +20,9 @@ const Arrow = (props) => {
     const child = store.cards[props.id];
 
     if (child.parent === "root") return null;
+    
     if(child.isCollapse) return null;
+
     const parent = store.cards[child.parent];
 
     const head = {
@@ -58,10 +60,10 @@ const Arrow = (props) => {
 
         return `M${x1} ${y1} C ${x2} ${y1} ${x3} ${y4} ${x4} ${y4}`;
     }
-    console.log("ARROW ", linePathDragging)
+    // console.log("ARROW ", linePathDragging)
     return (
         <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
-            <svg style={{ opacity: 0.4, position: "absolute", overflow: "visible" }}>
+            <svg style={{zIndex:-1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
                 <path
                     strokeWidth="5"
                     fill="none"

@@ -9,14 +9,14 @@ const TailArrow = (props) => {
     const { id, tail, setLinePathDragging, linePathDragging} = props;
     const store = useStore();
     useEffect(() => {
-        const tailPath = Draggable.create("#tailPath".concat(id),
+        const tailArrows = Draggable.create("#tailArrow".concat(id),
             {
                 type: "top,left",
                 cursor: 'pointer',
                 activeCursor: "pointer",
                 onDragStart: function () {
-                    gsap.set("#tailPath".concat(id), { top: tail.y, left: tail.x });
-                    tailPath[0].update()
+                    gsap.set("#tailArrow".concat(id), { top: tail.y, left: tail.x });
+                    tailArrows[0].update()
                 },
                 onDrag: function () {
                     console.log("TAIL DRAG")
@@ -25,28 +25,28 @@ const TailArrow = (props) => {
                 onDragEnd: function () {
                     console.log("TAIL DRAG END")
                     store.hitTestCards.forEach(cardID => {
-                        console.log("CARDID ",cardID,tailPath[0].hitTest(`#${cardID}`))
-                        if(tailPath[0].hitTest("#".concat(cardID))) {
+                        console.log("CARDID ",cardID,tailArrows[0].hitTest(`.container-filler`))
+                        if(tailArrows[0].hitTest("#".concat(cardID))) {
                             console.log("i hit", cardID)
                             // call reparent
                             store.reparentCard(id, cardID)
                         }
                     });
-                    tailPath[0].update();
+                    tailArrows[0].update();
                     setLinePathDragging(false);
                 },
                 onClick: () => {
                     //TODO :- Collapse Function
                 }
             })
-        return () => { if (tailPath[0]) tailPath[0].kill() }
+        return () => { if (tailArrows[0]) tailArrows[0].kill() }
     }, [id, tail.x, tail.y, setLinePathDragging, props.id ,store]);
     return (
         <>
-            <svg style={{ display:linePathDragging?.head ? 'none':'' , position: "absolute", overflow: "visible" }}>
+            <svg style={{zIndex:-1, position: "absolute", overflow: "visible" }}>
                 <circle
                     style={{ position: "absolute" }}
-                    id={"tailPath".concat(id)}
+                    id={"tailArrow".concat(id)}
                     cx={linePathDragging ? linePathDragging.x : tail.x}
                     cy={linePathDragging ? linePathDragging.y : tail.y}
                     r="5"

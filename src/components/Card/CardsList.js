@@ -4,7 +4,7 @@ import { useStore } from "../../store/hook"
 import CollapsedCard from "./CollapsedCard";
 import GenericCard from "./GenericCard"
 
-function CardsList(props) {
+function CardsList() {
     let store = useStore();
     
     return(
@@ -12,7 +12,7 @@ function CardsList(props) {
             {
                 Object.entries(store.cards)
                     .filter(([id, value]) => id && id !== "root" && !value?.isCollapse)
-                    .map(([id, value]) => {
+                    .map(([id, _]) => {
                         if(store.collapsedID[id])
                         return (<CollapsedCard key={id} id={id} cardsCollapsed={store.collapsedID[id]}/>)
                         else
