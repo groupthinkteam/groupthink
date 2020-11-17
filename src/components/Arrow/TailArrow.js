@@ -40,7 +40,7 @@ const TailArrow = (props) => {
                 }
             })
         return () => { if (tailArrows[0]) tailArrows[0].kill() }
-    }, [id, tail.x, tail.y, setLinePathDragging, props.id ,store]);
+    }, [id, tail.x, tail.y, setLinePathDragging,store]);
     return (
         <>
             <svg style={{zIndex:-1, position: "absolute", overflow: "visible" }}>

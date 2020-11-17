@@ -73,7 +73,7 @@ const CollapsedCard = (props) =>{
     );
 
     return (
-        <div id={'collapsed'.concat(props.id)} style={{
+        <div id={'collapsed'.concat(props.id)} ref={cardRef} style={{
             position: "absolute",
             opacity: 0,
             width: '200px',

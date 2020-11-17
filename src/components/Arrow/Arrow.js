@@ -16,13 +16,10 @@ const Arrow = (props) => {
     
     const [linePathDragging, setLinePathDragging] = useState(false);
     const store = useStore();
-    if (props.id === "root") return null;
     const child = store.cards[props.id];
 
     if (child.parent === "root") return null;
     
-    if(child.isCollapse) return null;
-
     const parent = store.cards[child.parent];
 
     const head = {

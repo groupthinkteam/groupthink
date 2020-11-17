@@ -7,7 +7,11 @@ function ArrowList(props) {
     let store = useStore();
     return (
         <div className="arrows">
-            {Object.keys(store.cards).map((id) => <Arrow key={"arrow".concat(id)} id={"".concat(id)} />)}
+            {
+                Object.entries(store.cards)
+                    .filter(([id, value]) => id && id !== "root" && !value?.isCollapse)
+                    .map(([id, _]) => <Arrow key={"arrow".concat(id)} id={"".concat(id)} />)
+            }
         </div>
     )
 }
