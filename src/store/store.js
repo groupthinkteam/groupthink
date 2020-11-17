@@ -14,6 +14,7 @@ export var storeObject = {
     projectID: null,
     projectMetadata: null,
     currentActive: null,
+    collapsedID :{},
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -48,6 +49,7 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
+    
     getActionQuery(callback) {
         database.ref("actionsearch")
             .once('value').then(snap => { callback(snap.val()) })
@@ -398,6 +400,15 @@ export var storeObject = {
                     })
             }).catch((error) => { console.log("failed to update because", error); callback(false) });
     },
+    collapseCard(id,strategy)
+    {
+        strategy ? this.collapsedID[id]=strategy :this.cards[id]["isCollapse"] = true;
+    },
+    expandCard(id,strategy)
+    {
+        strategy ? this.collapsedID[id]=null : this.cards[id]["isCollapse"] = null;
+    },
+    
     addUserEditing(id) {
         this.projectRef.child('nodes').child(id).child("editing")
             .set({ [this.userID]: servertime })

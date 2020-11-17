@@ -1,0 +1,55 @@
+import React, { useCallback, useEffect } from 'react';
+import { gsap, Draggable } from "gsap/all";
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../store/hook';
+
+gsap.registerPlugin(Draggable)
+
+const MidPointInArrow = (props) => {
+
+    const { id, midPoint, linePathDragging } = props;
+    const store = useStore();
+
+    const collapseChildren = useCallback((childrenId) => {
+        const currentCard = store.cards[childrenId];
+        if (childrenId !== id)
+            currentCard?.isCollapse ?
+                store.expandCard(childrenId) : store.collapseCard(childrenId);
+        else {
+            store.collapsedID[id] ?
+                store.expandCard(id, 'main') : store.collapseCard(id, 'main')
+        }
+        if (currentCard?.children) {
+            Object.keys(currentCard.children).map(childId => collapseChildren(childId))
+        }
+    }, [id, store])
+
+    useEffect(() => {
+        const mid = Draggable.create("#mid".concat(id),
+            {
+                type: "top,left",
+                cursor: 'pointer',
+                activeCursor: "pointer",
+                onDragStart: function () {
+                    gsap.set("#mid".concat(id), { top: midPoint.y, left: midPoint.x })
+                    mid[0].update()
+                },
+                onClick: function () { collapseChildren(id) }
+            })
+        return () => { if (mid[0]) mid[0].kill() }
+    }, [id, midPoint.x, midPoint.y, collapseChildren]);
+    return (
+        <svg style={{ position: "absolute", overflow: "visible",zIndex:-1 }}>
+            <circle
+                style={{ position: "absolute" }}
+                id={"mid".concat(id)}
+                cx={linePathDragging ? linePathDragging.x : midPoint.x}
+                cy={linePathDragging ? linePathDragging.y : midPoint.y}
+                r="5"
+                stroke="black"
+                strokeWidth="2px"
+                fill={linePathDragging ? "blue" : "#0fa958"} />
+        </svg>
+    )
+}
+export default observer(MidPointInArrow);

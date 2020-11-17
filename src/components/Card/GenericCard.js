@@ -39,9 +39,7 @@ const GenericCard = props => {
     useEffect(
         () => {
             // warning: can't use arrow functions here since that messes up the "this" binding
-            function drag() {
-                me.position = { x: this.x, y: this.y }
-            }
+            
             function dragStop() {
                 gsap.to("#".concat(props.id), {
                     boxShadow: "none",
@@ -65,7 +63,9 @@ const GenericCard = props => {
                     dragClickables: false,
                     onClick: () => { cardRef.current.focus(); setContextMenu(null); setShowPopper(false); },
                     onDragStart: dragStart,
-                    onDrag: drag,
+                    onDrag: function drag() {
+                        store.changePosition(props.id,{x: this.x, y: this.y })
+                    },
                     onDragEnd: dragStop,
                     cursor: "grab",
                     activeCursor: "grabbing"
@@ -93,6 +93,7 @@ const GenericCard = props => {
             <div id={props.id} tabIndex={0}
                 className="generic-card"
                 ref={cardRef}
+                
                 onContextMenu={(event) => {
                     event.preventDefault();
                     var cardContainerElement = document.querySelector('.card-container');
@@ -127,6 +128,7 @@ const GenericCard = props => {
                     height: me.size.height,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
+                    zIndex:1
                 }}
             >
                 <button className="kebab" onClick={() => { setContextMenu(null); setShowPopper(!showPopper); }}>

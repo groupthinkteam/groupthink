@@ -7,8 +7,6 @@ import FileCardList from './MenuList/FileCardList';
 import AudioCardList from './MenuList/AudioCardList';
 export default function menuListChooser(type) {
     switch (type) {
-        case "blank":
-            return 'BlankCard';
         case "text":
             return TextCardList;
         case "todo":
