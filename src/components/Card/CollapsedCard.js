@@ -26,10 +26,10 @@ const CollapsedCard = (props) =>{
         }
         
     }
-    useEffect(()=>{ gsap.set("#collapsed".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
+    useEffect(()=>{ gsap.set("#".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
     , [props.id, me.position])
     // if size changes, animate it
-    useEffect(() => { gsap.set("#collapsed".concat(props.id),{width: me.size.width,
+    useEffect(() => { gsap.set("#".concat(props.id),{width: me.size.width,
     height: '50px'}) }, [me, props.id])
 
     useEffect(
@@ -37,24 +37,24 @@ const CollapsedCard = (props) =>{
             // warning: can't use arrow functions here since that messes up the "this" binding
             
             function dragStop() {
-                gsap.to("#collapsed".concat(props.id), {
+                gsap.to("#".concat(props.id), {
                     boxShadow: "none",
                     duration: 0.5
                 })
                 store.savePosition(props.id, { x: this.x, y: this.y });
             }
             function dragStart() {
-                gsap.to("#collapsed".concat(props.id), {
+                gsap.to("#".concat(props.id), {
                     boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
                     duration: 0.5
                 })
             }
             let y = Draggable.create(
-                "#collapsed".concat(props.id),
+                "#".concat(props.id),
                 {
                     autoScroll: 1,
                     allowContextMenu: true,
-                    trigger: "#collapsed".concat(props.id),
+                    trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
                     onClick: () => { cardRef.current.focus(); },
@@ -73,7 +73,7 @@ const CollapsedCard = (props) =>{
     );
 
     return (
-        <div id={'collapsed'.concat(props.id)} ref={cardRef} style={{
+        <div id={props.id} ref={cardRef} style={{
             position: "absolute",
             opacity: 0,
             width: '200px',

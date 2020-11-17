@@ -25,6 +25,9 @@ const DashboardCard = props => {
                 <div className="card-description">
                     created <TimeAgo date={me.metadata.datecreated} />
                 </div>
+                <div>
+                    {props.shared ? "shared" :null}
+                </div>
                 <Button
                     // className="custom_btn"
                     handleClick={() => deleteProject(props.id)}>

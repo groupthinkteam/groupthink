@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import { gsap, Draggable } from "gsap/all";
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../store/hook';
 
 gsap.registerPlugin(Draggable)
 
 const HeadArrow = (props) => {
     const { id, head, setLinePathDragging, linePathDragging } = props;
+    const store = useStore();
     useEffect(() => {
         const headArrow = Draggable.create("#headArrow".concat(id),
             {
@@ -21,6 +24,14 @@ const HeadArrow = (props) => {
                 },
                 onDragEnd: function () {
                     console.log("HEAD DRAG END")
+                    store.hitTestCards.forEach(cardID => {
+                        console.log("CARDID ",cardID,headArrow[0].hitTest(`#${cardID}`))
+                        if(headArrow[0].hitTest("#".concat(cardID))) {
+                            console.log("i hit", cardID)
+                            // call reparent
+                            store.reparentCard(id, cardID)
+                        }
+                    });
                     headArrow[0].update();
                     setLinePathDragging(false);
                 },
@@ -29,7 +40,7 @@ const HeadArrow = (props) => {
                 }
             })
         return () => { if (headArrow[0]) headArrow[0].kill() }
-    }, [head.x, head.y, id, setLinePathDragging]);
+    }, [head.x, head.y, id, setLinePathDragging,store]);
 
 
     return (
@@ -50,4 +61,4 @@ const HeadArrow = (props) => {
         </>
     )
 }
-export default HeadArrow;
+export default observer( HeadArrow);

@@ -12,16 +12,19 @@ gsap.registerPlugin(Draggable)
  * connects a child and a parent. consts the user assign a new parent for the child.
  * @param {*} props - id, head, tail
  */
+
 const Arrow = (props) => {
-    
+
     const [linePathDragging, setLinePathDragging] = useState(false);
     const store = useStore();
     const child = store.cards[props.id];
 
+    if (!child) return null
     if (child.parent === "root") return null;
-    
-    const parent = store.cards[child.parent];
 
+    const parent = store.cards[child.parent];
+    //console.log("ARROW ", child.parent, child, parent)
+    if (!parent) return null;
     const head = {
         x: parent.position.x + parent.size.width / 2,
         y: parent.position.y + parent.size.height + 9,
@@ -60,28 +63,48 @@ const Arrow = (props) => {
     // console.log("ARROW ", linePathDragging)
     return (
         <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
-            <svg style={{zIndex:-1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
+            <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
                 <path
                     strokeWidth="5"
                     fill="none"
                     stroke={linePathDragging ? "blue" : "green"}
                     d={path} />
             </svg>
-            <HeadArrow
-                id={props.id}
-                head={head}
-                setLinePathDragging={setLinePathDragging}
-            />
-            <MidPointInArrow
-                id={props.id}
-                midPoint={midPoint}
-                linePathDragging={linePathDragging}
-            />
             <TailArrow
                 id={props.id}
                 tail={tail}
                 setLinePathDragging={setLinePathDragging}
             />
+            {
+                linePathDragging?.head || !linePathDragging ?
+                    <HeadArrow
+                        id={props.id}
+                        head={head}
+                        setLinePathDragging={setLinePathDragging}
+                    /> : null
+            }
+            <MidPointInArrow
+                id={props.id}
+                midPoint={midPoint}
+                linePathDragging={linePathDragging}
+            />
+            {
+                linePathDragging?.tail || !linePathDragging ? 
+                    <svg style={{ zIndex: -1, position: "absolute", overflow: "visible" }}>
+                        <circle
+                            id={"tail".concat(props.id)}
+                            style={{ position: "absolute" }}
+                            cx={linePathDragging ? linePathDragging.x : tail.x}
+                            cy={linePathDragging ? linePathDragging.y : tail.y}
+                            r="5"
+                            stroke="black"
+                            strokeWidth="2px"
+                            fill={linePathDragging ? "blue" : "#0fa958"} 
+                        />
+                    </svg> 
+                    :null
+            }
+
         </div>
     )
 };

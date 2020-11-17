@@ -62,6 +62,10 @@ const Dashboard = observer(() => {
               ? store.ownProjects.map((id) => <DashboardCard key={id} id={id} onOpen={() => onOpen(id)} />)
               : null
             }
+            {store.sharedProjects.length > 0
+              ? store.sharedProjects.map((id) => <DashboardCard shared key={id} id={id} onOpen={() => onOpen(id)} />)
+              : null
+            }
           </div>
         </div>
         <div className="recent-activity-section">

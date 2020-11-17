@@ -96,7 +96,7 @@ const GenericCard = props => {
                 
                 onContextMenu={(event) => {
                     event.preventDefault();
-                    var cardContainerElement = document.querySelector('.card-container');
+                    var cardContainerElement = document.querySelector('#root');
                     let x = event.clientX + cardContainerElement.scrollLeft - me.position.x;
                     let y = event.clientY + cardContainerElement.scrollTop - 40 - me.position.y;
                     setContextMenu({ x: Math.abs(x), y: Math.abs(y) })

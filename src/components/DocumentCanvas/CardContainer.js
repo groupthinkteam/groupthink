@@ -25,7 +25,7 @@ function CardContainer(props) {
                 onChange={e => store.zoom = e.target.value}
             />
             <div className="container-filler"
-                style={{ ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${store.zoom})` }}
+                style={{ ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0 , transformOrigin: "0% 0%", transform: `scale(${store.zoom})`}}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent && e.target.offsetParent.className === "card-container") {
