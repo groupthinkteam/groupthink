@@ -14,6 +14,7 @@ const HeadArrow = (props) => {
                 type: "top,left",
                 cursor: 'pointer',
                 activeCursor: "pointer",
+                autoScroll:1,
                 onDragStart: function () {
                     gsap.set("#headArrow".concat(id), { top: head.y, left: head.x });
                     headArrow[0].update()

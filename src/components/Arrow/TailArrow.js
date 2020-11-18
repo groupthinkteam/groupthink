@@ -13,6 +13,7 @@ const TailArrow = (props) => {
             {
                 type: "top,left",
                 cursor: 'pointer',
+                autoScroll:1,
                 activeCursor: "pointer",
                 onDragStart: function () {
                     gsap.set("#tail".concat(id), { top: tail.y, left: tail.x });

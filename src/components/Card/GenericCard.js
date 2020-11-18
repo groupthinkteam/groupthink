@@ -97,7 +97,7 @@ const GenericCard = props => {
                 
                 onContextMenu={(event) => {
                     event.preventDefault();
-                    var cardContainerElement = document.querySelector('#root');
+                    var cardContainerElement = document.querySelector('.card-container');
                     let x = event.clientX + cardContainerElement.scrollLeft - me.position.x;
                     let y = event.clientY + cardContainerElement.scrollTop - 40 - me.position.y;
                     setContextMenu({ x: Math.abs(x), y: Math.abs(y) })
@@ -152,8 +152,8 @@ const GenericCard = props => {
                 <div className="blank-filler" ref={blankRef}
                     style={
                         contextMenu ?
-                            { position: "absolute", top: contextMenu.y, left: contextMenu.x }
-                            : { position: "absolute" }
+                            {zIndex:1, position: "absolute", top: contextMenu.y, left: contextMenu.x }
+                            : {zIndex:1, position: "absolute" }
                     }
                 />
                 {contextMenu || showPopper ?
