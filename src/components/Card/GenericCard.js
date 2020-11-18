@@ -24,6 +24,7 @@ const GenericCard = props => {
     const blankRef = useRef(null);
     const [showPopper, setShowPopper] = useState(false);
     const [contextMenu, setContextMenu] = useState(null);
+    const [showLoader, setShowLoader] = useState(false);
     const closeContextMenu = () => {
         setShowPopper(false);
         setContextMenu(null);
@@ -131,6 +132,13 @@ const GenericCard = props => {
                     zIndex:1
                 }}
             >
+                {showLoader 
+                ? <div className="action-loader">
+                    <div className="loader-text">
+                    ▶️ Running Action... 
+                    </div>
+                </div> 
+                : null}
                 <button className="kebab" onClick={() => { setContextMenu(null); setShowPopper(!showPopper); }}>
                     <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
                 </button>
@@ -160,7 +168,7 @@ const GenericCard = props => {
                         zIndex={1}
                     >
                         <div>
-                            <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store} />
+                            <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store} setShowLoader={(bool) => setShowLoader(bool)}/>
                             <ReplaceFileList type={me.type} id={props.id} typeAPI={store} />
                             <a href="/dashboard" style={{ color: "black" }}>edit</a>
                             <hr />

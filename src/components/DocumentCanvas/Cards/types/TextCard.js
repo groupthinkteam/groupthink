@@ -19,7 +19,10 @@ function TextCard(props) {
         if (store.currentActive === props.id && quillRef.current) {
             quillRef.current.focus();
             var quillEditor = quillRef.current.getEditor();
-            quillEditor.setSelection(quillEditor.getSelection().index + 10, 0);
+            if (quillEditor){
+                quillEditor.setSelection(quillEditor.getSelection().index + 10, 0);
+            }
+            
         }
         
     },[props.id,store.currentActive]);
