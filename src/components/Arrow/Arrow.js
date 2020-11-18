@@ -23,7 +23,7 @@ const Arrow = (props) => {
     if (child.parent === "root") return null;
     
     const parent = store.cards[child.parent];
-    console.log("ARROW ",child.parent,child ,parent)
+    
     if(!parent) return null;
     const head = {
         x: parent.position.x + parent.size.width / 2,

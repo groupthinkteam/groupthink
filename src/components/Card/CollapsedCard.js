@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect,useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useStore } from '../../store/hook';
 import { gsap, Draggable } from "gsap/all";
 import "../../styles/Cards/GenericCard.scss";
@@ -8,7 +8,6 @@ gsap.registerPlugin(Draggable);
 const CollapsedCard = (props) =>{
     const store = useStore();
     const me = store.cards[props.id];
-    const cardRef = useRef(null);
     let count = 1;
     const countCollapseCard = (id) =>{
         const currentCard = store.cards[id];

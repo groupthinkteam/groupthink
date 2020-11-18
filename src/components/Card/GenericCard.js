@@ -40,7 +40,7 @@ const GenericCard = props => {
     useEffect(
         () => {
             // warning: can't use arrow functions here since that messes up the "this" binding
-            
+
             function dragStop() {
                 gsap.to("#".concat(props.id), {
                     boxShadow: "none",
@@ -65,7 +65,7 @@ const GenericCard = props => {
                     onClick: () => { cardRef.current.focus(); setContextMenu(null); setShowPopper(false); },
                     onDragStart: dragStart,
                     onDrag: function drag() {
-                        store.changePosition(props.id,{x: this.x, y: this.y })
+                        store.changePosition(props.id, { x: this.x, y: this.y })
                     },
                     onDragEnd: dragStop,
                     cursor: "grab",
@@ -94,13 +94,16 @@ const GenericCard = props => {
             <div id={props.id} tabIndex={0}
                 className="generic-card"
                 ref={cardRef}
-                
+
                 onContextMenu={(event) => {
                     event.preventDefault();
                     var cardContainerElement = document.querySelector('.card-container');
-                    let x = event.clientX + cardContainerElement.scrollLeft - me.position.x;
-                    let y = event.clientY + cardContainerElement.scrollTop - 40 - me.position.y;
-                    setContextMenu({ x: Math.abs(x), y: Math.abs(y) })
+                    let x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft / store.zoom - me.position.x);
+                    let y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollTop / store.zoom - me.position.y - 40);
+                    let x1 = Math.floor(event.clientX* store.zoom + cardContainerElement.scrollLeft - me.position.x) ;
+                    let y1 = Math.floor(event.clientY * store.zoom+ cardContainerElement.scrollTop - me.position.y - 40) ;
+
+                    setContextMenu({ x: store.zoom > 0 ? Math.abs(x) : Math.abs(x1), y: store.zoom > 0 ? Math.abs(y) : Math.abs(y1) })
                     setShowPopper(false);
                 }}
                 onBlur={(e) => {
@@ -109,11 +112,11 @@ const GenericCard = props => {
                         store.currentActive = null;
                     }
                     e.stopPropagation();
-                    store.removeUserEditing(props.id,'editing')
+                    store.removeUserEditing(props.id, 'editing')
                 }}
                 onFocus={e => {
                     store.currentActive = props.id;
-                    store.addUserEditing(props.id,'editing')
+                    store.addUserEditing(props.id, 'editing')
                     e.stopPropagation();
                 }}
                 onKeyDown={(e) => {
@@ -129,16 +132,16 @@ const GenericCard = props => {
                     height: me.size.height,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
-                    zIndex:1
+                    zIndex: 1
                 }}
             >
-                {showLoader 
-                ? <div className="action-loader">
-                    <div className="loader-text">
-                    ▶️ Running Action... 
+                {showLoader
+                    ? <div className="action-loader">
+                        <div className="loader-text">
+                            ▶️ Running Action...
                     </div>
-                </div> 
-                : null}
+                    </div>
+                    : null}
                 <button className="kebab" onClick={() => { setContextMenu(null); setShowPopper(!showPopper); }}>
                     <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
                 </button>
@@ -152,8 +155,8 @@ const GenericCard = props => {
                 <div className="blank-filler" ref={blankRef}
                     style={
                         contextMenu ?
-                            {zIndex:1, position: "absolute", top: contextMenu.y, left: contextMenu.x }
-                            : {zIndex:1, position: "absolute" }
+                            { zIndex: 1, position: "absolute", top: contextMenu.y, left: contextMenu.x }
+                            : { zIndex: 1, position: "absolute" }
                     }
                 />
                 {contextMenu || showPopper ?
@@ -168,7 +171,7 @@ const GenericCard = props => {
                         zIndex={1}
                     >
                         <div>
-                            <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store} setShowLoader={(bool) => setShowLoader(bool)}/>
+                            <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store} setShowLoader={(bool) => setShowLoader(bool)} />
                             <ReplaceFileList type={me.type} id={props.id} typeAPI={store} />
                             <a href="/dashboard" style={{ color: "black" }}>edit</a>
                             <hr />
