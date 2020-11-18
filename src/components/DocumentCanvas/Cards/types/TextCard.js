@@ -19,7 +19,8 @@ function TextCard(props) {
         if (store.currentActive === props.id && quillRef.current) {
             quillRef.current.focus();
             var quillEditor = quillRef.current.getEditor();
-            quillEditor.setSelection(quillEditor.getSelection().index + me.content.text.length, 0);
+            const selectionIndex = quillEditor.getSelection().index;
+            quillEditor.setSelection(selectionIndex === 0 ? selectionIndex + me.content.text.length : selectionIndex , 0);
         }
         
     },[props.id,store.currentActive,me.content.text]);

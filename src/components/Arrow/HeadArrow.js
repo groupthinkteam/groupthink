@@ -24,8 +24,7 @@ const HeadArrow = (props) => {
                 },
                 onDragEnd: function () {
                     console.log("HEAD DRAG END")
-                    store.hitTestCards.every(cardID => {
-                        console.log("CARDID ",cardID,headArrow[0].hitTest(`#${cardID}`))
+                    store.hitTestCards.filter(cardID=>cardID!==id && !store.cards[cardID]?.isCollapse).every(cardID => {
                         if(this.hitTest("#".concat(cardID))) {
                             console.log("i hit", cardID)
                             // call reparent

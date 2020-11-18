@@ -25,8 +25,7 @@ const TailArrow = (props) => {
                 },
                 onDragEnd: function () {
                     console.log("TAIL DRAG END")
-                    store.hitTestCards.filter(cardID=>cardID!==id).every(cardID => {
-                        console.log("    ", cardID)
+                    store.hitTestCards.filter(cardID=>cardID!==id && !store.cards[cardID]?.isCollapse).every(cardID => {
                         if (this.hitTest("#".concat(cardID))) {
                             console.log("i hit", cardID)
                             // call reparent
