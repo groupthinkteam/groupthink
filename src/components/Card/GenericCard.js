@@ -98,13 +98,22 @@ const GenericCard = props => {
                 onContextMenu={(event) => {
                     event.preventDefault();
                     var cardContainerElement = document.querySelector('.card-container');
-                    let x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft / store.zoom - me.position.x);
-                    let y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollTop / store.zoom - me.position.y - 40);
-                    let x1 = Math.floor(event.clientX* store.zoom + cardContainerElement.scrollLeft - me.position.x) ;
-                    let y1 = Math.floor(event.clientY * store.zoom+ cardContainerElement.scrollTop - me.position.y - 40) ;
-
-                    setContextMenu({ x: store.zoom > 0 ? Math.abs(x) : Math.abs(x1), y: store.zoom > 0 ? Math.abs(y) : Math.abs(y1) })
+                    // let x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft / store.zoom - me.position.x);
+                    // let y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollTop / store.zoom - me.position.y - 40);
+                    // let x1 = Math.floor(event.clientX/ store.zoom + cardContainerElement.scrollLeft* store.zoom - me.position.x) ;
+                    // let y1 = Math.floor(event.clientY / store.zoom+ cardContainerElement.scrollTop* store.zoom - me.position.y - 40) ;
+                    
+                    // setContextMenu({ x: store.zoom > 1 ? Math.abs(x) : Math.abs(x1), y: store.zoom > 1 ? Math.abs(y) : Math.abs(y1) })
                     setShowPopper(false);
+                    var x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft/store.zoom - me.position.x/store.zoom);
+                        var y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollLeft/store.zoom - me.position.y/store.zoom - 40);
+                        console.log("double click at", x, ",", y,",",store.zoom);
+                        if(store.zoom===1)
+                        {
+                            setContextMenu({ x: x, y:y })
+                        }
+                        else
+                        setContextMenu({ x: x,y:store.zoom>=1 ? y+20:y-40 })
                 }}
                 onBlur={(e) => {
                     console.log("ONBLUR")

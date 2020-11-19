@@ -165,7 +165,7 @@ export var storeObject = {
         updates[parent + "/children/" + newCardKey] = 1;
         updates[newCardKey] = newCard;
         this.projectRef.child("nodes").update(updates)
-            .then(() => console.log("Added a new child", newCardKey, "under", parent));
+            .then(() => console.log("Added a new child", newCardKey, "under", parent ,"with position ",position));
         this.updateLastActive()
     },
     removeCard(id, strategy, newParent) {

@@ -32,10 +32,11 @@ function CardContainer(props) {
                     if (e.target.offsetParent && e.target.offsetParent.className === "card-container") {
                         var x = Math.floor(e.clientX / store.zoom + e.target.offsetParent.scrollLeft/store.zoom);
                         var y = Math.floor(e.clientY / store.zoom + e.target.offsetParent.scrollTop/store.zoom - 40);
-                        var x1 = Math.floor(e.clientX * store.zoom + e.target.offsetParent.scrollLeft*store.zoom);
-                        var y1 = Math.floor(e.clientY * store.zoom + e.target.offsetParent.scrollTop*store.zoom - 40);
-                        console.log("double click at", x, ",", y);
-                        store.addCard({ x:store.zoom>0 ? x:x1, y:store.zoom>0 ? y:y1 }, { width: 310, height: 200 }, "root", "blank")
+                        console.log("double click at", x, ",", y,",",store.zoom);
+                        if(store.zoom ===1 )
+                        store.addCard({ x:x,y:y}, { width: 310, height: 200 }, "root", "blank");
+                        else
+                        store.addCard({ x:x, y:store.zoom>1 ? y+(store.zoom*40 - 80) : y+Math.floor(store.zoom*40-60) }, { width: 310, height: 200 }, "root", "blank")
                     }
                     else {
                         console.log("registered a double click on a card and did absolutely nothing about it")
@@ -45,17 +46,14 @@ function CardContainer(props) {
                 onMouseMove={(event) => {
                     console.log("triggered mouse move",event.clientX,event.clientY )
                     event.persist();
-                    var cardContainerElement = document.querySelector('.card-container');
-                    console.log("TEST OFFSET PARENT " ,cardContainerElement.scrollLeft,cardContainerElement.scrollTop);
-                    console.log("Compared to ZOOM ",store.zoom>=1 ?cardContainerElement.scrollLeft/store.zoom :cardContainerElement.scrollLeft*store.zoom)
+                    // var cardContainerElement = document.querySelector('.card-container');
+                    // console.log("TEST OFFSET PARENT " ,cardContainerElement.scrollLeft,cardContainerElement.scrollTop);
+                    // console.log("Compared to ZOOM ",store.zoom>=1 ?cardContainerElement.scrollLeft/store.zoom :cardContainerElement.scrollLeft*store.zoom)
                     if (event.target.offsetParent && event.target.offsetParent.className === "card-container") {
-                        //console.log("TEST @ OFFSET {A ",event.target.offsetParent.scrollLeft,event.target.offsetParent.scrollTop)
-                        var x = Math.floor(event.clientX / store.zoom + event.target.offsetParent.scrollLeft/store.zoom);
-                        var y = Math.floor(event.clientY / store.zoom + event.target.offsetParent.scrollTop/store.zoom - 40);
-                        var x1 = Math.floor(event.clientX * store.zoom + event.target.offsetParent.scrollLeft*store.zoom);
-                        var y1 = Math.floor(event.clientY * store.zoom + event.target.offsetParent.scrollTop*store.zoom - 40);
+                        var x = Math.floor(event.clientX / store.zoom + event.target.offsetParent.scrollLeft/ store.zoom);
+                        var y = Math.floor(event.clientY / store.zoom + event.target.offsetParent.scrollTop/ store.zoom - 40);
                         store.saveCursorPosition(
-                            store.zoom>0 ? x:x1, store.zoom>0 ? y:y1
+                            x,y
                         );
                     }
                 }}
