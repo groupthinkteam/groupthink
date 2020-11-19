@@ -5,8 +5,11 @@ import VideoCardList from './MenuList/VideoCardList';
 import LinkCardList from "./MenuList/LinkCardList";
 import FileCardList from './MenuList/FileCardList';
 import AudioCardList from './MenuList/AudioCardList';
+import BlankCardList from "./MenuList/BlankCardList";
 export default function menuListChooser(type) {
     switch (type) {
+        case 'blank' :
+            return BlankCardList
         case "text":
             return TextCardList;
         case "todo":
@@ -24,6 +27,6 @@ export default function menuListChooser(type) {
         case "file":
             return FileCardList;
         default:
-            return 'BlankCard';
+            return BlankCardList;
     }
 }

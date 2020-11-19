@@ -14,7 +14,7 @@ export var storeObject = {
     projectID: null,
     projectMetadata: null,
     currentActive: null,
-    collapsedID :{},
+    collapsedID: {},
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -49,7 +49,7 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
-    
+
     getActionQuery(callback) {
         database.ref("actionsearch")
             .once('value').then(snap => { callback(snap.val()) })
@@ -308,42 +308,41 @@ export var storeObject = {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
-    convertImageToBW(fullPath, contentType, customMetadata) {
+    convertImageToBW(fullPath, contentType, customMetadata, callback) {
         const imageData = {
             fpath: fullPath,
             contentType: contentType,
             customMetadata: customMetadata
         }
         var convToBw = functions.httpsCallable('imageToBw')
-        convToBw(imageData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
+        return convToBw(imageData).then(() => callback(true)).catch(() => callback(false))
     },
-    convertLinksToCitation(id, citeStyle) {
+    convertLinksToCitation(id, citeStyle, callback) {
         var fullText = []
         var convToCite = functions.httpsCallable('linkToCitation')
-        this.projectRef.child('nodes').child(id).child('content').child('text').once('value').then((snapshot) => {
-            fullText = snapshot.val();
-            console.log("full text: ", fullText);
-            var linksArr = this.linksFromText(fullText);
-            if (linksArr.length === 0) {
-                return console.log("no links found")
-            }
-            const linksData = {
-                projectId: this.projectID,
-                cardId: id,
-                link: linksArr,
-                fullText: fullText,
-                style: citeStyle
-            }
-            console.log("links data: ", linksData)
-            return convToCite(linksData).then(() => { console.log("Converted successfully") }).catch(() => { console.log("fail") })
-        })
-
+        fullText = this.cards[id].content.text
+        console.log("full text: ", fullText);
+        var linksArr = this.linksFromText(fullText);
+        if (linksArr.length === 0) {
+            return callback(false)
+        }
+        const linksData = {
+            projectId: this.projectID,
+            cardId: id,
+            link: linksArr,
+            fullText: fullText,
+            style: citeStyle
+        }
+        console.log("links data: ", linksData)
+        return convToCite(linksData).then(() => callback(true)).catch(() => callback(false))
     },
     linksFromText(stri) {
         const regexp = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
         const str = String(stri);
-        console.log(stri)
-        const array = [...str.match(regexp)];
+        var array = []
+        if (str.match(regexp) !== null) {
+            array = [...str.match(regexp)];
+        }
         return array
     },
     // update any property of store (for use with listeners)
@@ -400,15 +399,13 @@ export var storeObject = {
                     })
             }).catch((error) => { console.log("failed to update because", error); callback(false) });
     },
-    collapseCard(id,strategy)
-    {
-        strategy ? this.collapsedID[id]=strategy :this.cards[id]["isCollapse"] = true;
+    collapseCard(id, strategy) {
+        strategy ? this.collapsedID[id] = strategy : this.cards[id]["isCollapse"] = true;
     },
-    expandCard(id,strategy)
-    {
-        strategy ? this.collapsedID[id]=null : this.cards[id]["isCollapse"] = null;
+    expandCard(id, strategy) {
+        strategy ? this.collapsedID[id] = null : this.cards[id]["isCollapse"] = null;
     },
-    
+
     addUserEditing(id) {
         this.projectRef.child('nodes').child(id).child("editing")
             .set({ [this.userID]: servertime })

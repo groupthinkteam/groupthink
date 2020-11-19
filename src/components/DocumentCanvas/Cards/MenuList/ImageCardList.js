@@ -6,7 +6,8 @@ const ImageCardList = (props) => {
     const store = useStore();
     const metadata = props.content.metadata;
     const convImage = () => {
-        store.convertImageToBW(metadata.fullPath, metadata.contentType, metadata.customMetadata);
+        props.setShowLoader(true);
+        store.convertImageToBW(metadata.fullPath, metadata.contentType, metadata.customMetadata, (bool) => props.setShowLoader(false));
     }
     return (
         <div>

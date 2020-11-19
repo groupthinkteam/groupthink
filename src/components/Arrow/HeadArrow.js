@@ -14,6 +14,7 @@ const HeadArrow = (props) => {
                 type: "top,left",
                 cursor: 'pointer',
                 activeCursor: "pointer",
+                autoScroll:1,
                 onDragStart: function () {
                     gsap.set("#headArrow".concat(id), { top: head.y, left: head.x });
                     headArrow[0].update()
@@ -24,13 +25,14 @@ const HeadArrow = (props) => {
                 },
                 onDragEnd: function () {
                     console.log("HEAD DRAG END")
-                    store.hitTestCards.forEach(cardID => {
-                        console.log("CARDID ",cardID,headArrow[0].hitTest(`#${cardID}`))
-                        if(headArrow[0].hitTest("#".concat(cardID))) {
+                    store.hitTestCards.filter(cardID=>cardID!==id && !store.cards[cardID]?.isCollapse).every(cardID => {
+                        if(this.hitTest("#".concat(cardID))) {
                             console.log("i hit", cardID)
                             // call reparent
                             store.reparentCard(id, cardID)
+                            return false
                         }
+                        return true
                     });
                     headArrow[0].update();
                     setLinePathDragging(false);
