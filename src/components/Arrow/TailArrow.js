@@ -49,7 +49,7 @@ const TailArrow = (props) => {
     }, [id, tail.x, tail.y, setLinePathDragging, store]);
     return (
         
-            <svg  style={{ zIndex: -1, position: "absolute", overflow: "visible" }}>
+            <svg style={{ zIndex: -1, position: "absolute", overflow: "visible" }}>
                 <circle
                     style={{ position: "absolute" }}
                     cx={linePathDragging ? linePathDragging.x : tail.x}

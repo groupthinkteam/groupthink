@@ -6,6 +6,8 @@ import HeadArrow from "./HeadArrow";
 import MidPointInArrow from "./MidPointInArrow";
 import TailArrow from "./TailArrow";
 
+import "../../styles/Arrow.scss"
+
 gsap.registerPlugin(Draggable)
 
 /**
@@ -64,10 +66,17 @@ const Arrow = (props) => {
     return (
         <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
             <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
+                <defs>
+                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style={{ stopColor: "#FF6B43", stopOpacity: 1 }} />
+                        <stop offset="100%" style={{ stopColor: "#5FA2F1", stopOpacity: 1 }} />
+                    </linearGradient>
+                </defs>
                 <path
-                    strokeWidth="5"
+                    className="arrow-path"
+                    strokeWidth="2"
                     fill="none"
-                    stroke={linePathDragging ? "blue" : "green"}
+                    stroke="url(#grad3)"
                     d={path} />
             </svg>
             <TailArrow
@@ -89,7 +98,7 @@ const Arrow = (props) => {
                 linePathDragging={linePathDragging}
             />
             {
-                linePathDragging?.tail || !linePathDragging ? 
+                linePathDragging?.tail || !linePathDragging ?
                     <svg style={{ zIndex: -1, position: "absolute", overflow: "visible" }}>
                         <circle
                             id={"tail".concat(props.id)}
@@ -99,10 +108,10 @@ const Arrow = (props) => {
                             r="5"
                             stroke="black"
                             strokeWidth="2px"
-                            fill={linePathDragging ? "blue" : "#0fa958"} 
+                            fill={linePathDragging ? "blue" : "#0fa958"}
                         />
-                    </svg> 
-                    :null
+                    </svg>
+                    : null
             }
 
         </div>
