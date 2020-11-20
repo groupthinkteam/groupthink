@@ -43,11 +43,7 @@ function CardContainer(props) {
                 }}
 
                 onMouseMove={(event) => {
-<<<<<<< HEAD
-                    //console.log("triggered mouse move",event.clientX,event.clientY )
-=======
                     console.log("triggered mouse move")
->>>>>>> 0aad11a1553856417dc1dcd2f41d78800c95c66c
                     event.persist();
                     if (event.target.offsetParent && event.target.offsetParent.className === "card-container") {
                         var x = Math.floor(event.clientX / store.zoom + event.target.offsetParent.scrollLeft/ store.zoom);
