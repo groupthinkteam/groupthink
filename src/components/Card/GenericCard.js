@@ -34,7 +34,7 @@ const GenericCard = props => {
 
     // update position
     useEffect(
-        () => { gsap.set("#".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
+        () => { gsap.set("#".concat(props.id), { opacity: 1, ...me.position }) }
         , [props.id, me.position])
     // init draggable
     useEffect(

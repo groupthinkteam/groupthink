@@ -123,9 +123,9 @@ function BlankCard(props) {
                     onSave={onSave}
                     placeholder="Start typing, paste a link, or..."
                 />
-                <span onClick={() => inputFile.current.click()}>
+                <button onClick={() => inputFile.current.click()}>
                     Upload
-                </span>
+                </button>
                 <input type="file"
                     onChange={(e) => upload(e.target.files)}
                     ref={inputFile}
