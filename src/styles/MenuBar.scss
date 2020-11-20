@@ -18,7 +18,7 @@
     font-family: "Open Sans", "Varela Round", sans-serif;
 }
 
-.menu-bar-project-title {
+.project-title {
     padding: 3px 12px 6px 12px;
     position: relative;
     font-size: 18px;
@@ -31,6 +31,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+    &.edit {
+        outline: none;
+        &:focus {
+            outline: none;
+            border: 2px solid #1E7EEF;
+            border-radius: 6px;
+        }
+    }
 }
 
 .menu-bar-panel {

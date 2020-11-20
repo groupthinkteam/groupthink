@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
@@ -11,7 +11,7 @@ import { observer } from "mobx-react-lite"
 
 function MenuBar(props) {
     let store = useStore()
-    let meta = store.projectMetadata
+    let [isEditingTitle, setEditingTitle] = useState(false);
     return (
         <div className="menu-bar topheader">
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -23,11 +23,20 @@ function MenuBar(props) {
                 <SearchBar document={props?.document} dashboard={props?.dashboard} />
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
-                <span className="menu-bar-project-title">
-                         <input type="text" value={store.projectMetadata.name}
-                            onChange={(e) => { store.localRenameProject(e.target.value); console.log(e.target.value) }}
-                            onBlur={(e) => store.renameProject(store.projectID, e.target.value)} />
-                </span>
+                {isEditingTitle ?
+                    <input className="project-title edit"
+                        type="text"
+                        autoFocus
+                        value={store.projectMetadata.name}
+                        onChange={(e) => store.localRenameProject(e.target.value)}
+                        onBlur={(e) => {
+                            store.renameProject(store.projectID, e.target.value);
+                            setEditingTitle(false);
+                        }} />
+                    : <span className="project-title display" onClick={() => setEditingTitle(true)}>
+                        {store.projectMetadata.name}
+                    </span>
+                }
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">
                 <RoomConnect projectID={store.projectID} currentUser={store.currentUser} />
