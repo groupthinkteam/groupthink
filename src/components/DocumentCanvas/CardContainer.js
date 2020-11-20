@@ -44,7 +44,7 @@ function CardContainer(props) {
                 }}
 
                 onMouseMove={(event) => {
-                    console.log("triggered mouse move",event.clientX,event.clientY )
+                    //console.log("triggered mouse move",event.clientX,event.clientY )
                     event.persist();
                     // var cardContainerElement = document.querySelector('.card-container');
                     // console.log("TEST OFFSET PARENT " ,cardContainerElement.scrollLeft,cardContainerElement.scrollTop);

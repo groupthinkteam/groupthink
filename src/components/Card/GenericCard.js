@@ -94,7 +94,6 @@ const GenericCard = props => {
             <div id={props.id} tabIndex={0}
                 className="generic-card"
                 ref={cardRef}
-
                 onContextMenu={(event) => {
                     event.preventDefault();
                     var cardContainerElement = document.querySelector('.card-container');
@@ -168,6 +167,7 @@ const GenericCard = props => {
                             : { zIndex: 1, position: "absolute" }
                     }
                 />
+                {console.log("cardref: ", cardRef.current)}
                 {contextMenu || showPopper ?
                     <MenuCard
                         buttonref={showPopper ? cardRef.current : blankRef.current}
