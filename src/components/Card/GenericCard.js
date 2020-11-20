@@ -98,24 +98,25 @@ const GenericCard = props => {
                 onContextMenu={(event) => {
                     event.preventDefault();
                     var cardContainerElement = document.querySelector('.card-container');
-                    // let x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft / store.zoom - me.position.x);
-                    // let y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollTop / store.zoom - me.position.y - 40);
-                    // let x1 = Math.floor(event.clientX/ store.zoom + cardContainerElement.scrollLeft* store.zoom - me.position.x) ;
-                    // let y1 = Math.floor(event.clientY / store.zoom+ cardContainerElement.scrollTop* store.zoom - me.position.y - 40) ;
-
-                    // setContextMenu({ x: store.zoom > 1 ? Math.abs(x) : Math.abs(x1), y: store.zoom > 1 ? Math.abs(y) : Math.abs(y1) })
                     setShowPopper(false);
                     console.log("triggered Context Menu ",event.clientX,event.clientY )
+                    console.log("triggered Context Menu OFFSET ",event.target.offsetTop,event.currentTarget.offsetLeft )
+                    console.log("CARD CONTAINER OFFSET ",cardContainerElement.offsetX)
                     console.log("CARD POSITION ",me.position.x,me.position.y)
                     console.log("CONTAINER ELE ",cardContainerElement.scrollLeft,cardContainerElement.scrollTop)
                     var x = Math.floor(event.clientX/ store.zoom  + cardContainerElement.scrollLeft/ store.zoom  - me.position.x );
-                    var y = Math.floor(event.clientY/ store.zoom + cardContainerElement.scrollTop/ store.zoom - me.position.y*store.zoom - 40);
+                    var y = Math.floor(event.clientY/ store.zoom + cardContainerElement.scrollTop/ store.zoom - me.position.y- 40);
                     console.log("Contxt Menu click at", x, ",", y, ",", store.zoom);
                     if (store.zoom === 1) {
                         setContextMenu({ x: x, y: y })
                     }
                     else
-                        setContextMenu({ x:store.zoom >= 1 ? x : Math.abs(x-13), y: store.zoom >= 1 ? Math.abs(y*store.zoom) :Math.abs( y+24) })
+                        setContextMenu({ 
+                            x:store.zoom >= 1 ? x-3 : x+7-store.zoom ,
+                            y: store.zoom >= 1 ? y+20 :y-30-store.zoom ,
+                            offsetX :store.zoom >= 1 ? 0:x*store.zoom, //left
+                            offsetY :store.zoom >= 1 ?  y:y*store.zoom //top
+                        })
                 }}
                 onBlur={(e) => {
                     console.log("ONBLUR")
@@ -174,7 +175,7 @@ const GenericCard = props => {
                     <MenuCard
                         buttonref={showPopper ? cardRef.current : blankRef.current}
                         position="right-start"
-                        offset={[0, 4]}
+                        offset={[contextMenu?.offsetX ? contextMenu?.offsetX : 0, contextMenu?.offsetY ? contextMenu?.offsetY : 0]}
                         tooltipclass="tooltips"
                         arrowclass="arrow"
                         showpopper={true}//{store.currentActive === props.id}
