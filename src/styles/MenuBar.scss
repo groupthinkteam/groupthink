@@ -30,12 +30,18 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: fit-content;
     max-width: 100%;
+    &.display {
+        &:hover {
+            border: 1px solid #939393;
+            border-radius: 6px;
+        }
+    }
     &.edit {
-        outline: none;
         &:focus {
             outline: none;
-            border: 2px solid #1E7EEF;
+            border: 1px solid #1E7EEF;
             border-radius: 6px;
         }
     }
