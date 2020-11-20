@@ -6,21 +6,19 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/hook";
 import { useHistory, useParams, useLocation } from "react-router-dom";
 
-
 function Document() {
   let store = useStore();
   const history = useHistory();
   const location = useLocation();
-  const { projectID, keyID } = useParams();
-  const [isloaded, setIsLoaded] = useState(false);
+  let { projectID } = useParams();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     console.log("opening project", projectID);
-    setTimeout(() => setIsLoaded(true), 300)
     store.projectID = projectID
     store.addDocumentListeners()
     return () => store.removeDocumentListeners()
-  }, [store, projectID, history, location, keyID])
+  }, [store, projectID])
 
   useEffect(() => {
     store.addCursorListener()
@@ -33,12 +31,16 @@ function Document() {
     history.push('/login', { from: location });
   }
 
-  if (!isloaded) {
+  if (store.documentLoadPercent > 1 && !isLoaded) {
+    setIsLoaded(true)
+  }
+
+  if (!isLoaded) {
     return <Loading />
   }
   return (
     <div>
-      <MenuBar document documentName={store.projectName} currentUser={store.currentUser} signOut={signOut} projectID={projectID} />
+      <MenuBar document signOut={signOut} projectID={projectID} />
       <CardContainer />
     </div>
   );

@@ -15,6 +15,7 @@ export var storeObject = {
     projectMetadata: null,
     currentActive: null,
     collapsedID: {},
+    documentLoadPercent: 0,
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -111,16 +112,11 @@ export var storeObject = {
                 });
         })
     },
+    localRenameProject(title) {
+        this.projectMetadata.name = title
+    },
     renameProject(id, title) {
         database.ref("documents").child(id).child("metadata").child("name").set(title)
-        database.ref("documents").child(id).child("users")
-            .once("value")
-            .then((snap) => {
-                let updates = {}
-                Object.keys(snap.val()).forEach((userID) => updates[userID + "/projects/" + id + "/name"] = title)
-                database.ref("users").update(updates)
-            }
-            )
     },
     // document related actions
     saveCursorPosition: throttle(function saveCursorPosition(x, y) {
@@ -165,7 +161,7 @@ export var storeObject = {
         updates[parent + "/children/" + newCardKey] = 1;
         updates[newCardKey] = newCard;
         this.projectRef.child("nodes").update(updates)
-            .then(() => console.log("Added a new child", newCardKey, "under", parent ,"with position ",position));
+            .then(() => console.log("Added a new child", newCardKey, "under", parent, "with position ", position));
         this.updateLastActive()
     },
     removeCard(id, strategy, newParent) {
@@ -444,12 +440,12 @@ export var storeObject = {
         }
     },
     addDocumentListeners() {
-        this.projectRef.child("users").on("value", (snap) => this.users = snap.val());
+        this.projectRef.child("users").on("value", (snap) => { this.users = snap.val(); this.documentLoadPercent += 1 });
         this.projectRef.child("nodes").on("child_added", (snap) => this.cards[snap.key] = snap.val());
         this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
         this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
         this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
-        this.projectRef.child("metadata").on("value", (snap) => this.projectMetadata = snap.val());
+        this.projectRef.child("metadata").on("value", (snap) => { this.projectMetadata = snap.val(); this.documentLoadPercent += 1 });
     },
     addCursorListener() {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());
@@ -472,6 +468,7 @@ export var storeObject = {
         this.users = {}
         this.cursors = {}
         this.container = {}
+        this.documentLoadPercent = 0
     },
     removeCursorListener() {
         this.projectRef.child("cursors").off()

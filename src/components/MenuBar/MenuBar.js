@@ -6,11 +6,12 @@ import RoomConnect from "../Voice/RoomConnect"
 import SearchBar from "../Search/SearchBar"
 import PersonaList from "../PersonaList/PersonaList"
 import UserMenu from "./UserMenu"
+import { useStore } from "../../store/hook"
+import { observer } from "mobx-react-lite"
 
-
-export default function MenuBar(props) {
-    const currentUser = props.currentUser
-
+function MenuBar(props) {
+    let store = useStore()
+    let meta = store.projectMetadata
     return (
         <div className="menu-bar topheader">
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -22,35 +23,29 @@ export default function MenuBar(props) {
                 <SearchBar document={props?.document} dashboard={props?.dashboard} />
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
-                {props.documentName ?
-                    <span className="menu-bar-project-title">
-                        {props.documentName}
-                    </span>
-                    : null
-                }
+                <span className="menu-bar-project-title">
+                         <input type="text" value={store.projectMetadata.name}
+                            onChange={(e) => { store.localRenameProject(e.target.value); console.log(e.target.value) }}
+                            onBlur={(e) => store.renameProject(store.projectID, e.target.value)} />
+                </span>
             </div>
             <div className="menu-bar-panel menu-bar-panel-right">
-                {
-                    props.document ?
-                        <>
-                            <RoomConnect projectID={props.projectID} currentUser={currentUser} />
-                            <PersonaList />
-                            <div className="menu-bar-separator" />
-                            <ShareLink projectID={props.projectID} buttonClassName="menu-action-button highlight"
-                                currentUser={currentUser}
-                            />
-                        </>
-                        : null
-                }
+                <RoomConnect projectID={store.projectID} currentUser={store.currentUser} />
+                <PersonaList />
                 <div className="menu-bar-separator" />
-                <UserMenu photoURL={currentUser.photoURL}
-                    username={currentUser.displayName}
+                <ShareLink projectID={store.projectID} buttonClassName="menu-action-button highlight"
+                    currentUser={store.currentUser}
+                />
+                <div className="menu-bar-separator" />
+                <UserMenu photoURL={store.currentUser.photoURL}
+                    username={store.currentUser.displayName}
                     imageClass="menu-bar-user-profile-picture"
                     logOutClass="menu-action-button"
                     signOut={props.signOut}
                 />
-
             </div>
         </div>
     );
 }
+
+export default observer(MenuBar);
