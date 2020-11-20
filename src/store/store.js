@@ -440,12 +440,19 @@ export var storeObject = {
         }
     },
     addDocumentListeners() {
-        this.projectRef.child("users").on("value", (snap) => { this.users = snap.val(); this.documentLoadPercent += 1 });
+        this.projectRef.child("users").on("value", (snap) => {
+            this.users = snap.val();
+            this.documentLoadPercent += 1
+        });
         this.projectRef.child("nodes").on("child_added", (snap) => this.cards[snap.key] = snap.val());
         this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
         this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
         this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
-        this.projectRef.child("metadata").on("value", (snap) => { this.projectMetadata = snap.val(); this.documentLoadPercent += 1 });
+        this.projectRef.child("metadata").on("value", (snap) => {
+            this.projectMetadata = snap.val();
+            if (this.projectMetadata)
+                this.documentLoadPercent += 1
+        });
     },
     addCursorListener() {
         this.projectRef.child("cursors").on('value', (snap) => this.cursors = snap.val());
