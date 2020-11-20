@@ -6,9 +6,8 @@ import { useStore } from '../../../../store/hook';
 const TextCardList = (props) => {
     const store = useStore();
     const cardId = props.id;
-    //const [showPopper, setShowPopper] = useState(false)
-    const [showSubMenu, setShowSubMenu] = useState(false)
-    //const citeButtonRef = useRef(null)
+    const [showPopper, setShowPopper] = useState(false)
+    const citeButtonRef = useRef(null)
     const convLinks = (citationStyle) => {
         props.setShowLoader(true)
         // TODO if bool is false, the operation failed, show error
@@ -16,42 +15,6 @@ const TextCardList = (props) => {
     }
     return (
         <div>
-            {showSubMenu ? 
-                <div>
-                    <button
-                        onClick={() => setShowSubMenu(!showSubMenu)}
-                    >
-                        Citations
-                    </button>
-                    <br></br>
-                    <button
-                        onClick={() => convLinks("apa")}
-                    >
-                        APA Style
-                    </button>
-                    <br></br>
-                    <button
-                        onClick={() => convLinks("vancouver")}
-                    >
-                        Vancouver Style
-                    </button>
-
-                    <br></br>
-                    <button
-                        onClick={() => convLinks("harvard1")}
-                    >
-                        Harvard Style
-                    </button>
-                </div>
-            :
-                <div>
-                    <button
-                        onClick={() => setShowSubMenu(!showSubMenu)}
-                    >
-                        Citations
-                    </button>
-                </div>}
-            {/*
                 <button ref={citeButtonRef} onClick={() => setShowPopper(!showPopper)}>Citations</button>
             <PopperMenu
                 buttonref={citeButtonRef}
@@ -62,10 +25,24 @@ const TextCardList = (props) => {
                 showpopper={showPopper}//{store.currentActive === props.id}
                 zIndex={1}
             >
-                <div>Hellooo</div>
+                <div><button
+                        onClick={() => convLinks("apa")}
+                    >
+                        APA Style
+                    </button>
+                    <button
+                        onClick={() => convLinks("vancouver")}
+                    >
+                        Vancouver Style
+                    </button>
+                    <button
+                        onClick={() => convLinks("harvard1")}
+                    >
+                        Harvard Style
+                    </button></div>
             </PopperMenu>
             <hr />
-             */}
+             
 
         </div>
     )
