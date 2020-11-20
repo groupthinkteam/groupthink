@@ -7,8 +7,8 @@ import 'react-h5-audio-player/src/styles.scss';
  */
 const AudioCard = (props) => {
     return (
-        <div>
-            File Name : {props.content.metadata.name}
+        <div style={{fontFamily: "Open Sans", fontSize: "12px"}}>
+            {props.content.metadata.name}
             <AudioPlayer
                 src={props.content.url}
                 showDownloadProgress="false"

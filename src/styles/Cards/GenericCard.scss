@@ -9,16 +9,16 @@
     &:focus,
     &:focus-within {
         outline: none;
-        border: 2px solid #1e7eef;
+        border: 1px solid #1e7eef;
     }
 
     &.active-card {
         /* Background / backgroundPrimary */
-        border: 2px solid #1e7eef;
+        border: 1px solid #1e7eef;
     }
 
     &.searched-card {
-        border: 2px solid green;
+        border: 1px solid green;
     }
 
     .kebab {

@@ -26,7 +26,7 @@ function BlankCard(props) {
             width: 200
         },
         audio: {
-            height: 142,
+            height: 113,
             width: 300
         },
         link: {
@@ -68,7 +68,11 @@ function BlankCard(props) {
     }
 
     const upload = useCallback((files) => {
-        let file = files[0], displayHeight = null, displayWidth = null, originalHeight = null, originalWidth = null;;
+        let file = files[0], displayHeight = null, displayWidth = null, originalHeight = null, originalWidth = null;
+        console.log("triggered file upload")
+        console.log(file)
+        if (!file) return;
+
         const type = getTypeFromMetadata(file?.type);
 
         detectDimension(type, file, data => {
@@ -123,7 +127,7 @@ function BlankCard(props) {
                     onSave={onSave}
                     placeholder="Start typing, paste a link, or..."
                 />
-                <button onClick={() => inputFile.current.click()}>
+                <button className="upload-button" onClick={() => inputFile.current.click()}>
                     Upload
                 </button>
                 <input type="file"

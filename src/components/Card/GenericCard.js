@@ -40,7 +40,6 @@ const GenericCard = props => {
     useEffect(
         () => {
             // warning: can't use arrow functions here since that messes up the "this" binding
-
             function dragStop() {
                 gsap.to("#".concat(props.id), {
                     boxShadow: "none",
@@ -98,23 +97,17 @@ const GenericCard = props => {
                     event.preventDefault();
                     var cardContainerElement = document.querySelector('.card-container');
                     setShowPopper(false);
-                    console.log("triggered Context Menu ",event.clientX,event.clientY )
-                    console.log("triggered Context Menu OFFSET ",event.target.offsetTop,event.currentTarget.offsetLeft )
-                    console.log("CARD CONTAINER OFFSET ",cardContainerElement.offsetX)
-                    console.log("CARD POSITION ",me.position.x,me.position.y)
-                    console.log("CONTAINER ELE ",cardContainerElement.scrollLeft,cardContainerElement.scrollTop)
-                    var x = Math.floor(event.clientX/ store.zoom  + cardContainerElement.scrollLeft/ store.zoom  - me.position.x );
-                    var y = Math.floor(event.clientY/ store.zoom + cardContainerElement.scrollTop/ store.zoom - me.position.y- 40);
-                    console.log("Contxt Menu click at", x, ",", y, ",", store.zoom);
+                    var x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft / store.zoom - me.position.x);
+                    var y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollTop / store.zoom - me.position.y - 40);
                     if (store.zoom === 1) {
                         setContextMenu({ x: x, y: y })
                     }
                     else
-                        setContextMenu({ 
-                            x:store.zoom >= 1 ? x-3 : x+7-store.zoom ,
-                            y: store.zoom >= 1 ? y+20 :y-30-store.zoom ,
-                            offsetX :store.zoom >= 1 ? 0:x*store.zoom, //left
-                            offsetY :store.zoom >= 1 ?  y:y*store.zoom //top
+                        setContextMenu({
+                            x: store.zoom >= 1 ? x - 3 : x + 7 - store.zoom,
+                            y: store.zoom >= 1 ? y + 20 : y - 30 - store.zoom,
+                            offsetX: store.zoom >= 1 ? 0 : x * store.zoom, //left
+                            offsetY: store.zoom >= 1 ? y : y * store.zoom //top
                         })
                 }}
                 onBlur={(e) => {
@@ -166,11 +159,10 @@ const GenericCard = props => {
                 <div className="blank-filler" ref={blankRef}
                     style={
                         contextMenu ?
-                            { zIndex: 1, position: "absolute", top: contextMenu.y, left: contextMenu.x , height: 10, width: 10, backgroundColor: "black" }
+                            { zIndex: 1, position: "absolute", top: contextMenu.y, left: contextMenu.x, height: 10, width: 10, backgroundColor: "black" }
                             : { zIndex: 1, position: "absolute" }
                     }
                 />
-                {console.log("cardref: ", cardRef.current)}
                 {contextMenu || showPopper ?
                     <MenuCard
                         buttonref={showPopper ? cardRef.current : blankRef.current}
