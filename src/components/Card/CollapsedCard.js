@@ -9,12 +9,19 @@ const CollapsedCard = (props) =>{
     const store = useStore();
     const me = store.cards[props.id];
     let count = 1;
+    const childArray = {};
     const countCollapseCard = (id) =>{
         const currentCard = store.cards[id];
         if(currentCard?.children)
         {
             count = count+Object.keys(currentCard.children).length
             Object.keys(currentCard.children).forEach(cardID=>{
+                const collapsedCard = store.cards[cardID];
+                //Cards Will be relative to the collapsed top parent (props.id)
+                const x_DIff =collapsedCard.position.x - me.position.x;
+                const y_Diff = collapsedCard.position.y - me.position.y;
+                // This Records all Childs and SubChilds Counts And Position DIfference
+                childArray[cardID]={x:x_DIff,y:y_Diff};
                 countCollapseCard(cardID)
             });
             return count;
@@ -41,6 +48,11 @@ const CollapsedCard = (props) =>{
                     duration: 0.5
                 })
                 store.savePosition(props.id, { x: this.x, y: this.y });
+                //Save relative position w.r.t. parent
+                Object.entries(childArray).forEach(([cardId,value])=>{
+                    store.savePosition(cardId,{x:this.x+value.x, y:this.y+value.y});
+                    store.collapseCard(cardId);
+                })
             }
             function dragStart() {
                 gsap.to("#".concat(props.id), {

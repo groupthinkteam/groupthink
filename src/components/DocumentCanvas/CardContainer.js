@@ -7,8 +7,7 @@ import CursorsList from "../Cursor/CursorsList";
 import CardsList from "../Card/CardsList";
 
 import "../../styles/CardContainer.scss";
-//on FUll Zoom TEST OFFSET PARENT  1563 1643 triggered mouse move 214 530
-//on Zoom OUT TEST OFFSET PARENT  0 35 triggered mouse move 353 429
+
 function CardContainer(props) {
     let store = useStore()
     console.log("CardContainer ", store.container.width,window.innerWidth)
@@ -44,11 +43,12 @@ function CardContainer(props) {
                 }}
 
                 onMouseMove={(event) => {
+<<<<<<< HEAD
                     //console.log("triggered mouse move",event.clientX,event.clientY )
+=======
+                    console.log("triggered mouse move")
+>>>>>>> 0aad11a1553856417dc1dcd2f41d78800c95c66c
                     event.persist();
-                    // var cardContainerElement = document.querySelector('.card-container');
-                    // console.log("TEST OFFSET PARENT " ,cardContainerElement.scrollLeft,cardContainerElement.scrollTop);
-                    // console.log("Compared to ZOOM ",store.zoom>=1 ?cardContainerElement.scrollLeft/store.zoom :cardContainerElement.scrollLeft*store.zoom)
                     if (event.target.offsetParent && event.target.offsetParent.className === "card-container") {
                         var x = Math.floor(event.clientX / store.zoom + event.target.offsetParent.scrollLeft/ store.zoom);
                         var y = Math.floor(event.clientY / store.zoom + event.target.offsetParent.scrollTop/ store.zoom - 40);
