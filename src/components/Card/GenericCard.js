@@ -22,6 +22,7 @@ const GenericCard = props => {
     const MenuListType = menuListChooser(me.type);
     const cardRef = useRef(null);
     const blankRef = useRef(null);
+    const [isDragging, setDragging] = useState(false);
     const [showPopper, setShowPopper] = useState(false);
     const [contextMenu, setContextMenu] = useState(null);
     const [showLoader, setShowLoader] = useState(false);
@@ -34,8 +35,12 @@ const GenericCard = props => {
 
     // update position
     useEffect(
-        () => { gsap.set("#".concat(props.id), { opacity: 1, ...me.position }) }
-        , [props.id, me.position])
+        () => {
+            if (isDragging) return () => { };
+            else gsap.to("#".concat(props.id), { opacity: 1, ...me.position, duration: 0.2 })
+        }
+        , [props.id, me.position, isDragging])
+
     // init draggable
     useEffect(
         () => {
@@ -45,6 +50,7 @@ const GenericCard = props => {
                     boxShadow: "none",
                     duration: 0.5
                 })
+                setDragging(false);
                 store.savePosition(props.id, { x: this.x, y: this.y });
             }
             function dragStart() {
@@ -52,6 +58,7 @@ const GenericCard = props => {
                     boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
                     duration: 0.5
                 })
+                setDragging(true);
             }
             let y = Draggable.create(
                 "#".concat(props.id),
@@ -167,12 +174,12 @@ const GenericCard = props => {
                     <MenuCard
                         buttonref={showPopper ? cardRef.current : blankRef.current}
                         position="right-start"
-                        offset={[0, store.zoom*(-281.25)+285]}
+                        offset={[0, store.zoom * (-281.25) + 285]}
                         tooltipclass="tooltips"
                         arrowclass="arrow"
                         showpopper={true}//{store.currentActive === props.id}
                         pos={contextMenu}
-                        //zIndex={1}
+                    //zIndex={1}
                     >
                         <div>
                             <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store} setShowLoader={(bool) => setShowLoader(bool)} />
