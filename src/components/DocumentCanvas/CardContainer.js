@@ -10,7 +10,7 @@ import "../../styles/CardContainer.scss";
 
 function CardContainer(props) {
     let store = useStore()
-    console.log("CardContainer ", store.container.width,window.innerWidth)
+    console.log("CardContainer ", store.container.width, window.innerWidth)
     return (
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
@@ -22,39 +22,33 @@ function CardContainer(props) {
                 max="2.5"
                 defaultValue="1"
                 step="0.0001"
-                onChange={e => {store.zoom = e.target.value;console.log("ZOON  TEST ",store.zoom)}}
+                onChange={e => { store.zoom = e.target.value; console.log("ZOON  TEST ", store.zoom) }}
             />
             <div className="container-filler"
-                style={{ ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0 , transformOrigin: "0% 0%", transform: `scale(${store.zoom})`}}
+                style={{ ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${store.zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent && e.target.offsetParent.className === "card-container") {
-                        var x = Math.floor(e.clientX / store.zoom + e.target.offsetParent.scrollLeft/store.zoom);
-                        var y = Math.floor(e.clientY / store.zoom + e.target.offsetParent.scrollTop/store.zoom - 40);
-                        console.log("double click at", x, ",", y,",",store.zoom);
-                        if(store.zoom ===1 )
-                        store.addCard({ x:x,y:y}, { width: 310, height: 200 }, "root", "blank");
-                        else
-                        store.addCard({ x:x, y:store.zoom>1 ? y+(store.zoom*40 - 80) : y+Math.floor(store.zoom*40-60) }, { width: 310, height: 200 }, "root", "blank")
+                        var x = Math.floor((e.clientX + e.target.offsetParent.scrollLeft) / store.zoom);
+                        var y = Math.floor((e.clientY - 40 + e.target.offsetParent.scrollTop) / store.zoom);
+                        console.log("double click at", x, ",", y, ",", store.zoom);
+                        store.addCard({ x: x, y: y }, { width: 150, height: 50 }, "root", "blank")
                     }
                     else {
                         console.log("registered a double click on a card and did absolutely nothing about it")
                     }
                 }}
-
-                onMouseMove={(event) => {
-                    console.log("triggered mouse move")
-                    event.persist();
-                    if (event.target.offsetParent && event.target.offsetParent.className === "card-container") {
-                        var x = Math.floor(event.clientX / store.zoom + event.target.offsetParent.scrollLeft/ store.zoom);
-                        var y = Math.floor(event.clientY / store.zoom + event.target.offsetParent.scrollTop/ store.zoom - 40);
+                onMouseMove={(e) => {
+                    console.log("triggered mouse move on")
+                    e.persist();
+                        var x = Math.floor((e.clientX + e.currentTarget.offsetParent.scrollLeft) / store.zoom);
+                        var y = Math.floor((e.clientY - 40 + e.currentTarget.offsetParent.scrollTop) / store.zoom);
                         store.saveCursorPosition(
-                            x,y
+                            x, y
                         );
-                    }
                 }}
             >
-                
+
                 <ArrowList />
                 <CursorsList />
                 <CardsList />

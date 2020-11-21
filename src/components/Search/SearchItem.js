@@ -1,6 +1,7 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 
-export default function SearchItem(props) {
+function SearchItem(props) {
     return (
         <div id={"searchitem" + props.id} className="search-result-item" onClick={props.onClick}>
             <div className="matched-keywords">{props.match}</div>
@@ -8,3 +9,5 @@ export default function SearchItem(props) {
         </div>
     )
 }
+
+export default observer(SearchItem)

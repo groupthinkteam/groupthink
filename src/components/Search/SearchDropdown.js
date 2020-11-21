@@ -50,7 +50,6 @@ const SearchDropdown = (props) => {
         )
     }
 
-
     const actionItems = [];
     for (let i = 0; i < props.actionResult.matches.length; i++) {
         let match = props.actionResult.matches[i];
@@ -65,7 +64,6 @@ const SearchDropdown = (props) => {
         )
     }
 
-
     if (props.document && props.results.matches[currentMatch]?.id)
         scrollToID(props.results.matches[currentMatch]?.id)
 
@@ -76,12 +74,12 @@ const SearchDropdown = (props) => {
                 {actionItems}
             </div>
             {/* {currentMatch + 1}/{props.results.matches.length} */}
-            <button onClick={() => setCurrentMatch((old) => (old + 1) % props.results.matches.length)}>
+            {/* <button onClick={() => setCurrentMatch((old) => (old + 1) % props.results.matches.length)}>
                 Next
             </button>
             <button onClick={() => setCurrentMatch((old) => Math.abs(old - 1) % props.results.matches.length)}>
                 Prev
-            </button>
+            </button> */}
         </div>
     )
 }
