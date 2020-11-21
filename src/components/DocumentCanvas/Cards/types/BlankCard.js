@@ -111,14 +111,14 @@ function BlankCard(props) {
     }, [props.id, props.typeAPI, defaultSize])
 
     if (uploadState) {
-        gsap.to("#uploadfiller".concat(props.id), { height: uploadState + "%" })
+        gsap.to("#uploadfiller".concat(props.id), { width: uploadState + "%" })
     }
 
     return (
         uploadState
-            ? <div style={{ position: "relative", height: "100%", width: "100%", display: "flex", flexFlow: "column nowrap", justifyContent: "flex-end" }}>
-                <div id={"uploadfiller".concat(props.id)} style={{ width: "100%", height: 0, backgroundColor: "lavenderblush" }} />
-                <div style={{ position: "absolute", top: "50%" }}> Uploading </div>
+            ? <div style={{ position: "relative", height: "100%", width: "100%", display: "flex", flexFlow: "row nowrap", justifyContent: "flex-start" }}>
+                <div id={"uploadfiller".concat(props.id)} style={{ width: 0, height: "100%", backgroundColor: "#1e7eef" }} />
+                <div style={{ position: "absolute", top: "50%" }}>Uploading</div>
             </div>
             :
             <div className="blankcard">

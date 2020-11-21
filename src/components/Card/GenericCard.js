@@ -187,7 +187,7 @@ const GenericCard = props => {
                             <a href="/dashboard" style={{ color: "black" }}>edit</a>
                             <hr />
                             <p style={{ color: 'green', cursor: 'pointer' }} onClick={() => {
-                                store.addCard({ x: me.position.x + 220, y: me.position.y + 220 }, { width: 310, height: 200 }, props.id, 'blank');
+                                store.addCard({ x: me.position.x + 50, y: me.position.y + me.size.height + 50 }, { width: 275, height: 45 }, props.id, 'blank');
                                 closeContextMenu();
                             }}
                             >

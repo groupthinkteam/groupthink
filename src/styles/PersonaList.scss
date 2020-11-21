@@ -1,14 +1,13 @@
 .persona-list {
     display: flex;
     flex-flow: row nowrap;
-    border: 1px solid black;
 }
 .persona-item{
     margin-right: 5px;
     margin-left: 5px;
     img {
-        height: 40px;
-        width: 40px;
+        height: 28px;
+        width: 28px;
         border-radius: 20px;
     }
 }
