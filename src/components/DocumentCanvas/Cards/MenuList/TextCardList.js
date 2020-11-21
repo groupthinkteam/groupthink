@@ -19,11 +19,11 @@ const TextCardList = (props) => {
             <PopperMenu
                 buttonref={citeButtonRef}
                 position="right-start"
-                offset={[0, 13]}
+                offset={[0, store.zoom*(-91.25)+105]}
                 tooltipclass="tooltips"
                 arrowclass="arrow"
                 showpopper={showPopper}//{store.currentActive === props.id}
-                zIndex={1}
+                //zIndex={1}
             >
                 <div><button
                         onClick={() => convLinks("apa")}

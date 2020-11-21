@@ -167,12 +167,12 @@ const GenericCard = props => {
                     <MenuCard
                         buttonref={showPopper ? cardRef.current : blankRef.current}
                         position="right-start"
-                        offset={[contextMenu?.offsetX ? contextMenu?.offsetX : 0, contextMenu?.offsetY ? contextMenu?.offsetY : 0]}
+                        offset={[0, store.zoom*(-281.25)+285]}
                         tooltipclass="tooltips"
                         arrowclass="arrow"
                         showpopper={true}//{store.currentActive === props.id}
                         pos={contextMenu}
-                        zIndex={1}
+                        //zIndex={1}
                     >
                         <div>
                             <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store} setShowLoader={(bool) => setShowLoader(bool)} />
