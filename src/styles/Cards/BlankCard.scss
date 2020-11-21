@@ -1,3 +1,45 @@
-.upload-button {
-    
+.blankcard {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px 5px;
+    .upload-button {
+        font-size: 12px;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 600;
+        /* gt better blue */ 
+        color: #1e7eef;
+        border: 1px solid #1e7eef;
+        background-color: white;
+        box-sizing: border-box;
+        border-radius: 6px;
+        height: 25px;
+        &:hover {
+            background: #1e7eef;
+            color: white;
+        }
+        &:focus {
+            outline: none;
+        }
+        &:active {
+            outline: none;
+        }
+    }
+    .text-edit {
+        box-sizing: border-box;
+        border-radius: 6px;
+        width: 200px;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+        height: 30px;
+        // &:hover {
+        //     border: 2px solid grey;
+        // }
+        // &:focus, &:focus-within {
+        //     border: 2px solid black;
+        // }
+    }
 }

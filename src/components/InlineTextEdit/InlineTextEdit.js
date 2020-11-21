@@ -10,7 +10,7 @@ function InlineTextEdit(props, ref) {
         width: props.widthOffset ? 'calc(100% - ' + props.widthOffset + 'px)' : "95%",
         height: "auto",
         fontSize: "12px",
-        fontFamily: props.fontFamily || "Roboto, Open Sans, Varela Round, sans-serif",
+        fontFamily: props.fontFamily || "Open Sans, Varela Round, sans-serif",
         textDecorationLine: props.strikethrough ? "line-through" : "none",
         color: props.color || "black",
         cursor: "initial",

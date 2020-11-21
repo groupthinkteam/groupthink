@@ -32,7 +32,7 @@ function CardContainer(props) {
                         var x = Math.floor((e.clientX + e.target.offsetParent.scrollLeft) / store.zoom);
                         var y = Math.floor((e.clientY - 40 + e.target.offsetParent.scrollTop) / store.zoom);
                         console.log("double click at", x, ",", y, ",", store.zoom);
-                        store.addCard({ x: x, y: y }, { width: 150, height: 50 }, "root", "blank")
+                        store.addCard({ x: x, y: y }, { width: 275, height: 45 }, "root", "blank")
                     }
                     else {
                         console.log("registered a double click on a card and did absolutely nothing about it")

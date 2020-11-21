@@ -121,12 +121,15 @@ function BlankCard(props) {
                 <div style={{ position: "absolute", top: "50%" }}> Uploading </div>
             </div>
             :
-            <div>
-                <InlineTextEdit
-                    onChange={e => onChange(e)}
-                    onSave={onSave}
-                    placeholder="Start typing, paste a link, or..."
-                />
+            <div className="blankcard">
+                <div className="text-edit">
+                    <InlineTextEdit
+                        onChange={e => onChange(e)}
+                        onSave={onSave}
+                        placeholder="Start typing, paste a link, or..."
+                        margin="2px 0px 0px 0px"
+                    />
+                </div>
                 <button className="upload-button" onClick={() => inputFile.current.click()}>
                     Upload
                 </button>

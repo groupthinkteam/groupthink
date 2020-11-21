@@ -199,7 +199,6 @@ const GenericCard = props => {
                     : null
                 }
                 <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
-
             </div>
         </>
     )
