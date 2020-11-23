@@ -10,29 +10,43 @@
         justify-content: flex-start;
         align-items: flex-start;
         padding-left: 6px;
-
+        padding-right: 6px;
+        text-overflow: ellipsis;
         font-family: "Open Sans";
         font-style: normal;
+        max-width: 288px;
         .description {
+            overflow: hidden;
+            max-height: 64px;
             font-weight: normal;
             font-size: 10px;
+            line-height: 16px;
             color: #000000;
         }
         .title {
             font-weight: bold;
             font-size: 13px;
             color: #1e7eef;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: block;
+            max-width: 100%;
         }
         .domain {
             font-family: "Roboto";
             font-style: normal;
             font-weight: normal;
             font-size: 10px;
-            color: #DEDEDE;
+            color: #dedede;
         }
     }
-    img {
+    .preview-image {
         border-radius: 6px;
         object-fit: cover;
+        min-width: 100px;
+        font-size: 6px;
+        overflow: hidden;
+        font-family: "Open Sans";
     }
 }
