@@ -4,7 +4,7 @@ import "../../../../styles/Cards/LinkCard.scss"
 
 const LinkCard = (props) => {
     if (!props.content.url) return null;
-    if (props.content.description) return <LinkDisplay preview={props.content} />
+    if (props.content.description) return <LinkDisplay preview={props.content} url={props.content.url} />
     else {
         return (
             <LinkPreview url={props.content.url}
@@ -24,9 +24,9 @@ const LinkCard = (props) => {
     }
 }
 
-const LinkDisplay = React.memo(({ preview }) => {
+const LinkDisplay = React.memo(({ preview, url }) => {
     return (
-        <div className="link-card">
+        <div className="link-card" onClick={() => window.open(url, "_blank")}>
             <img className="preview-image" height="100px" width="100px" src={preview.img} alt={preview.title} />
             <div className="text">
                 <div className="title">
