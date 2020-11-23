@@ -22,7 +22,7 @@ export var storeObject = {
     },
     permission: "",
     currentUser: false,
-    zoom: 0.8,
+    zoom: 1,
     validproject: '',
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name

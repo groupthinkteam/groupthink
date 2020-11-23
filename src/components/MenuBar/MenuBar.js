@@ -13,7 +13,7 @@ function MenuBar(props) {
     let store = useStore()
     let [isEditingTitle, setEditingTitle] = useState(false);
     return (
-        <div className="menu-bar topheader">
+        <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
                 <div className="site-title">
                     <Link to="/dashboard">

@@ -21,6 +21,11 @@
     staydown "^2.0.1"
     webrtc-adapter "^7.2.8"
 
+"@ashwamegh/react-link-preview@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@ashwamegh/react-link-preview/-/react-link-preview-0.2.2.tgz#95c324d3acbc52801784f1973f02d3aa5170d201"
+  integrity sha512-LF2KL8ZPkn4o4OTDQT8rxWdIzXnLScZzobr0ho3Bo9RkftVWHLhnxxIiUE3PmroQD9r2AAxI7x5oCJAeMOcCAw==
+
 "@babel/code-frame@7.8.3":
   version "7.8.3"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.8.3.tgz#33e25903d7481181534e12ec0a25f16b6fcf419e"

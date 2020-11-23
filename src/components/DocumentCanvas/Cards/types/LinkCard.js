@@ -1,24 +1,27 @@
 import React from 'react';
-import { ReactTinyLink } from 'react-tiny-link';
-/**
- * This Card Shows The Link's image description in single card
- * @param {*} props - Property of File .
- * @property `typeAPI` , `content` , `id` 
- */
+import LinkPreview from '@ashwamegh/react-link-preview'
+import "../../../../styles/Cards/LinkCard.scss"
+
 const LinkCard = (props) => {
-
     return (
-        <div>
-            <ReactTinyLink
-                cardSize="small"
-                showGraphic={true}
-                maxLine={2}
-                minLine={1}
-                url={props.content.url}
-            />
-
-        </div>
+        <LinkPreview url={props.content.url} render={LinkDisplay} />
     )
-
 }
+
+const LinkDisplay = ({ loading, preview }) => {
+    return loading
+        ? (<h1>Loading...</h1>)
+        : (
+            <div className="link-card">
+                <img height="100px" width="100px" src={preview.img} alt={preview.title} />
+                <div className="text">
+                    <div className="title">
+                        <img alt="link-title" src={require("../../../../assets/link-logo.svg")} />{preview.title}</div>
+                    <div className="description">{preview.description}</div>
+                    <div className="domain">{preview.domain}</div>
+                </div>
+            </div>
+        )
+}
+
 export default React.memo(LinkCard);

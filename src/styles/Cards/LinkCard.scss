@@ -1,0 +1,38 @@
+.link-card {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 6px 6px 6px 6px;
+    .text {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding-left: 6px;
+
+        font-family: "Open Sans";
+        font-style: normal;
+        .description {
+            font-weight: normal;
+            font-size: 10px;
+            color: #000000;
+        }
+        .title {
+            font-weight: bold;
+            font-size: 13px;
+            color: #1e7eef;
+        }
+        .domain {
+            font-family: "Roboto";
+            font-style: normal;
+            font-weight: normal;
+            font-size: 10px;
+            color: #DEDEDE;
+        }
+    }
+    img {
+        border-radius: 6px;
+        object-fit: cover;
+    }
+}

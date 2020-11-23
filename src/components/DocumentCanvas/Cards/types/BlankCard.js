@@ -30,8 +30,8 @@ function BlankCard(props) {
             width: 300
         },
         link: {
-            height: 157,
-            width: 340
+            height: 150,
+            width: 400
         }
     };
 
