@@ -16,6 +16,7 @@
     border-radius: 0px;
     position: relative;
     font-family: "Open Sans", "Varela Round", sans-serif;
+    background-repeat: no-repeat;
 }
 
 .project-title {
@@ -78,6 +79,8 @@
             line-height: 27px;
             color: white;
             text-decoration: none;
+            padding-left: 8px;
+            user-select: none;
             &:hover {
                 text-decoration: none;
             }
