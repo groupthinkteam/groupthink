@@ -178,7 +178,7 @@ const GenericCard = props => {
                     <MenuCard
                         buttonref={showPopper ? cardRef.current : blankRef.current}
                         position="right-start"
-                        offset={[0, store.zoom * (-281.25) + 285]}
+                        offset={[0, (-store.zoom+ 1)*me.size.width+16]}
                         tooltipclass="tooltips"
                         arrowclass="arrow"
                         showpopper={true}//{store.currentActive === props.id}
