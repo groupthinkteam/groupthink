@@ -68,7 +68,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: () => { cardRef.current.focus(); setContextMenu(null); setShowPopper(false); },
+                    onClick: () => { cardRef.current.focus(); closeContextMenu(); },
                     onDragStart: dragStart,
                     onDrag: function drag() {
                         store.changePosition(props.id, { x: this.x, y: this.y })
@@ -102,6 +102,7 @@ const GenericCard = props => {
                 ref={cardRef}
                 onContextMenu={(event) => {
                     event.preventDefault();
+                    store.currentContext = props.id;
                     var cardContainerElement = document.querySelector('.card-container');
                     setShowPopper(false);
                     var x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft / store.zoom - me.position.x);
@@ -153,7 +154,10 @@ const GenericCard = props => {
                     </div>
                     </div>
                     : null}
-                <button className="kebab" onClick={() => { setContextMenu(null); setShowPopper(!showPopper); }}>
+                <button className="kebab" onClick={() => {
+                    store.currentContext = props.id;
+                    setContextMenu(null); setShowPopper(!showPopper);
+                }}>
                     <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
                 </button>
                 {
@@ -163,14 +167,14 @@ const GenericCard = props => {
                         {editingUser.name} is editing...
                     </div>
                 }
-                <div className="blank-filler" ref={blankRef}
+                <div id={(props.id).concat('blank-filler')} className="blank-filler" ref={blankRef}
                     style={
-                        contextMenu ?
+                        contextMenu && store.currentContext === props.id ?
                             { zIndex: 1, position: "absolute", top: contextMenu.y, left: contextMenu.x, height: 10, width: 10, backgroundColor: "black" }
                             : { zIndex: 1, position: "absolute" }
                     }
                 />
-                {contextMenu || showPopper ?
+                {(contextMenu || showPopper) && store.currentContext === props.id ?
                     <MenuCard
                         buttonref={showPopper ? cardRef.current : blankRef.current}
                         position="right-start"

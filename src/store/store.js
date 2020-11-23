@@ -16,6 +16,7 @@ export var storeObject = {
     currentActive: null,
     collapsedID: {},
     documentLoadPercent: 0,
+    currentContext:'',
     get userID() {
         return this.currentUser && this.currentUser.uid
     },

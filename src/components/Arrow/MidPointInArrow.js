@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect,useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { gsap, Draggable } from "gsap/all";
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/hook';
@@ -19,10 +19,11 @@ const MidPointInArrow = (props) => {
         else
             collapse ?
                 store.expandCard(childrenId) : store.collapseCard(childrenId);
+
         if (currentCard?.children) {
             Object.keys(currentCard.children).map(childId => collapseChildren(childId))
         }
-        
+
         setCollapse(!collapse)
     }, [id, store, collapse])
 
@@ -41,7 +42,7 @@ const MidPointInArrow = (props) => {
         return () => { if (mid[0]) mid[0].kill() }
     }, [id, midPoint.x, midPoint.y, collapseChildren]);
     return (
-        <svg style={{ position: "absolute", overflow: "visible",zIndex:-1 }}>
+        <svg style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
             <circle
                 style={{ position: "absolute" }}
                 id={"mid".concat(id)}
