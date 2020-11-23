@@ -54,10 +54,10 @@ const HeadArrow = (props) => {
                     id={"headArrow".concat(id)}
                     cx={linePathDragging ? linePathDragging.x : head.x}
                     cy={linePathDragging ? linePathDragging.y : head.y}
-                    r="5"
+                    r="3"
                     stroke="black"
-                    strokeWidth="2px"
-                    fill={linePathDragging ? "blue" : "#0fa958"}
+                    strokeWidth="0px"
+                    fill={"#FF6B43"}
                 />
             </svg>
         </>

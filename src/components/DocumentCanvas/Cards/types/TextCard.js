@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../../../store/hook";
 
 import ReactQuill from "react-quill"
-import 'react-quill/dist/quill.snow.css'
+import 'react-quill/dist/quill.bubble.css'
 
 function TextCard(props) {
     const store = useStore();
@@ -26,7 +26,7 @@ function TextCard(props) {
     return (
         <div className="text-node" style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
             <ReactQuill ref={quillRef}
-                theme="snow"
+                theme="bubble"
                 value={me.content.text}
                 modules={modules}
                 onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }} />

@@ -161,11 +161,11 @@ const GenericCard = props => {
                     <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
                 </button>
                 {
-                    editingUser &&
-                    <div className="generic-card-active-user-list">
-                        <img className='generic-card-text-profile-pic' alt={editingUser.name} src={editingUser.photoURL} />
-                        {editingUser.name} is editing...
-                    </div>
+                    // editingUser &&
+                    // <div className="generic-card-active-user-list">
+                    //     <img className='generic-card-text-profile-pic' alt={editingUser.name} src={editingUser.photoURL} />
+                    //     {editingUser.name} is editing...
+                    // </div>
                 }
                 <div id={(props.id).concat('blank-filler')} className="blank-filler" ref={blankRef}
                     style={

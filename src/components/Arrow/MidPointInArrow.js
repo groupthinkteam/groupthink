@@ -48,10 +48,10 @@ const MidPointInArrow = (props) => {
                 id={"mid".concat(id)}
                 cx={linePathDragging ? linePathDragging.x : midPoint.x}
                 cy={linePathDragging ? linePathDragging.y : midPoint.y}
-                r="5"
+                r="3"
                 stroke="black"
-                strokeWidth="2px"
-                fill={linePathDragging ? "blue" : "#0fa958"} />
+                strokeWidth="0px"
+                fill={"#FF6B43"} />
         </svg>
     )
 }

@@ -4,7 +4,6 @@
     justify-content: flex-start;
     align-items: flex-start;
     padding: 6px 6px 6px 6px;
-    cursor: pointer;
     .text {
         display: flex;
         flex-flow: column nowrap;
@@ -33,6 +32,7 @@
             overflow: hidden;
             display: block;
             max-width: 100%;
+            cursor: pointer;
         }
         .domain {
             font-family: "Roboto";
@@ -49,5 +49,6 @@
         font-size: 6px;
         overflow: hidden;
         font-family: "Open Sans";
+        cursor: pointer;
     }
 }

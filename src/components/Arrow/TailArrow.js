@@ -52,10 +52,10 @@ const TailArrow = (props) => {
                     style={{ position: "absolute" }}
                     cx={linePathDragging ? linePathDragging.x : tail.x}
                     cy={linePathDragging ? linePathDragging.y : tail.y}
-                    r="5"
+                    r="3"
                     stroke="black"
-                    strokeWidth="2px"
-                    fill={linePathDragging ? "blue" : "#0fa958"} />
+                    strokeWidth="0px"
+                    fill={"#5FA2F1"} />
             </svg>
         
     )

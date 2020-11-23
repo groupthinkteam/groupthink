@@ -26,10 +26,10 @@ const LinkCard = (props) => {
 
 const LinkDisplay = React.memo(({ preview, url }) => {
     return (
-        <div className="link-card" onClick={() => window.open(url, "_blank")}>
-            <img className="preview-image" height="100px" width="100px" src={preview.img} alt={preview.title} />
+        <div className="link-card">
+            <img className="preview-image" height="100px" width="100px" src={preview.img} alt={preview.title} onClick={() => window.open(url, "_blank")} />
             <div className="text">
-                <div className="title">
+                <div className="title" onClick={() => window.open(url, "_blank")}>
                     <img alt="link-title" src={require("../../../../assets/link-logo.svg")} />{preview.title}</div>
                 <div className="description">{preview.description}</div>
                 <div className="domain">{preview.domain}</div>
