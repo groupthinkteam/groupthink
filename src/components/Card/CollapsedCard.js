@@ -84,7 +84,7 @@ const CollapsedCard = (props) =>{
     );
 
     return (
-        <div id={props.id}  className="generic-card" style={{
+        <div id={props.id}  className="collapse-card generic-card" style={{
             position: "absolute",
             opacity: 0,
             width: '200px',

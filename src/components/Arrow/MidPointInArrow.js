@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect,useState } from 'react';
 import { gsap, Draggable } from "gsap/all";
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/hook';
@@ -6,23 +6,25 @@ import { useStore } from '../../store/hook';
 gsap.registerPlugin(Draggable)
 
 const MidPointInArrow = (props) => {
-
+    const [collapse, setCollapse] = useState(false);
     const { id, midPoint, linePathDragging } = props;
     const store = useStore();
 
     const collapseChildren = useCallback((childrenId) => {
         const currentCard = store.cards[childrenId];
-        if (childrenId !== id)
-            currentCard?.isCollapse ?
-                store.expandCard(childrenId) : store.collapseCard(childrenId);
-        else {
+
+        if (childrenId === id)
             store.collapsedID[id] ?
                 store.expandCard(id, 'main') : store.collapseCard(id, 'main')
-        }
+        else
+            collapse ?
+                store.expandCard(childrenId) : store.collapseCard(childrenId);
         if (currentCard?.children) {
             Object.keys(currentCard.children).map(childId => collapseChildren(childId))
         }
-    }, [id, store])
+        
+        setCollapse(!collapse)
+    }, [id, store, collapse])
 
     useEffect(() => {
         const mid = Draggable.create("#mid".concat(id),
