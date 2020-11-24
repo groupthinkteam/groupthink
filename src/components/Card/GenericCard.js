@@ -154,10 +154,13 @@ const GenericCard = props => {
                     </div>
                     </div>
                     : null}
-                <button className="kebab" onClick={() => {
+                <button className="kebab" 
+                onClick={() => {
                     store.currentContext = props.id;
                     setContextMenu(null); setShowPopper(!showPopper);
-                }}>
+                }}
+                
+                >
                     <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
                 </button>
                 {
@@ -170,7 +173,7 @@ const GenericCard = props => {
                 <div id={(props.id).concat('blank-filler')} className="blank-filler" ref={blankRef}
                     style={
                         contextMenu && store.currentContext === props.id ?
-                            { zIndex: 1, position: "absolute", top: contextMenu.y, left: contextMenu.x, height: 10, width: 10, backgroundColor: "black" }
+                            { zIndex: 1, position: "absolute", top: contextMenu.y, left: contextMenu.x}
                             : { zIndex: 1, position: "absolute" }
                     }
                 />
@@ -178,12 +181,12 @@ const GenericCard = props => {
                     <MenuCard
                         buttonref={showPopper ? cardRef.current : blankRef.current}
                         position="right-start"
-                        offset={[0, (-store.zoom+ 1)*me.size.width+16]}
+                        offset={[0, (1 - store.zoom)*me.size.width+16]}
                         tooltipclass="tooltips"
                         arrowclass="arrow"
                         showpopper={true}//{store.currentActive === props.id}
                         pos={contextMenu}
-                    //zIndex={1}
+                        zIndex={1}
                     >
                         <div>
                             <MenuListType id={props.id} content={{ ...me.content }} typeAPI={store} setShowLoader={(bool) => setShowLoader(bool)} />
