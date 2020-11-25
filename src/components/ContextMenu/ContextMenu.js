@@ -3,9 +3,9 @@ import React, { useState } from "react"
 import { useStore } from "../../store/hook"
 import "./ContextMenu.scss"
 
-function ContextMenu({ id, loaderCallback }) {
+function ContextMenu({ id, loaderCallback, closeCallback }) {
     let store = useStore()
-    let me = store.cards
+    let parentCard = store.cards[id]
     let cardSpecificOptions = {
         "text": [
             {
@@ -50,7 +50,9 @@ function ContextMenu({ id, loaderCallback }) {
     let commonOptions = [
         {
             label: "Add child",
-            onClick: function addChild() { }
+            onClick: function addChild() {
+                store.addCard({ x: parentCard.position.x + 50, y: parentCard.position.y + parentCard.size.height + 50 }, { width: 275, height: 45 }, id, 'blank')
+            }
         },
     ]
 
@@ -59,13 +61,13 @@ function ContextMenu({ id, loaderCallback }) {
             {
                 commonOptions.map(
                     ({ label, onClick }, index) =>
-                        <ContextMenuItem key={index} label={label} onClickHandler={onClick} />)
+                        <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeCallback() }} />)
             }
             <hr className="separator" />
             {
-                cardSpecificOptions[store.cards[id].type].map(
+                cardSpecificOptions[parentCard.type].map(
                     ({ label, onClick }, index) =>
-                        <ContextMenuItem key={index} label={label} onClickHandler={onClick} />)
+                        <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeCallback() }} />)
             }
         </div>
     )
@@ -73,7 +75,7 @@ function ContextMenu({ id, loaderCallback }) {
 
 function ContextMenuItem({ label, onClickHandler }) {
     return (
-        <div className="item">
+        <div className="item" onClick={onClickHandler}>
             {label}
         </div>
     );

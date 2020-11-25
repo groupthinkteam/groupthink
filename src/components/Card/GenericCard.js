@@ -189,7 +189,7 @@ const GenericCard = props => {
                         pos={contextMenu}
                         zIndex={1}
                     >
-                        <ContextMenu id={props.id} loaderCallback={(bool) => setShowLoader(bool)} />
+                        <ContextMenu id={props.id} loaderCallback={(bool) => setShowLoader(bool)} closeCallback={closeContextMenu} />
                     </MenuCard>
                     : null
                 }
