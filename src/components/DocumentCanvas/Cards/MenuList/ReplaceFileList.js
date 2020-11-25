@@ -70,11 +70,11 @@ function ReplaceFileList(props) {
     return (
 
         <div>
-            <span onClick={() => inputFile.current.click()}>
+            <span onClick={() =>{ inputFile.current.click() ; }}>
                 Replace File
-                </span>
+            </span>
             <input type="file"
-                onChange={(e) => upload(e.target.files)}
+                onChange={(e) => {upload(e.target.files); props.closeContextMenu();}}
                 ref={inputFile}
                 style={{ display: 'none' }} />
             <hr/>
