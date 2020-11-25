@@ -1,11 +1,12 @@
 .tooltips {
   // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid black;
+  border: 1px solid #DEDEDE;
   border-radius: 6px;
   background-color: white;
-  padding: 6px;
+  // padding: 6px;
   text-align: left;
   z-index: 9999999999999;
+  box-sizing: border-box;
 }
 
 .arrow,

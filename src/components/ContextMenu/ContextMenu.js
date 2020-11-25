@@ -72,7 +72,11 @@ function ContextMenu({ id, loaderCallback }) {
 }
 
 function ContextMenuItem({ label, onClickHandler }) {
-    return <p>{label}</p>;
+    return (
+        <div className="item">
+            {label}
+        </div>
+    );
 }
 
 export default observer(ContextMenu)
