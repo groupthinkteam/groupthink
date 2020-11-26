@@ -7,7 +7,9 @@ import { observer } from "mobx-react-lite";
 import cardChooser from "../DocumentCanvas/Cards/cardChooser";
 import '../../styles/PopperMenu.scss';
 import "../../styles/Cards/GenericCard.scss";
-import MenuCard from "../DocumentCanvas/Cards/types/MenuCard";
+import MenuCard from "../DocumentCanvas/Cards/MenuList/MenuCard";
+import menuListChooser from "../DocumentCanvas/Cards/menuListChooser";
+import ReplaceFileList from "../DocumentCanvas/Cards/MenuList/ReplaceFileList";
 import ContextMenu from "../ContextMenu/ContextMenu";
 
 // register gsap plugin so it doesn't get discarded during tree shake
@@ -18,18 +20,17 @@ const GenericCard = props => {
     let store = useStore();
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
+    const MenuListType = menuListChooser(me.type);
     const cardRef = useRef(null);
     const blankRef = useRef(null);
     const [isDragging, setDragging] = useState(false);
     const [showPopper, setShowPopper] = useState(false);
     const [contextMenu, setContextMenu] = useState(null);
     const [showLoader, setShowLoader] = useState(false);
-
     const closeContextMenu = () => {
         setShowPopper(false);
         setContextMenu(null);
     }
-    
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
 
@@ -122,10 +123,6 @@ const GenericCard = props => {
                     console.log("ONBLUR")
                     if (store.currentActive === props.id) {
                         store.currentActive = null;
-                        gsap.to("#".concat(props.id), {
-                            boxShadow: "none",
-                            duration: 0.5
-                        })
                     }
                     e.stopPropagation();
                     store.removeUserEditing(props.id, 'editing')
@@ -133,10 +130,6 @@ const GenericCard = props => {
                 onFocus={e => {
                     store.currentActive = props.id;
                     store.addUserEditing(props.id, 'editing')
-                    gsap.to("#".concat(props.id), {
-                        boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
-                        duration: 0.5
-                    })
                     e.stopPropagation();
                 }}
                 onKeyDown={(e) => {
@@ -196,11 +189,11 @@ const GenericCard = props => {
                         pos={contextMenu}
                         zIndex={1}
                     >
-                        <ContextMenu id={props.id} loaderCallback={(bool) => setShowLoader(bool)} closeContextMenu={closeContextMenu} />
+                        <ContextMenu id={props.id} loaderCallback={(bool) => setShowLoader(bool)} closeContextMenu={closeContextMenu}/>
                     </MenuCard>
                     : null
                 }
-                <CardType typeAPI={store}  content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
+                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
             </div>
         </>
     )
