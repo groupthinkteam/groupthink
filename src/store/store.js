@@ -333,6 +333,10 @@ export var storeObject = {
         console.log("links data: ", linksData)
         return convToCite(linksData).then(() => callback(true)).catch(() => callback(false))
     },
+    sendInviteEmail(data) {
+        var sendLinkEmail = functions.httpsCallable('sendLinkEmail')
+        return sendLinkEmail(data)
+    },
     linksFromText(stri) {
         const regexp = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
         const str = String(stri);

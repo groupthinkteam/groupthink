@@ -200,3 +200,4 @@ const GenericCard = props => {
 }
 
 export default observer(GenericCard);
+

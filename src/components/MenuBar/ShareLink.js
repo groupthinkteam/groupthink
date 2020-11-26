@@ -3,33 +3,43 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/hook";
 import Button from '../Button/Button';
 import '../../styles/UserMenu.scss'
-
-
 import PopperMenu from '../PopperMenu/PopperMenu';
 
 const ShareLink = (props) => {
     const store = useStore();
     const [link, setLink] = useState(false)
+    const [email, setEmail] = useState()
     const [linkType, setLinkType] = useState();
     const [permission, setPermission] = useState();
     const [show, setShow] = useState(false);
     const [url, setURL] = useState();
     const buttonRef = useRef(null);
     const contentRef = useRef(null);
+    const sendInvite = () => {
+            var data = {
+                link: url,
+                emailId: email
+            }
+            console.log("email data: ", data)
+            store.sendInviteEmail(data);        
+    }
     const ChangeRadio = (e) => {
         setPermission(e.target.value)
     }
     const LinkType = (e) => {
         setLinkType(e.target.value)
     }
+    const Email = (e) => {
+        setEmail(e.target.value)
+    }
     const openLink = () => {
         if (linkType !== undefined && permission !== undefined) {
             setLink(true)
             const newKey = store.addKeyToShare(permission)
-            setURL([String(window.location.origin), "shared", store.projectID, newKey, permission].join("/"));
+            return setURL([String(window.location.origin), "shared", store.projectID, newKey, permission].join("/"));
         }
         else
-            setLink(false)
+            return setLink(false)
     }
     useEffect(() => {
         function handleClickOutside(event) {
@@ -53,7 +63,7 @@ const ShareLink = (props) => {
                 arrowclass="arrowuser"
                 showpopper={show}
             >
-                <div ref={contentRef} style={{width:'300px'}}>
+                <div ref={contentRef} style={{ width: '300px' }}>
                     Type Of Link To be Shared
                     <br />
                     <input type="radio" name="linkType" value="public" onChange={e => LinkType(e)} required={true} />
@@ -66,7 +76,9 @@ const ShareLink = (props) => {
                     <input type="radio" name="options" value="rw" onChange={e => ChangeRadio(e)} required={true} />
                     <label htmlFor="male">Read and Write </label>
                     <br />
-                    <Button className="custom_btn" handleClick={openLink}>Generate Link</Button>
+                    <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
+                    <input type="text" name="emailId" onChange={e => Email(e)}></input>
+                    <Button className="custom_btn" handleClick={sendInvite}>Send Invite</Button>
                     {
                         link ?
                             <div style={{ flexDirection: 'row' }}>
