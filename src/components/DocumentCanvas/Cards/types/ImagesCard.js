@@ -12,7 +12,7 @@ const ImagesCard = (props) => {
     if (store.currentActive === props.id && textEditRef.current) {
       textEditRef.current.focus();
     }
-  });
+  },[props.id,store.currentActive]);
 
   return (
     <div className="image-card" key={"imagecard".concat(props.id)}>

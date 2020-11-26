@@ -1,8 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useStore } from "../../store/hook"
-import "./ContextMenu.scss"
-import ReplaceFileList from "../DocumentCanvas/Cards/MenuList/ReplaceFileList"
+import "./ContextMenu.scss";
 
 function ContextMenu({ id, loaderCallback, closeContextMenu }) {
     let store = useStore()
@@ -32,14 +31,14 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
         "audio": [
             {
                 label: "Replace File",
-                onClick: <ReplaceFileList closeContextMenu={closeContextMenu} type={me.type} id={id} typeAPI={store} />
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ],
         "blank": [],
         "file": [
             {
                 label: "Replace File",
-                onClick: <ReplaceFileList closeContextMenu={closeContextMenu} type={me.type} id={id} typeAPI={store} />
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ],
         "image": [
@@ -54,24 +53,28 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
                         (bool) => loaderCallback(false)
                     );
                 }
+            },
+            {
+                label: "Replace File",
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ],
         "link": [
             {
                 label: "Edit Link",
-                onClick: function edit() { }
+                onClick: () => { store.convertCardToBlank(id,me.type); closeContextMenu(); }
             }
         ],
         "VideoLink": [
             {
                 label: "Edit Link",
-                onClick: function edit() { }
+                onClick: () => { store.convertCardToBlank(id,me.type); closeContextMenu(); }
             }
         ],
         "VideoFile": [
             {
                 label: "Replace File",
-                onClick: <ReplaceFileList closeContextMenu={closeContextMenu} type={me.type} id={id} typeAPI={store} />
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ]
     }
@@ -115,10 +118,7 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
 }
 
 function ContextMenuItem({ label, onClickHandler }) {
-    if (label === 'Replace File')
-        return onClickHandler
-    else
-        return <p onClick={onClickHandler}>{label}</p>;
+    return <p style={{ cursor: 'pointer' }} onClick={onClickHandler}>{label}</p>;
 }
 
 export default observer(ContextMenu)
