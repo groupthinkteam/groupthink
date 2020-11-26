@@ -34,8 +34,10 @@ function ReplaceFileList(props) {
         };
         props.typeAPI.requestUpload(uploadPath, file, typemeta,
             (status) => {
-                if (typeof status === "number")
+                if (typeof status === "number") {
                     setUploadState(status);
+                    props.loaderCallback(true);
+                }
                 else {
                     props.typeAPI.requestDownload(
                         uploadPath,
@@ -60,28 +62,19 @@ function ReplaceFileList(props) {
     if (uploadState) {
         gsap.to("#uploadfiller".concat(props.id), { height: uploadState + "%" })
     }
-    const fileSet = {
-        image : 'image',
-        file:'file',
-        VideoFile:'VideoFile',
-        audio:'audio'
-    }
-    if(fileSet[props.type])
     return (
 
         <div>
-            <span onClick={() =>{ inputFile.current.click() ; }}>
+            <span onClick={() => { inputFile.current.click(); }}>
                 Replace File
             </span>
             <input type="file"
-                onChange={(e) => {upload(e.target.files); props.closeContextMenu();}}
+                onChange={(e) => { upload(e.target.files); props.closeContextMenu(); }}
                 ref={inputFile}
                 style={{ display: 'none' }} />
-            <hr/>
+            <hr />
         </div >
     )
-    else
-    return '';
 }
 
 export default React.memo(ReplaceFileList);

@@ -4,7 +4,7 @@ import { useStore } from "../../store/hook"
 import "./ContextMenu.scss"
 import ReplaceFileList from "../DocumentCanvas/Cards/MenuList/ReplaceFileList"
 
-function ContextMenu({ id, loaderCallback, closeContextMenu }) {
+function ContextMenu({ id, loaderCallback, closeContextMenu, enableEditLink }) {
     let store = useStore()
     let me = store.cards[id]
     const convLinks = (citationStyle) => {
@@ -32,14 +32,14 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
         "audio": [
             {
                 label: "Replace File",
-                onClick: <ReplaceFileList closeContextMenu={closeContextMenu} type={me.type} id={id} typeAPI={store} />
+                onClick: ()=>{store.converCardToBlank(id); closeContextMenu();} 
             }
         ],
         "blank": [],
         "file": [
             {
                 label: "Replace File",
-                onClick: <ReplaceFileList closeContextMenu={closeContextMenu} type={me.type} id={id} typeAPI={store} />
+                onClick: () => {store.converCardToBlank(id); closeContextMenu();}
             }
         ],
         "image": [
@@ -54,6 +54,10 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
                         (bool) => loaderCallback(false)
                     );
                 }
+            },
+            {
+                label: "Replace File",
+                onClick: () => {store.converCardToBlank(id); closeContextMenu();}
             }
         ],
         "link": [
@@ -65,13 +69,13 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
         "VideoLink": [
             {
                 label: "Edit Link",
-                onClick: function edit() { }
+                onClick: () => {}
             }
         ],
         "VideoFile": [
             {
                 label: "Replace File",
-                onClick: <ReplaceFileList closeContextMenu={closeContextMenu} type={me.type} id={id} typeAPI={store} />
+                onClick: () =>{ store.converCardToBlank(id); closeContextMenu(); }
             }
         ]
     }
@@ -115,10 +119,7 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
 }
 
 function ContextMenuItem({ label, onClickHandler }) {
-    if (label === 'Replace File')
-        return onClickHandler
-    else
-        return <p onClick={onClickHandler}>{label}</p>;
+    return <p style={{ cursor: 'pointer' }} onClick={onClickHandler}>{label}</p>;
 }
 
 export default observer(ContextMenu)

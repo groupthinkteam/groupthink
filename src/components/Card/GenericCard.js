@@ -27,6 +27,8 @@ const GenericCard = props => {
     const [showPopper, setShowPopper] = useState(false);
     const [contextMenu, setContextMenu] = useState(null);
     const [showLoader, setShowLoader] = useState(false);
+
+    console.log("CHECK ",showLoader);
     const closeContextMenu = () => {
         setShowPopper(false);
         setContextMenu(null);
@@ -123,6 +125,10 @@ const GenericCard = props => {
                     console.log("ONBLUR")
                     if (store.currentActive === props.id) {
                         store.currentActive = null;
+                        gsap.to("#".concat(props.id), {
+                            boxShadow: "none",
+                            duration: 0.5
+                        })
                     }
                     e.stopPropagation();
                     store.removeUserEditing(props.id, 'editing')
@@ -130,6 +136,10 @@ const GenericCard = props => {
                 onFocus={e => {
                     store.currentActive = props.id;
                     store.addUserEditing(props.id, 'editing')
+                    gsap.to("#".concat(props.id), {
+                        boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
+                        duration: 0.5
+                    })
                     e.stopPropagation();
                 }}
                 onKeyDown={(e) => {
@@ -189,11 +199,11 @@ const GenericCard = props => {
                         pos={contextMenu}
                         zIndex={1}
                     >
-                        <ContextMenu id={props.id} loaderCallback={(bool) => setShowLoader(bool)} closeContextMenu={closeContextMenu}/>
+                        <ContextMenu id={props.id} loaderCallback={(bool) => setShowLoader(bool)} closeContextMenu={closeContextMenu} />
                     </MenuCard>
                     : null
                 }
-                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
+                <CardType typeAPI={store}  content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
             </div>
         </>
     )
