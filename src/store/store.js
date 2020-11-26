@@ -305,13 +305,12 @@ export var storeObject = {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
-    converCardToBlank(id) {
-        //a.delete file from storage 
-        //b. reset content
-        //c. change type
-        const pathToFile = this.cards[id].content.metadata.fullPath
-        const ref = storage().ref(pathToFile);
-        ref.delete().then(console.log("File Deleted")).catch(err => console.log("File Delete Error", err))
+    convertCardToBlank(id,type) {
+        if (!type) {
+            const pathToFile = this.cards[id].content.metadata.fullPath
+            const ref = storage().ref(pathToFile);
+            ref.delete().then(console.log("File Deleted")).catch(err => console.log("File Delete Error", err))
+        } 
         this.changeType(id, 'blank', { width: 275, height: 45 }, { text: '' });
     },
     convertImageToBW(fullPath, contentType, customMetadata, callback) {

@@ -1,10 +1,9 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useStore } from "../../store/hook"
-import "./ContextMenu.scss"
-import ReplaceFileList from "../DocumentCanvas/Cards/MenuList/ReplaceFileList"
+import "./ContextMenu.scss";
 
-function ContextMenu({ id, loaderCallback, closeContextMenu, enableEditLink }) {
+function ContextMenu({ id, loaderCallback, closeContextMenu }) {
     let store = useStore()
     let me = store.cards[id]
     const convLinks = (citationStyle) => {
@@ -32,14 +31,14 @@ function ContextMenu({ id, loaderCallback, closeContextMenu, enableEditLink }) {
         "audio": [
             {
                 label: "Replace File",
-                onClick: ()=>{store.converCardToBlank(id); closeContextMenu();} 
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ],
         "blank": [],
         "file": [
             {
                 label: "Replace File",
-                onClick: () => {store.converCardToBlank(id); closeContextMenu();}
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ],
         "image": [
@@ -57,25 +56,25 @@ function ContextMenu({ id, loaderCallback, closeContextMenu, enableEditLink }) {
             },
             {
                 label: "Replace File",
-                onClick: () => {store.converCardToBlank(id); closeContextMenu();}
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ],
         "link": [
             {
                 label: "Edit Link",
-                onClick: function edit() { }
+                onClick: () => { store.convertCardToBlank(id,me.type); closeContextMenu(); }
             }
         ],
         "VideoLink": [
             {
                 label: "Edit Link",
-                onClick: () => {}
+                onClick: () => { store.convertCardToBlank(id,me.type); closeContextMenu(); }
             }
         ],
         "VideoFile": [
             {
                 label: "Replace File",
-                onClick: () =>{ store.converCardToBlank(id); closeContextMenu(); }
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ]
     }
