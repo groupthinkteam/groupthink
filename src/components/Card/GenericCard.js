@@ -7,9 +7,7 @@ import { observer } from "mobx-react-lite";
 import cardChooser from "../DocumentCanvas/Cards/cardChooser";
 import '../../styles/PopperMenu.scss';
 import "../../styles/Cards/GenericCard.scss";
-import MenuCard from "../DocumentCanvas/Cards/MenuList/MenuCard";
-import menuListChooser from "../DocumentCanvas/Cards/menuListChooser";
-import ReplaceFileList from "../DocumentCanvas/Cards/MenuList/ReplaceFileList";
+import MenuCard from "../DocumentCanvas/Cards/types/MenuCard";
 import ContextMenu from "../ContextMenu/ContextMenu";
 
 // register gsap plugin so it doesn't get discarded during tree shake
@@ -20,7 +18,6 @@ const GenericCard = props => {
     let store = useStore();
     let me = store.cards[props.id];
     const CardType = cardChooser(me.type);
-    const MenuListType = menuListChooser(me.type);
     const cardRef = useRef(null);
     const blankRef = useRef(null);
     const [isDragging, setDragging] = useState(false);
