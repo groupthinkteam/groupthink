@@ -1,48 +1,80 @@
 import { observer } from "mobx-react-lite"
-import React, { useState } from "react"
+import React from "react"
 import { useStore } from "../../store/hook"
-import "./ContextMenu.scss"
+import "./ContextMenu.scss";
 
-function ContextMenu({ id, loaderCallback, closeCallback }) {
+function ContextMenu({ id, loaderCallback, closeContextMenu }) {
     let store = useStore()
-    let parentCard = store.cards[id]
+    let me = store.cards[id]
+    const convLinks = (citationStyle) => {
+        loaderCallback(true)
+        // TODO if bool is false, the operation failed, show error
+        store.convertLinksToCitation(id, citationStyle, (bool) => loaderCallback(false));
+        closeContextMenu();
+    }
+
     let cardSpecificOptions = {
         "text": [
             {
-                label: "Generate Citation",
-                onClick: function cite() { }
+                label: "Generate Citation / APA Citation",
+                onClick: () => convLinks("apa")
+            },
+            {
+                label: "Vancouver Style",
+                onClick: () => convLinks("vancouver")
+            },
+            {
+                label: "Harvard Style",
+                onClick: () => convLinks("harvard1")
             }
         ],
-        "audio": [],
+        "audio": [
+            {
+                label: "Replace File",
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
+            }
+        ],
         "blank": [],
         "file": [
             {
                 label: "Replace File",
-                onClick: function replace() { }
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ],
         "image": [
             {
                 label: "Apply B/W Filter",
-                onClick: function bwfilter() { }
+                onClick: () => {
+                    loaderCallback(true);
+                    store.convertImageToBW(
+                        me.content.metadata.fullPath,
+                        me.content.metadata.contentType,
+                        me.content.metadata.customMetadata,
+                        (bool) => loaderCallback(false)
+                    );
+                }
+            },
+            {
+                label: "Replace File",
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ],
         "link": [
             {
                 label: "Edit Link",
-                onClick: function edit() { }
+                onClick: () => { store.convertCardToBlank(id,me.type); closeContextMenu(); }
             }
         ],
-        "onlinevideo": [
+        "VideoLink": [
             {
                 label: "Edit Link",
-                onClick: function edit() { }
+                onClick: () => { store.convertCardToBlank(id,me.type); closeContextMenu(); }
             }
         ],
-        "video": [
+        "VideoFile": [
             {
-                label: "Replace Video",
-                onClick: function replace() { }
+                label: "Replace File",
+                onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
         ]
     }
@@ -50,10 +82,22 @@ function ContextMenu({ id, loaderCallback, closeCallback }) {
     let commonOptions = [
         {
             label: "Add child",
-            onClick: function addChild() {
-                store.addCard({ x: parentCard.position.x + 50, y: parentCard.position.y + parentCard.size.height + 50 }, { width: 275, height: 45 }, id, 'blank')
+            onClick: () => {
+                store.addCard(
+                    { x: me.position.x + 50, y: me.position.y + me.size.height + 50 },
+                    { width: 275, height: 45 },
+                    id, 'blank'
+                );
+                closeContextMenu();
             }
         },
+        {
+            label: 'Delete',
+            onClick: () => {
+                store.removeCard(id, "recursive", me["parent"]);
+                closeContextMenu();
+            }
+        }
     ]
 
     return (
@@ -61,24 +105,20 @@ function ContextMenu({ id, loaderCallback, closeCallback }) {
             {
                 commonOptions.map(
                     ({ label, onClick }, index) =>
-                        <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeCallback() }} />)
+                        <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeContextMenu() }} />)
             }
             <hr className="separator" />
             {
-                cardSpecificOptions[parentCard.type].map(
+                cardSpecificOptions[me.type].map(
                     ({ label, onClick }, index) =>
-                        <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeCallback() }} />)
+                        <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeContextMenu() }} />)
             }
         </div>
     )
 }
 
 function ContextMenuItem({ label, onClickHandler }) {
-    return (
-        <div className="item" onClick={onClickHandler}>
-            {label}
-        </div>
-    );
+    return <p style={{ cursor: 'pointer' }} onClick={onClickHandler}>{label}</p>;
 }
 
 export default observer(ContextMenu)

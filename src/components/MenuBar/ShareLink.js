@@ -3,9 +3,8 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/hook";
 import Button from '../Button/Button';
 import '../../styles/UserMenu.scss'
-
-
 import PopperMenu from '../PopperMenu/PopperMenu';
+import CreatableSelect from 'react-select/creatable';
 
 const ShareLink = (props) => {
     const store = useStore();
@@ -16,25 +15,28 @@ const ShareLink = (props) => {
     const [url, setURL] = useState();
     const buttonRef = useRef(null);
     const contentRef = useRef(null);
-    const ChangeRadio = (e) => {
-        setPermission(e.target.value)
-    }
-    const LinkType = (e) => {
-        setLinkType(e.target.value)
-    }
-    const openLink = () => {
-        if (linkType !== undefined && permission !== undefined) {
-            setLink(true)
-            const newKey = store.addKeyToShare(permission)
-            setURL([String(window.location.origin), "shared", store.projectID, newKey, permission].join("/"));
-        }
-        else
-            setLink(false)
+    //Stores the State for EMail-ID inputs.
+    const [state, setState] = useState({
+        inputValue: '',
+        value: []
+    });
+
+    
+    const handleClose = () => {
+        setShow(false);
+        setState({
+            inputValue: '',
+            value: []
+        });
+        setLink(false);
+        setURL(null);
+        setLinkType(null);
+        setPermission(null);
     }
     useEffect(() => {
         function handleClickOutside(event) {
             if (buttonRef.current && contentRef.current && !buttonRef.current.contains(event.target) && !contentRef.current.contains(event.target)) {
-                setShow(false);
+                handleClose();
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
@@ -42,6 +44,77 @@ const ShareLink = (props) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [buttonRef]);
+
+    const sendInvite = () => {
+
+        if (state.value.length > 0) {
+            Object.entries(state.value).forEach(([_, val]) => {
+                const updates = {};
+                updates["emailId"] = val.value;
+                const newKey = store.addKeyToShare(permission || 'rw')
+                updates["link"] = [String(window.location.origin), "shared", store.projectID, newKey, permission || 'rw'].join("/");
+                store.sendInviteEmail(updates);
+            })
+        }
+        else
+            console.log("EMPTY STRING");
+    }
+    const ChangeRadio = (e) => {
+        setPermission(e.target.value)
+    }
+    const LinkType = (e) => {
+        setLinkType(e.target.value)
+    }
+    const components = {
+        DropdownIndicator: null,
+    };
+
+    const createOption = (label) => ({
+        label,
+        value: label,
+    });
+    const openLink = () => {
+        if (linkType !== undefined && permission !== undefined) {
+            setLink(true)
+            const newKey = store.addKeyToShare(permission)
+            return setURL([String(window.location.origin), "shared", store.projectID, newKey, permission].join("/"));
+        }
+        else
+            return setLink(false)
+    }
+    
+    function validateEmail(email) {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+
+    const handleChange = (value, actionMeta) => {
+        setState({ inputValue: state.inputValue, value: value });
+    };
+
+    const handleInputChange = (inputValue) => {
+        setState({ inputValue: inputValue, value: state.value });
+    };
+
+    const handleKeyDown = (event) => {
+        const { inputValue, value } = state;
+        if (!inputValue) return;
+        switch (event.key) {
+            case 'Enter':
+            case 'Tab':
+                if (validateEmail(inputValue)) {
+                    setState({
+                        inputValue: '',
+                        value: [...value, createOption(inputValue)],
+                    });
+                }
+                else alert(`Invalid Email Entered ${inputValue}`, setState(state))
+                event.preventDefault();
+                break;
+            default: break;
+        }
+    }
+
     return (
         <>
             <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => setShow(!show)}>Share</Button>
@@ -53,7 +126,7 @@ const ShareLink = (props) => {
                 arrowclass="arrowuser"
                 showpopper={show}
             >
-                <div ref={contentRef} style={{width:'300px'}}>
+                <div ref={contentRef} style={{ width: '300px' }}>
                     Type Of Link To be Shared
                     <br />
                     <input type="radio" name="linkType" value="public" onChange={e => LinkType(e)} required={true} />
@@ -66,7 +139,7 @@ const ShareLink = (props) => {
                     <input type="radio" name="options" value="rw" onChange={e => ChangeRadio(e)} required={true} />
                     <label htmlFor="male">Read and Write </label>
                     <br />
-                    <Button className="custom_btn" handleClick={openLink}>Generate Link</Button>
+                    <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
                     {
                         link ?
                             <div style={{ flexDirection: 'row' }}>
@@ -78,9 +151,25 @@ const ShareLink = (props) => {
                             </div>
                             : <div />
                     }
+                    <div>
+                        <CreatableSelect
+                            components={components}
+                            inputValue={state.inputValue}
+                            isClearable
+                            isMulti
+                            menuIsOpen={false}
+                            onChange={handleChange.bind(this)}
+                            onInputChange={e => handleInputChange(e)}
+                            onKeyDown={e => handleKeyDown(e)}
+                            placeholder="Type Email and press enter..."
+                            value={state.value}
+                        />
+                        <Button className="custom_btn" handleClick={sendInvite}>Send Invite</Button>
+                    </div>
                 </div>
             </PopperMenu>
         </>
     )
 };
+
 export default observer(ShareLink);

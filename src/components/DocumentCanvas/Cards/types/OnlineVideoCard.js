@@ -21,7 +21,9 @@ const OnlineVideoCard = (props) => {
                 />
             </div>
             <a style={{ color: 'red' }} href={props.content.metadata.url}>
-                <span className="video-card-title">{props.content.metadata.title}</span>
+                <span className="video-card-title">
+                    {props.content.metadata.title}
+                </span>
             </a>
         </div>
     )

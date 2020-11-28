@@ -16,7 +16,7 @@ export var storeObject = {
     currentActive: null,
     collapsedID: {},
     documentLoadPercent: 0,
-    currentContext:'',
+    currentContext: '',
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -238,7 +238,7 @@ export var storeObject = {
         this.cards[id]["content"] = newContent;
         this.saveContent(id, newContent);
     },
-    changeType(id, newType, size, content) {
+    changeType(id, newType, size, content, callback) {
         this.updateLastActive();
         const newCardDefaults = {
             type: newType,
@@ -305,6 +305,14 @@ export var storeObject = {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
+    convertCardToBlank(id,type) {
+        if (!type) {
+            const pathToFile = this.cards[id].content.metadata.fullPath
+            const ref = storage().ref(pathToFile);
+            ref.delete().then(console.log("File Deleted")).catch(err => console.log("File Delete Error", err))
+        } 
+        this.changeType(id, 'blank', { width: 275, height: 45 }, { text: '' });
+    },
     convertImageToBW(fullPath, contentType, customMetadata, callback) {
         const imageData = {
             fpath: fullPath,
@@ -332,6 +340,10 @@ export var storeObject = {
         }
         console.log("links data: ", linksData)
         return convToCite(linksData).then(() => callback(true)).catch(() => callback(false))
+    },
+    sendInviteEmail(data) {
+        var sendLinkEmail = functions.httpsCallable('sendLinkEmail')
+        return sendLinkEmail(data)
     },
     linksFromText(stri) {
         const regexp = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
