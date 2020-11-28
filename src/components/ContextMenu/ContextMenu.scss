@@ -1,0 +1,20 @@
+.context-menu {
+    overflow: hidden;
+    cursor: default;
+    .separator {
+        padding: 2px 2px 2px 2px;
+        margin: 2px 6px 2px 6px;
+    }
+    .item {
+        margin: 2px 2px 2px 2px;
+        padding: 6px 6px 6px 6px;
+        font-size: 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        &:hover {
+            color: white;
+            background-color:#0C6FF9;
+            background-color: #FC611E;
+        }
+    }
+}

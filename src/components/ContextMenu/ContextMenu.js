@@ -105,13 +105,13 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
             {
                 commonOptions.map(
                     ({ label, onClick }, index) =>
-                        <ContextMenuItem key={index} label={label} onClickHandler={onClick} />)
+                        <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeContextMenu() }} />)
             }
             <hr className="separator" />
             {
                 cardSpecificOptions[me.type].map(
                     ({ label, onClick }, index) =>
-                        <ContextMenuItem key={index} label={label} onClickHandler={onClick} />)
+                        <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeContextMenu() }} />)
             }
         </div>
     )
