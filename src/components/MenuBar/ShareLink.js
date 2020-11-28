@@ -5,6 +5,7 @@ import Button from '../Button/Button';
 import '../../styles/UserMenu.scss'
 import PopperMenu from '../PopperMenu/PopperMenu';
 import CreatableSelect from 'react-select/creatable';
+import { database } from '../../services/firebase'
 
 const ShareLink = (props) => {
     const store = useStore();
@@ -45,8 +46,18 @@ const ShareLink = (props) => {
         };
     }, [buttonRef]);
 
-    const sendInvite = () => {
+    const checkLinks = () => {
+        var objKeys = {}
+       if (store.checkKeys() == true) {
+            objKeys = store.fetchKeys();
+            var lastPerm = objKeys[Object.keys(objKeys)[Object.keys(objKeys).length - 1]]
+            var lastKey = Object.keys(objKeys)[Object.keys(objKeys).length - 1]
+            setURL([String(window.location.origin), "shared", store.projectID, lastKey, lastPerm].join("/"));
+            setLink(true)
+       }
+    }
 
+    const sendInvite = () => {
         if (state.value.length > 0) {
             Object.entries(state.value).forEach(([_, val]) => {
                 const updates = {};
@@ -117,7 +128,7 @@ const ShareLink = (props) => {
 
     return (
         <>
-            <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => setShow(!show)}>Share</Button>
+            <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => {setShow(!show); checkLinks();}}>Share</Button>
             <PopperMenu
                 buttonref={buttonRef}
                 position="bottom"

@@ -4,6 +4,7 @@ import { database, storage, auth, servertime, functions } from "../services/fire
 import projectTemplates from "../constants/projectTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
+import { snap } from "gsap/all"
 
 export var storeObject = {
     projects: {},
@@ -372,7 +373,23 @@ export var storeObject = {
             .update(updates)
             .then(console.log("successfully Added key ", newSharedKey))
             .catch((reason) => console.log("error in updating key because", reason));
+            console.log("keys ", this.projectRef.child("sharing").once('value').then((snapshot) => snapshot.val()))
         return (newSharedKey);
+    },
+    checkKeys() {
+        var id = this.projectRef.child("sharing").once('value').then((snapshot) => snapshot.val())
+        if (id !== null) {
+            return true
+        }
+        else {
+            return false
+        }
+    },
+    fetchKeys() {
+        const objKeys = this.projectRef.child("sharing").once('value')
+        .then((snapshot) => snapshot.val())
+        .catch((err) => console.log(err))
+        return objKeys
     },
     createSharedUser(projectID, keyId, permission, callback) {
         let updates = {};
