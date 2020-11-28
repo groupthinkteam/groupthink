@@ -46,17 +46,21 @@ const ShareLink = (props) => {
         };
     }, [buttonRef]);
 
-    const checkLinks = () => {
+    const checkLinks = async () => {
         var objKeys = {}
-       if (store.checkKeys() == true) {
-            objKeys = store.fetchKeys();
+        var check = await store.checkKeys()
+        console.log(check)
+       if (check == true) {
+            objKeys = await store.fetchKeys();
+            //console.log("Object Keys", objKeys)
             var lastPerm = objKeys[Object.keys(objKeys)[Object.keys(objKeys).length - 1]]
             var lastKey = Object.keys(objKeys)[Object.keys(objKeys).length - 1]
+            //console.log("obj", lastPerm, lastKey)
             setURL([String(window.location.origin), "shared", store.projectID, lastKey, lastPerm].join("/"));
             setLink(true)
        }
     }
-
+    
     const sendInvite = () => {
         if (state.value.length > 0) {
             Object.entries(state.value).forEach(([_, val]) => {
@@ -150,9 +154,11 @@ const ShareLink = (props) => {
                     <input type="radio" name="options" value="rw" onChange={e => ChangeRadio(e)} required={true} />
                     <label htmlFor="male">Read and Write </label>
                     <br />
-                    <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
+                    
                     {
                         link ?
+                        <div>
+                            <Button className="custom_btn" handleClick={() => {setLink(false); store.removeKey();}}>Turn off</Button>
                             <div style={{ flexDirection: 'row' }}>
                                 <br />
                             Copy Your Link :
@@ -160,7 +166,10 @@ const ShareLink = (props) => {
                                 <b style={{ flexShrink: 1, flex: 1, flexWrap: 'wrap' }}>{url}</b>
                                 <br />
                             </div>
-                            : <div />
+                        </div>
+                            
+                            : 
+                            <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
                     }
                     <div>
                         <CreatableSelect

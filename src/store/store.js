@@ -306,12 +306,12 @@ export var storeObject = {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
-    convertCardToBlank(id,type) {
+    convertCardToBlank(id, type) {
         if (!type) {
             const pathToFile = this.cards[id].content.metadata.fullPath
             const ref = storage().ref(pathToFile);
             ref.delete().then(console.log("File Deleted")).catch(err => console.log("File Delete Error", err))
-        } 
+        }
         this.changeType(id, 'blank', { width: 275, height: 45 }, { text: '' });
     },
     convertImageToBW(fullPath, contentType, customMetadata, callback) {
@@ -373,23 +373,34 @@ export var storeObject = {
             .update(updates)
             .then(console.log("successfully Added key ", newSharedKey))
             .catch((reason) => console.log("error in updating key because", reason));
-            console.log("keys ", this.projectRef.child("sharing").once('value').then((snapshot) => snapshot.val()))
+        console.log("keys ", this.projectRef.child("sharing").once('value').then((snapshot) => snapshot.val()))
         return (newSharedKey);
     },
     checkKeys() {
-        var id = this.projectRef.child("sharing").once('value').then((snapshot) => snapshot.val())
-        if (id !== null) {
-            return true
-        }
-        else {
-            return false
-        }
+        const check = this.projectRef.child("sharing").once('value')
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    return true;
+                }
+            })
+            .catch((err) => err)
+        return check;
     },
     fetchKeys() {
-        const objKeys = this.projectRef.child("sharing").once('value')
-        .then((snapshot) => snapshot.val())
-        .catch((err) => console.log(err))
-        return objKeys
+        const keys = this.projectRef.child("sharing").once('value')
+            .then((snapshot) => {
+                return snapshot.val()
+            })
+            .catch((err) => console.log(err))
+        return keys
+    },
+    removeKey() {
+        const keys = this.projectRef.child("sharing").remove()
+            .then(() => {
+                console.log("Removed")
+            })
+            .catch((err) => console.log(err))
+        return keys
     },
     createSharedUser(projectID, keyId, permission, callback) {
         let updates = {};
