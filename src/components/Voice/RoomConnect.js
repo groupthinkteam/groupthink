@@ -15,15 +15,17 @@ const RoomConnect = (props) => {
   const ROOM_NAME = props.projectID;
   const [isJoined, setIsJoined] = useState(false);
   const globalStore = useStore();
-  useEffect(()=>{
-    if(isJoined)
-    {
+  
+  useEffect(() => {
+    const me = globalStore.users[globalStore.userID];
+    if (isJoined) {
       globalStore.addUserCallInfo();
     }
-    else{
+    if (me.joinedCall && !isJoined) {
       globalStore.removeUserCallInfo();
     }
-  },[isJoined,globalStore])
+  }, [isJoined, globalStore])
+
   return (
     <div className="voice-room">
       <Provider store={store}>
@@ -78,4 +80,4 @@ function PeerItem(props) {
   )
 }
 
-export default observer( RoomConnect);
+export default observer(RoomConnect);

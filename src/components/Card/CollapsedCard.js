@@ -1,47 +1,45 @@
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useStore } from '../../store/hook';
 import { gsap, Draggable } from "gsap/all";
-import "../../styles/Cards/GenericCard.scss";
+import "../../styles/Cards/CollapseCard.scss";
 gsap.registerPlugin(Draggable);
 
-const CollapsedCard = (props) =>{
+const CollapsedCard = (props) => {
     const store = useStore();
     const me = store.cards[props.id];
     let count = 1;
     const childArray = {};
-    const countCollapseCard = (id) =>{
+    const collapseCardRef = useRef(null);
+    const countCollapseCard = (id) => {
         const currentCard = store.cards[id];
-        if(currentCard?.children)
-        {
-            count = count+Object.keys(currentCard.children).length
-            Object.keys(currentCard.children).forEach(cardID=>{
+        if (currentCard?.children) {
+            count = count + Object.keys(currentCard.children).length
+            Object.keys(currentCard.children).forEach(cardID => {
                 const collapsedCard = store.cards[cardID];
                 //Cards Will be relative to the collapsed top parent (props.id)
-                const x_DIff =collapsedCard.position.x - me.position.x;
+                const x_DIff = collapsedCard.position.x - me.position.x;
                 const y_Diff = collapsedCard.position.y - me.position.y;
                 // This Records all Childs and SubChilds Counts And Position DIfference
-                childArray[cardID]={x:x_DIff,y:y_Diff};
+                childArray[cardID] = { x: x_DIff, y: y_Diff };
                 countCollapseCard(cardID)
             });
             return count;
         }
-        else
-        {
+        else {
             return count
         }
-        
+
     }
-    useEffect(()=>{ gsap.set("#".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
-    , [props.id, me.position])
+    useEffect(() => { gsap.set("#".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
+        , [props.id, me.position])
     // if size changes, animate it
-    useEffect(() => { gsap.set("#".concat(props.id),{width: me.size.width,
-    height: '50px'}) }, [me, props.id])
+    useEffect(() => { gsap.set("#".concat(props.id), { width: 275, height: 45 }) }, [me, props.id])
 
     useEffect(
         () => {
             // warning: can't use arrow functions here since that messes up the "this" binding
-            
+
             function dragStop() {
                 gsap.to("#".concat(props.id), {
                     boxShadow: "none",
@@ -49,8 +47,8 @@ const CollapsedCard = (props) =>{
                 })
                 store.savePosition(props.id, { x: this.x, y: this.y });
                 //Save relative position w.r.t. parent
-                Object.entries(childArray).forEach(([cardId,value])=>{
-                    store.savePosition(cardId,{x:this.x+value.x, y:this.y+value.y});
+                Object.entries(childArray).forEach(([cardId, value]) => {
+                    store.savePosition(cardId, { x: this.x + value.x, y: this.y + value.y });
                     store.collapseCard(cardId);
                 })
             }
@@ -68,11 +66,14 @@ const CollapsedCard = (props) =>{
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: false,
-                    onClick: () => { },
+                    onClick: () => { collapseCardRef.current.focus(); },
                     onDragStart: dragStart,
                     onDrag: function drag() {
-                        
-                        store.changePosition(props.id,{x: this.x, y: this.y })
+                        gsap.to("#".concat(props.id), {
+                            boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
+                            duration: 0.5
+                        })
+                        store.changePosition(props.id, { x: this.x, y: this.y })
                     },
                     onDragEnd: dragStop,
                     cursor: "grab",
@@ -84,16 +85,17 @@ const CollapsedCard = (props) =>{
     );
 
     return (
-        <div id={props.id}  className="collapse-card generic-card" style={{
+        <div id={props.id} ref={collapseCardRef} className="collapse-card " tabIndex={0} style={{
             position: "absolute",
             opacity: 0,
-            width: '200px',
-            height: '50px',
+            width: 275,
+            height: 45,
             borderTopLeftRadius: me.editingUser ? "0px" : "6px",
             tabIndex: -1,
-            backgroundColor:'white'
+            textAlign:'center',
+            backgroundColor: 'white'
         }}>
-            {countCollapseCard(props.id)} Cards are Collapsed
+            <span>{countCollapseCard(props.id)} Cards are Collapsed</span>
         </div>
     )
 }

@@ -436,7 +436,7 @@ export var storeObject = {
     removeUserCallInfo(info) {
         this.projectRef.child('users').child(this.userID)
             .update({ joinedCall: null })
-            .then(console.log("This User has Joined Call"))
+            .then(console.log("This User has Not Joined Call"))
             .catch(error => console.log("Error raised in removeUserCallInfo because ", error))
     },
     // listener manipulation
