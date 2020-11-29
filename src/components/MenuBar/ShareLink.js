@@ -5,12 +5,11 @@ import Button from '../Button/Button';
 import '../../styles/UserMenu.scss'
 import PopperMenu from '../PopperMenu/PopperMenu';
 import CreatableSelect from 'react-select/creatable';
-import { database } from '../../services/firebase'
+import { _isUndefined } from 'gsap/gsap-core';
 
 const ShareLink = (props) => {
     const store = useStore();
     const [link, setLink] = useState(false)
-    const [linkType, setLinkType] = useState();
     const [permission, setPermission] = useState();
     const [show, setShow] = useState(false);
     const [url, setURL] = useState();
@@ -22,7 +21,7 @@ const ShareLink = (props) => {
         value: []
     });
 
-    
+
     const handleClose = () => {
         setShow(false);
         setState({
@@ -31,7 +30,6 @@ const ShareLink = (props) => {
         });
         setLink(false);
         setURL(null);
-        setLinkType(null);
         setPermission(null);
     }
     useEffect(() => {
@@ -50,7 +48,7 @@ const ShareLink = (props) => {
         var objKeys = {}
         var check = await store.checkKeys()
         console.log(check)
-       if (check == true) {
+        if (check === true) {
             objKeys = await store.fetchKeys();
             //console.log("Object Keys", objKeys)
             var lastPerm = objKeys[Object.keys(objKeys)[Object.keys(objKeys).length - 1]]
@@ -58,28 +56,48 @@ const ShareLink = (props) => {
             //console.log("obj", lastPerm, lastKey)
             setURL([String(window.location.origin), "shared", store.projectID, lastKey, lastPerm].join("/"));
             setLink(true)
-       }
-    }
-    
-    const sendInvite = () => {
-        if (state.value.length > 0) {
-            Object.entries(state.value).forEach(([_, val]) => {
-                const updates = {};
-                updates["emailId"] = val.value;
-                const newKey = store.addKeyToShare(permission || 'rw')
-                updates["link"] = [String(window.location.origin), "shared", store.projectID, newKey, permission || 'rw'].join("/");
-                store.sendInviteEmail(updates);
-            })
         }
-        else
-            console.log("EMPTY STRING");
     }
+
+    const sendInvite = async () => {
+        var check = await store.checkKeys()
+        if (permission !== undefined) {
+            if (state.value.length > 0) {
+                const updates = {};
+                if (check === true) {
+                    updates["link"] = url;
+                }
+                else {
+                    const newKey = store.addKeyToShare(permission)
+                    updates["link"] = [String(window.location.origin), "shared", store.projectID, newKey, permission].join("/");
+                }
+                Object.entries(state.value).forEach(([_, val]) => {
+                    updates["emailId"] = val.value;
+                    store.sendInviteEmail(updates);
+                })
+            }
+            else
+                console.log("EMPTY STRING");
+        }
+        else {
+            alert("Please Select Permissions for link sharing.")
+        }
+    }
+
+    const copyLink = () => {
+        const el = document.createElement('textarea');
+        el.value = url;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    }
+
     const ChangeRadio = (e) => {
+        console.log(e.target.value)
         setPermission(e.target.value)
     }
-    const LinkType = (e) => {
-        setLinkType(e.target.value)
-    }
+
     const components = {
         DropdownIndicator: null,
     };
@@ -89,15 +107,16 @@ const ShareLink = (props) => {
         value: label,
     });
     const openLink = () => {
-        if (linkType !== undefined && permission !== undefined) {
+        if (permission !== undefined) {
             setLink(true)
             const newKey = store.addKeyToShare(permission)
             return setURL([String(window.location.origin), "shared", store.projectID, newKey, permission].join("/"));
         }
         else
-            return setLink(false)
+            alert("Please set permissions")
+        return setLink(false)
+
     }
-    
     function validateEmail(email) {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
@@ -132,7 +151,7 @@ const ShareLink = (props) => {
 
     return (
         <>
-            <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => {setShow(!show); checkLinks();}}>Share</Button>
+            <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => { setShow(!show); checkLinks(); }}>Share</Button>
             <PopperMenu
                 buttonref={buttonRef}
                 position="bottom"
@@ -142,34 +161,48 @@ const ShareLink = (props) => {
                 showpopper={show}
             >
                 <div ref={contentRef} style={{ width: '300px' }}>
-                    Type Of Link To be Shared
-                    <br />
-                    <input type="radio" name="linkType" value="public" onChange={e => LinkType(e)} required={true} />
-                    <label htmlFor="male">Public</label>
-                    <input type="radio" name="linkType" value="private" onChange={e => LinkType(e)} required={true} />
-                    <label htmlFor="male">Private </label>
-                    <br />
-                    <input type="radio" name="options" value="r" onChange={e => ChangeRadio(e)} required={true} />
-                    <label htmlFor="male">Read Only</label>
-                    <input type="radio" name="options" value="rw" onChange={e => ChangeRadio(e)} required={true} />
-                    <label htmlFor="male">Read and Write </label>
-                    <br />
-                    
+                    Share With People
+
                     {
                         link ?
-                        <div>
-                            <Button className="custom_btn" handleClick={() => {setLink(false); store.removeKey();}}>Turn off</Button>
-                            <div style={{ flexDirection: 'row' }}>
+                            <div>
+                                <Button
+                                    className="custom_btn"
+                                    handleClick={() => { setLink(false); setPermission(undefined); store.removeKey(); }}
+                                >
+                                    Turn off Link Sharing
+                                </Button>
                                 <br />
-                            Copy Your Link :
-                            <br />
-                                <b style={{ flexShrink: 1, flex: 1, flexWrap: 'wrap' }}>{url}</b>
+                                <Button
+                                    className="custom_btn"
+                                    handleClick={copyLink}
+                                >
+                                    Copy Link
+                                </Button>
                                 <br />
                             </div>
-                        </div>
-                            
-                            : 
-                            <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
+
+                            :
+                            <div>
+                                <select
+                                    name="permission"
+                                    id="permission"
+                                    onChange={e => ChangeRadio(e)}
+                                >
+                                    <option value={undefined}>
+                                        Set Permission:
+                                    </option>
+                                    <option value="r">
+                                        Read Only
+                                    </option>
+                                    <option value="rw">
+                                        Read and Write
+                                    </option>
+                                </select>
+
+                                <br />
+                                <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
+                            </div>
                     }
                     <div>
                         <CreatableSelect

@@ -1,9 +1,9 @@
 .tooltips {
   // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid #DEDEDE;
+  border: 1px solid black;
   border-radius: 6px;
   background-color: white;
-  // padding: 6px;
+  padding: 6px;
   text-align: left;
   z-index: 9999999999999;
   box-sizing: border-box;
@@ -36,10 +36,12 @@ p .arrow::before {
 
 .arrowuser::before {
   content: " ";
+  border: 1px solid black;
+  bottom: 50%;
   background-color: white;
   box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
   position: absolute;
-  top: -15px;
+  top: -11px;
   left: 0;
   transform: rotate(45deg);
   width: 10px;
