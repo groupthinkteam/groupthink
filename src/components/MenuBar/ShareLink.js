@@ -20,6 +20,7 @@ const ShareLink = (props) => {
     const togglePopup = () => {
         setIsOpen(!isOpen);
     }
+
     //Stores the State for EMail-ID inputs.
     const [state, setState] = useState({
         inputValue: '',
@@ -97,7 +98,7 @@ const ShareLink = (props) => {
         document.body.removeChild(el);
     }
 
-    const ChangeRadio = (e) => {
+    const changeRadio = (e) => {
         console.log(e.target.value)
         setPermission(e.target.value)
     }
@@ -110,6 +111,7 @@ const ShareLink = (props) => {
         label,
         value: label,
     });
+
     const openLink = () => {
         if (permission) {
             setLink(true)
@@ -143,7 +145,7 @@ const ShareLink = (props) => {
                 if (validateEmail(inputValue)) {
                     setState({
                         inputValue: '',
-                        value: [...value, createOption(inputValue)],
+                        value: value ? [...value, createOption(inputValue)] : [createOption(inputValue)],
                     });
                 }
                 else alert(`Invalid Email Entered ${inputValue}`, setState(state))
@@ -157,84 +159,84 @@ const ShareLink = (props) => {
         <>
             <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => { checkLinks(); togglePopup(); }}>Share</Button>
             {isOpen && <PopupMenu
-                    content={<>
-                        <div ref={contentRef} style={{ width: '300px' }}>
-                            <div style={{padding: "5px"}}>
+                content={<>
+                    <div ref={contentRef} style={{ width: '300px' }}>
+                        <div style={{ padding: "5px" }}>
                             Share With People
                             </div>
-                    
-                    {
-                        link ?
-                            <div>
-                                <div style={{padding: "5px"}}>
-                                <Button
-                                    className="custom_btn"
-                                    handleClick={() => { setLink(false); setPermission(undefined); store.removeKey(); }}
-                                >
-                                    Turn off Link Sharing
-                                </Button>
-                                </div>
-                                <div style={{padding: "5px"}}>
-                                <Button
-                                    className="custom_btn"
-                                    handleClick={copyLink}
-                                >
-                                    Copy Link
+
+                        {
+                            link ?
+                                <div>
+                                    <div style={{ padding: "5px" }}>
+                                        <Button
+                                            className="custom_btn"
+                                            handleClick={() => { setLink(false); setPermission(undefined); store.removeKey(); }}
+                                        >
+                                            Turn off Link Sharing
                                 </Button>
                                     </div>
-                            
+                                    <div style={{ padding: "5px" }}>
+                                        <Button
+                                            className="custom_btn"
+                                            handleClick={copyLink}
+                                        >
+                                            Copy Link
+                                </Button>
+                                    </div>
+
+                                </div>
+
+                                :
+                                <div>
+                                    <div style={{ padding: "5px" }}>
+                                        <select
+                                            name="permission"
+                                            id="permission"
+                                            onChange={e => changeRadio(e)}
+                                        >
+                                            <option value={''}>
+                                                Set Permission:
+                                    </option>
+                                            <option value="r">
+                                                Read Only
+                                    </option>
+                                            <option value="rw">
+                                                Read and Write
+                                    </option>
+                                        </select>
+                                    </div>
+                                    <div style={{ padding: "5px" }}>
+                                        <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
+                                    </div>
+
+                                </div>
+                        }
+                        <div>
+                            <div style={{ padding: "5px" }}>
+                                <CreatableSelect
+                                    components={components}
+                                    inputValue={state.inputValue}
+                                    isClearable
+                                    isMulti
+                                    menuIsOpen={false}
+                                    onChange={handleChange.bind(this)}
+                                    onInputChange={e => handleInputChange(e)}
+                                    onKeyDown={e => handleKeyDown(e)}
+                                    placeholder="Type Email and press enter..."
+                                    value={state.value}
+                                />
+                            </div>
+                            <div style={{ padding: "5px" }}>
+                                <Button className="custom_btn" handleClick={sendInvite}>Send Invite</Button>
                             </div>
 
-                            :
-                            <div>
-                                <div style={{padding: "5px"}}>
-                                <select
-                                    name="permission"
-                                    id="permission"
-                                    onChange={e => ChangeRadio(e)}
-                                >
-                                    <option value={''}>
-                                        Set Permission:
-                                    </option>
-                                    <option value="r">
-                                        Read Only
-                                    </option>
-                                    <option value="rw">
-                                        Read and Write
-                                    </option>
-                                </select>
-                                </div>
-                                <div style={{padding: "5px"}}>
-                                <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
-                                </div>
-                                
-                            </div>
-                    }
-                    <div>
-                        <div style={{padding: "5px"}}>
-                        <CreatableSelect
-                            components={components}
-                            inputValue={state.inputValue}
-                            isClearable
-                            isMulti
-                            menuIsOpen={false}
-                            onChange={handleChange.bind(this)}
-                            onInputChange={e => handleInputChange(e)}
-                            onKeyDown={e => handleKeyDown(e)}
-                            placeholder="Type Email and press enter..."
-                            value={state.value}
-                        />
                         </div>
-                        <div style={{padding: "5px"}}>
-                            <Button className="custom_btn" handleClick={sendInvite}>Send Invite</Button>
-                        </div>
-                        
                     </div>
-                </div>
-                    </>}
-                    handleClose={togglePopup}
-                />}
-            
+                </>}
+                handleClose={togglePopup}
+            />}
+
         </>
     )
 };
