@@ -226,6 +226,12 @@ export var storeObject = {
             .set(newSize)
             .then(console.log("set new size for", id, "to", newSize));
     },
+    saveContainerSize(){
+        this.updateLastActive()
+        this.projectRef.child('container')
+            .set(this.container)
+            .then(console.log("set new size for container ",this.container.height , this.container.width));
+    },
     saveContent: throttle(function saveContent(id, newContent) {
         this.updateLastActive()
         this.projectRef.child("nodes").child(id).child("content")

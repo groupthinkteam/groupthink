@@ -28,7 +28,7 @@ const GenericCard = props => {
         setShowPopper(false);
         setContextMenu(null);
     }
-    console.log("CONTAINRT ", store.container.width)
+    console.log("CONTAINRT ", store.container.width, store.container.height)
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
 
@@ -50,6 +50,8 @@ const GenericCard = props => {
                     duration: 0.5
                 })
                 setDragging(false);
+                //container size 
+                store.saveContainerSize();
                 store.savePosition(props.id, { x: this.x, y: this.y });
             }
             function dragStart() {
@@ -72,11 +74,14 @@ const GenericCard = props => {
                     onDrag: function drag() {
                         if (this.x > parseInt(store.container.width)) {
                             store.changeContainerSizeLocal({ width: `${this.x}px`, height: store.container.height })
-                            y[0].update(true)
+                        }
+                        else if (this.y > parseInt(store.container.height)) {
+                            store.changeContainerSizeLocal({ height: `${this.y}px`, width: store.container.width })
                         }
                         else {
-                            store.changeContainerSizeLocal({ width: `10000px`, height: store.container.height })
+                            store.changeContainerSizeLocal({ width: `10000px`, height: '10000px' })
                         }
+                        y[0].update(true)
                         store.changePosition(props.id, { x: this.x, y: this.y })
                     },
                     onDragEnd: dragStop,
