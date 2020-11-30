@@ -42,13 +42,13 @@ function MenuBar(props) {
                 <RoomConnect projectID={store.projectID} currentUser={store.currentUser} />
                 <PersonaList />
                 <div className="menu-bar-separator" />
-                <ShareLink 
-                    projectID={store.projectID} 
+                <ShareLink
+                    projectID={store.projectID}
                     buttonClassName="menu-action-button highlight"
                     currentUser={store.currentUser}
                 />
                 <div className="menu-bar-separator" />
-                <UserMenu 
+                <UserMenu
                     photoURL={store.currentUser.photoURL}
                     username={store.currentUser.displayName}
                     imageClass="menu-bar-user-profile-picture"
