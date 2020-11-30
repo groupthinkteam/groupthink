@@ -6,15 +6,21 @@ import '../../styles/UserMenu.scss'
 import PopperMenu from '../PopperMenu/PopperMenu';
 import CreatableSelect from 'react-select/creatable';
 import { _isUndefined } from 'gsap/gsap-core';
+import PopupMenu from "../PopupMenu/PopupMenu"
 
 const ShareLink = (props) => {
     const store = useStore();
     const [link, setLink] = useState(false)
     const [permission, setPermission] = useState();
-    const [show, setShow] = useState(false);
     const [url, setURL] = useState();
     const buttonRef = useRef(null);
     const contentRef = useRef(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+    const togglePopup = () => {
+        setIsOpen(!isOpen);
+    }
+
     //Stores the State for EMail-ID inputs.
     const [state, setState] = useState({
         inputValue: '',
@@ -23,7 +29,6 @@ const ShareLink = (props) => {
 
 
     const handleClose = () => {
-        setShow(false);
         setState({
             inputValue: '',
             value: []
@@ -93,7 +98,7 @@ const ShareLink = (props) => {
         document.body.removeChild(el);
     }
 
-    const ChangeRadio = (e) => {
+    const changeRadio = (e) => {
         console.log(e.target.value)
         setPermission(e.target.value)
     }
@@ -106,6 +111,7 @@ const ShareLink = (props) => {
         label,
         value: label,
     });
+
     const openLink = () => {
         if (permission) {
             setLink(true)
@@ -139,7 +145,7 @@ const ShareLink = (props) => {
                 if (validateEmail(inputValue)) {
                     setState({
                         inputValue: '',
-                        value: [...value, createOption(inputValue)],
+                        value: value ? [...value, createOption(inputValue)] : [createOption(inputValue)],
                     });
                 }
                 else alert(`Invalid Email Entered ${inputValue}`, setState(state))
@@ -151,76 +157,86 @@ const ShareLink = (props) => {
 
     return (
         <>
-            <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => { setShow(!show); checkLinks(); }}>Share</Button>
-            <PopperMenu
-                buttonref={buttonRef}
-                position="bottom"
-                offset={[0, 10]}
-                tooltipclass="tooltips"
-                arrowclass="arrowuser"
-                showpopper={show}
-            >
-                <div ref={contentRef} style={{ width: '300px' }}>
-                    Share With People
-
-                    {
-                        link ?
-                            <div>
-                                <Button
-                                    className="custom_btn"
-                                    handleClick={() => { setLink(false); setPermission(undefined); store.removeKey(); }}
-                                >
-                                    Turn off Link Sharing
-                                </Button>
-                                <br />
-                                <Button
-                                    className="custom_btn"
-                                    handleClick={copyLink}
-                                >
-                                    Copy Link
-                                </Button>
-                                <br />
+            <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => { checkLinks(); togglePopup(); }}>Share</Button>
+            {isOpen && <PopupMenu
+                content={<>
+                    <div ref={contentRef} style={{ width: '300px' }}>
+                        <div style={{ padding: "5px" }}>
+                            Share With People
                             </div>
 
-                            :
-                            <div>
-                                <select
-                                    name="permission"
-                                    id="permission"
-                                    onChange={e => ChangeRadio(e)}
-                                >
-                                    <option value={''}>
-                                        Set Permission:
-                                    </option>
-                                    <option value="r">
-                                        Read Only
-                                    </option>
-                                    <option value="rw">
-                                        Read and Write
-                                    </option>
-                                </select>
+                        {
+                            link ?
+                                <div>
+                                    <div style={{ padding: "5px" }}>
+                                        <Button
+                                            className="custom_btn"
+                                            handleClick={() => { setLink(false); setPermission(undefined); store.removeKey(); }}
+                                        >
+                                            Turn off Link Sharing
+                                </Button>
+                                    </div>
+                                    <div style={{ padding: "5px" }}>
+                                        <Button
+                                            className="custom_btn"
+                                            handleClick={copyLink}
+                                        >
+                                            Copy Link
+                                </Button>
+                                    </div>
 
-                                <br />
-                                <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
+                                </div>
+
+                                :
+                                <div>
+                                    <div style={{ padding: "5px" }}>
+                                        <select
+                                            name="permission"
+                                            id="permission"
+                                            onChange={e => changeRadio(e)}
+                                        >
+                                            <option value={''}>
+                                                Set Permission:
+                                    </option>
+                                            <option value="r">
+                                                Read Only
+                                    </option>
+                                            <option value="rw">
+                                                Read and Write
+                                    </option>
+                                        </select>
+                                    </div>
+                                    <div style={{ padding: "5px" }}>
+                                        <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
+                                    </div>
+
+                                </div>
+                        }
+                        <div>
+                            <div style={{ padding: "5px" }}>
+                                <CreatableSelect
+                                    components={components}
+                                    inputValue={state.inputValue}
+                                    isClearable
+                                    isMulti
+                                    menuIsOpen={false}
+                                    onChange={handleChange.bind(this)}
+                                    onInputChange={e => handleInputChange(e)}
+                                    onKeyDown={e => handleKeyDown(e)}
+                                    placeholder="Type Email and press enter..."
+                                    value={state.value}
+                                />
                             </div>
-                    }
-                    <div>
-                        <CreatableSelect
-                            components={components}
-                            inputValue={state.inputValue}
-                            isClearable
-                            isMulti
-                            menuIsOpen={false}
-                            onChange={handleChange.bind(this)}
-                            onInputChange={e => handleInputChange(e)}
-                            onKeyDown={e => handleKeyDown(e)}
-                            placeholder="Type Email and press enter..."
-                            value={state.value}
-                        />
-                        <Button className="custom_btn" handleClick={sendInvite}>Send Invite</Button>
+                            <div style={{ padding: "5px" }}>
+                                <Button className="custom_btn" handleClick={sendInvite}>Send Invite</Button>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-            </PopperMenu>
+                </>}
+                handleClose={togglePopup}
+            />}
+
         </>
     )
 };
