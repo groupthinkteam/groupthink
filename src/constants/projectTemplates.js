@@ -4,8 +4,8 @@
 const projectTemplates = {
     tester: {
         container: {
-            height: "4000px",
-            width: "4000px"
+            height: "10000px",
+            width: "10000px"
         },
         nodes: {
             root: {

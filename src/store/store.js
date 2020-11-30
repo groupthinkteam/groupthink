@@ -52,7 +52,7 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
-
+    
     getActionQuery(callback) {
         database.ref("actionsearch")
             .once('value').then(snap => { callback(snap.val()) })
@@ -250,6 +250,9 @@ export var storeObject = {
             .update(newCardDefaults)
             .then(console.log("set", content, "new type for", id, "value:", newCardDefaults))
             .catch(err => err);
+    },
+    changeContainerSizeLocal(size){
+        this.container = size
     },
     reparentCard(id, newParent) {
         this.updateLastActive()

@@ -28,6 +28,7 @@ const GenericCard = props => {
         setShowPopper(false);
         setContextMenu(null);
     }
+    console.log("CONTAINRT ", store.container.width)
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
 
@@ -69,6 +70,12 @@ const GenericCard = props => {
                     onClick: () => { cardRef.current.focus(); closeContextMenu(); },
                     onDragStart: dragStart,
                     onDrag: function drag() {
+                        if (this.x > parseInt(store.container.width)) {
+                            store.changeContainerSizeLocal({ width: `${this.x}px`, height: store.container.height })
+                        }
+                        else {
+                            store.changeContainerSizeLocal({ width: `10000px`, height: store.container.height })
+                        }
                         store.changePosition(props.id, { x: this.x, y: this.y })
                     },
                     onDragEnd: dragStop,
@@ -186,7 +193,7 @@ const GenericCard = props => {
                         pos={contextMenu}
                         zIndex={1}
                     >
-                        <ContextMenu id={props.id} loaderCallback={(bool) => setShowLoader(bool)} closeContextMenu={closeContextMenu}/>
+                        <ContextMenu id={props.id} loaderCallback={(bool) => setShowLoader(bool)} closeContextMenu={closeContextMenu} />
                     </MenuCard>
                     : null
                 }

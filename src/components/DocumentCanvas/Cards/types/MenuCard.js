@@ -39,7 +39,6 @@ const MenuCard = (props) => {
 
     return (
         <>
-            {console.log("popperref: ", popperRef )}
             {props.showpopper ?
                 <div
                     ref={popperRef}
