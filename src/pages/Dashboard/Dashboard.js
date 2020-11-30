@@ -35,7 +35,7 @@ const Dashboard = observer(() => {
         <div className="site-title">groupthink</div>
         <div className="user-welcome">
           <div className="welcome-text">
-            <span className="welcome-bold">Welcome,</span> <br />
+            <span className="welcome-bold">Welcome,</span>
             <span className="user-name">{store.currentUser.displayName}</span>
           </div>
           <div className="profile-picture">
