@@ -47,6 +47,16 @@ p .arrow::before {
   width: 10px;
   height: 10px;
 }
+.arrowuser:after {
+  padding:0;margin:0;display:block;
+  content: "";
+  width:15px;
+  height:10px;
+  background-color:white;
+  position: absolute;
+  right: -3px;
+  top: -6px;
+}
 
 .tooltips[data-popper-placement^="top"] > #arrow {
   bottom: -20px;
