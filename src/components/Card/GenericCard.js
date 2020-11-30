@@ -72,6 +72,7 @@ const GenericCard = props => {
                     onDrag: function drag() {
                         if (this.x > parseInt(store.container.width)) {
                             store.changeContainerSizeLocal({ width: `${this.x}px`, height: store.container.height })
+                            y[0].update(true)
                         }
                         else {
                             store.changeContainerSizeLocal({ width: `10000px`, height: store.container.height })

@@ -11,9 +11,9 @@ const FilesCard = ({ content }) => {
     return (
         <div className="file-card">
             <a href={`${content.url}`} target="_blank" rel="noopener noreferrer">
-                <div className="file-card-name">
+                <span className="file-card-name" style={{maxWidth:'162px'}}>
                     {content.metadata.name}
-                </div>
+                </span>
             </a>
             <div className="file-card-info">
                 <div>
