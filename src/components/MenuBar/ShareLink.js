@@ -107,7 +107,7 @@ const ShareLink = (props) => {
         value: label,
     });
     const openLink = () => {
-        if (permission !== undefined) {
+        if (permission) {
             setLink(true)
             const newKey = store.addKeyToShare(permission)
             return setURL([String(window.location.origin), "shared", store.projectID, newKey, permission].join("/"));
@@ -189,7 +189,7 @@ const ShareLink = (props) => {
                                     id="permission"
                                     onChange={e => ChangeRadio(e)}
                                 >
-                                    <option value={undefined}>
+                                    <option value={''}>
                                         Set Permission:
                                     </option>
                                     <option value="r">

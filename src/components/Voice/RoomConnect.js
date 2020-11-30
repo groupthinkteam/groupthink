@@ -21,7 +21,7 @@ const RoomConnect = (props) => {
     if (isJoined) {
       globalStore.addUserCallInfo();
     }
-    if (me.joinedCall && !isJoined) {
+    if (!isJoined && me?.joinedCall ) {
       globalStore.removeUserCallInfo();
     }
   }, [isJoined, globalStore])

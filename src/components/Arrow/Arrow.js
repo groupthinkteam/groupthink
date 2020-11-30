@@ -67,16 +67,16 @@ const Arrow = (props) => {
         <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
             <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
                 <defs>
-                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style={{ stopColor: "#FF6B43", stopOpacity: 1 }} />
-                        <stop offset="100%" style={{ stopColor: "#5FA2F1", stopOpacity: 1 }} />
+                    <linearGradient id={"grad3".concat(props.id)} x1={head.x>tail.x ? "100%" : '0%'} y1="0%" x2={head.x>tail.x ?"0%":"100%"} y2="0%">
+                        <stop offset="50%" stopColor="#FF6B43" stopOpacity="1"  />
+                        <stop offset="50%"  stopColor="#5FA2F1" stopOpacity="1" />
                     </linearGradient>
                 </defs>
                 <path
                     className="arrow-path"
                     strokeWidth="2"
                     fill="none"
-                    stroke="url(#grad3)"
+                    stroke={`url(#grad3${props.id})`}
                     d={path} />
             </svg>
             {
