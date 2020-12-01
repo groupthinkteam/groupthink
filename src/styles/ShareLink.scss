@@ -1,0 +1,19 @@
+.sharelink {
+    .container {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        .heading {
+            font-family: Overpass;
+            font-style: normal;
+            font-size: 22px;
+            .share {
+                font-weight: 800;
+            }
+            .project-title {
+                font-weight: normal;
+            }
+        }
+    }
+}

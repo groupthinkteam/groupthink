@@ -1,12 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { observer } from "mobx-react-lite";
-import { useStore } from "../../store/hook";
-import Button from '../Button/Button';
-import '../../styles/UserMenu.scss'
-import PopperMenu from '../PopperMenu/PopperMenu';
-import CreatableSelect from 'react-select/creatable';
-import { _isUndefined } from 'gsap/gsap-core';
+import React, { useState, useRef, useEffect } from 'react'
+import { observer } from "mobx-react-lite"
+import CreatableSelect from 'react-select/creatable'
+
+import { useStore } from "../../store/hook"
+import Button from '../Button/Button'
 import PopupMenu from "../PopupMenu/PopupMenu"
+
+import '../../styles/ShareLink.scss'
 
 const ShareLink = (props) => {
     const store = useStore();
@@ -37,6 +37,7 @@ const ShareLink = (props) => {
         setURL(null);
         setPermission(null);
     }
+
     useEffect(() => {
         function handleClickOutside(event) {
             if (buttonRef.current && contentRef.current && !buttonRef.current.contains(event.target) && !contentRef.current.contains(event.target)) {
@@ -156,88 +157,69 @@ const ShareLink = (props) => {
     }
 
     return (
-        <>
-            <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => { checkLinks(); togglePopup(); }}>Share</Button>
-            {isOpen && <PopupMenu
-                content={<>
-                    <div ref={contentRef} style={{ width: '300px' }}>
-                        <div style={{ padding: "5px" }}>
-                            Share With People
-                            </div>
-
+        <div className="sharelink">
+            <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => { checkLinks(); togglePopup(); }}>
+                Share
+            </Button>
+            {isOpen &&
+                <PopupMenu handleClose={togglePopup}>
+                    <div ref={contentRef} className="container">
+                        <div className="heading">
+                            <span className="share">
+                                Share With People
+                            </span>
+                            <span className="project-title">
+                                {store.projectName}
+                            </span>
+                        </div>
                         {
                             link ?
                                 <div>
-                                    <div style={{ padding: "5px" }}>
-                                        <Button
-                                            className="custom_btn"
-                                            handleClick={() => { setLink(false); setPermission(undefined); store.removeKey(); }}
-                                        >
-                                            Turn off Link Sharing
-                                </Button>
-                                    </div>
-                                    <div style={{ padding: "5px" }}>
-                                        <Button
-                                            className="custom_btn"
-                                            handleClick={copyLink}
-                                        >
-                                            Copy Link
-                                </Button>
-                                    </div>
-
+                                    <Button className="custom_btn" handleClick={() => { setLink(false); setPermission(undefined); store.removeKey(); }}>
+                                        Turn off Link Sharing
+                                    </Button>
+                                    <Button className="custom_btn" handleClick={copyLink}>
+                                        Copy Link
+                                    </Button>
                                 </div>
-
                                 :
                                 <div>
-                                    <div style={{ padding: "5px" }}>
-                                        <select
-                                            name="permission"
-                                            id="permission"
-                                            onChange={e => changeRadio(e)}
-                                        >
-                                            <option value={''}>
-                                                Set Permission:
-                                    </option>
-                                            <option value="r">
-                                                Read Only
-                                    </option>
-                                            <option value="rw">
-                                                Read and Write
-                                    </option>
-                                        </select>
-                                    </div>
-                                    <div style={{ padding: "5px" }}>
-                                        <Button className="custom_btn" handleClick={openLink}>Get Shareable Link</Button>
-                                    </div>
-
+                                    <select name="permission" id="permission" onChange={e => changeRadio(e)}>
+                                        <option value={''}>
+                                            Set Permission:
+                                            </option>
+                                        <option value="r">
+                                            Read Only
+                                            </option>
+                                        <option value="rw">
+                                            Read and Write
+                                            </option>
+                                    </select>
+                                    <Button className="custom_btn" handleClick={openLink}>
+                                        Get Shareable Link
+                                    </Button>
                                 </div>
                         }
                         <div>
-                            <div style={{ padding: "5px" }}>
-                                <CreatableSelect
-                                    components={components}
-                                    inputValue={state.inputValue}
-                                    isClearable
-                                    isMulti
-                                    menuIsOpen={false}
-                                    onChange={handleChange.bind(this)}
-                                    onInputChange={e => handleInputChange(e)}
-                                    onKeyDown={e => handleKeyDown(e)}
-                                    placeholder="Type Email and press enter..."
-                                    value={state.value}
-                                />
-                            </div>
+                            <CreatableSelect
+                                components={components}
+                                inputValue={state.inputValue}
+                                isClearable
+                                isMulti
+                                menuIsOpen={false}
+                                onChange={handleChange.bind(this)}
+                                onInputChange={e => handleInputChange(e)}
+                                onKeyDown={e => handleKeyDown(e)}
+                                placeholder="Type Email and press enter..."
+                                value={state.value}
+                            />
                             <div style={{ padding: "5px" }}>
                                 <Button className="custom_btn" handleClick={sendInvite}>Send Invite</Button>
                             </div>
-
                         </div>
                     </div>
-                </>}
-                handleClose={togglePopup}
-            />}
-
-        </>
+                </PopupMenu>}
+        </div>
     )
 };
 
