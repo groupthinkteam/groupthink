@@ -179,6 +179,36 @@ const ShareLink = (props) => {
                             <span className="title">
                                 Invite via email
                             </span>
+                            <div className="email-content">
+                                <CreatableSelect
+                                    components={components}
+                                    inputValue={state.inputValue}
+                                    isClearable
+                                    isMulti
+                                    menuIsOpen={false}
+                                    onChange={handleChange.bind(this)}
+                                    onInputChange={e => handleInputChange(e)}
+                                    onKeyDown={e => handleKeyDown(e)}
+                                    placeholder="Invite someone using their email"
+                                    value={state.value}
+                                />
+                                <Button className="button" handleClick={sendInvite}>
+                                    Invite
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="section">
+                            <span className="title">
+                                Invite via link
+                            </span>
+                            <div className="link-content">
+
+                            </div>
+                        </div>
+                        <div className="section">
+                            <span className="title">
+                                Currently shared with
+                            </span>
                         </div>
                         {
                             link ?
@@ -209,21 +239,7 @@ const ShareLink = (props) => {
                                 </div>
                         }
                         <div>
-                            <CreatableSelect
-                                components={components}
-                                inputValue={state.inputValue}
-                                isClearable
-                                isMulti
-                                menuIsOpen={false}
-                                onChange={handleChange.bind(this)}
-                                onInputChange={e => handleInputChange(e)}
-                                onKeyDown={e => handleKeyDown(e)}
-                                placeholder="Type Email and press enter..."
-                                value={state.value}
-                            />
-                            <Button className="custom_btn" handleClick={sendInvite}>
-                                Send Invite
-                            </Button>
+
                         </div>
                     </div>
                 </PopupMenu>}

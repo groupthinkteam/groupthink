@@ -12,6 +12,7 @@
             width: 91px;
             height: 43px;
             border-radius: 5px;
+            border: none;
         }
         .heading {
             display: flex;
@@ -45,6 +46,21 @@
             .title {
                 font-weight: 600;
                 font-size: 18px;
+            }
+            .link-content {
+                .button {
+                    background-color: #32aaff;
+                    color: white;
+                }
+            }
+            .email-content {
+                display: flex;
+                flex-flow: row nowrap;
+                width: 100%;
+                .button {
+                    background-color: #32aaff;
+                    color: white;
+                }
             }
         }
     }
