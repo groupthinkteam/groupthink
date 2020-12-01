@@ -166,10 +166,18 @@ const ShareLink = (props) => {
                     <div ref={contentRef} className="container">
                         <div className="heading">
                             <span className="share">
-                                Share With People
+                                Share
                             </span>
                             <span className="project-title">
                                 {store.projectName}
+                            </span>
+                        </div>
+                        <span className="edit-warning">
+                            Everyone who has access to this project will be able to edit.
+                        </span>
+                        <div className="section">
+                            <span className="title">
+                                Invite via email
                             </span>
                         </div>
                         {
@@ -213,9 +221,9 @@ const ShareLink = (props) => {
                                 placeholder="Type Email and press enter..."
                                 value={state.value}
                             />
-                            <div style={{ padding: "5px" }}>
-                                <Button className="custom_btn" handleClick={sendInvite}>Send Invite</Button>
-                            </div>
+                            <Button className="custom_btn" handleClick={sendInvite}>
+                                Send Invite
+                            </Button>
                         </div>
                     </div>
                 </PopupMenu>}

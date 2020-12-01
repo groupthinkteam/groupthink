@@ -1,18 +1,50 @@
 .sharelink {
+    font-family: Overpass;
+    font-style: normal;
     .container {
         display: flex;
         flex-flow: column nowrap;
         justify-content: flex-start;
         align-items: flex-start;
+        margin: 10px 10px 10px 10px;
+        padding: 0;
+        .button {
+            width: 91px;
+            height: 43px;
+            border-radius: 5px;
+        }
         .heading {
-            font-family: Overpass;
-            font-style: normal;
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            justify-content: flex-start;
             font-size: 22px;
             .share {
                 font-weight: 800;
+                margin-right: 8px;
             }
             .project-title {
+                display: inline-block;
                 font-weight: normal;
+                color: #32aaff;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                // width: fit-content;
+                width: 450px;
+            }
+        }
+        .edit-warning {
+            font-size: 14px;
+        }
+        .section {
+            display: flex;
+            flex-flow: column nowrap;
+            margin: 15px 0px;
+            width: 100%;
+            .title {
+                font-weight: 600;
+                font-size: 18px;
             }
         }
     }
