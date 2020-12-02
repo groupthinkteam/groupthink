@@ -11,12 +11,20 @@ import "../../styles/CardContainer.scss";
 function CardContainer(props) {
     let store = useStore()
     console.log("CardContainer ", store.container.width, window.innerWidth)
+
+    let containerElement = document.querySelector(".card-container")
+
+    let transformOrigin = {
+        x: window.innerWidth / 2 + containerElement?.scrollLeft,
+        y: (window.innerHeight - 40) / 2 + containerElement?.scrollTop
+    }
+
     return (
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
             <input
                 className="zoom-slider"
-                style={{ position: "fixed", top: "40px", left: "10px", zIndex: 9999999999 }}
+                style={{ position: "fixed", bottom: "40px", right: "10px", zIndex: 9999999999 }}
                 type="range"
                 min="0.5"
                 max="2.5"
@@ -25,7 +33,7 @@ function CardContainer(props) {
                 onChange={e => { store.zoom = e.target.value; console.log("ZOON  TEST ", store.zoom) }}
             />
             <div className="container-filler"
-                style={{ ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0, transformOrigin: "0% 0%", transform: `scale(${store.zoom})` }}
+                style={{ ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0, transformOrigin: `${transformOrigin.x}px ${transformOrigin.y}px`, transform: `scale(${store.zoom})` }}
                 onDoubleClick={(e) => {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent && e.target.offsetParent.className === "card-container") {
@@ -41,11 +49,11 @@ function CardContainer(props) {
                 onMouseMove={(e) => {
                     console.log("triggered mouse move on")
                     e.persist();
-                        var x = Math.floor((e.clientX + e.currentTarget.offsetParent.scrollLeft) / store.zoom);
-                        var y = Math.floor((e.clientY - 40 + e.currentTarget.offsetParent.scrollTop) / store.zoom);
-                        store.saveCursorPosition(
-                            x, y
-                        );
+                    var x = Math.floor((e.clientX + e.currentTarget.offsetParent.scrollLeft) / store.zoom);
+                    var y = Math.floor((e.clientY - 40 + e.currentTarget.offsetParent.scrollTop) / store.zoom);
+                    store.saveCursorPosition(
+                        x, y
+                    );
                 }}
             >
 
