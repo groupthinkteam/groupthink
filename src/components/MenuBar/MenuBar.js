@@ -9,10 +9,13 @@ import UserMenu from "./UserMenu"
 import { useStore } from "../../store/hook"
 import { observer } from "mobx-react-lite"
 import ActionsMenu from "../Actions/ActionsMenu"
+import Feedback from "../Feedback/Feedback"
+import '../../styles/ShareLink.scss'
 
 function MenuBar(props) {
     let store = useStore()
     let [isEditingTitle, setEditingTitle] = useState(false);
+    
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -22,7 +25,7 @@ function MenuBar(props) {
                     </Link>
                 </div>
                 <ActionsMenu />
-                <SearchBar document={props.document}/> 
+                <SearchBar document={props.document} />
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 {isEditingTitle ?
@@ -40,6 +43,7 @@ function MenuBar(props) {
                     </span>
                 }
             </div>
+            <Feedback />
             <div className="menu-bar-panel menu-bar-panel-right">
                 <RoomConnect projectID={store.projectID} currentUser={store.currentUser} />
                 <PersonaList />
