@@ -18,7 +18,7 @@ export var storeObject = {
     collapsedID: {},
     documentLoadPercent: 0,
     currentContext: '',
-    recentSearches :[],
+    recentSearches: {},
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -32,11 +32,14 @@ export var storeObject = {
     get firebaseConfig() {
         return FIREBASE_CONSTANTS.UI_CONFIG;
     },
-    get ownProjects() {
-        return Object.keys(this.projects).filter(id => !this.projects[id].shared)
+    get allProjects() {
+        return Object.keys(this.projects)
     },
     get sharedProjects() {
         return Object.keys(this.projects).filter(id => this.projects[id].shared)
+    },
+    get starredProjects() {
+        return Object.keys(this.projects).filter(id => this.projects[id].isStarred)
     },
     get projectRef() {
         return database.ref("documents").child(this.projectID)
@@ -53,10 +56,14 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
-    addToRecentSearch(id){
-        console.log("Check recent search ID",this.recentSearches.indexOf(id));
-        if(this.recentSearches.indexOf(id) !== 0)
-        this.recentSearches.push(id);
+    
+    addToRecentSearch(id) {
+        console.log("Check recent search ID", id, this.projectID);
+        const k = this.projectID
+        this.recentSearches[id] = k;
+        console.log("Check recent search ID", this.recentSearches);
+        // if(this.recentSearches.indexOf(id) !== 0)
+        // this.recentSearches.push(id);
     },
     getActionQuery(callback) {
         database.ref("actionsearch")
@@ -137,6 +144,7 @@ export var storeObject = {
         this.projectRef &&
             this.projectRef.child("users").child(this.userID).child("lastUpdatedAt")
                 .set(servertime)
+
     }, 5000),
     setProjectID(newProjectID) {
         this.projectID = newProjectID;
@@ -207,6 +215,20 @@ export var storeObject = {
         this.projectRef.child("nodes").update(updates)
             .then(console.log("deleted", id, "successfully")).catch(error => console.log("couldn't reparent because ", error));
     },
+    starredThisProject(id) {
+        this.projects[id]["isStarred"] = true;
+        this.userRef.child(id).child("isStarred")
+            .set(true)
+            .then(console.log(id, " This Project is starred"))
+            .catch(err => console.log("Error in setting Starred ", err))
+    },
+    unStarredThisProject(id) {
+        this.projects[id]["isStarred"] = null;
+        this.userRef.child(id).child("isStarred")
+            .set(null)
+            .then(console.log(id, " This Project is unStarred"))
+            .catch(err => console.log("Error in setting unStarred ", err))
+    },
     changePosition(id, newPos) {
         this.cards[id]["position"] = newPos;
     },
@@ -231,11 +253,11 @@ export var storeObject = {
             .set(newSize)
             .then(console.log("set new size for", id, "to", newSize));
     },
-    saveContainerSize(){
+    saveContainerSize() {
         this.updateLastActive()
         this.projectRef.child('container')
             .set(this.container)
-            .then(console.log("set new size for container ",this.container.height , this.container.width));
+            .then(console.log("set new size for container ", this.container.height, this.container.width));
     },
     saveContent: throttle(function saveContent(id, newContent) {
         this.updateLastActive()
@@ -262,7 +284,7 @@ export var storeObject = {
             .then(console.log("set", content, "new type for", id, "value:", newCardDefaults))
             .catch(err => err);
     },
-    changeContainerSizeLocal(size){
+    changeContainerSizeLocal(size) {
         this.container = size
     },
     reparentCard(id, newParent) {
@@ -487,6 +509,9 @@ export var storeObject = {
             this.userRef.on("child_added", (snap) => {
                 database.ref("documents").child(snap.key).child("metadata")
                     .on("value", (meta) => this.projects[snap.key] = { ...snap.val(), metadata: meta.val() });
+                database.ref("documents").child(snap.key).child("users").on("value", (users) => {
+                    this.projects[snap.key] = { ...this.projects[snap.key], users: users.val() }
+                });
             })
             this.userRef.on("child_removed", (snap) => {
                 database.ref("documents").child(snap.key).child("metadata").off();
@@ -516,8 +541,10 @@ export var storeObject = {
         if (this.userID.length > 1) {
             this.userRef.off();
             Object.keys(this.projects)
-                .forEach((key) =>
-                    database.ref("documents").child(key).child("metadata").off())
+                .forEach((key) => {
+                    database.ref("documents").child(key).child("metadata").off();
+                    database.ref("documents").child(key).child("users").off()
+                })
         }
     },
     removeDocumentListeners() {

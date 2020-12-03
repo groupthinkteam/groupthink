@@ -22,7 +22,7 @@ const SearchBar = (props) => {
     const [results, setResults] = useState({ matches: [], suggest: [] });
     const [actionResult, setActionResult] = useState({ matches: [], suggest: [] });
     const [dropdown, setDropdown] = useState(false);
-    
+
     const scrollToID = (id) => {
         let height = document.getElementById("card-container").style.height;
         let x = store.cards[id].position.x - window.innerWidth - 100;
@@ -74,59 +74,79 @@ const SearchBar = (props) => {
     }
 
     return (
-        <div className="menu-bar-searchbox ">
-            <div className="search-input" style={props.dashboard ? { border: "2px solid black" } : {}}>
-                <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
+        <div className={props.dashboard ? 'new' : "menu-bar-searchbox "}>
+            <div className={props.dashboard ? "new-search-input" : "search-input"} style={props.dashboard ? { border: "2px solid black" } : {}}>
+                <img onClick={() => setExpanded(true)} className={"searchbar-search-icon"} alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
+                {
+                    props.dashboard ?
+                        <InlineTextEdit
+                            style={{ fontSize: "14px", fontFamily: "Overpass", margin: '5px 7px 7px' }}
+                            borderColor='black'
+                            placeholder={"Type in a name, keyword, or description"}
+                            onChange={(e) => searchValues(e.target.value)}
+                        /> : null
+                }
             </div>
-            {expanded ?
-                <Popup handleClose={() => { closeSearchBar() }}>
-                    <div className="actions-container">
-                        <div className="title">
-                            <img className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
+            {
+                expanded && props.document ?
+                    <Popup handleClose={() => { closeSearchBar() }}>
+                        <div className="actions-container">
+                            <div className="title">
+                                <img className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
                             Search
                         </div>
-                        <div className="subtitle">
-                            Search automatically extracts important keywords from your cards to help you find things easily.
+                            <div className="subtitle">
+                                Search automatically extracts important keywords from your cards to help you find things easily.
                         </div>
-                        <div className="new">
-                            <div className="new-search-input" style={props.dashboard ? { border: "2px solid black" } : {}}>
-                                <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
-                                <InlineTextEdit
-                                    style={{ fontSize: "14px", fontFamily: "Overpass", margin: '5px 7px 7px' }}
-                                    borderColor='black'
-                                    placeholder={"Type in a name, keyword, or description"}
-                                    onChange={(e) => searchValues(e.target.value)}
-                                />
-                            </div>
-                            {
-                                (results.matches.length || actionResult.matches.length)
-                                    ? <SearchDropdown
-                                        results={results} actionResult={actionResult} document={props.document} dashboard={props.dashboard}
-                                        dropdown={dropdown}
-                                        setDropdown={setDropdown}
-                                        closeSearchBar={closeSearchBar}
+                            <div className="new">
+                                <div className="new-search-input" style={props.dashboard ? { border: "2px solid black" } : {}}>
+                                    <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
+                                    <InlineTextEdit
+                                        style={{ fontSize: "14px", fontFamily: "Overpass", margin: '5px 7px 7px' }}
+                                        borderColor='black'
+                                        placeholder={"Type in a name, keyword, or description"}
+                                        onChange={(e) => searchValues(e.target.value)}
                                     />
-                                    : null
-                            }
+                                </div>
+                                {
+                                    (results.matches.length || actionResult.matches.length)
+                                        ? <SearchDropdown
+                                            results={results} actionResult={actionResult} document={props.document} dashboard={props.dashboard}
+                                            dropdown={dropdown}
+                                            setDropdown={setDropdown}
+                                            closeSearchBar={closeSearchBar}
+                                        />
+                                        : null
+                                }
+                            </div>
+                            <div className="title">
+                                Recent Searches
                         </div>
-                        <div className="title">
-                            Recent Searches
+                            <div className="recent-search">
+                                {
+                                    Object.entries(store.recentSearches)
+                                        .filter(([_, projectID]) => projectID === store.projectID)
+                                        .map(([cardID, _]) =>
+                                            <div key={cardID} onClick={() => closeSearchBar(cardID)} style={{ cursor: 'pointer' }} >
+                                                {cardID}
+                                            </div>
+                                        )
+                                }
+                            </div>
                         </div>
-                        <div className="recent-search">
-                            {store.recentSearches.length > 0 ?
-                                store.recentSearches.map((item) =>
-                                    <div key={item} onClick={() => closeSearchBar(item)} style={{ cursor: 'pointer' }} >
-                                        {item}
-                                    </div>
-                                )
-                                : null
-                            }
-                        </div>
-                    </div>
-                </Popup>
-                : null
+                    </Popup>
+                    : null
             }
-
+            {/* {
+                (results.matches.length || actionResult.matches.length) && props.dashboard
+                    ? <SearchDropdown
+                        results={results} actionResult={actionResult} document={props.document} dashboard={props.dashboard}
+                        dropdown={dropdown}
+                        setDropdown={setDropdown}
+                        closeSearchBar={closeSearchBar}
+                    />
+                    : null
+            } */}
         </div>
     )
 }
