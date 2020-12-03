@@ -2,10 +2,12 @@ import React, { useState } from "react"
 import PopupMenu from "../PopupMenu/PopupMenu"
 import Button from '../Button/Button'
 import "../../styles/Feedback/Feedback.scss"
-
-
+import { observer } from "mobx-react-lite"
+import { useStore } from "../../store/hook"
+import Bowser from "bowser";
 
 function Feedback(props) {
+    let store = useStore()
     const [isOpen, setIsOpen] = useState(false);
     const [feedback, setFeedback] = useState(null);
     const togglePopup = () => {
@@ -15,18 +17,49 @@ function Feedback(props) {
         "R6ipYETLsriXjdnpDCGcztvuo1m01YNh_FPG4-Jw8ReZl_hG68sMoAJf" +
         "woB_3ro82-U";
     const makeFeedback = (e) => {
-        setFeedback({content: e})
+        setFeedback(e)
     }
+    const browser = Bowser.getParser(window.navigator.userAgent).getBrowser();
+    console.log(browser.version);
 
     const sendFeedback = () => {
         fetch(
             webHook,
             {
+
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(feedback),
+                body: JSON.stringify({
+                    embeds: [
+                        {
+                            title: 'Feedback',
+                            color: 14177041,
+                            author: {
+                                name: store.currentUser.displayName,
+                                icon_url: store.currentUser.photoURL,
+                            },
+                            fields: [
+                                {
+                                  name: 'Browser',
+                                  value: browser.name,
+                                },
+                                {
+                                  name: 'Version',
+                                  value: browser.version,
+                                },
+                                {
+                                    name: 'User Email',
+                                    value: store.currentUser.email,
+                                },
+                              ],
+                            description: feedback,
+
+                        }
+                    ],
+                }),
+
             }
         )
             .then(response => response.json())
@@ -53,4 +86,4 @@ function Feedback(props) {
 
 }
 
-export default Feedback
+export default observer(Feedback)
