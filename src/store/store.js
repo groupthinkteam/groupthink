@@ -18,6 +18,7 @@ export var storeObject = {
     collapsedID: {},
     documentLoadPercent: 0,
     currentContext: '',
+    recentSearches :[],
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -52,7 +53,11 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
-    
+    addToRecentSearch(id){
+        console.log("Check recent search ID",this.recentSearches.indexOf(id));
+        if(this.recentSearches.indexOf(id) !== 0)
+        this.recentSearches.push(id);
+    },
     getActionQuery(callback) {
         database.ref("actionsearch")
             .once('value').then(snap => { callback(snap.val()) })

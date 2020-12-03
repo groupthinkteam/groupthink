@@ -10,31 +10,14 @@ gsap.registerPlugin(ScrollToPlugin)
 
 const SearchDropdown = (props) => {
     const store = useStore();
-    const history = useHistory();
-    const location = useLocation();
-    const [currentMatch, setCurrentMatch] = useState(0)
-    const [previousMatchID, setPreviousMatchID] = useState(null)
+    // const history = useHistory();
+    // const location = useLocation();
+    // const [currentMatch, setCurrentMatch] = useState(0)
+    // const [previousMatchID, setPreviousMatchID] = useState(null)
 
-    const scrollToID = (id) => {
-        if (id !== previousMatchID) {
-            let height = document.getElementById("card-container").style.height;
-            let x = store.cards[id].position.x - window.innerWidth - 100;
-            let y = store.cards[id].position.y - height - 100;
-            x = x < 0 ? 0 : x;
-            y = y < 0 ? 0 : y;
-            let tl = gsap.timeline();
-            tl.to("#card-container", { duration: 0.3, scrollTo: { x: x, y: y } });
-            tl.to("#".concat(id), { scale: 1.3, duration: 0.3 });
-            tl.to("#".concat(id), { scale: 1.0, duration: 0.1 })
-            tl.play()
-            setPreviousMatchID(id)
-        }
-        props.setDropdown(false);
-    }
-
-    const openProject = (id) => {
-        history.push('/project/' + id, { from: location })
-    }
+    // const openProject = (id) => {
+    //     history.push('/project/' + id, { from: location })
+    // }
 
     const searchItems = [];
     for (let i = 0; i < props.results.matches.length; i++) {
@@ -44,7 +27,7 @@ const SearchDropdown = (props) => {
         searchItems.push(
             (
                 <SearchItem key={i} id={match.id} field={field} match={terms}
-                    onClick={() => { props.document ? setCurrentMatch(i) : openProject(match.id) }}
+                    onClick={() => { store.addToRecentSearch(match.id); props.closeSearchBar(match.id);}} //props.document ? setCurrentMatch(i) : openProject(match.id) }}
                 />
             )
         )
@@ -63,9 +46,6 @@ const SearchDropdown = (props) => {
             )
         )
     }
-
-    if (props.document && props.results.matches[currentMatch]?.id)
-        scrollToID(props.results.matches[currentMatch]?.id)
 
     return (
         <div className="search-dropdown">

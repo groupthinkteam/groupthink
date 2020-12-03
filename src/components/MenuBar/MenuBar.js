@@ -22,6 +22,7 @@ function MenuBar(props) {
                     </Link>
                 </div>
                 <ActionsMenu />
+                <SearchBar document={props.document}/> 
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 {isEditingTitle ?

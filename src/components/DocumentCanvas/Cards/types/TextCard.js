@@ -9,15 +9,19 @@ function TextCard(props) {
     const store = useStore();
     const quillRef = useRef(null);
     const me = store.cards[props.id];
-    useEffect(() => {
-        if (store.currentActive === props.id && quillRef.current) {
-            quillRef.current.focus();
+    const pointerAtLast = () => {
+        if (quillRef.current) {
             var quillEditor = quillRef.current.getEditor();
             console.log("EDITOR ", quillEditor.getText().length - 1, quillEditor.getSelection())
             const selectionIndex = quillEditor.getSelection()?.index;
             quillEditor.setSelection(selectionIndex ? selectionIndex : quillEditor.getText().length - 1, 0);
         }
-    }, [props.id, store.currentActive, me.content.text]);
+    }
+    useEffect(() => {
+        if (store.currentActive === props.id && quillRef.current) {
+            quillRef.current.focus();
+        }
+    }, [props.id, store.currentActive]);
 
     let modules = {
         toolbar: ['bold', 'italic', 'underline', 'strike']
@@ -29,6 +33,7 @@ function TextCard(props) {
                 theme="bubble"
                 value={me.content.text}
                 modules={modules}
+                onFocus={pointerAtLast}
                 onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }} />
         </div>
     )
