@@ -48,7 +48,7 @@ const SearchBar = (props) => {
             <div className="search-input" style={props.dashboard ? {border: "2px solid black"} : {}}>
                 <img className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
                 <InlineTextEdit
-                    style={{fontSize: "11px", fontFamily: "Open Sans"}}
+                    style={{fontSize: "11px", fontFamily: "Overpass"}}
                     borderColor='black'
                     placeholder={props.document ? "Search for an item or action" : "Search by project name"}
                     onChange={(e) => searchValues(e.target.value)}
