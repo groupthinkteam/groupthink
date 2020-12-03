@@ -9,6 +9,7 @@
 
     font-family: Overpass;
     font-style: normal;
+    font-weight: normal;
 
     .title {
         font-weight: 800;
@@ -16,9 +17,62 @@
         line-height: 34px;
     }
     .subtitle {
-        font-weight: normal;
         font-size: 14px;
         line-height: 21px;
+    }
+    .section-heading {
+        font-weight: 400;
+        font-size: 20px;
+        margin-top: 30px;
+    }
+    .grid {
+        display: flex;
+        flex-flow: column nowrap;
+        width: 100%;
+        overflow: auto;
+        max-height: calc(min(800px, 80vh) - 150px);
+        .action-item {
+            display: flex;
+            flex-flow: row nowrap;
+            width: 100%;
+            min-height: 60px;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-top: 5px;
+            justify-content: flex-start;
+            align-items: center;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.2s;
+            &:hover {
+                background: #f6f6f6;
+                border: 1px solid #413d45;
+                box-sizing: border-box;
+                border-radius: 8px;
+            }
+            .icon {
+                width: 40px;
+                height: 40px;
+                background: #c4c4c4;
+                border-radius: 5px;
+            }
+            .content {
+                display: flex;
+                flex-flow: column nowrap;
+                justify-content: flex-start;
+                align-items: flex-start;
+                margin-left: 10px;
+                .title {
+                    font-size: 16px;
+                    font-weight: 400;
+                    line-height: 18px;
+                }
+                .description {
+                    font-size: 14px;
+                    color: #a29fa5;
+                }
+            }
+        }
     }
 }
 

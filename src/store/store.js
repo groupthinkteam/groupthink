@@ -56,7 +56,7 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
-    
+
     addToRecentSearch(id) {
         console.log("Check recent search ID", id, this.projectID);
         const k = this.projectID
@@ -568,4 +568,41 @@ export var storeObject = {
         auth().signOut()
     },
 
+
+    // actions
+    // ------------
+    // args must contain a valid card ID
+    runAction(name, args, callback) {
+        function summarize() {
+            const API_KEY = "89A59B5393";
+            fetch(`https://api.smmry.com/SM_API_KEY=${API_KEY}&SM_URL=${args.url}`)
+                .then((response) => {
+                    if (response.sm_api_error === undefined) {
+                        callback(false)
+                    }
+                    callback(
+                        {
+                            percentReduced: response.sm_api_content_reduced,
+                            content: response.sm_api_content
+                        }
+                    )
+                })
+        }
+        this[name].apply()
+        // eval(name + "()");
+    },
+    actionsList: [
+        {
+            title: "Summarize a link",
+            description: "uses AI to create a summary of a webpage or PDF",
+        },
+        {
+            title: "Generate APA citations",
+            description: "scans for links in a text card and creates APA formatted citations for them",
+        }, 
+        {
+            title: "Generate Harvard citations",
+            description: "scans for links in a text card and creates Harvard formatted citations for them",
+        },
+    ]
 };

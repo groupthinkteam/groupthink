@@ -1,16 +1,9 @@
-import { summary } from "./scripts/summary"
-
-
-class action {
-    constructor({ string: name, string: description, function: run }) {
-        this.name = name;
-        this.description = description;
-        this.run = run;
-    }
-}
+import React from "react"
 
 export default function directory(actionName) {
     
+
+    return null;
 }
 
 

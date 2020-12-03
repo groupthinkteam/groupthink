@@ -18,6 +18,7 @@
   top: calc(15vh - 20px);
   padding: 10px;
   overflow: auto;
+  max-height: calc(min(800px, 80vh));
 
   /* white white */
   background: #ffffff;
@@ -28,17 +29,8 @@
 
   .close-icon {
     position: absolute;
-    right: 10px;
-    top: 10px;
-    content: "x";
+    right: 15px;
+    top: 20px;
     cursor: pointer;
-    background: #ededed;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    line-height: 20px;
-    text-align: center;
-    border: 1px solid #999;
-    font-size: 20px;
   }
 }

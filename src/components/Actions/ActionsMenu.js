@@ -5,8 +5,6 @@ import Popup from "../PopupMenu/PopupMenu"
 
 import "../../styles/Actions/ActionsMenu.scss"
 
-
-
 function ActionsMenu(props) {
     let store = useStore()
     let [expanded, setExpanded] = useState(false);
@@ -33,12 +31,31 @@ function ActionsMenu(props) {
                         <div className="subtitle">
                             Actions make your life easier by automating many common tasks.
                         </div>
+                        <div className="section-heading">
+                            Popular Actions
+                        </div>
+                        <div className="grid">
+                            {store.actionsList.map(
+                                (action) => (
+                                    <div className="action-item">
+                                        <div className="icon"></div>
+                                        <div className="content">
+                                            <div className="title">
+                                                {action.title}
+                                            </div>
+                                            <div className="description">
+                                                {action.description}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            )}
+                        </div>
                     </div>
                 </Popup>
                 : null}
         </div>
     )
-
 }
 
 export default observer(ActionsMenu)
