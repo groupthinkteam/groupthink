@@ -1,12 +1,69 @@
 .card-container {
     height: calc(100vh - 40px);
-    background: #F3F8FF;
-    // background-image: radial-gradient(circle at 1px 1px, grey 0.5px, transparent 0);
-    // background-size: 10px 10px;
+    background: #f3f8ff;
+    .zoom-widget {
+        /* kite white */
+        background: #fcfbf9;
+        /* kite dark gray */
+        border: 1px solid #a29fa5;
+        border-radius: 5px;
+
+        position: fixed;
+        bottom: 20px;
+        right: 10px;
+        z-index: 9999999999;
+
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: center;
+
+        height: 40px;
+        width: 130px;
+
+        transition: 0.2s;
+        opacity: 0.7;
+        &:hover {
+            opacity: 1;
+        }
+
+        .zoom-icon {
+            width: 22px;
+            cursor: pointer;
+            margin: 3px;
+            opacity: 0.5;
+            transition: 0.2s;
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        .input {
+            padding: 5px;
+            font-family: Overpass;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 16px;
+            color: #413d45;
+            background-color: transparent;
+            vertical-align: middle;
+            transition: 0.2s;
+            width: 60px;
+            text-align: center;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            &:hover {
+                border: 1px solid #a29fa5;
+            }
+            &:focus {
+                border: 1px solid black;
+            }
+        }
+    }
 }
 
 .container-filler {
-    background: #F3F8FF;
+    background: #f3f8ff;
     // background-image: radial-gradient(circle at 1px 1px, grey 0.5px, transparent 0);
     // background-size: 10px 10px;
 }

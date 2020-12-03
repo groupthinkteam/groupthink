@@ -28,7 +28,6 @@ const GenericCard = props => {
         setShowPopper(false);
         setContextMenu(null);
     }
-    console.log("CONTAINRT ", store.container.width, store.container.height)
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
 
@@ -130,7 +129,6 @@ const GenericCard = props => {
                         })
                 }}
                 onBlur={(e) => {
-                    console.log("ONBLUR")
                     if (store.currentActive === props.id) {
                         store.currentActive = null;
                     }
@@ -143,7 +141,6 @@ const GenericCard = props => {
                     e.stopPropagation();
                 }}
                 onKeyDown={(e) => {
-                    console.log("pressed ", e.key);
                     if (e.key === "Delete") {
                         store.removeCard(props.id, "recursive")
                     }
