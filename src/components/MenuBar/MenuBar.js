@@ -8,6 +8,7 @@ import PersonaList from "../PersonaList/PersonaList"
 import UserMenu from "./UserMenu"
 import { useStore } from "../../store/hook"
 import { observer } from "mobx-react-lite"
+import ActionsMenu from "../Actions/ActionsMenu"
 
 function MenuBar(props) {
     let store = useStore()
@@ -20,7 +21,7 @@ function MenuBar(props) {
                         g
                     </Link>
                 </div>
-                <SearchBar document={props?.document} dashboard={props?.dashboard} />
+                <ActionsMenu />
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 {isEditingTitle ?
