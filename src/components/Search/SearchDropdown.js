@@ -10,14 +10,24 @@ gsap.registerPlugin(ScrollToPlugin)
 
 const SearchDropdown = (props) => {
     const store = useStore();
-    // const history = useHistory();
-    // const location = useLocation();
+    const history = useHistory();
+    const location = useLocation();
     // const [currentMatch, setCurrentMatch] = useState(0)
     // const [previousMatchID, setPreviousMatchID] = useState(null)
 
-    // const openProject = (id) => {
-    //     history.push('/project/' + id, { from: location })
-    // }
+    const openProject = (id) => {
+        history.push('/project/' + id, { from: location })
+    }
+
+    const setSearchedItem = (id) =>{
+        if(props.dashboard)
+        openProject(id)
+        else
+        {
+            store.addToRecentSearch(id); 
+            props.closeSearchBar(id);      
+        }
+    }
 
     const searchItems = [];
     for (let i = 0; i < props.results.matches.length; i++) {
@@ -27,7 +37,7 @@ const SearchDropdown = (props) => {
         searchItems.push(
             (
                 <SearchItem key={i} id={match.id} field={field} match={terms}
-                    onClick={() => { store.addToRecentSearch(match.id); props.closeSearchBar(match.id);}} //props.document ? setCurrentMatch(i) : openProject(match.id) }}
+                    onClick={() => {setSearchedItem(match.id)}}
                 />
             )
         )

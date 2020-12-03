@@ -11,6 +11,7 @@ const Dashboard = observer(() => {
   let store = useStore();
   const history = useHistory();
   const location = useLocation();
+  const [filterProject, setFilterProject] = useState('All Projects');
 
   let [currentView, setCurrentView] = useState("all")
 
@@ -27,6 +28,21 @@ const Dashboard = observer(() => {
   const signOut = () => {
     store.signout();
     history.push('/login', { from: location });
+  }
+  const changeRadio = (e) => {
+    console.log(e.target.value)
+    setFilterProject(e.target.value)
+  }
+  const sortProject = () => {
+    switch (filterProject) {
+      case 'All Projects':
+        return store.allProjects;
+      case 'Starred Project':
+        return store.starredProjects;
+      case 'Shared Project':
+        return store.sharedProject;
+      default: break;
+    }
   }
 
   return (
@@ -48,8 +64,19 @@ const Dashboard = observer(() => {
           <div className="project-section-header">
             <div className="header-left-container">
               <div className="dashboard-title">
-                Your Projects
-            </div>
+                {filterProject}
+                <select style={{ width: '18px' }} name="permission" id="permission" onChange={e => changeRadio(e)}>
+                  <option value={'All Projects'}>
+                    All Projects
+                  </option>
+                  <option value="Starred Project">
+                    Starred Project
+                  </option>
+                  {/* <option value="Shared Project">
+                    Shared Project
+                  </option> */}
+                </select>
+              </div>
               <button className="addnew" onClick={() => store.addNewProject((id) => onOpen(id))}>
                 + Create
             </button>
@@ -58,14 +85,27 @@ const Dashboard = observer(() => {
           </div>
 
           <div className="project-section-content">
-            {store.ownProjects.length > 0
+            <table>
+              <tbody>
+                <tr>
+                  <th>Title</th>
+                  <th>Last Modified</th>
+                  <th>Created At</th>
+                  <th>Shared</th>
+                </tr>
+              </tbody>
+            </table>
+            {
+              sortProject().map((id) => <DashboardCard key={id} id={id} onOpen={() => onOpen(id)} />)
+            }
+            {/* {store.ownProjects.length > 0
               ? store.ownProjects.map((id) => <DashboardCard key={id} id={id} onOpen={() => onOpen(id)} />)
               : null
             }
             {store.sharedProjects.length > 0
               ? store.sharedProjects.map((id) => <DashboardCard shared key={id} id={id} onOpen={() => onOpen(id)} />)
               : null
-            }
+            } */}
           </div>
         </div>
         <div className="recent-activity-section">
