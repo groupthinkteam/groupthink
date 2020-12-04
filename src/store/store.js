@@ -588,32 +588,38 @@ export var storeObject = {
     runAction(name, args, callback) {
         function summarize() {
             const API_KEY = "89A59B5393";
-            fetch(`https://api.smmry.com/SM_API_KEY=${API_KEY}&SM_URL=${args.url}`)
+            fetch(`https://api.smmry.com/SM_API_KEY=${API_KEY}&SM_URL=${args.url}&SM_WITH_BREAK`)
                 .then((response) => {
-                    if (response.sm_api_error === undefined) {
-                        callback(false)
-                    }
-                    callback(
-                        {
-                            percentReduced: response.sm_api_content_reduced,
-                            content: response.sm_api_content
+                    response.json().then((json) => {
+                        if (json.sm_api_error !== undefined) {
+                            callback(false)
                         }
-                    )
+                        callback(
+                            {
+                                percentReduced: json.sm_api_content_reduced,
+                                content: json.sm_api_content.split("[BREAK]")
+                            }
+                        )
+                    })
                 })
         }
-        this[name].apply()
-        // eval(name + "()");
+        if (name === "summarize") {
+            summarize()
+        }
     },
     actionsList: [
         {
+            id: "summarize",
             title: "Summarize a link",
             description: "uses AI to create a summary of a webpage or PDF",
         },
-        {
+        {   
+            id: "citeapa",
             title: "Generate APA citations",
             description: "scans for links in a text card and creates APA formatted citations for them",
         },
         {
+            if: "citeharvard",
             title: "Generate Harvard citations",
             description: "scans for links in a text card and creates Harvard formatted citations for them",
         },
