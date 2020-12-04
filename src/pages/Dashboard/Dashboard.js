@@ -13,7 +13,11 @@ const Dashboard = observer(() => {
   const location = useLocation();
   const [filterProject, setFilterProject] = useState('All Projects');
 
-  //let [currentView, setCurrentView] = useState("all")
+  useEffect(() => {
+    if (store.filteredProjectID.length)
+      setFilterProject('Searching Project')
+    else setFilterProject('All Projects')
+  }, [store.filteredProjectID.length])
 
   useEffect(() => {
     store.addDashboardListeners()
@@ -38,6 +42,8 @@ const Dashboard = observer(() => {
         return store.starredProjects;
       case 'Shared Project':
         return store.sharedProject;
+      case 'Searching Project':
+        return store.searchedProject;
       default: break;
     }
   }

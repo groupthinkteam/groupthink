@@ -7,6 +7,7 @@ import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
 import { snap } from "gsap/all"
 
 export var storeObject = {
+    filteredProjectID: [],
     projects: {},
     cards: {},
     users: {},
@@ -40,6 +41,10 @@ export var storeObject = {
     },
     get starredProjects() {
         return Object.keys(this.projects).filter(id => this.projects[id].users[this.userID].isStarred)
+    },
+    get searchedProject(){
+        
+        return Object.keys(this.projects).filter(id => this.filteredProjectID.indexOf(id)!==-1)
     },
     get projectRef() {
         return database.ref("documents").child(this.projectID)
@@ -214,6 +219,15 @@ export var storeObject = {
         }
         this.projectRef.child("nodes").update(updates)
             .then(console.log("deleted", id, "successfully")).catch(error => console.log("couldn't reparent because ", error));
+    },
+    filterProject(searchResult) {
+        if(searchResult.matches.length>0)
+        for (let i = 0; i < searchResult.matches.length; i++) {
+            const match = searchResult.matches[i];
+            this.filteredProjectID.push(match.id);
+        }
+        else
+        this.filteredProjectID=[];
     },
     starredThisProject(id) {
         console.log(this.projects[id].users[this.userID].name)

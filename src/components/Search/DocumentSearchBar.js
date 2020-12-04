@@ -2,21 +2,36 @@ import React, { useState } from 'react'
 import SearchDropdown from './SearchDropdown';
 import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 import Popup from '../PopupMenu/PopupMenu';
+
 import "../../styles/Actions/ActionsMenu.scss"
 import "../../styles/SearchBar.scss";
+import html2canvas from 'html2canvas';
+import { observer } from 'mobx-react-lite';
 
 const DocumentSearchBar = (props) => {
     const [expanded, setExpanded] = useState(false);
     const { setActionResult, setResults, scrollToID, searchValues,
         results,
         actionResult,
-        recentSearches} = props;
+        recentSearches } = props;
     const closeSearchBar = (id) => {
         setActionResult({ matches: [], suggest: [] });
         setResults({ matches: [], suggest: [] })
         setExpanded(false);
         if (id)
             scrollToID(id);
+    }
+
+
+    const getCardImage = (divID,cardID) => {
+        var node = document.querySelector('#'.concat(cardID));
+        html2canvas(node).then(function (canvas) {
+            console.log("canvas ",canvas)
+            document.getElementById(divID).appendChild(canvas);
+        })
+        .catch(function (error) {
+            console.error('oops, something went wrong!', error);
+        });
     }
     return (
         <div className="menu-bar-searchbox ">
@@ -48,7 +63,6 @@ const DocumentSearchBar = (props) => {
                                     (results.matches.length || actionResult.matches.length)
                                         ? <SearchDropdown
                                             results={results} actionResult={actionResult} document
-                      
                                             closeSearchBar={closeSearchBar}
                                         />
                                         : null
@@ -62,8 +76,9 @@ const DocumentSearchBar = (props) => {
                                     Object.entries(recentSearches)
                                         .filter(([_, projectID]) => projectID === props.projectID)
                                         .map(([cardID, _]) =>
-                                            <div key={cardID} onClick={() => closeSearchBar(cardID)} style={{ cursor: 'pointer' }} >
-                                                {cardID}
+                                            <div onLoad={getCardImage("test-image",cardID)} key={cardID} onClick={() => closeSearchBar(cardID)} style={{ cursor: 'pointer' }} >
+                                                {cardID} 
+                                                <div className="test-image" id="test-image"></div>
                                             </div>
                                         )
                                 }
@@ -76,4 +91,4 @@ const DocumentSearchBar = (props) => {
         </div>
     )
 }
-export default DocumentSearchBar;
+export default observer( DocumentSearchBar);

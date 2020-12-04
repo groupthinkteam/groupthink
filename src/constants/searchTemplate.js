@@ -75,7 +75,7 @@ export default class SearchElements {
                         break;
                     default:
                         //This is For Search in Cards Other than documents/projectID/nodes/
-                        projectArray.push({ id: key, name: val.name })
+                        projectArray.push({ id: key, name: val.metadata.name })
                         break;
                 }
             return '';

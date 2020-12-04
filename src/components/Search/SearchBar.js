@@ -69,7 +69,6 @@ const SearchBar = (props) => {
                     <DashboardSearchBar
                         searchValues={searchValues}
                         results={results}
-                        actionResult={actionResult}
                     />
                     : <DocumentSearchBar
                         setActionResult={setActionResult}
