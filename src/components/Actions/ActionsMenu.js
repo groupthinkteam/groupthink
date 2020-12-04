@@ -36,19 +36,16 @@ function ActionsMenu(props) {
                         </div>
                         <div className="grid">
                             {store.actionsList.map(
-                                (action) => (
-                                    <div className="action-item">
-                                        <div className="icon"></div>
-                                        <div className="content">
-                                            <div className="title">
-                                                {action.title}
-                                            </div>
-                                            <div className="description">
-                                                {action.description}
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
+                                (action) =>
+                                    <ActionItem
+                                        key={action.id}
+                                        action={action} onClick={() => {
+                                            store.runAction(
+                                                action.id,
+                                                { url: "https://www.nytimes.com/2020/08/06/opinion/coronavirus-us-recession.html?action=click&module=Opinion&pgtype=Homepage" },
+                                                (response) => { console.log("response from summarize", response) }
+                                            )
+                                        }} />
                             )}
                         </div>
                     </div>
@@ -57,5 +54,22 @@ function ActionsMenu(props) {
         </div>
     )
 }
+
+function ActionItem({ action, onClick }) {
+    return (
+        <div className="action-item" onClick={onClick}>
+            <div className="icon"></div>
+            <div className="content">
+                <div className="title">
+                    {action.title}
+                </div>
+                <div className="description">
+                    {action.description}
+                </div>
+            </div>
+        </div>
+    )
+}
+
 
 export default observer(ActionsMenu)
