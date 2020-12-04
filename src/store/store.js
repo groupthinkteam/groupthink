@@ -39,7 +39,7 @@ export var storeObject = {
         return Object.keys(this.projects).filter(id => this.projects[id].shared)
     },
     get starredProjects() {
-        return Object.keys(this.projects).filter(id => this.projects[id].isStarred)
+        return Object.keys(this.projects).filter(id => this.projects[id].users[this.userID].isStarred)
     },
     get projectRef() {
         return database.ref("documents").child(this.projectID)
@@ -216,18 +216,17 @@ export var storeObject = {
             .then(console.log("deleted", id, "successfully")).catch(error => console.log("couldn't reparent because ", error));
     },
     starredThisProject(id) {
-        this.projects[id]["isStarred"] = true;
-        this.userRef.child(id).child("isStarred")
-            .set(true)
-            .then(console.log(id, " This Project is starred"))
-            .catch(err => console.log("Error in setting Starred ", err))
+        console.log(this.projects[id].users[this.userID].name)
+        database.ref("documents").child(id)
+            .child(`users/${this.userID}/isStarred`)
+            .set(true).then(console.log(id, " This Project is starred in USERS"))
+            .catch(err => console.log("Error in setting Starred ", err));
     },
     unStarredThisProject(id) {
-        this.projects[id]["isStarred"] = null;
-        this.userRef.child(id).child("isStarred")
-            .set(null)
-            .then(console.log(id, " This Project is unStarred"))
-            .catch(err => console.log("Error in setting unStarred ", err))
+        database.ref("documents").child(id)
+            .child(`users/${this.userID}/isStarred`)
+            .set(null).then(console.log(id, " This Project is starred in USERS"))
+            .catch(err => console.log("Error in setting Starred ", err));
     },
     changePosition(id, newPos) {
         this.cards[id]["position"] = newPos;
@@ -599,7 +598,7 @@ export var storeObject = {
         {
             title: "Generate APA citations",
             description: "scans for links in a text card and creates APA formatted citations for them",
-        }, 
+        },
         {
             title: "Generate Harvard citations",
             description: "scans for links in a text card and creates Harvard formatted citations for them",

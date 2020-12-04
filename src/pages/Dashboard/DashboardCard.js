@@ -24,7 +24,7 @@ const DashboardCard = props => {
 
                             <div className="title" >
                                 {
-                                    me.isStarred ?
+                                    me.users[store.userID].isStarred ?
                                         <svg onClick={() => store.unStarredThisProject(props.id)} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.48999L13.09 6.74999L20 7.75999L15 12.63L16.18 19.51L10 16.26L3.82 19.51L5 12.63L0 7.75999L6.91 6.74999L10 0.48999Z" fill="#32AAFF" />
                                         </svg>

@@ -13,26 +13,23 @@ const Dashboard = observer(() => {
   const location = useLocation();
   const [filterProject, setFilterProject] = useState('All Projects');
 
-  let [currentView, setCurrentView] = useState("all")
+  //let [currentView, setCurrentView] = useState("all")
 
   useEffect(() => {
     store.addDashboardListeners()
     return () => store.removeDashboardListeners()
-  }, [])
+  }, [store])
 
   const onOpen = (id) => {
     store.setProjectID(id);
     history.push("/project/" + id, { from: location })
   }
 
-  const signOut = () => {
-    store.signout();
-    history.push('/login', { from: location });
-  }
-  const changeRadio = (e) => {
-    console.log(e.target.value)
-    setFilterProject(e.target.value)
-  }
+  // const signOut = () => {
+  //   store.signout();
+  //   history.push('/login', { from: location });
+  // }
+
   const sortProject = () => {
     switch (filterProject) {
       case 'All Projects':
@@ -65,7 +62,7 @@ const Dashboard = observer(() => {
             <div className="header-left-container">
               <div className="dashboard-title">
                 {filterProject}
-                <select style={{ width: '18px' }} name="permission" id="permission" onChange={e => changeRadio(e)}>
+                <select style={{ width: '18px' }} name="permission" id="permission" onChange={e => setFilterProject(e.target.value)}>
                   <option value={'All Projects'}>
                     All Projects
                   </option>
@@ -98,14 +95,6 @@ const Dashboard = observer(() => {
             {
               sortProject().map((id) => <DashboardCard key={id} id={id} onOpen={() => onOpen(id)} />)
             }
-            {/* {store.ownProjects.length > 0
-              ? store.ownProjects.map((id) => <DashboardCard key={id} id={id} onOpen={() => onOpen(id)} />)
-              : null
-            }
-            {store.sharedProjects.length > 0
-              ? store.sharedProjects.map((id) => <DashboardCard shared key={id} id={id} onOpen={() => onOpen(id)} />)
-              : null
-            } */}
           </div>
         </div>
         <div className="recent-activity-section">
