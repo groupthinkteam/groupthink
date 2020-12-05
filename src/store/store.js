@@ -42,9 +42,9 @@ export var storeObject = {
     get starredProjects() {
         return Object.keys(this.projects).filter(id => this.projects[id].users[this.userID].isStarred)
     },
-    get searchedProject(){
-        
-        return Object.keys(this.projects).filter(id => this.filteredProjectID.indexOf(id)!==-1)
+    get searchedProject() {
+
+        return Object.keys(this.projects).filter(id => this.filteredProjectID.indexOf(id) !== -1)
     },
     get projectRef() {
         return database.ref("documents").child(this.projectID)
@@ -221,13 +221,13 @@ export var storeObject = {
             .then(console.log("deleted", id, "successfully")).catch(error => console.log("couldn't reparent because ", error));
     },
     filterProject(searchResult) {
-        if(searchResult.matches.length>0)
-        for (let i = 0; i < searchResult.matches.length; i++) {
-            const match = searchResult.matches[i];
-            this.filteredProjectID.push(match.id);
-        }
+        if (searchResult.matches.length > 0)
+            for (let i = 0; i < searchResult.matches.length; i++) {
+                const match = searchResult.matches[i];
+                this.filteredProjectID.push(match.id);
+            }
         else
-        this.filteredProjectID=[];
+            this.filteredProjectID = [];
     },
     starredThisProject(id) {
         console.log(this.projects[id].users[this.userID].name)
@@ -607,21 +607,28 @@ export var storeObject = {
             summarize()
         }
     },
-    actionsList: [
-        {
+    actionsList: {
+        "summarize": {
             id: "summarize",
             title: "Summarize a link",
             description: "uses AI to create a summary of a webpage or PDF",
         },
-        {   
+        "citeapa":
+        {
             id: "citeapa",
             title: "Generate APA citations",
             description: "scans for links in a text card and creates APA formatted citations for them",
         },
+        "citeharvard":
         {
             if: "citeharvard",
             title: "Generate Harvard citations",
             description: "scans for links in a text card and creates Harvard formatted citations for them",
         },
-    ]
-};
+        // actions UI
+        actionsUI: {
+            isSelectingCard: false,
+            selectedAction: null,
+        }
+    }
+}

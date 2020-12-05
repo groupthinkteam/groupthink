@@ -1,22 +1,76 @@
 .dashboard-card {
-    width: 100%;
-    // height: 100px;
+    width: calc(100% - 30px);
+    height: 63.4px;
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: row nowrap;
     padding: 10px 0px 10px 10px;
-    .card-row {
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid transparent;
+    margin: 5px 15px;
+
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    font-family: Overpass;
+    
+    &:hover {
+        background: #f6f6f6;
+        /* kite black */
+
+        border: 1px solid #413d45;
+        box-sizing: border-box;
+        border-radius: 8px;
+    }
+
+    .title {
+        .text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        cursor: pointer;
+        width: 30%;
         display: flex;
-        flex-flow: row wrap;
-        justify-content: flex-start;
+        flex-flow: row nowrap;
         align-items: center;
-        .title {
-            font-family: "Roboto";
-            cursor: pointer;
-            height: fit-content;
-            font-style: normal;
-            font-weight: bold;
-            font-size: 16px;
-        }        
+        justify-content: flex-start;
+
+        .star {
+            min-width: 25px;
+            margin-right: 10px;
+        }
+    }
+    .rest {
+        display: flex;
+        flex-flow: row nowrap;
+        width: 70%;
+        justify-content: flex-end;
+        align-items: center;
+        .shared {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-end;
+            align-items: center;
+            width: calc(max(20%, 200px));
+            .shared-user-profile-picture {
+                height: 36px;
+                width: 36px;
+                border-radius: 25px;
+                margin: 3px;
+            }
+            .extrausers {
+                min-height: 36px;
+                min-width: 36px;
+                border-radius: 18px;
+                margin: 3px;
+                border: 1px solid black;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+    .date {
     }
 }
-
