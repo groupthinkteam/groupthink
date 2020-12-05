@@ -108,6 +108,7 @@ const GenericCard = props => {
 
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
+    let showCompatibleOverlay = (store.isSelectingCard && store.actionsList[store.selectedAction]["types"].includes(me.type))
 
     return (
         <>
@@ -173,6 +174,11 @@ const GenericCard = props => {
                                 Not compatible with {store.actionsList[store.selectedAction]["title"]}
                             </div>
                         </div>
+                        : null
+                }
+                {
+                    showCompatibleOverlay ?
+                        <div className="compatible-overlay" />
                         : null
                 }
                 <button className="kebab"
