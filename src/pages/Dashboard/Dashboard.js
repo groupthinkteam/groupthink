@@ -84,20 +84,18 @@ const Dashboard = observer(() => {
                 + Create
             </button>
             </div>
-            <SearchBar dashboard />
+            {/* <SearchBar dashboard /> */}
           </div>
 
           <div className="project-section-content">
-            <table>
-              <tbody>
-                <tr>
-                  <th>Title</th>
-                  <th>Last Modified</th>
-                  <th>Created At</th>
-                  <th>Shared</th>
-                </tr>
-              </tbody>
-            </table>
+            <div className="row-headings">
+              <span className="heading title">Title</span>
+              <div className="rest">
+                <span className="heading date">Last edited</span>
+                <span className="heading date">Created</span>
+                <span className="heading shared">Shared with</span>
+              </div>
+            </div>
             {
               sortProject().map((id) => <DashboardCard key={id} id={id} onOpen={() => onOpen(id)} />)
             }

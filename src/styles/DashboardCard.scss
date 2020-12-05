@@ -13,7 +13,7 @@
     font-weight: 600;
     font-size: 18px;
     font-family: Overpass;
-    
+
     &:hover {
         background: #f6f6f6;
         /* kite black */
@@ -28,8 +28,8 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            cursor: pointer;
         }
-        cursor: pointer;
         width: 30%;
         display: flex;
         flex-flow: row nowrap;
@@ -39,6 +39,12 @@
         .star {
             min-width: 25px;
             margin-right: 10px;
+        }
+
+        .delete-button {
+            border: none;
+            background-color: transparent;
+            color: red;
         }
     }
     .rest {
@@ -70,7 +76,16 @@
                 align-items: center;
             }
         }
-    }
-    .date {
+        .date {
+            color: #A29FA5;
+            font-size: 16px;
+            font-weight: normal;
+            width: 150px;
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: center;
+            align-items: center;
+        }
     }
 }
+

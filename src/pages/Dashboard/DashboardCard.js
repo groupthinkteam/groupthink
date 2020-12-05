@@ -43,17 +43,21 @@ const DashboardCard = props => {
                     }
                 </div>
                 <span className="text" onClick={props.onOpen}>{me.metadata.name}</span>
+                {
+                    isHover ?
+                        <Button
+                            className="delete-button"
+                            handleClick={() => store.deleteProject(props.id)}>
+                            Delete
+                            </Button>
+                        : null
+                }
             </div>
             <div className="rest">
-                <Button
-                    className="delete-button"
-                    handleClick={() => store.deleteProject(props.id)}>
-                    Delete
-            </Button>
-                <div className="card-description">
+                <div className="date">
                     <TimeAgo date={me.users[store.userID].lastUpdatedAt} />
                 </div>
-                <div className="card-description">
+                <div className="date">
                     <TimeAgo date={me.metadata.datecreated} />
                 </div>
                 <div className="shared">

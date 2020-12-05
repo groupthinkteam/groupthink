@@ -100,9 +100,45 @@
                 display: flex;
                 flex-flow: column nowrap;
                 overflow: auto;
-                border: 2px solid black;
-                border-radius: 6px;
                 margin-top: 7px;
+                .row-headings {
+                    display: flex;
+                    flex-flow: row nowrap;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                    margin: 20px 0px 0px 0px;
+                    border-top: 1px solid black;
+                    border-bottom: 1px solid black;
+                    padding: 10px 15px 10px 15px;
+                    // padding: 5px 10px;
+                    .rest {
+                        width: 70%;
+                        display: flex;
+                        flex-flow: row nowrap;
+                        justify-content: flex-end;
+                        align-items: center;
+                    }
+                    .heading {
+                        font-family: Overpass;
+                        font-style: normal;
+                        font-weight: 600;
+                        font-size: 18px;
+                        color: #413d45;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        &.title {
+                            width: 30%;
+                        }
+                        &.shared {
+                            width: calc(max(20%, 200px));
+                        }
+                        &.date {
+                            width: 150px;
+                        }
+                    }
+                }
             }
         }
     }
