@@ -8,7 +8,8 @@ import CardsList from "../Card/CardsList";
 
 import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
-
+import Minimap from 'react-minimap';
+import 'react-minimap/dist/react-minimap.css';
 function CardContainer(props) {
     let store = useStore()
 
@@ -22,6 +23,7 @@ function CardContainer(props) {
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
             <Zoom />
+            <Minimap />
             <div className="container-filler"
                 style={{
                     ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0,
