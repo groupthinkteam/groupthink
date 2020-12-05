@@ -25,6 +25,7 @@ function ActionsMenu(props) {
             {store.selectedAction ?
                 <div className="action-name">
                     {store.actionsList[store.selectedAction].title}
+                    <div className="close-action" onClick={() => { store.isSelectingCard = false; store.selectedAction = null }}>Cancel</div>
                 </div>
                 : null
             }
