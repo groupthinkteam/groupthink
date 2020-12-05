@@ -85,7 +85,7 @@ const Dashboard = observer(() => {
             <button className="addnew" onClick={() => store.addNewProject((id) => onOpen(id))}>
               + Create
             </button>
-            {/* <SearchBar dashboard /> */}
+            <SearchBar dashboard />
           </div>
 
           <div className="project-section-content">
