@@ -221,9 +221,11 @@ export var storeObject = {
             .then(console.log("deleted", id, "successfully")).catch(error => console.log("couldn't reparent because ", error));
     },
     filterProject(searchResult) {
+        this.filteredProjectID = []
         if (searchResult.matches.length > 0)
             for (let i = 0; i < searchResult.matches.length; i++) {
                 const match = searchResult.matches[i];
+                //if(match.score > searchResult.matches.length)
                 this.filteredProjectID.push(match.id);
             }
         else

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 import "../../styles/SearchBar.scss";
 import { useStore } from '../../store/hook';
@@ -7,9 +7,11 @@ const DashboardSearchBar = (props) => {
     const { searchValues, results } = props;
     
     const store = useStore();
-    
+    useEffect(()=>{
+        store.filterProject(results)
+    },[results,store])
     return (
-        <div onLoad={store.filterProject(results)} className='new'>
+        <div  className='new'>
             <div className="new-search-input" style={{ border: "2px solid black" }}>
                 <img className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
 

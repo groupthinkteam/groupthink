@@ -55,7 +55,8 @@ const SearchBar = (props) => {
 
             const searchObject = new SearchElements(indexes);
             const [result, suggestions] = searchObject.getResult(text, store.projects);
-
+            console.log("RESULT ",text, result);
+            console.log("Suggestion", text, suggestions);
             setResults({ matches: result, suggest: suggestions });
             store.highlightSearched(result, 'projects');
         }

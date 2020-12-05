@@ -6,7 +6,7 @@ export default class SearchElements {
         this.miniSearch = new MiniSearch({
             fields: indexes,
             searchOptions: {
-                fuzzy: 0.2,
+                fuzzy: 0.01,
                 prefix: true
             }
         });

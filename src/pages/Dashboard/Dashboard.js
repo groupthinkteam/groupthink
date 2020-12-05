@@ -12,7 +12,7 @@ const Dashboard = observer(() => {
   const history = useHistory();
   const location = useLocation();
   const [filterProject, setFilterProject] = useState('All Projects');
-
+  // console.log(store.filteredProjectID)
   useEffect(() => {
     if (store.filteredProjectID.length)
       setFilterProject('Searching Project')
