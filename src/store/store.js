@@ -603,8 +603,38 @@ export var storeObject = {
                     })
                 })
         }
+        function getYtCaptions() {
+            const urlParts = args.url.split('=')
+            const vidId = urlParts[urlParts.length - 1]
+            const copyLink = (t) => {
+                const el = document.createElement('textarea');
+                el.value = t;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            }
+            fetch(`http://video.google.com/timedtext?lang=en&v=${vidId}`)
+                .then(response => response.text())
+                .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+                .then(data => {
+                    var lines = data.getElementsByTagName('text')
+                    var fullCap = ""
+                    var lLength = lines.length
+                    for (var i = 0; i < lLength; i++) {
+                        fullCap = fullCap + " " + lines[i].childNodes[0].nodeValue
+                    }
+                    fullCap = fullCap.replace(/\n/g, ' ').replaceAll('&#39;', "'")
+                    copyLink(fullCap);
+                })
+                .then(() => callback(true))
+                .catch(() => callback(false))
+        }
         if (name === "summarize") {
             summarize()
+        }
+        if (name === "getYtCaptions") {
+            getYtCaptions()
         }
     },
     actionsList: {

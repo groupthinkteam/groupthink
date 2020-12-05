@@ -62,13 +62,22 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
         "link": [
             {
                 label: "Edit Link",
-                onClick: () => { store.convertCardToBlank(id,me.type); closeContextMenu(); }
+                onClick: () => { store.convertCardToBlank(id, me.type); closeContextMenu(); }
             }
         ],
         "VideoLink": [
             {
                 label: "Edit Link",
-                onClick: () => { store.convertCardToBlank(id,me.type); closeContextMenu(); }
+                onClick: () => { store.convertCardToBlank(id, me.type); closeContextMenu(); }
+            },
+            {
+                label: "Extract Captions",
+                onClick: () => {
+                    loaderCallback(true);
+                    store.runAction("getYtCaptions", {
+                        url: me.content.metadata.url
+                    }, (bool) => loaderCallback(false))
+                }
             }
         ],
         "VideoFile": [
