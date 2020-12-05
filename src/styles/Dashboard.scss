@@ -1,6 +1,7 @@
 .dashboard-page {
     background-color: white;
     overflow: scroll;
+    font-family: Overpass;
     .top-bar {
         margin: 30px 30px 10px 30px;
         display: flex;
@@ -8,23 +9,13 @@
         justify-content: space-between;
         align-items: center;
         .site-title {
-            font-family: "B612 Mono";
-            font-style: normal;
-            font-weight: normal;
-            font-size: 34px;
-            line-height: 27px;
-
             display: flex;
             align-items: center;
             text-align: center;
             width: fit-content;
-
-            padding: 25px 15px 25px 15px;
-
-            /* gt solid white */
-            color: #ffffff;
-            /* gt orange */
-            background: #ff6b43;
+            img {
+                height: 50px;
+            }
         }
         .user-welcome {
             display: flex;
@@ -34,7 +25,6 @@
                 display: flex;
                 flex-flow: column nowrap;
                 align-items: flex-end;
-                font-family: "Roboto";
                 font-style: normal;
                 font-weight: normal;
                 font-size: 24px;
@@ -69,31 +59,36 @@
                     display: flex;
                     flex-flow: row nowrap;
                     .dashboard-title {
-                        font-family: "Roboto", "Overpass";
-                        font-style: normal;
-                        font-weight: bold;
-                        font-size: 24px;
-                        line-height: 24px;
-
                         display: flex;
                         align-items: center;
 
-                        /* gt solid black */
-                        color: #000000;
-                        margin-right: 20px;
-                    }
-                    .addnew {
-                        color: #1e7eef;
-                        background-color: transparent;
-                        border: 2px solid #1e7eef;
-                        box-sizing: border-box;
-                        border-radius: 6px;
-                        width: fit-content;
-                        &:hover {
-                            background-color: #1e7eef;
-                            color: white;
+                        .select {
+                            font-family: "Overpass";
+                            font-style: normal;
+                            font-weight: bold;
+                            font-size: 24px;
+                            line-height: 24px;
+
+                            border: none;
                         }
                     }
+                }
+                .addnew {
+                    background-color: #32aaff;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    height: 40px;
+                    width: 100px;
+                    font-family: Overpass;
+                    font-style: normal;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding-top: 4px;
                 }
             }
             .project-section-content {
@@ -102,14 +97,16 @@
                 overflow: auto;
                 margin-top: 7px;
                 .row-headings {
+                    position: sticky;
+                    top: 0px;
                     display: flex;
                     flex-flow: row nowrap;
                     justify-content: space-between;
                     align-items: center;
                     width: 100%;
                     margin: 20px 0px 0px 0px;
-                    border-top: 1px solid black;
-                    border-bottom: 1px solid black;
+                    border-top: 1px solid #413d45;
+                    border-bottom: 1px solid #413d45;
                     padding: 10px 15px 10px 15px;
                     // padding: 5px 10px;
                     .rest {
@@ -124,18 +121,22 @@
                         font-style: normal;
                         font-weight: 600;
                         font-size: 18px;
-                        color: #413d45;
+                        // color: #413d45;
                         display: flex;
-                        justify-content: center;
+                        flex-flow: row nowrap;
                         align-items: center;
                         &.title {
                             width: 30%;
+                            justify-content: flex-start;
+                            padding-left: 45px;
                         }
                         &.shared {
                             width: calc(max(20%, 200px));
+                            justify-content: flex-end;
                         }
                         &.date {
                             width: 150px;
+                            justify-content: center;
                         }
                     }
                 }

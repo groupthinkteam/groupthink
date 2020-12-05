@@ -51,7 +51,9 @@ const Dashboard = observer(() => {
   return (
     <div className="dashboard-page">
       <div className="top-bar">
-        <div className="site-title">groupthink</div>
+        <div className="site-title">
+          <img src={require("../../assets/dashboard/logo.svg")} alt="logo" />
+        </div>
         <div className="user-welcome">
           <div className="welcome-text">
             <span className="welcome-bold">Welcome,</span>
@@ -67,23 +69,22 @@ const Dashboard = observer(() => {
           <div className="project-section-header">
             <div className="header-left-container">
               <div className="dashboard-title">
-                {filterProject}
-                <select style={{ width: '18px' }} name="permission" id="permission" onChange={e => setFilterProject(e.target.value)}>
+                <select className="select" name="permission" id="permission" onChange={e => setFilterProject(e.target.value)}>
                   <option value={'All Projects'}>
                     All Projects
                   </option>
                   <option value="Starred Project">
-                    Starred Project
+                    Starred
                   </option>
                   {/* <option value="Shared Project">
                     Shared Project
                   </option> */}
                 </select>
               </div>
-              <button className="addnew" onClick={() => store.addNewProject((id) => onOpen(id))}>
-                + Create
-            </button>
             </div>
+            <button className="addnew" onClick={() => store.addNewProject((id) => onOpen(id))}>
+              + Create
+            </button>
             {/* <SearchBar dashboard /> */}
           </div>
 
