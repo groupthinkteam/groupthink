@@ -41,12 +41,11 @@ function ActionsMenu(props) {
                             Popular Actions
                         </div>
                         <div className="grid">
-                            {store.actionsList.map(
-                                (action) => {
-                                    let [id, params] = Object.entries(action)[0]
-                                    console.log(id, params)
+                            {Object.entries(store.actionsList).map(
+                                ([id, action]) => {
+                                    console.log(id, action)
                                     return (
-                                        <ActionItem key={id} action={params}
+                                        <ActionItem key={id} action={action}
                                             onClick={() => {
                                                 store.selectedAction = id;
                                                 store.isSelectingCard = true;

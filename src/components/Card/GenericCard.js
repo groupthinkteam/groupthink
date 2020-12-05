@@ -87,9 +87,12 @@ const GenericCard = props => {
                     cursor: "grab",
                     activeCursor: "grabbing"
                 })
+            if (store.isSelectingCard) {
+                y[0].disable();
+            }
             return () => y[0].kill();
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [me.type, store.currentActive]
+        }, [me.type, store.currentActive, store.isSelectingCard]
     );
     useEffect(() => {
         function handleClickOutside(event) {
@@ -104,6 +107,7 @@ const GenericCard = props => {
     }, [cardRef]);
 
     let editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
+    let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
 
     return (
         <>
@@ -155,13 +159,22 @@ const GenericCard = props => {
                     zIndex: 1
                 }}
             >
-                {showLoader
-                    ? <div className="action-loader">
+                {showLoader ?
+                    <div className="action-loader">
                         <div className="loader-text">
                             ▶️ Running Action...
-                    </div>
+                        </div>
                     </div>
                     : null}
+                {
+                    showIncompatibleOverlay ?
+                        <div className="action-loader">
+                            <div className="loader-text">
+                                Not compatible with {store.actionsList[store.selectedAction]["title"]}
+                            </div>
+                        </div>
+                        : null
+                }
                 <button className="kebab"
                     onClick={() => {
                         store.currentContext = props.id;

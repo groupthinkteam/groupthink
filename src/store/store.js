@@ -612,23 +612,24 @@ export var storeObject = {
             id: "summarize",
             title: "Summarize a link",
             description: "uses AI to create a summary of a webpage or PDF",
+            types: ["link"]
         },
-        "citeapa":
-        {
-            id: "citeapa",
-            title: "Generate APA citations",
-            description: "scans for links in a text card and creates APA formatted citations for them",
-        },
-        "citeharvard":
-        {
-            if: "citeharvard",
-            title: "Generate Harvard citations",
-            description: "scans for links in a text card and creates Harvard formatted citations for them",
-        },
-        // actions UI
-        actionsUI: {
-            isSelectingCard: false,
-            selectedAction: null,
-        }
+        // "citeapa":
+        // {
+        //     id: "citeapa",
+        //     title: "Generate APA citations",
+        //     description: "scans for links in a text card and creates APA formatted citations for them",
+        // },
+        // "citeharvard":
+        // {
+        //     if: "citeharvard",
+        //     title: "Generate Harvard citations",
+        //     description: "scans for links in a text card and creates Harvard formatted citations for them",
+        // }
+    },
+    // actions UI
+    actionsUI: {
+        isSelectingCard: false,
+        selectedAction: null,
     }
 }
