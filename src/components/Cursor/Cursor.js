@@ -33,8 +33,9 @@ const Cursor = observer((props) => {
                 src={require("../../assets/cursor.svg")}
                 style={{ userSelect: "none", maxWidth: "25px", maxHeight: "25px" }} />
             <div style={{
-                marginLeft: 10, paddingLeft: 5, paddingRight: 5, paddingBottom: 2, paddingTop: 2,
-                backgroundColor: "darkorange", color: "white", fontSize: 13, fontFamily: "sans-serif"
+                position: "relative",
+                marginLeft: 15, top: -5, paddingLeft: 5, paddingRight: 5, paddingBottom: 2, paddingTop: 4,
+                backgroundColor: "#48BB35", color: "white", fontSize: 14, fontFamily: "Overpass", borderRadius: 6
             }}>
                 {name}
             </div>
