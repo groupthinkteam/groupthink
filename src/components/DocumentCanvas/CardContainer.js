@@ -12,10 +12,10 @@ function CardContainer(props) {
     let store = useStore()
 
     let containerElement = document.querySelector(".card-container")
-    let transformOrigin = {
-        x: window.innerWidth / 2 + containerElement?.scrollLeft,
-        y: (window.innerHeight - 50) / 2 + containerElement?.scrollTop
-    }
+    // let transformOrigin = {
+    //     x: window.innerWidth / 2 + containerElement?.scrollLeft,
+    //     y: (window.innerHeight - 50) / 2 + containerElement?.scrollTop
+    // }
 
     return (
         <div className="card-container" id="card-container"

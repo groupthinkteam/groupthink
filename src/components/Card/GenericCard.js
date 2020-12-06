@@ -113,7 +113,7 @@ const GenericCard = props => {
     return (
         <>
             <div id={props.id} tabIndex={0}
-                className="generic-card"
+                className={"generic-card" + (showCompatibleOverlay ? " compat-cursor" : "")}
                 ref={cardRef}
                 onContextMenu={(event) => {
                     event.preventDefault();

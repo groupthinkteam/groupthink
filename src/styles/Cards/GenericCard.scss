@@ -6,6 +6,11 @@
     box-sizing: content-box;
     border-radius: 6px;
     overflow: visible;
+
+    &.compat-cursor {
+        cursor: url("../../assets/actions/compatiblecursor.svg"), default;
+    }
+
     &:focus,
     &:focus-within {
         outline: none;
@@ -66,6 +71,9 @@
         border-radius: 6px;
         &:hover {
             background-color: rgba(180, 95, 45, 0.719);
+        }
+        &.compat-cursor {
+            cursor: url("../../assets/actions/compatiblecursor.svg");
         }
     }
 
