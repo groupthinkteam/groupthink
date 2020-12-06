@@ -369,34 +369,6 @@ export var storeObject = {
         }
         this.changeType(id, 'blank', { width: 275, height: 45 }, { text: '' });
     },
-    convertImageToBW(fullPath, contentType, customMetadata, callback) {
-        const imageData = {
-            fpath: fullPath,
-            contentType: contentType,
-            customMetadata: customMetadata
-        }
-        var convToBw = functions.httpsCallable('imageToBw')
-        return convToBw(imageData).then(() => callback(true)).catch(() => callback(false))
-    },
-    convertLinksToCitation(id, citeStyle, callback) {
-        var fullText = []
-        var convToCite = functions.httpsCallable('linkToCitation')
-        fullText = this.cards[id].content.text
-        console.log("full text: ", fullText);
-        var linksArr = this.linksFromText(fullText);
-        if (linksArr.length === 0) {
-            return callback(false)
-        }
-        const linksData = {
-            projectId: this.projectID,
-            cardId: id,
-            link: linksArr,
-            fullText: fullText,
-            style: citeStyle
-        }
-        console.log("links data: ", linksData)
-        return convToCite(linksData).then(() => callback(true)).catch(() => callback(false))
-    },
     sendInviteEmail(data) {
         var sendLinkEmail = functions.httpsCallable('sendLinkEmail')
         return sendLinkEmail(data)
@@ -686,6 +658,15 @@ export var storeObject = {
             }
             return array
         }
+        function convertImageToBW() {
+            const imageData = {
+                fpath: card.content.metadata.fullPath,
+                contentType: card.content.metadata.contentType,
+                customMetadata: card.content.metadata.customMetadata
+            }
+            var convToBw = functions.httpsCallable('imageToBw')
+            return convToBw(imageData).then(() => callback(true)).catch(() => callback(false))
+        }
         if (name === "summarize") {
             summarize()
         }
@@ -697,6 +678,9 @@ export var storeObject = {
         }
         if (name === "convertLinksToCitation") {
             convertLinksToCitation()
+        }
+        if (name === "convertImageToBW") {
+            convertImageToBW()
         }
     },
     actionsList: {
@@ -723,19 +707,13 @@ export var storeObject = {
             title: "Generate APA style citations",
             description: "generates citations for all the research publication links in your text",
             types: ["text"]
+        },
+        "convertImageToBW": {
+            id: "convertImageToBW",
+            title: "Convert image to grayscale",
+            description: "converts an image to grayscale",
+            types: ["image"]
         }
-        // "citeapa":
-        // {
-        //     id: "citeapa",
-        //     title: "Generate APA citations",
-        //     description: "scans for links in a text card and creates APA formatted citations for them",
-        // },
-        // "citeharvard":
-        // {
-        //     if: "citeharvard",
-        //     title: "Generate Harvard citations",
-        //     description: "scans for links in a text card and creates Harvard formatted citations for them",
-        // }
     },
     // actions UI
     actionsUI: {

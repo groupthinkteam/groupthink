@@ -15,18 +15,6 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
 
     let cardSpecificOptions = {
         "text": [
-            {
-                label: "Generate Citation / APA Citation",
-                onClick: () => convLinks("apa")
-            },
-            {
-                label: "Vancouver Style",
-                onClick: () => convLinks("vancouver")
-            },
-            {
-                label: "Harvard Style",
-                onClick: () => convLinks("harvard1")
-            }
         ],
         "audio": [
             {
@@ -43,18 +31,6 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
         ],
         "image": [
             {
-                label: "Apply B/W Filter",
-                onClick: () => {
-                    loaderCallback(true);
-                    store.convertImageToBW(
-                        me.content.metadata.fullPath,
-                        me.content.metadata.contentType,
-                        me.content.metadata.customMetadata,
-                        (bool) => loaderCallback(false)
-                    );
-                }
-            },
-            {
                 label: "Replace File",
                 onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
             }
@@ -70,15 +46,6 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
                 label: "Edit Link",
                 onClick: () => { store.convertCardToBlank(id, me.type); closeContextMenu(); }
             },
-            {
-                label: "Extract Captions",
-                onClick: () => {
-                    loaderCallback(true);
-                    store.runAction("getYtCaptions", {
-                        url: me.content.metadata.url
-                    }, (bool) => loaderCallback(false))
-                }
-            }
         ],
         "VideoFile": [
             {
