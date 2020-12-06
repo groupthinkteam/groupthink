@@ -2,14 +2,12 @@ import React, { useState } from 'react'
 import SearchDropdown from './SearchDropdown';
 import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 import Popup from '../PopupMenu/PopupMenu';
+import { observer } from 'mobx-react-lite';
+import DisabledCard from '../Card/DisabledCard';
 
 import "../../styles/Actions/ActionsMenu.scss"
 import "../../styles/SearchBar.scss";
-import html2canvas from 'html2canvas';
-import { observer } from 'mobx-react-lite';
-import GenericCard from '../Card/GenericCard';
-import * as htmlToImage from 'html-to-image';
-import DisabledCard from '../Card/DisabledCard';
+
 const DocumentSearchBar = (props) => {
     const [expanded, setExpanded] = useState(false);
     const { setActionResult, setResults, scrollToID, searchValues,
@@ -23,31 +21,9 @@ const DocumentSearchBar = (props) => {
         if (id)
             scrollToID(id);
     }
-
-
-    const getCardImage = (divID,cardID) => {
-        var node = document.querySelector('#'.concat(cardID));
-        html2canvas(node).then(function (canvas) {
-            console.log("canvas ",canvas)
-            // var img    = node.toDataURL(canvas);
-            // document.getElementById(divID).write('<img src="'+img+'"/>');
-            document.getElementById(divID).appendChild(canvas);
-        })
-        .catch(function (error) {
-            console.error('oops, something went wrong!', error);
-        });
-        htmlToImage.toJpeg(node).then(function (canvas) {
-            console.log("canvas ",canvas)
-            // var img    = node.toDataURL(canvas);
-            // document.getElementById(divID).write('<img src="'+img+'"/>');
-            var img = new Image();
-            img.src = canvas;
-            document.getElementById(divID).appendChild(img);
-        })
-        .catch(function (error) {
-            console.error('oops, something went wrong!', error);
-        });
-    }
+    const recentSearchLength = Object.keys(recentSearches).length;
+    const iterateRecentSearch = Object.entries(recentSearches).filter(([_, projectID]) => projectID === props.projectID)
+    console.log(Object.keys(recentSearches).length ? "ok" : "notok")
     return (
         <div className="menu-bar-searchbox ">
             <div className="search-input">
@@ -83,19 +59,17 @@ const DocumentSearchBar = (props) => {
                                         : null
                                 }
                             </div>
-                            <div className="title">
-                                Recent Searches
-                        </div>
+                            {
+                                recentSearchLength ?
+                                    <div className="title">
+                                        Recent Searches
+                                    </div>
+                                    : null
+                            }
                             <div className="recent-search">
                                 {
-                                    Object.entries(recentSearches)
-                                        .filter(([_, projectID]) => projectID === props.projectID)
-                                        .map(([cardID, _]) =>
-                                            // <div onLoad={getCardImage("test-image",cardID)} key={cardID} onClick={() => closeSearchBar(cardID)} style={{ cursor: 'pointer' }} >
-                                            //     {/* {cardID}  */}
-                                            //     <div className="test-image" id="test-image"></div>
-                                            // </div>
-                                            <DisabledCard key={cardID} id={cardID} handleClick={() => closeSearchBar(cardID)}/>
+                                    iterateRecentSearch.map(([cardID, _]) =>
+                                            <DisabledCard key={cardID} id={cardID} handleClick={() => closeSearchBar(cardID)} />
                                         )
                                 }
                             </div>
@@ -107,4 +81,4 @@ const DocumentSearchBar = (props) => {
         </div>
     )
 }
-export default observer( DocumentSearchBar);
+export default observer(DocumentSearchBar);

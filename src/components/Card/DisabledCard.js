@@ -17,7 +17,6 @@ const DisabledCard = (props) => {
                 duration: 0.5,
                 width: me.size.width,
                 height: me.size.height,
-                borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                 transform:'scale(0.8)'
             }}
         >
