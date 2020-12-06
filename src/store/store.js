@@ -183,7 +183,8 @@ export var storeObject = {
         this.projectRef.child("nodes").update(updates)
             .then(() => {
                 console.log("Added a new child", newCardKey, "under", parent, "with position ", position)
-                getIDCallback(newCardKey)
+                if (getIDCallback)
+                    getIDCallback(newCardKey)
             });
         this.updateLastActive()
     },
@@ -660,14 +661,14 @@ export var storeObject = {
         "summarize": {
             id: "summarize",
             title: "Summarize a link",
-            description: "uses AI to create a summary of a webpage or PDF",
+            description: "uses AI to create a 7-sentence summary of a an article or webpage",
             types: ["link"]
         },
         "getYtCaptions": {
             id: "getYtCaptions",
             title: "Get YouTube captions",
-            description: "uses AI to create a summary of a webpage or PDF",
-            types: ["link"]
+            description: "fetches the time-stamped transcript for a YouTube video",
+            types: ["VideoLink"]
         },
         // "citeapa":
         // {
