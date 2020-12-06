@@ -78,36 +78,58 @@
 
 .top-band {
     border: 2px solid black;
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     flex-flow: row nowrap;
-    
+    justify-content: flex-start;
+    align-items: center;
+    transition: 0.2s;
     margin: 0px 10px 0px 10px;
+    width: fit-content;
+    min-height: 38px;
+    min-width: 38px;
+    &:hover {
+        border-color: #ff7e1d;
+    }
 
     .action-name {
         display: flex;
         flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
         background-color: #ff7e1d;
         color: white;
-        border-radius: 6px;
+        border-radius: 5px;
         padding: 5px;
-        margin: 5px;
+        margin: 3px;
         font-family: Overpass;
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        .close-action {
+            cursor: pointer;
+            margin-left: 10px;
+            &:hover {
+                color: black;
+                fill: black;
+                stroke: black;
+            }
+        }
     }
 
     .actions-button-icon {
         transition: 0.2s;
-        background-color: white;
+        background-color: transparent;
         box-sizing: border-box;
         border-radius: 8px;
-
-        width: 30px;
-        height: 30px;
+        width: 35px;
+        max-height: 35px;
+        object-fit: scale-down;
 
         &:hover {
-            background-color: #ff7e1d;
+            border-color: #ff7e1d;
         }
         &:hover path {
             fill: white;
