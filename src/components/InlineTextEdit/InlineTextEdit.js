@@ -36,6 +36,7 @@ function InlineTextEdit(props, ref) {
             href={props.href}
             target={props.target}
             ref={ref}
+            id={props.id}
         />
     )
 }
