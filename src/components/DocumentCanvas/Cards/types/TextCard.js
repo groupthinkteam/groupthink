@@ -9,7 +9,7 @@ function TextCard(props) {
     const store = useStore();
     const quillRef = useRef(null);
     const me = store.cards[props.id];
-
+    
     return (
         <div className="text-node" style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
             <HtmlEditor
@@ -17,10 +17,11 @@ function TextCard(props) {
                 value={me.content.text}
                 onChange={(value) => { props.typeAPI.saveContent(props.id, { text: value || "" }) }}
                 render={({ editor, view }) => (
-                    <div ref={quillRef}>
-                        <Floater view={view}>
+                    <div>
+                        <MenuBar menu={{ marks: menu.marks }} view={view} />
+                        {/* <Floater view={view}>
                             <MenuBar menu={{ marks: menu.marks }} view={view} />
-                        </Floater>
+                        </Floater> */}
                         {editor}
                     </div>
                 )}
