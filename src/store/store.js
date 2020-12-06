@@ -401,15 +401,6 @@ export var storeObject = {
         var sendLinkEmail = functions.httpsCallable('sendLinkEmail')
         return sendLinkEmail(data)
     },
-    linksFromText(stri) {
-        const regexp = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
-        const str = String(stri);
-        var array = []
-        if (str.match(regexp) !== null) {
-            array = [...str.match(regexp)];
-        }
-        return array
-    },
     // update any property of store (for use with listeners)
     sync(property, path, value) {
         set(this[property], path, value)
@@ -595,6 +586,7 @@ export var storeObject = {
         let card = this.cards[id]
         let addCard = this.addCard
         let saveContent = this.saveContent
+        let projectId = this.projectID
 
         function summarize() {
             const API_KEY = "89A59B5393";
@@ -664,6 +656,35 @@ export var storeObject = {
                 }
             }
             convToPdf(data).then(() => callback(true)).catch(() => callback(false))
+
+        }
+        function convertLinksToCitation() {
+            var fullText = []
+            var convToCite = functions.httpsCallable('linkToCitation')
+            fullText = card.content.text
+            console.log("full text: ", fullText);
+            var linksArr = linksFromText(fullText);
+            if (linksArr.length === 0) {
+                return callback(false)
+            }
+            const linksData = {
+                projectId: projectId,
+                cardId: id,
+                link: linksArr,
+                fullText: fullText,
+                style: "apa"
+            }
+            console.log("links data: ", linksData)
+            return convToCite(linksData).then(() => callback(true)).catch(() => callback(false))
+        }
+        function linksFromText(stri) {
+            const regexp = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
+            const str = String(stri);
+            var array = []
+            if (str.match(regexp) !== null) {
+                array = [...str.match(regexp)];
+            }
+            return array
         }
         if (name === "summarize") {
             summarize()
@@ -673,6 +694,9 @@ export var storeObject = {
         }
         if (name === "convFile") {
             convFile()
+        }
+        if (name === "convertLinksToCitation") {
+            convertLinksToCitation()
         }
     },
     actionsList: {
@@ -693,6 +717,12 @@ export var storeObject = {
             title: "Convert file to PDF",
             description: "converts your file to pdf format",
             types: ["file"]
+        },
+        "convertLinksToCitation": {
+            id: "convertLinksToCitation",
+            title: "Generate APA style citations",
+            description: "generates citations for all the research publication links in your text",
+            types: ["text"]
         }
         // "citeapa":
         // {
