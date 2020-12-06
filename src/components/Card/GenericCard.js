@@ -121,7 +121,7 @@ const GenericCard = props => {
                     var cardContainerElement = document.querySelector('.card-container');
                     setShowPopper(false);
                     var x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft / store.zoom - me.position.x);
-                    var y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollTop / store.zoom - me.position.y - 40);
+                    var y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollTop / store.zoom - me.position.y - 50);
                     if (store.zoom === 1) {
                         setContextMenu({ x: x, y: y })
                     }

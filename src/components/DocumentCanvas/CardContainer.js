@@ -14,7 +14,7 @@ function CardContainer(props) {
     let containerElement = document.querySelector(".card-container")
     let transformOrigin = {
         x: window.innerWidth / 2 + containerElement?.scrollLeft,
-        y: (window.innerHeight - 40) / 2 + containerElement?.scrollTop
+        y: (window.innerHeight - 50) / 2 + containerElement?.scrollTop
     }
 
     return (
@@ -31,7 +31,7 @@ function CardContainer(props) {
                     // gets the coordinates of the double click relative to "filler"
                     if (e.target.offsetParent && e.target.offsetParent.className === "card-container") {
                         var x = Math.floor((e.clientX + e.target.offsetParent.scrollLeft) / store.zoom);
-                        var y = Math.floor((e.clientY - 40 + e.target.offsetParent.scrollTop) / store.zoom);
+                        var y = Math.floor((e.clientY - 50 + e.target.offsetParent.scrollTop) / store.zoom);
                         console.log("double click at", x, ",", y, ",", store.zoom);
                         store.addCard({ x: x, y: y }, { width: 275, height: 45 }, "root", "blank")
                     }
@@ -42,7 +42,7 @@ function CardContainer(props) {
                 onMouseMove={(e) => {
                     e.persist();
                     var x = Math.floor((e.clientX + e.currentTarget.offsetParent.scrollLeft) / store.zoom);
-                    var y = Math.floor((e.clientY - 40 + e.currentTarget.offsetParent.scrollTop) / store.zoom);
+                    var y = Math.floor((e.clientY - 50 + e.currentTarget.offsetParent.scrollTop) / store.zoom);
                     store.saveCursorPosition(
                         x, y
                     );

@@ -1,5 +1,6 @@
 .dashboard-page {
-    background-color: white;
+    background-color: #FCFBF9;
+    transition: 0.2s;
     overflow: scroll;
     font-family: Overpass;
     .top-bar {
@@ -38,7 +39,7 @@
                 img {
                     height: 60px;
                     width: 60px;
-                    border-radius: 6px;
+                    border-radius: 30px;
                 }
             }
         }
