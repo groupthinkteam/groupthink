@@ -178,7 +178,16 @@ const GenericCard = props => {
                 }
                 {
                     showCompatibleOverlay ?
-                        <div className="compatible-overlay" />
+                        <div className="compatible-overlay" onClick={() => {
+                            setShowLoader(true);
+                            // exit Action Mode
+                            function onActionCompleted(result) {
+                                setShowLoader(false);
+                                store.isSelectingCard = false;
+                                store.selectedAction = null;
+                            }
+                            store.runAction(store.selectedAction, props.id, onActionCompleted)
+                        }} />
                         : null
                 }
                 <button className="kebab"
