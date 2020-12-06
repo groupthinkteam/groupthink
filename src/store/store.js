@@ -621,19 +621,12 @@ export var storeObject = {
                 })
         }
         function getYtCaptions() {
-            if (!card.content.url.includes("www.youtube.com")) {
+            if (!card.content.metadata.url.includes("www.youtube.com")) {
                 callback("error")
             }
-            const urlParts = card.content.url.split('=')
+            const urlParts = card.content.metadata.url.split('=')
             const vidId = urlParts[urlParts.length - 1]
-            const copyLink = (t) => {
-                const el = document.createElement('textarea');
-                el.value = t;
-                document.body.appendChild(el);
-                el.select();
-                document.execCommand('copy');
-                document.body.removeChild(el);
-            }
+            
             fetch(`http://video.google.com/timedtext?lang=en&v=${vidId}`)
                 .then(response => response.text())
                 .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
@@ -645,10 +638,32 @@ export var storeObject = {
                         fullCap = fullCap + " " + lines[i].childNodes[0].nodeValue
                     }
                     fullCap = fullCap.replace(/\n/g, ' ').replaceAll('&#39;', "'")
-                    copyLink(fullCap);
+                    //copyLink(fullCap);
+                    addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
+                        { height: 200, width: 400 },
+                        id,
+                        "text",
+                        (newID) => {
+                            let content = fullCap?.split("[BREAK]").map((line) => "<li>" + line + "</li>")
+                            saveContent(newID, { text: "<ol>" + content.join(" ") + "</ol>" })
+                        })
                 })
                 .then(() => callback(true))
                 .catch(() => callback(false))
+        }
+        function convFile() {
+            var convToPdf = functions.httpsCallable('fileConv')
+            const customMetadata = card.content.metadata.customMetadata
+            const data = {
+                fullpath: card.content.metadata.fullPath,
+                outformat: "pdf",
+                updateMetadata: {
+                    metadata: {
+                        [Object.keys(customMetadata)[0]]: customMetadata[Object.keys(customMetadata)[0]]
+                    }
+                }
+            }
+            convToPdf(data).then(() => callback(true)).catch(() => callback(false))
         }
         if (name === "summarize") {
             summarize()
@@ -656,20 +671,29 @@ export var storeObject = {
         if (name === "getYtCaptions") {
             getYtCaptions()
         }
+        if (name === "convFile") {
+            convFile()
+        }
     },
     actionsList: {
         "summarize": {
             id: "summarize",
             title: "Summarize a link",
-            description: "uses AI to create a 7-sentence summary of a an article or webpage",
+            description: "uses AI to create a summary of a webpage or PDF",
             types: ["link"]
         },
         "getYtCaptions": {
             id: "getYtCaptions",
-            title: "Get YouTube captions",
-            description: "fetches the time-stamped transcript for a YouTube video",
+            title: "Extract subtitles from a Youtube video",
+            description: "extracts available closed captions from a Youtube video",
             types: ["VideoLink"]
         },
+        "convFile": {
+            id: "convFile",
+            title: "Convert file to PDF",
+            description: "converts your file to pdf format",
+            types: ["file"]
+        }
         // "citeapa":
         // {
         //     id: "citeapa",
