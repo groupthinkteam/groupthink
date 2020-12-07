@@ -44,7 +44,7 @@ function BlankCard(props) {
         else {
             const outcome = getTypeFromURL(e.target.value);
             if (outcome === 'NoLink') {
-                props.typeAPI.changeType(props.id, "text", defaultSize["text"], { text: e.target.value })
+                props.typeAPI.changeType(props.id, "text", defaultSize["text"], { text: `<p>${e.target.value}</p>`,lastEditedby:props.typeAPI.userID })
             }
             else if (outcome === 'VideoLink') {
                 getMetadataFromURL(e.target.value, metadata => {

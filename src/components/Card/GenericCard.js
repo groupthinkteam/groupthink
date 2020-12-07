@@ -177,6 +177,15 @@ const GenericCard = props => {
                         : null
                 }
                 {
+                    me.type ==='text' && me.content.lastEditedby !== store.userID && store.currentActive===props.id?
+                    <div className="action-loader">
+                            <div className="loader-text">
+                                Not Editable 
+                            </div>
+                        </div>
+                        : null
+                }
+                {
                     showCompatibleOverlay ?
                         <div className="compatible-overlay" onClick={() => {
                             setShowLoader(true);

@@ -138,6 +138,7 @@ export var storeObject = {
         database.ref("documents").child(id).child("metadata").child("name").set(title)
     },
     // document related actions
+    
     saveCursorPosition: throttle(function saveCursorPosition(x, y) {
         this.updateLastActive()
         this.projectRef.child("cursors").child(this.userID)
@@ -157,7 +158,7 @@ export var storeObject = {
         else this.removeDocumentListeners();
     },
     // card related actions
-    addCard(position, size, newparent, newtype, getIDCallback) {
+    addCard(position, size, newparent, newtype) {
         // schema for new card
         let parent = newparent || "root"
         let type = newtype || "blank"
@@ -181,11 +182,7 @@ export var storeObject = {
         updates[parent + "/children/" + newCardKey] = 1;
         updates[newCardKey] = newCard;
         this.projectRef.child("nodes").update(updates)
-            .then(() => {
-                console.log("Added a new child", newCardKey, "under", parent, "with position ", position)
-                if (getIDCallback)
-                    getIDCallback(newCardKey)
-            });
+            .then(() => console.log("Added a new child", newCardKey, "under", parent, "with position ", position));
         this.updateLastActive()
     },
     removeCard(id, strategy, newParent) {
@@ -591,40 +588,26 @@ export var storeObject = {
     // actions
     // ------------
     // args must contain a valid card ID
-    runAction(name, id, callback) {
-        let card = this.cards[id]
-        let addCard = this.addCard
-        let saveContent = this.saveContent
-
+    runAction(name, args, callback) {
         function summarize() {
             const API_KEY = "89A59B5393";
-            fetch(`https://api.smmry.com/SM_API_KEY=${API_KEY}&SM_WITH_BREAK&SM_URL=${card.content.url}`)
+            fetch(`https://api.smmry.com/SM_API_KEY=${API_KEY}&SM_URL=${args.url}&SM_WITH_BREAK`)
                 .then((response) => {
                     response.json().then((json) => {
                         if (json.sm_api_error !== undefined) {
                             callback(false)
                         }
-                        addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
-                            { height: 200, width: 400 },
-                            id,
-                            "text",
-                            (newID) => {
-                                let content = json.sm_api_content?.split("[BREAK]").map((line) => "<li>" + line + "</li>")
-                                saveContent(newID, { text: "<ol>" + content.join(" ") + "</ol>" })
-                            })
-                        console.log({
-                            percentReduced: json.sm_api_content_reduced,
-                            content: json.sm_api_content?.split("[BREAK]")
-                        })
-                        callback(true)
+                        callback(
+                            {
+                                percentReduced: json.sm_api_content_reduced,
+                                content: json.sm_api_content.split("[BREAK]")
+                            }
+                        )
                     })
                 })
         }
         function getYtCaptions() {
-            if (!card.content.url.includes("www.youtube.com")) {
-                callback("error")
-            }
-            const urlParts = card.content.url.split('=')
+            const urlParts = args.url.split('=')
             const vidId = urlParts[urlParts.length - 1]
             const copyLink = (t) => {
                 const el = document.createElement('textarea');
@@ -661,14 +644,8 @@ export var storeObject = {
         "summarize": {
             id: "summarize",
             title: "Summarize a link",
-            description: "uses AI to create a 7-sentence summary of a an article or webpage",
+            description: "uses AI to create a summary of a webpage or PDF",
             types: ["link"]
-        },
-        "getYtCaptions": {
-            id: "getYtCaptions",
-            title: "Get YouTube captions",
-            description: "fetches the time-stamped transcript for a YouTube video",
-            types: ["VideoLink"]
         },
         // "citeapa":
         // {
