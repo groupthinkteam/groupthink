@@ -81,10 +81,10 @@ const Dashboard = observer(() => {
                   </option> */}
                 </select>
               </div>
+              <button className="addnew" onClick={() => store.addNewProject((id) => onOpen(id))}>
+                + Create
+              </button>
             </div>
-            <button className="addnew" onClick={() => store.addNewProject((id) => onOpen(id))}>
-              + Create
-            </button>
             <SearchBar dashboard />
           </div>
 

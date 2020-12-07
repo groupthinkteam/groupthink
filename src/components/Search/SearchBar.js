@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { gsap, ScrollToPlugin } from "gsap/all"
 
-import "../../styles/SearchBar.scss";
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/hook';
+
 import SearchElements from '../../constants/searchTemplate';
-import "../../styles/Actions/ActionsMenu.scss"
+
 import DashboardSearchBar from './DashboardSearchBar';
 import DocumentSearchBar from './DocumentSearchBar';
 

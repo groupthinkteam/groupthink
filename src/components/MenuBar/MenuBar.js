@@ -15,17 +15,17 @@ import '../../styles/ShareLink.scss'
 function MenuBar(props) {
     let store = useStore()
     let [isEditingTitle, setEditingTitle] = useState(false);
-    
+
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
                 <div className="site-title">
                     <Link to="/dashboard">
-                        g
+                        <img className="logo" src={require("../../assets/dashboard/logo.svg")} alt="logo" />
                     </Link>
                 </div>
                 <ActionsMenu />
-                <SearchBar document/> 
+                <SearchBar document />
             </div>
             <div className="menu-bar-panel menu-bar-panel-center">
                 {isEditingTitle ?

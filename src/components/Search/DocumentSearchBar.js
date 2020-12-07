@@ -4,7 +4,7 @@ import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 import Popup from '../PopupMenu/PopupMenu';
 
 import "../../styles/Actions/ActionsMenu.scss"
-import "../../styles/SearchBar.scss";
+import "../../styles/Search/Document.scss";
 import { observer } from 'mobx-react-lite';
 import DisabledCard from '../Card/DisabledCard';
 
@@ -65,7 +65,7 @@ const DocumentSearchBar = (props) => {
                                     Object.entries(recentSearches)
                                         .filter(([_, projectID]) => projectID === props.projectID)
                                         .map(([cardID, _]) =>
-                                            <DisabledCard key={cardID} id={cardID} handleClick={() => closeSearchBar(cardID)}/>
+                                            <DisabledCard key={cardID} id={cardID} handleClick={() => closeSearchBar(cardID)} />
                                         )
                                 }
                             </div>
@@ -77,4 +77,4 @@ const DocumentSearchBar = (props) => {
         </div>
     )
 }
-export default observer( DocumentSearchBar);
+export default observer(DocumentSearchBar);

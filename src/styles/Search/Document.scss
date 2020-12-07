@@ -1,0 +1,32 @@
+.searchbar-search-icon {
+    height: 24px;
+}
+
+.new {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    width: calc(min(100%, 300px));
+    .new-search-input {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: left;
+        padding: 5px 3px 3px 6px;
+        width: 100%;
+        height: 30px;
+        border: 1px solid black;
+        border-radius: 6px;
+    }
+}
+.menu-bar-searchbox {
+    .search-input {
+        padding: 5px 3px 3px 6px;
+        width: 30px;
+        height: 30px;
+        border: 1px solid black;
+        border-radius: 6px;
+        background-color: transparent;
+    }
+}

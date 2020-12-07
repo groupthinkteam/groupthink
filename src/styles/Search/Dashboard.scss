@@ -1,0 +1,23 @@
+.dashboard-search {
+    .searchbox {
+        height: 40px;
+        width: 250px;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 10px;
+        border: 1.5px solid black;
+        border-radius: 6px;
+        .input {
+            background-color: transparent;
+            border: none;
+            font-family: Overpass;
+            font-size: 14px;
+        }
+        .icon {
+            height: 20px;
+            margin-right: 10px;
+        }
+    }
+}
