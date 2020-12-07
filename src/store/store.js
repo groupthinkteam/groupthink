@@ -592,7 +592,7 @@ export var storeObject = {
             const vidId = urlParts[urlParts.length - 1]
 
             fetch(`https://video.google.com/timedtext?lang=en&v=${vidId}`)
-                .then(response => { response.text(); console.log(response, response.text()) })
+                .then(response => response.text())
                 .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
                 .then(data => {
                     var lines = data.getElementsByTagName('text')

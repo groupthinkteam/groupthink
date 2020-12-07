@@ -146,7 +146,7 @@ const GenericCard = props => {
                     e.stopPropagation();
                 }}
                 onKeyDown={(e) => {
-                    if (e.key === "Delete") {
+                    if (e.key === "Delete" && me.type !== "text") {
                         store.removeCard(props.id, "recursive")
                     }
                 }}
@@ -161,10 +161,10 @@ const GenericCard = props => {
                 }}
             >
                 {
-                    me.type ==='text' && me.content.lastEditedby !== store.userID && me.editing?
-                    <div className="action-loader">
+                    me.type === 'text' && me.content.lastEditedby !== store.userID && me.editing ?
+                        <div className="action-loader">
                             <div className="loader-text">
-                                Not Editable 
+                                Not Editable
                             </div>
                         </div>
                         : null

@@ -75,7 +75,9 @@ function Feedback(props) {
                         <h2>Feedback</h2>
                         <textarea className="textbox" type="text" onChange={(e) => { makeFeedback(e.target.value); }}></textarea>
                         <br />
-                        <button onClick={() => sendFeedback()}>Submit</button>
+                        <button onClick={() => { sendFeedback(); togglePopup() }}>
+                            Submit
+                        </button>
                     </div>
                 </PopupMenu>}
         </div>

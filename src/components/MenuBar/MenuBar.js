@@ -24,6 +24,7 @@ function MenuBar(props) {
                         <img className="logo" src={require("../../assets/menu/ealogo.svg")} alt="logo" />
                     </Link>
                 </div>
+                <Feedback />
                 <ActionsMenu />
                 <SearchBar document />
             </div>
@@ -43,7 +44,7 @@ function MenuBar(props) {
                     </span>
                 }
             </div>
-            <Feedback />
+            
             <div className="menu-bar-panel menu-bar-panel-right">
                 <RoomConnect projectID={store.projectID} currentUser={store.currentUser} />
                 <PersonaList />
