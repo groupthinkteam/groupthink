@@ -1,6 +1,10 @@
 .sharelink {
     font-family: Overpass;
     font-style: normal;
+    .share-type-icon {
+        height: 30px;
+        margin-right: 5px;
+    }
     .container {
         display: flex;
         flex-flow: column nowrap;
@@ -10,9 +14,10 @@
         padding: 0;
         .button {
             width: 91px;
-            height: 43px;
+            height: 38px;
             border-radius: 5px;
             border: none;
+            margin-left: 5px;
         }
         .heading {
             display: flex;
@@ -56,10 +61,23 @@
             .email-content {
                 display: flex;
                 flex-flow: row nowrap;
+                align-items: center;
+                justify-content: flex-start;
                 width: 100%;
+                margin-top: 5px;
                 .button {
                     background-color: #32aaff;
                     color: white;
+                    opacity: 0.8;
+                    transition: 0.2s;
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+                .rs-container {
+                    width: 100%;
+                    font-family: Overpass;
+                    font-size: 12px;
                 }
             }
         }

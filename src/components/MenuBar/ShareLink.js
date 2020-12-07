@@ -11,7 +11,7 @@ import '../../styles/ShareLink.scss'
 const ShareLink = (props) => {
     const store = useStore();
     const [link, setLink] = useState(false)
-    const [permission, setPermission] = useState();
+    const [permission, setPermission] = useState("rw");
     const [url, setURL] = useState();
     const buttonRef = useRef(null);
     const contentRef = useRef(null);
@@ -35,7 +35,6 @@ const ShareLink = (props) => {
         });
         setLink(false);
         setURL(null);
-        setPermission(null);
     }
 
     useEffect(() => {
@@ -97,11 +96,6 @@ const ShareLink = (props) => {
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
-    }
-
-    const changeRadio = (e) => {
-        console.log(e.target.value)
-        setPermission(e.target.value)
     }
 
     const components = {
@@ -180,7 +174,9 @@ const ShareLink = (props) => {
                                 Invite via email
                             </span>
                             <div className="email-content">
+                                <img className="share-type-icon" alt="" src={require("../../assets/share/email.svg")}/>
                                 <CreatableSelect
+                                    className="rs-container"
                                     components={components}
                                     inputValue={state.inputValue}
                                     isClearable
@@ -189,7 +185,7 @@ const ShareLink = (props) => {
                                     onChange={handleChange.bind(this)}
                                     onInputChange={e => handleInputChange(e)}
                                     onKeyDown={e => handleKeyDown(e)}
-                                    placeholder="Invite someone using their email"
+                                    placeholder="Type an email and press Tab"
                                     value={state.value}
                                 />
                                 <Button className="button" handleClick={sendInvite}>
@@ -213,27 +209,16 @@ const ShareLink = (props) => {
                         {
                             link ?
                                 <div>
-                                    <Button className="custom_btn" handleClick={() => { setLink(false); setPermission(undefined); store.removeKey(); }}>
-                                        Turn off Link Sharing
+                                    <Button className="button" handleClick={() => { setLink(false); store.removeKey(); }}>
+                                        Disable link sharing
                                     </Button>
-                                    <Button className="custom_btn" handleClick={copyLink}>
+                                    <Button className="button" handleClick={copyLink}>
                                         Copy Link
                                     </Button>
                                 </div>
                                 :
                                 <div>
-                                    <select name="permission" id="permission" onChange={e => changeRadio(e)}>
-                                        <option value={''}>
-                                            Set Permission:
-                                            </option>
-                                        <option value="r">
-                                            Read Only
-                                            </option>
-                                        <option value="rw">
-                                            Read and Write
-                                            </option>
-                                    </select>
-                                    <Button className="custom_btn" handleClick={openLink}>
+                                    <Button className="button" handleClick={openLink}>
                                         Get Shareable Link
                                     </Button>
                                 </div>
