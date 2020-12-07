@@ -5,6 +5,7 @@ import "../../styles/Feedback/Feedback.scss"
 import { observer } from "mobx-react-lite"
 import { useStore } from "../../store/hook"
 import Bowser from "bowser";
+import { nanoid } from 'nanoid'
 
 function Feedback(props) {
     let store = useStore()
@@ -26,7 +27,6 @@ function Feedback(props) {
         fetch(
             webHook,
             {
-
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ function Feedback(props) {
                 body: JSON.stringify({
                     embeds: [
                         {
-                            title: 'Feedback',
+                            title: 'Feedback #' + nanoid(),
                             color: 14177041,
                             author: {
                                 name: store.currentUser.displayName,
@@ -42,20 +42,15 @@ function Feedback(props) {
                             },
                             fields: [
                                 {
-                                    name: 'Browser',
-                                    value: browser.name,
-                                },
-                                {
-                                    name: 'Version',
-                                    value: browser.version,
-                                },
-                                {
-                                    name: 'User Email',
+                                    name: 'Email',
                                     value: store.currentUser.email,
+                                },
+                                {
+                                    name: 'Browser',
+                                    value: browser.name + " " + browser.version,
                                 },
                             ],
                             description: feedback,
-
                         }
                     ],
                 }),
