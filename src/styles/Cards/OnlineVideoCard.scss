@@ -1,10 +1,14 @@
 .video-card {
     padding: 10px 10px 0px 10px;
     .video-card-title {
+        font-family: Overpass;
+        font-size: 14px;
+        color: black;
         display: inline-block;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 90%;
+        max-width: 95%;
+        margin-top: 5px;
     }
 }

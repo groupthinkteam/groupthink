@@ -20,7 +20,7 @@ const OnlineVideoCard = (props) => {
                     ref={playerRef}
                 />
             </div>
-            <a style={{ color: 'red' }} href={props.content.metadata.url}>
+            <a href={props.content.metadata.url}>
                 <span className="video-card-title">
                     {props.content.metadata.title}
                 </span>

@@ -1,0 +1,18 @@
+.audio-card {
+    margin: 6px;
+    font-family: Overpass;
+    font-size: 14px;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #32AAFF;
+    .rhap_container {
+        border: none !important;
+        box-shadow: none !important;
+        .rhap_time {
+            font-family: Overpass !important;
+            font-size: 12px !important;
+        }
+    }
+}
