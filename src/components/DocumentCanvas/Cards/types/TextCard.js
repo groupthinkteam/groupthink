@@ -1,14 +1,11 @@
 import React, { useRef, useEffect } from "react";
-import { observer } from "mobx-react-lite";
-import { useStore } from "../../../../store/hook";
 
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 
 function TextCard(props) {
-    const store = useStore();
     const quillRef = useRef(null);
-    const me = store.cards[props.id];
+    const me = props.typeAPI.cards[props.id];
     const pointerAtLast = () => {
         if (quillRef.current) {
             var quillEditor = quillRef.current.getEditor();
@@ -27,22 +24,22 @@ function TextCard(props) {
     }
 
     useEffect(() => {
-        if (store.currentActive === props.id && quillRef.current) {
+        if (props.typeAPI.currentActive === props.id && quillRef.current) {
             quillRef.current.focus();
-            if (me.content.lastEditedby !== store.userID) {
+            if (me.content.lastEditedby !== props.typeAPI.userID) {
                 var quillEditor = quillRef.current.getEditor();
                 quillEditor.enable(false)
             }
         }
-    }, [props.id, store.currentActive, me.content.lastEditedby, store.userID]);
+    }, [props.id, props.typeAPI.currentActive, me.content.lastEditedby, props.typeAPI.userID]);
 
     let modules = {
         toolbar: ['bold', 'italic', 'underline', 'strike']
     }
 
     const onChangeQuill = (value) => {
-        if (me.content.lastEditedby === store.userID) {
-            props.typeAPI.saveContent(props.id, { text: value || "", lastEditedby: store.userID })
+        if (me.content.lastEditedby === props.typeAPI.userID) {
+            props.typeAPI.saveContent(props.id, { text: value || "", lastEditedby: props.typeAPI.userID })
         }
     }
     return (
@@ -56,4 +53,4 @@ function TextCard(props) {
         </div>
     )
 }
-export default observer(TextCard);
+export default TextCard;

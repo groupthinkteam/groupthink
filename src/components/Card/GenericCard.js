@@ -16,7 +16,7 @@ gsap.registerPlugin(Draggable);
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 const GenericCard = props => {
     let store = useStore();
-    let me = store.cards[props.id];
+    const me = store.cards[props.id];
     const CardType = cardChooser(me.type);
     const cardRef = useRef(null);
     const blankRef = useRef(null);
@@ -161,7 +161,7 @@ const GenericCard = props => {
                 }}
             >
                 {
-                    me.type ==='text' && me.content.lastEditedby !== store.userID && store.currentActive===props.id?
+                    me.type ==='text' && me.content.lastEditedby !== store.userID && me.editing?
                     <div className="action-loader">
                             <div className="loader-text">
                                 Not Editable 
