@@ -160,6 +160,15 @@ const GenericCard = props => {
                     zIndex: 1
                 }}
             >
+                {
+                    me.type ==='text' && me.content.lastEditedby !== store.userID && store.currentActive===props.id?
+                    <div className="action-loader">
+                            <div className="loader-text">
+                                Not Editable 
+                            </div>
+                        </div>
+                        : null
+                }
                 {showLoader ?
                     <div className="action-loader">
                         <div className="loader-text">
