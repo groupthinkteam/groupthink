@@ -42,18 +42,18 @@ function Feedback(props) {
                             },
                             fields: [
                                 {
-                                  name: 'Browser',
-                                  value: browser.name,
+                                    name: 'Browser',
+                                    value: browser.name,
                                 },
                                 {
-                                  name: 'Version',
-                                  value: browser.version,
+                                    name: 'Version',
+                                    value: browser.version,
                                 },
                                 {
                                     name: 'User Email',
                                     value: store.currentUser.email,
                                 },
-                              ],
+                            ],
                             description: feedback,
 
                         }
@@ -68,14 +68,16 @@ function Feedback(props) {
 
 
     return (
-        <div>
-            <div>
-                <Button handleClick={() => { togglePopup(); }}>Feedback</Button>
-            </div>
+        <div className="feedback">
+            <button className="fb-button"
+                style={{ border: "1.5px solid black", fontFamily: "Overpass", backgroundColor: "transparent" }}
+                onClick={() => { togglePopup(); }}>
+                Feedback
+            </button>
             {isOpen &&
                 <PopupMenu handleClose={togglePopup}>
                     <div className="container">
-                        <h1>Feedback</h1>
+                        <h2>Feedback</h2>
                         <textarea className="textbox" type="text" onChange={(e) => { makeFeedback(e.target.value); }}></textarea>
                         <br />
                         <button onClick={() => sendFeedback()}>Submit</button>

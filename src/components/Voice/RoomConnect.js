@@ -15,13 +15,13 @@ const RoomConnect = (props) => {
   const ROOM_NAME = props.projectID;
   const [isJoined, setIsJoined] = useState(false);
   const globalStore = useStore();
-  
+
   useEffect(() => {
     const me = globalStore.users[globalStore.userID];
     if (isJoined) {
       globalStore.addUserCallInfo();
     }
-    if (!isJoined && me?.joinedCall ) {
+    if (!isJoined && me?.joinedCall) {
       globalStore.removeUserCallInfo();
     }
   }, [isJoined, globalStore])
@@ -36,7 +36,7 @@ const RoomConnect = (props) => {
           <SWRTC.Connected>
             {!isJoined ?
               <div className="join-leave-call" onClick={() => setIsJoined(!isJoined)}>
-                <img alt="join call" src={require("../../assets/join-call-icon.svg")} />
+                <img alt="join call" src={require("../../assets/voice/voice.svg")} />
               </div>
               :
               <div>
@@ -45,10 +45,6 @@ const RoomConnect = (props) => {
                 <SWRTC.Room name={ROOM_NAME} password={ROOM_PASSWORD} >
                   {roomprops =>
                     <div className="joined-call">
-                      <div className="join-leave-call" onClick={() => setIsJoined(!isJoined)}>
-                        <img alt="end call" src={require("../../assets/end-call-icon.svg")} />
-                      </div>
-                      {roomprops.peers.map((peer) => <PeerItem peer={peer} />)}
                       <SWRTC.UserControls>
                         {userprops =>
                           <div className="mute-unmute" onClick={() => { userprops.isMuted ? userprops.unmute() : userprops.mute() }}>
@@ -56,6 +52,10 @@ const RoomConnect = (props) => {
                           </div>
                         }
                       </SWRTC.UserControls>
+                      <div className="join-leave-call" onClick={() => setIsJoined(!isJoined)}>
+                        <img alt="end call" src={require("../../assets/end-call-icon.svg")} />
+                      </div>
+                      {roomprops.peers.map((peer) => <PeerItem peer={peer} />)}
                     </div>
                   }
                 </SWRTC.Room>

@@ -21,7 +21,7 @@ function MenuBar(props) {
             <div className="menu-bar-panel menu-bar-panel-left">
                 <div className="site-title">
                     <Link to="/dashboard">
-                        <img className="logo" src={require("../../assets/dashboard/logo.svg")} alt="logo" />
+                        <img className="logo" src={require("../../assets/menu/ealogo.svg")} alt="logo" />
                     </Link>
                 </div>
                 <ActionsMenu />

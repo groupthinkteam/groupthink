@@ -9,15 +9,15 @@
         font-family: "Overpass", sans-serif;
         font-weight: 600;
         /* gt better blue */ 
-        color: #1e7eef;
-        border: 1px solid #1e7eef;
+        color: #32AAFF;
+        border: 1px solid #32AAFF;
         background-color: white;
         box-sizing: border-box;
         border-radius: 6px;
         height: 25px;
         margin-right: 3px;
         &:hover {
-            background: #1e7eef;
+            background: #32AAFF;
             color: white;
         }
         &:focus {

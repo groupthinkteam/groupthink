@@ -1,10 +1,21 @@
 .joined-call {
     display: flex;
     flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .join-leave-call {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
+    img {
+        height: 35px;
+        // width: 30px;
+        object-fit: scale-down;
+    }
 }
 
 .mute-unmute {

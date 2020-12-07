@@ -40,7 +40,8 @@
             // min-width: 30px;
             // min-height: 30px;
             .logo {
-                height: 30px;
+                margin-top: 3px;
+                height: 40px;
             }
         }
     }
@@ -51,12 +52,12 @@
         justify-content: center;
         align-items: center;
         .project-title {
-            padding: 3px 12px 6px 12px;
+            padding: 3px 12px 3px 12px;
             position: relative;
             font-size: 18px;
             font-family: "Overpass", monospace;
             font-weight: 800;
-            color: #1e7eef;
+            color: #32AAFF;
             text-decoration: none;
             line-height: 24px;
             white-space: nowrap;
@@ -73,7 +74,7 @@
             &.edit {
                 &:focus {
                     outline: none;
-                    border: 1px solid #1e7eef;
+                    border: 1px solid #32AAFF;
                     border-radius: 6px;
                 }
             }

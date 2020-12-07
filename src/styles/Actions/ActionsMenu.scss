@@ -77,7 +77,7 @@
 }
 
 .top-band {
-    border: 2px solid black;
+    border: 1.5px solid #939393;
     border-radius: 8px;
     display: flex;
     flex-flow: row nowrap;
@@ -86,8 +86,8 @@
     transition: 0.2s;
     margin: 0px 10px 0px 10px;
     width: fit-content;
-    min-height: 38px;
-    min-width: 38px;
+    min-height: 30px;
+    min-width: 30px;
     &:hover {
         border-color: #ff7e1d;
     }
@@ -111,11 +111,6 @@
         .close-action {
             cursor: pointer;
             margin-left: 10px;
-            &:hover {
-                color: black;
-                fill: black;
-                stroke: black;
-            }
         }
     }
 
@@ -124,8 +119,8 @@
         background-color: transparent;
         box-sizing: border-box;
         border-radius: 8px;
-        width: 35px;
-        max-height: 35px;
+        width: 25px;
+        max-height: 23px;
         object-fit: scale-down;
 
         &:hover {

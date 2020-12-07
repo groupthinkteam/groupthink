@@ -117,7 +117,7 @@ function BlankCard(props) {
     return (
         uploadState
             ? <div style={{ position: "relative", height: "100%", width: "100%", display: "flex", flexFlow: "row nowrap", justifyContent: "flex-start" }}>
-                <div id={"uploadfiller".concat(props.id)} style={{ width: 0, height: "100%", backgroundColor: "#1e7eef" }} />
+                <div id={"uploadfiller".concat(props.id)} style={{ width: 0, height: "100%", backgroundColor: "#32AAFF" }} />
                 <div style={{ position: "absolute", top: "50%" }}>Uploading</div>
             </div>
             :
