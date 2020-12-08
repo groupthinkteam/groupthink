@@ -106,10 +106,10 @@ const GenericCard = props => {
         };
     }, [cardRef]);
 
-    const editingUser = me.editing && !me.editing[store.userID] ? store.users[Object.keys(me.editing)[0]] : null;
+    const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
     let showCompatibleOverlay = (store.isSelectingCard && store.actionsList[store.selectedAction]["types"].includes(me.type))
-
+    
     return (
         <>
             <div id={props.id} tabIndex={0}
@@ -164,7 +164,7 @@ const GenericCard = props => {
                     me.type === 'text'&& me.editing && !me.editing[store.userID]  ?
                         <div className="action-loader">
                             <div className="loader-text">
-                                {store.currentUser.displayName} is Editing this
+                                {editingUser.name} is Editing this
                             </div>
                         </div>
                         : null
