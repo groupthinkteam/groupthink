@@ -8,8 +8,6 @@ export const FIREBASE_CONSTANTS = {
         signInOptions: [
             auth.GoogleAuthProvider.PROVIDER_ID,
             auth.FacebookAuthProvider.PROVIDER_ID,
-            auth.EmailAuthProvider.PROVIDER_ID,
-            auth.PhoneAuthProvider.PROVIDER_ID
         ],
         callbacks: {
             signInSuccessWithAuthResult: () => false

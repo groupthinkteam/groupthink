@@ -64,9 +64,7 @@ function Feedback(props) {
 
     return (
         <div className="feedback">
-            <button className="fb-button"
-                style={{ border: "1.5px solid black", fontFamily: "Overpass", backgroundColor: "transparent" }}
-                onClick={() => { togglePopup(); }}>
+            <button className="fb-button" onClick={() => { togglePopup(); }}>
                 Feedback
             </button>
             {isOpen &&

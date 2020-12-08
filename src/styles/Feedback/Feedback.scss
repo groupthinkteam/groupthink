@@ -1,5 +1,21 @@
-
-        .textbox {
-            width: 500px;
-            height: 200px;
+.feedback {
+    .fb-button {
+        background-color: transparent;
+        border: 1.5px solid #32AAFF;
+        color: #32AAFF;
+        border-radius: 6px;
+        height: 30px;
+        font-family: Overpass;
+        font-size: 12px;
+        font-weight: bold;
+        transition: 0.2s;
+        &:hover {
+            background-color: #32AAFF;
+            color: white;
         }
+    }
+    .textbox {
+        width: 500px;
+        height: 200px;
+    }
+}

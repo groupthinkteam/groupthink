@@ -24,7 +24,9 @@ function MenuBar(props) {
                         <img className="logo" src={require("../../assets/menu/ealogo.svg")} alt="logo" />
                     </Link>
                 </div>
+                <div className="menu-bar-separator" />
                 <Feedback />
+                <div className="menu-bar-separator" />
                 <ActionsMenu />
                 <SearchBar document />
             </div>
