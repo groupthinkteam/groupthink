@@ -22,24 +22,23 @@ function TextCard(props) {
             quillEditor.setSelection(selectionIndex + text.length, 0);
         }, 1)
     }
-
     useEffect(() => {
         if (props.typeAPI.currentActive === props.id && quillRef.current) {
             quillRef.current.focus();
-            if (me.content.lastEditedby !== props.typeAPI.userID) {
+            if (me.editing && !me.editing[props.typeAPI.userID]) {
                 var quillEditor = quillRef.current.getEditor();
                 quillEditor.enable(false)
             }
         }
-    }, [props.id, props.typeAPI.currentActive, me.content.lastEditedby, props.typeAPI.userID]);
+    }, [props.id, props.typeAPI.currentActive, me.editing, props.typeAPI.userID]);
 
     let modules = {
         toolbar: ['bold', 'italic', 'underline', 'strike']
     }
 
     const onChangeQuill = (value) => {
-        if (me.content.lastEditedby === props.typeAPI.userID) {
-            props.typeAPI.saveContent(props.id, { text: value || "", lastEditedby: props.typeAPI.userID })
+        if (me.editing && me.editing[props.typeAPI.userID]) {
+            props.typeAPI.saveContent(props.id, { text: value || "" })
         }
     }
     return (
