@@ -209,7 +209,24 @@ const ShareLink = (props) => {
                                 Invite via link
                             </span>
                             <div className="link-content">
-
+                                <img className="share-type-link" alt="" src={require("../../assets/share/link.svg")} />
+                                {
+                                    link ?
+                                        <>
+                                            <Button className="button" handleClick={() => { setLink(false); store.removeKey(); }}>
+                                                Disable link sharing
+                                            </Button>
+                                            <Button className="button" handleClick={copyLink}>
+                                                Copy Link
+                                            </Button>
+                                        </>
+                                        :
+                                        <>
+                                            <Button className="button" handleClick={openLink}>
+                                                Get Shareable Link
+                                            </Button>
+                                        </>
+                                }
                             </div>
                         </div>
                         <div className="section">
@@ -219,26 +236,6 @@ const ShareLink = (props) => {
                             <div className="users-list">
                                 {sharedUsers}
                             </div>
-                        </div>
-                        {
-                            link ?
-                                <div>
-                                    <Button className="button" handleClick={() => { setLink(false); store.removeKey(); }}>
-                                        Disable link sharing
-                                    </Button>
-                                    <Button className="button" handleClick={copyLink}>
-                                        Copy Link
-                                    </Button>
-                                </div>
-                                :
-                                <div>
-                                    <Button className="button" handleClick={openLink}>
-                                        Get Shareable Link
-                                    </Button>
-                                </div>
-                        }
-                        <div>
-
                         </div>
                     </div>
                 </PopupMenu>}

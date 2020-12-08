@@ -6,6 +6,10 @@
         height: 30px;
         margin-right: 5px;
     }
+    .share-type-link {
+        height: 25px;
+        margin-right: 5px;
+    }
     .container {
         display: flex;
         flex-flow: column nowrap;
@@ -14,11 +18,18 @@
         margin: 10px 10px 10px 10px;
         padding: 0;
         .button {
+            font-family: Overpass;
             width: 91px;
             height: 38px;
             border-radius: 5px;
             border: none;
             margin-left: 5px;
+            transition: 0.2s;
+            font-weight: bold;
+            border: 1.5px solid transparent;
+            &:hover {
+                border: 1.5px solid #413d45;
+            }
         }
         .heading {
             display: flex;
@@ -55,8 +66,15 @@
             }
             .link-content {
                 .button {
-                    background-color: #32aaff;
-                    color: white;
+                    background-color: #FFCE00;
+                    color: #413d45;
+                    width: fit-content;
+                    padding-left: 15px;
+                    padding-right: 15px;
+                    border: 1.5px solid transparent;
+                    &:hover {
+                        border: 1.5px solid #413d45;
+                    }
                 }
             }
             .email-content {
@@ -69,17 +87,20 @@
                 .button {
                     background-color: #32aaff;
                     color: white;
-                    opacity: 0.8;
-                    transition: 0.2s;
-                    &:hover {
-                        opacity: 1;
-                    }
                 }
                 .rs-container {
                     width: 100%;
                     font-family: Overpass;
                     font-size: 12px;
                 }
+            }
+            .link-content {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                justify-content: flex-start;
+                width: 100%;
+                margin-top: 5px;
             }
         }
         .users-list {
