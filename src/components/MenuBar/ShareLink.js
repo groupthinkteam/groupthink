@@ -150,6 +150,17 @@ const ShareLink = (props) => {
         }
     }
 
+    let sharedUsers = null;
+    if (isOpen) {
+        sharedUsers = Object.entries(store.users)
+            .map(([id, user]) =>
+                <div className="users-list-item">
+                    <img src={user.photoURL} alt={user.name} className="user-profile" />
+                    {user.name}
+                </div>
+            )
+    }
+
     return (
         <div className="sharelink">
             <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => { checkLinks(); togglePopup(); }}>
@@ -174,7 +185,7 @@ const ShareLink = (props) => {
                                 Invite via email
                             </span>
                             <div className="email-content">
-                                <img className="share-type-icon" alt="" src={require("../../assets/share/email.svg")}/>
+                                <img className="share-type-icon" alt="" src={require("../../assets/share/email.svg")} />
                                 <CreatableSelect
                                     className="rs-container"
                                     components={components}
@@ -205,6 +216,9 @@ const ShareLink = (props) => {
                             <span className="title">
                                 Currently shared with
                             </span>
+                            <div className="users-list">
+                                {sharedUsers}
+                            </div>
                         </div>
                         {
                             link ?
