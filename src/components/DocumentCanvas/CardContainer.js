@@ -10,7 +10,6 @@ import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
 function CardContainer(props) {
     let store = useStore()
-
     let containerElement = document.querySelector(".card-container")
     // let transformOrigin = {
     //     x: window.innerWidth / 2 + containerElement?.scrollLeft,
@@ -21,6 +20,13 @@ function CardContainer(props) {
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
             <Zoom />
+            {
+                Object.keys(store.cards).length < 2 ?
+                    <div className="double-click">
+                        double click anywhere to add a new card
+                        </div>
+                    : null
+            }
             <div className="container-filler" id="container-filler"
                 style={{
                     ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0,
@@ -48,7 +54,6 @@ function CardContainer(props) {
                     );
                 }}
             >
-
                 <ArrowList />
                 <CursorsList />
                 <CardsList />
