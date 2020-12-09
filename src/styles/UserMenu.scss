@@ -1,18 +1,27 @@
-
-
 .colorblack {
   color: black;
 }
-
-.separator {
-  color: rgb(197, 191, 191);
+.colororange {
+  color: orange;
 }
-
+.separator {
+  border: 0.5px solid rgb(197, 191, 191);
+  margin: 8px 2px 8px 2px;
+}
+.photo{
+  display: flex;
+  justify-content: space-around;
   .profimage {
     border-radius: 50%;
+    margin: 8px 2px 8px 2px;
     height: 95px;
     width: 95px;
   }
-  .colororange {
-    color: orange;
-  }
+}
+.info {
+  display: flex;
+  justify-content: space-around;
+}
+.options {
+  margin-left: 2px; 
+}

@@ -35,17 +35,25 @@ const UserMenu = (props) => {
             >
 
                 <div>
-                    <img alt="" src={props.photoURL} className="profimage"></img>
-                    <h4>{props.username}</h4>
-                    <p className="colororange">Early Access</p>
-                    <hr />
-                    {/* <a href="true" target="blank" style={{ color: "black" }}>Profile</a> */}
-                    <a href="/dashboard" className="colorblack">Dashboard</a>
-                    <br />
-                    {/* <a href="true" target="blank" style={{ color: "black" }}>Settings</a> */}
-                    {/* <a href="true" target="blank" style={{ color: "black" }}>Help About</a> */}
+                    <div className="photo">
+                        <img alt="" src={props.photoURL} className="profimage"></img>
+                    </div>
+                    <div className="info">
+                        <h4>{props.username}</h4>
+                    </div>
+                    <div className="info">
+                        <p className="colororange">Early Access</p>
+                    </div>
+                    <hr className="separator" />
+                    <div className="options">
+                        {/* <a href="true" target="blank" style={{ color: "black" }}>Profile</a> */}
+                        <a href="/dashboard" className="colorblack">Dashboard</a>
+                        <br />
+                        {/* <a href="true" target="blank" style={{ color: "black" }}>Settings</a> */}
+                        {/* <a href="true" target="blank" style={{ color: "black" }}>Help About</a> */}
+                        <a href="true" onClick={props.signOut} className="colororange">Logout</a>
+                    </div>
 
-                    <a href="true" onClick={props.signOut} className="colororange">Logout</a>
                 </div>
             </PopperMenu>
 
