@@ -18,7 +18,7 @@ const DashboardCard = props => {
 
     let personas = Object.entries(me.users).filter(([userID, values]) => userID !== store.userID).slice(0, 3)
     let extraUsers = Object.keys(me.users).length - (personas.length + 1)
-
+    console.log("project", me)
     return (
         <div id={props.id}
             className="dashboard-card"
@@ -44,7 +44,7 @@ const DashboardCard = props => {
                 </div>
                 <span className="text" onClick={props.onOpen}>{me.metadata.name}</span>
                 {
-                    isHover ?
+                    isHover && me.users[store.userID].permission === "admin" ?
                         <Button
                             className="delete-button"
                             handleClick={() => store.deleteProject(props.id)}>
