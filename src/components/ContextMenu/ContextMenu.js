@@ -6,12 +6,6 @@ import "./ContextMenu.scss";
 function ContextMenu({ id, loaderCallback, closeContextMenu }) {
     let store = useStore()
     let me = store.cards[id]
-    const convLinks = (citationStyle) => {
-        loaderCallback(true)
-        // TODO if bool is false, the operation failed, show error
-        store.convertLinksToCitation(id, citationStyle, (bool) => loaderCallback(false));
-        closeContextMenu();
-    }
 
     let cardSpecificOptions = {
         "text": [
@@ -83,7 +77,6 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
                     ({ label, onClick }, index) =>
                         <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeContextMenu() }} />)
             }
-            <hr className="separator" />
             {
                 cardSpecificOptions[me.type].map(
                     ({ label, onClick }, index) =>

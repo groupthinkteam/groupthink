@@ -28,25 +28,24 @@ const UserMenu = (props) => {
             <PopperMenu
                 buttonref={buttonRef}
                 position="bottom"
-                offset={[0, 10]}
-                tooltipclass="tooltips"
+                offset={[0, 12]}
+                tooltipclass="tooltipsuser"
                 arrowclass="arrowuser"
                 showpopper={showPopper}
             >
-                <div ref={contentRef}>
+
+                <div>
                     <img alt="" src={props.photoURL} className="profimage"></img>
                     <h4>{props.username}</h4>
-                    <p style={{ color: "orange" }}>groupthink <b>pro</b></p>
+                    <p className="colororange">Early Access</p>
                     <hr />
-                    <a href="true" target="blank" style={{ color: "black" }}>Profile</a>
+                    {/* <a href="true" target="blank" style={{ color: "black" }}>Profile</a> */}
+                    <a href="/dashboard" className="colorblack">Dashboard</a>
                     <br />
-                    <a href="/dashboard" style={{ color: "black" }}>Dashboard</a>
-                    <br />
-                    <a href="true" target="blank" style={{ color: "black" }}>Settings</a>
-                    <hr />
-                    <a href="true" target="blank" style={{ color: "black" }}>Help About</a>
-                    <hr />
-                    <a href="true" onClick={props.signOut} style={{ color: "orange" }}>Logout</a>
+                    {/* <a href="true" target="blank" style={{ color: "black" }}>Settings</a> */}
+                    {/* <a href="true" target="blank" style={{ color: "black" }}>Help About</a> */}
+
+                    <a href="true" onClick={props.signOut} className="colororange">Logout</a>
                 </div>
             </PopperMenu>
 
