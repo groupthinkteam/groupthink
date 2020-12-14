@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { gsap, Draggable ,TweenMax} from "gsap/all";
+import { gsap, Draggable, TweenMax } from "gsap/all";
 
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
@@ -11,7 +11,7 @@ import MenuCard from "../DocumentCanvas/Cards/types/MenuCard";
 import ContextMenu from "../ContextMenu/ContextMenu";
 
 // register gsap plugin so it doesn't get discarded during tree shake
-gsap.registerPlugin(Draggable,TweenMax);
+gsap.registerPlugin(Draggable, TweenMax);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 const GenericCard = props => {
@@ -44,23 +44,33 @@ const GenericCard = props => {
         () => {
             var topLastY = 0;
             var topDraggable = new Draggable.create("#top-bar".concat(props.id), {
-                trigger: ".top-bar",
+                trigger: "#top-bar".concat(props.id),
                 cursor: "n-resize",
-                onDrag: updateTop,
+                activeCursor: 'n-resize',
+                onDrag: function () {
+                    if (this.y < 0) {
+                        var diffY = this.y - topLastY;
+                        console.log("CHECK ", this.y, topLastY, diffY, { height: "-=" + diffY, y: "+=" + diffY })
+                        TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
+                        //store.changePosition(props.id, { x: this.x, y: this.y })
+                        topLastY = this.y;
+                        topDraggable[0].update(true);
+                    }
+                },
+                onDragEnd: function () {
+                    gsap.set("#top-bar".concat(props.id), { position: 'absolute', y: y[0].y, x: y[0].x })
+                },
                 onPress: function () {
                     topLastY = this.y;
                     y[0].disable();
+                    topDraggable[0].update(true);
                 },
                 onRelease: function () {
                     y[0].enable();
                 }
             });
 
-            function updateTop() {
-                var diffY = this.y - topLastY;
-                TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
-                topLastY = this.y;
-            }
+
             // warning: can't use arrow functions here since that messes up the "this" binding
             function dragStop() {
                 gsap.to("#".concat(props.id), {
@@ -100,6 +110,7 @@ const GenericCard = props => {
                             store.changeContainerSizeLocal({ width: `10000px`, height: '10000px' })
                         }
                         y[0].update(true)
+                        console.log("CHECK ", { x: this.x, y: this.y })
                         store.changePosition(props.id, { x: this.x, y: this.y })
                     },
                     onDragEnd: dragStop,
@@ -109,7 +120,7 @@ const GenericCard = props => {
             if (store.isSelectingCard) {
                 y[0].disable();
             }
-            return () => {y[0].kill(); topDraggable[0].kill();}
+            return () => { y[0].kill(); topDraggable[0].kill(); }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
@@ -174,12 +185,14 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
+                    // minWidth: me.size.width,
+                    // minHeight: me.size.height,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1
                 }}
             >
-                <div class="top-bar" id={"top-bar".concat(props.id)}></div>
+                <div className="top-bar" id={"top-bar".concat(props.id)}></div>
                 {
                     me.type === 'text' && me.editing && !me.editing[store.userID] ?
                         <div className="action-loader">
