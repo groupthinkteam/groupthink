@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { gsap, Draggable } from "gsap/all";
+import { gsap, Draggable ,TweenMax} from "gsap/all";
 
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
@@ -11,7 +11,7 @@ import MenuCard from "../DocumentCanvas/Cards/types/MenuCard";
 import ContextMenu from "../ContextMenu/ContextMenu";
 
 // register gsap plugin so it doesn't get discarded during tree shake
-gsap.registerPlugin(Draggable);
+gsap.registerPlugin(Draggable,TweenMax);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 const GenericCard = props => {
@@ -42,6 +42,25 @@ const GenericCard = props => {
     // init draggable
     useEffect(
         () => {
+            var topLastY = 0;
+            var topDraggable = new Draggable.create("#top-bar".concat(props.id), {
+                trigger: ".top-bar",
+                cursor: "n-resize",
+                onDrag: updateTop,
+                onPress: function () {
+                    topLastY = this.y;
+                    y[0].disable();
+                },
+                onRelease: function () {
+                    y[0].enable();
+                }
+            });
+
+            function updateTop() {
+                var diffY = this.y - topLastY;
+                TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
+                topLastY = this.y;
+            }
             // warning: can't use arrow functions here since that messes up the "this" binding
             function dragStop() {
                 gsap.to("#".concat(props.id), {
@@ -90,7 +109,7 @@ const GenericCard = props => {
             if (store.isSelectingCard) {
                 y[0].disable();
             }
-            return () => y[0].kill();
+            return () => {y[0].kill(); topDraggable[0].kill();}
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
@@ -109,7 +128,7 @@ const GenericCard = props => {
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
     let showCompatibleOverlay = (store.isSelectingCard && store.actionsList[store.selectedAction]["types"].includes(me.type))
-    
+
     return (
         <>
             <div id={props.id} tabIndex={0}
@@ -160,8 +179,9 @@ const GenericCard = props => {
                     zIndex: 1
                 }}
             >
+                <div class="top-bar" id={"top-bar".concat(props.id)}></div>
                 {
-                    me.type === 'text'&& me.editing && !me.editing[store.userID]  ?
+                    me.type === 'text' && me.editing && !me.editing[store.userID] ?
                         <div className="action-loader">
                             <div className="loader-text">
                                 {editingUser.name} is Editing this

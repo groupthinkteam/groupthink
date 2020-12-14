@@ -109,8 +109,10 @@ export var storeObject = {
                     "name": this.currentUser.displayName,
                 }
             },
-            ...projectTemplates.tester
+            ...projectTemplates('blank')
         }
+        
+        
         const newProjectID = database.ref("documents").push(template).key
         this.userRef.child(newProjectID).set({
             access: "admin",

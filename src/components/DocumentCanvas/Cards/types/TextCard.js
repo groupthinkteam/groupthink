@@ -1,8 +1,11 @@
+import { Resizable } from "re-resizable";
 import React, { useRef, useEffect } from "react";
+// import { Resizable, ResizableBox } from 'react-resizable';
+// import ResizePanel from "react-resize-panel";
 
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
-
+import './TextCard.scss';
 function TextCard(props) {
     const quillRef = useRef(null);
     const me = props.typeAPI.cards[props.id];
@@ -41,14 +44,30 @@ function TextCard(props) {
             props.typeAPI.saveContent(props.id, { text: value || "" })
         }
     }
+    const style = {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        border: "solid 1px #ddd",
+        background: "#f0f0f0"
+    }
     return (
         <div className="text-node" onPaste={(e) => { pasteAtLast(e.clipboardData.getData('Text')) }} style={{ overflowX: "hidden", overflowY: "auto", width: "100%", height: "100%" }}>
+            <div class="wrap">
+                <div class="resize horizontal">Resize me!</div>
+                <div class="resize vertical">Resize me!</div>
+                <div class="resize both">Resize me!</div>
+            </div>
             <ReactQuill ref={quillRef}
                 theme="snow"
                 value={me.content.text}
                 modules={modules}
                 onFocus={pointerAtLast}
                 onChange={(value) => onChangeQuill(value)} />
+            <Resizable style={style}
+                size={props.size}
+                onResizeStart={(e, direction, ref, d) => console.log("SIZE ", d)}
+                onResizeStop={(e, direction, ref, d) => console.log("SIZE ", d)}>SDS</Resizable>
         </div>
     )
 }
