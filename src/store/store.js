@@ -89,12 +89,13 @@ export var storeObject = {
             .catch(error => console.log("While Validating Project", error));
     },
     // dashboard related actions
-    addNewProject(callback) {
+    addNewProject(callback, tempId, projectName) {
         const thumbnails = [require("../assets/1.webp"), require("../assets/2.webp"), require("../assets/3.webp"), require("../assets/4.webp")]
         const thumbnailURL = thumbnails[Math.floor(Math.random() * thumbnails.length)]
+        
         const template = {
             metadata: {
-                name: "New Project",
+                name: projectName,
                 thumbnailURL: thumbnailURL,
                 datecreated: servertime
             },
@@ -109,12 +110,13 @@ export var storeObject = {
                     "name": this.currentUser.displayName,
                 }
             },
-            ...projectTemplates.tester
+            ...projectTemplates(tempId || 'blank')
         }
+        
         const newProjectID = database.ref("documents").push(template).key
         this.userRef.child(newProjectID).set({
             access: "admin",
-            name: "New Project",
+            name: projectName,
             thumbnailURL: thumbnailURL,
             createdAt: servertime,
         }).then(() => callback(newProjectID))
@@ -719,5 +721,31 @@ export var storeObject = {
     actionsUI: {
         isSelectingCard: false,
         selectedAction: null,
+    },
+
+    // project templates
+    useTemplate(name, callback) {
+            
+        if (name === "classDash") {
+            this.addNewProject(data => callback(data), name, this.templatesList[`${name}`].title)
+        }
+        if (name === "blank") {
+            this.addNewProject(data => callback(data), name, this.templatesList[`${name}`].title)
+        }
+    },
+    templatesList: {
+        "blank": {
+            id: "blank",
+            title: "Blank Project",
+            description: "Start a blank project."
+        },
+        "classDash": {
+            id: "classDash",
+            title: "Class Dashboard",
+            description: "Take Notes, Organize Articles, Make Summaries and more with this template."
+        }
+    },
+    templatesUI: {
+        selectedTemplate: null
     }
 }
