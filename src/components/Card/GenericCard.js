@@ -9,6 +9,7 @@ import '../../styles/PopperMenu.scss';
 import "../../styles/Cards/GenericCard.scss";
 import MenuCard from "../DocumentCanvas/Cards/types/MenuCard";
 import ContextMenu from "../ContextMenu/ContextMenu";
+import cardSizeConstant from "../../constants/CardSizeConstant";
 
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable, TweenMax);
@@ -47,6 +48,7 @@ const GenericCard = props => {
             var $bottom = document.createElement("div");
             var $top = document.createElement("div");
             var $left = document.createElement("div");
+            const cardDOM = document.getElementById(props.id).style;
             function getMatrix(element) {
                 const values = element.style.transform.split(/\w+\(|\);?/);
                 const transform = values[1].split(',');
@@ -56,7 +58,6 @@ const GenericCard = props => {
                 };
             }
             function onResizeDragEnd() {
-                const cardDOM = document.getElementById(props.id).style;
                 store.resize(props.id, { width: cardDOM.width, height: cardDOM.height });
                 const ex = getMatrix(document.getElementById(props.id))
                 store.savePosition(props.id,ex)
@@ -165,6 +166,7 @@ const GenericCard = props => {
             let y = Draggable.create(
                 "#".concat(props.id),
                 {
+                    
                     autoScroll: 1,
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
@@ -266,6 +268,8 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
+                    // minWidth:cardSizeConstant[me.type].width ,
+                    // minHeight:cardSizeConstant[me.type].height ,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1
