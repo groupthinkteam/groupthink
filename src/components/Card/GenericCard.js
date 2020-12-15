@@ -64,7 +64,7 @@ const GenericCard = props => {
             }
             var rightLastX = 0;
             var rightDraggable = new Draggable($right, {
-                trigger: `${"#right-bar".concat(props.id)}, ${"#top-right".concat(props.id)}, ${"#bottom-right".concat(props.id)}`,
+                trigger: `${"#right-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}`,
                 cursor: "e-resize",
                 onDrag: updateRight,
                 onDragEnd: onResizeDragEnd,
@@ -85,7 +85,7 @@ const GenericCard = props => {
 
             var bottomLastY = 0;
             var bottomDraggable = new Draggable($bottom, {
-                trigger: `${"#bottom-bar".concat(props.id)}, ${"#bottom-right".concat(props.id)}, ${"#bottom-left".concat(props.id)}`,
+                trigger: `${"#bottom-bar-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
                 cursor: "s-resize",
                 onDrag: updateBottom,
                 onDragEnd: onResizeDragEnd,
@@ -106,7 +106,7 @@ const GenericCard = props => {
 
             var topLastY = 0;
             var topDraggable = new Draggable($top, {
-                trigger: `${"#top-bar".concat(props.id)}, ${"#top-right".concat(props.id)}, ${"#top-left".concat(props.id)}`,
+                trigger: `${"#top-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}`,
                 cursor: "n-resize",
                 onDrag: updateTop,
                 onDragEnd: onResizeDragEnd,
@@ -126,7 +126,7 @@ const GenericCard = props => {
 
             var leftLastX = 0;
             var leftDraggable = new Draggable($left, {
-                trigger: `${"#left-bar".concat(props.id)}, ${"#top-left".concat(props.id)}, ${"#bottom-left".concat(props.id)}`,
+                trigger: `${"#left-bar-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
                 cursor: "w-resize",
                 onDrag: updateLeft,
                 onDragEnd: onResizeDragEnd,
@@ -275,14 +275,14 @@ const GenericCard = props => {
                     zIndex: 1
                 }}
             >
-                <div className="top-bar" id={"top-bar".concat(props.id)}></div>
-                <div className="top-left" id={"top-left".concat(props.id)}></div>
-                <div className="right-bar" id={"right-bar".concat(props.id)}></div>
-                <div className="bottom-bar" id={"bottom-bar".concat(props.id)}></div>
-                <div className="left-bar" id={"left-bar".concat(props.id)}></div>
-                <div className="bottom-right" id={"bottom-right".concat(props.id)}></div>
-                <div className="top-right" id={"top-right".concat(props.id)}></div>
-                <div className="bottom-left" id={"bottom-left".concat(props.id)}></div>
+                <div className="top-bar-generic" id={"top-bar-generic".concat(props.id)}></div>
+                <div className="top-left-generic" id={"top-left-generic".concat(props.id)}></div>
+                <div className="right-bar-generic" id={"right-bar-generic".concat(props.id)}></div>
+                <div className="bottom-bar-generic" id={"bottom-bar-generic".concat(props.id)}></div>
+                <div className="left-bar-generic" id={"left-bar-generic".concat(props.id)}></div>
+                <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)}></div>
+                <div className="top-right-generic" id={"top-right-generic".concat(props.id)}></div>
+                <div className="bottom-left-generic" id={"bottom-left-generic".concat(props.id)}></div>
                 {
                     me.type === 'text' && me.editing && !me.editing[store.userID] ?
                         <div className="action-loader">

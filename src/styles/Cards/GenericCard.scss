@@ -105,7 +105,7 @@
     }
 }
 
-.top-left {
+.top-left-generic {
     display: block;
     position: absolute;
     height: 15px;
@@ -121,7 +121,7 @@
 
 
 
-.bottom-right {
+.bottom-right-generic {
     display: block;
     position: absolute;
     height: 15px;
@@ -134,7 +134,7 @@
     }
 }
 
-.bottom-left {
+.bottom-left-generic {
     display: block;
     position: absolute;
     height: 15px;
@@ -149,7 +149,7 @@
 
 
 
-.top-right {
+.top-right-generic {
     display: block;
     position: absolute;
     height: 15px;
@@ -162,7 +162,7 @@
     }
 }
 
-.top-bar {
+.top-bar-generic {
     display: block;
     position: absolute;
     height: 3px;
@@ -173,7 +173,7 @@
     }
 }
 
-.bottom-bar {
+.bottom-bar-generic {
     display: block;
     position: absolute;
     height: 3px;
@@ -184,7 +184,7 @@
     }
 }
 
-.left-bar {
+.left-bar-generic {
     display: block;
     position: absolute;
     height: 100%;
@@ -194,7 +194,7 @@
     }
 }
 
-.right-bar {
+.right-bar-generic {
     display: block;
     position: absolute;
     height: 100%;
