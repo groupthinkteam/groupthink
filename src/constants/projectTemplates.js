@@ -17,14 +17,14 @@ const blank = {
     }
 
 }
-const classDashboard = {
+const classDash = {
 
     container: {
         height: "10000px",
         width: "10000px"
     },
     nodes: {
-        'textcardID': {
+        'tempTextCard': {
             content: {
                 text: '<p>s</p>'
             },
@@ -35,7 +35,7 @@ const classDashboard = {
             },
             position:{
                 x:window.innerWidth/2,
-                y:window.innerWidth/2
+                y: 40
             }
         },
         root: {
@@ -51,10 +51,11 @@ const projectTemplates = (tempID) => {
     {
         case 'blank':
             return blank;
-        case 'classDashboard':
-            return classDashboard;
+        case 'classDash':
+            return classDash;
         default : break;
     }
 }
-
 export default projectTemplates;
+
+    

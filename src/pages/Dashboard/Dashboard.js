@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import DashboardCard from "./DashboardCard"
 import { observer } from 'mobx-react-lite'
-
+import ChooseTemplate from '../../components/ChooseTemplate/ChooseTemplate'
 import "../../styles/Dashboard.scss"
 import { useStore } from '../../store/hook'
 import { useHistory, useLocation } from 'react-router-dom'
 import SearchBar from '../../components/Search/SearchBar'
+import { propTypes } from 'pdf-viewer-reactjs'
 
 const Dashboard = observer(() => {
   let store = useStore();
@@ -81,9 +82,9 @@ const Dashboard = observer(() => {
                   </option> */}
                 </select>
               </div>
-              <button className="addnew" onClick={() => store.addNewProject((id) => onOpen(id))}>
-                + Create
-              </button>
+              <ChooseTemplate 
+                openProject = {onOpen}
+              />
             </div>
             <SearchBar dashboard />
           </div>
