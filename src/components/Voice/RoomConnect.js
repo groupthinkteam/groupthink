@@ -5,6 +5,9 @@ import '../../styles/VoiceRoom.scss';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/hook';
 
+import Popup from "../PopupMenu/PopupMenu"
+import { joinCall, leaveCall } from '@andyet/simplewebrtc/actions';
+
 const API_KEY = '120319f9263e8477a01064c0';
 
 const ROOM_PASSWORD = 'default';
@@ -15,6 +18,7 @@ const RoomConnect = (props) => {
   const ROOM_NAME = props.projectID;
   const [isJoined, setIsJoined] = useState(false);
   const globalStore = useStore();
+  const [isPopupExpanded, setPopupExpanded] = useState(false);
 
   useEffect(() => {
     const me = globalStore.users[globalStore.userID];
@@ -28,39 +32,82 @@ const RoomConnect = (props) => {
 
   return (
     <div className="voice-room">
+      <div className="call-ui-collapsed" onClick={() => setPopupExpanded(true)}>
+        <img alt="open voice call menu" src={require("../../assets/voice/voice.svg")} />
+      </div>
       <Provider store={store}>
-        <SWRTC.Provider configUrl={CONFIG_URL} userData={props.currentUser} displayName={props.currentUser.displayName}>
+        <SWRTC.Provider configUrl={CONFIG_URL} displayName={props.currentUser.uid} userData={{ isOnCall: isJoined }}>
           <SWRTC.Connecting>
             <p>Connecting...</p>
           </SWRTC.Connecting>
           <SWRTC.Connected>
-            {!isJoined ?
-              <div className="join-leave-call" onClick={() => setIsJoined(!isJoined)}>
-                <img alt="join call" src={require("../../assets/voice/voice.svg")} />
-              </div>
-              :
-              <div>
-                <SWRTC.RequestUserMedia audio auto audioTypeHint="speech" />
-                <SWRTC.RemoteAudioPlayer />
-                <SWRTC.Room name={ROOM_NAME} password={ROOM_PASSWORD} >
-                  {roomprops =>
-                    <div className="joined-call">
-                      <SWRTC.UserControls>
-                        {userprops =>
-                          <div className="mute-unmute" onClick={() => { userprops.isMuted ? userprops.unmute() : userprops.mute() }}>
-                            {userprops.isMuted ? "Unmute" : "Click to Mute"}
-                          </div>
-                        }
-                      </SWRTC.UserControls>
-                      <div className="join-leave-call" onClick={() => setIsJoined(!isJoined)}>
-                        <img alt="end call" src={require("../../assets/end-call-icon.svg")} />
-                      </div>
-                      {roomprops.peers.map((peer) => <PeerItem peer={peer} />)}
+            <div>
+              <SWRTC.Room name={ROOM_NAME} password={ROOM_PASSWORD}>
+                {roomprops =>
+                  isPopupExpanded ?
+                    <Popup handleClose={() => setPopupExpanded(false)}>
+                      <div className="voice-container">
+                        <div className="title">
+                          Voice Call
                     </div>
-                  }
-                </SWRTC.Room>
-              </div>
-            }
+                        <div className="subtitle">
+                          Voice calls help you collaborate effortlessly with others on the project.
+                    </div>
+                        <div className="section-heading">
+                          Call controls
+                    </div>
+                        <div className="call-controls">
+                          {
+                            isJoined ?
+                              <button className="leave-call" onClick={() => { leaveCall(ROOM_NAME, true); setIsJoined(false) }}>
+                                Leave Call
+                          </button>
+                              : <button className="join-call" onClick={() => { joinCall(ROOM_NAME); setIsJoined(true) }}>
+                                Join Call
+                          </button>
+                          }
+                          {
+                            isJoined ?
+                              <SWRTC.UserControls>
+                                {userprops =>
+                                  <div className="mute-unmute" onClick={() => { userprops.isMuted ? userprops.unmute() : userprops.mute() }}>
+                                    {userprops.isMuted ? "Unmute" : "Click to Mute"}
+                                  </div>
+                                }
+                              </SWRTC.UserControls>
+                              : null
+                          }
+                        </div>
+                        <div className="section-heading">
+                          Currently on the call ({roomprops.peers.filter((peer) => globalStore.users[peer.displayName]["joinedCall"]).length})
+                    </div>
+                        <div className="users-list">
+                          {
+                            roomprops.peers.filter((peer) => globalStore.users[peer.displayName]["joinedCall"]).length < 1
+                              ? <span className="subtitle">There are no users on the call yet.</span>
+                              : roomprops.peers.filter((peer) => globalStore.users[peer.displayName]["joinedCall"]).map((peer) => {
+                                // displayName is actually uid
+                                let user = globalStore.users[peer.displayName]
+                                console.log(peer)
+                                return (
+                                  <div key={"voiceuserlist" + peer.displayName} className="users-list-item">
+                                    <img src={user.photoURL} alt={user.name} className="user-profile" />
+                                    {user.name} {peer.speaking ? "is speaking" : null}
+                                  </div>
+                                )
+                              })}
+                        </div>
+                      </div>
+                    </Popup>
+                    : null}
+              </SWRTC.Room>
+              {isJoined ?
+                <>
+                  <SWRTC.RequestUserMedia audio auto audioTypeHint="speech" />
+                  <SWRTC.RemoteAudioPlayer />
+                </>
+                : null}
+            </div>
           </SWRTC.Connected>
           <SWRTC.Disconnected>
             Lost Connection
@@ -68,15 +115,6 @@ const RoomConnect = (props) => {
         </SWRTC.Provider>
       </Provider>
     </div >
-  )
-}
-
-function PeerItem(props) {
-  //Method in peer : joinedCall & speaking
-  return (
-    <div key={props.peer.id} className="peer-item" style={{ border: "2px solid black" }}>
-      Peer Name: {props.peer.displayName} {props.peer.speaking ? "is speaking" : null}
-    </div>
   )
 }
 

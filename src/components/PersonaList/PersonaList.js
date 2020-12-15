@@ -21,10 +21,12 @@ function PersonaList(props) {
                 <div className="persona-list">
                     {users.map(
                         ([userID, values]) => {
-                            console.log("JOINED", values.joinedCall,values); return <div key={"persona".concat(userID)} style={values.joinedCall ? { backgroundColor: 'green' } : null} className="persona-item">
-                                <img alt={values.displayName} src={values.photoURL} />
-                                {values.displayName}
-                            </div>
+                            return (
+                                <div key={"persona".concat(userID)} className="persona-item">
+                                    <img alt={values.displayName} src={values.photoURL} />
+                                    {values.displayName}
+                                </div>
+                            )
                         }
                     )}
                 </div>
