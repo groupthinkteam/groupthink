@@ -15,7 +15,7 @@ gsap.registerPlugin(Draggable, TweenMax);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 const GenericCard = props => {
-    let store = useStore();
+    const store = useStore();
     const me = store.cards[props.id];
     const CardType = cardChooser(me.type);
     const cardRef = useRef(null);
@@ -28,6 +28,7 @@ const GenericCard = props => {
         setShowPopper(false);
         setContextMenu(null);
     }
+    
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
 
@@ -46,15 +47,19 @@ const GenericCard = props => {
             var $bottom = document.createElement("div");
             var $top = document.createElement("div");
             var $left = document.createElement("div");
-
+            function getMatrix(element) {
+                const values = element.style.transform.split(/\w+\(|\);?/);
+                const transform = values[1].split(',');
+                return {
+                  x: parseInt(transform[0]),
+                  y: parseInt(transform[1])
+                };
+            }
             function onResizeDragEnd() {
-                console.log("RESIZE END")
                 const cardDOM = document.getElementById(props.id).style;
                 store.resize(props.id, { width: cardDOM.width, height: cardDOM.height });
-                //store.savePosition(props.id,{x:changeX||me.position.x+this.x,y:changeY||me.position.y+this.y})
-                console.log("position after resize ",changeY,me.position.y+this.y)
-                // var x = Math.floor((e.clientX + e.target.offsetParent.scrollLeft) / store.zoom);
-                // var y = Math.floor((e.clientY - 50 + e.target.offsetParent.scrollTop) / store.zoom);
+                const ex = getMatrix(document.getElementById(props.id))
+                store.savePosition(props.id,ex)
             }
             var rightLastX = 0;
             var rightDraggable = new Draggable($right, {
@@ -74,8 +79,6 @@ const GenericCard = props => {
             function updateRight() {
                 var diffX = this.x - rightLastX;
                 TweenMax.set("#".concat(props.id), { width: "+=" + diffX });
-                changeY=me.position.y+this.y
-                changeX=me.position.x+this.x
                 rightLastX = this.x;
             }
 
@@ -97,8 +100,6 @@ const GenericCard = props => {
             function updateBottom() {
                 var diffY = this.y - bottomLastY;
                 TweenMax.set("#".concat(props.id), { height: "+=" + diffY });
-                changeY=me.position.y+this.y
-                changeX=me.position.x+this.x
                 bottomLastY = this.y;
             }
 
@@ -116,12 +117,9 @@ const GenericCard = props => {
                     y[0].enable();
                 }
             });
-            var changeY;
             function updateTop() {
                 var diffY = this.y - topLastY;
                 TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
-                changeY=me.position.y+this.y
-                changeX=me.position.x+this.x
                 topLastY = this.y;
             }
 
@@ -139,16 +137,12 @@ const GenericCard = props => {
                     y[0].enable();
                 }
             });
-            var changeX;
+
             function updateLeft() {
                 var diffX = this.x - leftLastX;
                 TweenMax.set("#".concat(props.id), { width: "-=" + diffX, x: "+=" + diffX });
-                changeY=me.position.y+this.y
-                changeX=me.position.x+this.x
                 leftLastX = this.x;
             }
-
-
 
             // warning: can't use arrow functions here since that messes up the "this" binding
             function dragStop() {
@@ -272,8 +266,6 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    // minWidth: 200,
-                    // minHeight: 200,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1

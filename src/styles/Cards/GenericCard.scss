@@ -110,9 +110,13 @@
     position: absolute;
     height: 15px;
     width: 15px;
-    background: gray;
+
     left: 0;
     top: 0;
+
+    &:hover {
+        background: gray;
+    }
 }
 
 
@@ -122,9 +126,12 @@
     position: absolute;
     height: 15px;
     width: 15px;
-    background: gray;
     right: 0;
     bottom: 0;
+
+    &:hover {
+        background: gray;
+    }
 }
 
 .bottom-left {
@@ -132,9 +139,12 @@
     position: absolute;
     height: 15px;
     width: 15px;
-    background: gray;
     left: 0;
     bottom: 0;
+
+    &:hover {
+        background: gray;
+    }
 }
 
 
@@ -144,9 +154,12 @@
     position: absolute;
     height: 15px;
     width: 15px;
-    background: gray;
     right: 0;
     top: 0;
+
+    &:hover {
+        background: gray;
+    }
 }
 
 .top-bar {
@@ -154,28 +167,40 @@
     position: absolute;
     height: 3px;
     width: 100%;
-    background: black;
+
+    &:hover {
+        background: #32AAFF;
+    }
 }
+
 .bottom-bar {
     display: block;
     position: absolute;
     height: 3px;
     width: 100%;
-    background: black;
     bottom: 0;
+    &:hover {
+        background: #32AAFF;
+    }
 }
+
 .left-bar {
     display: block;
     position: absolute;
     height: 100%;
     width: 3px;
-    background: black;
+    &:hover {
+        background: #32AAFF;
+    }
 }
+
 .right-bar {
     display: block;
     position: absolute;
     height: 100%;
     width: 3px;
-    background: black;
     right: 0;
-  }
+    &:hover {
+        background: #32AAFF;
+    }
+}
