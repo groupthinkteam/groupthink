@@ -46,6 +46,7 @@
         background: rgba(255, 255, 255, 0.75);
         color: #413d45;
         z-index: 99999999999;
+
         .loader-text {
             padding: 5px 5px 5px 5px;
             //background: white;
@@ -69,9 +70,11 @@
         transition: 0.2s;
         z-index: 99999999999;
         border-radius: 6px;
+
         &:hover {
             background-color: rgba(180, 95, 45, 0.719);
         }
+
         &.compat-cursor {
             cursor: url("../../assets/actions/compatiblecursor.svg");
         }
@@ -101,10 +104,78 @@
         }
     }
 }
+
+.top-left {
+    display: block;
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background: gray;
+    left: 0;
+    top: 0;
+}
+
+
+
+.bottom-right {
+    display: block;
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background: gray;
+    right: 0;
+    bottom: 0;
+}
+
+.bottom-left {
+    display: block;
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background: gray;
+    left: 0;
+    bottom: 0;
+}
+
+
+
+.top-right {
+    display: block;
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    background: gray;
+    right: 0;
+    top: 0;
+}
+
 .top-bar {
     display: block;
     position: absolute;
     height: 3px;
     width: 100%;
     background: black;
+}
+.bottom-bar {
+    display: block;
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    background: black;
+    bottom: 0;
+}
+.left-bar {
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 3px;
+    background: black;
+}
+.right-bar {
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 3px;
+    background: black;
+    right: 0;
   }

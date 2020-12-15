@@ -42,33 +42,112 @@ const GenericCard = props => {
     // init draggable
     useEffect(
         () => {
-            var topLastY = 0;
-            var topDraggable = new Draggable.create("#top-bar".concat(props.id), {
-                trigger: "#top-bar".concat(props.id),
-                cursor: "n-resize",
-                activeCursor: 'n-resize',
-                onDrag: function () {
-                    if (this.y < 0) {
-                        var diffY = this.y - topLastY;
-                        console.log("CHECK ", this.y, topLastY, diffY, { height: "-=" + diffY, y: "+=" + diffY })
-                        TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
-                        //store.changePosition(props.id, { x: this.x, y: this.y })
-                        topLastY = this.y;
-                        topDraggable[0].update(true);
-                    }
-                },
-                onDragEnd: function () {
-                    gsap.set("#top-bar".concat(props.id), { position: 'absolute', y: y[0].y, x: y[0].x })
-                },
+            var $right = document.createElement("div");
+            var $bottom = document.createElement("div");
+            var $top = document.createElement("div");
+            var $left = document.createElement("div");
+
+            function onResizeDragEnd() {
+                console.log("RESIZE END")
+                const cardDOM = document.getElementById(props.id).style;
+                store.resize(props.id, { width: cardDOM.width, height: cardDOM.height });
+                //store.savePosition(props.id,{x:changeX||me.position.x+this.x,y:changeY||me.position.y+this.y})
+                console.log("position after resize ",changeY,me.position.y+this.y)
+                // var x = Math.floor((e.clientX + e.target.offsetParent.scrollLeft) / store.zoom);
+                // var y = Math.floor((e.clientY - 50 + e.target.offsetParent.scrollTop) / store.zoom);
+            }
+            var rightLastX = 0;
+            var rightDraggable = new Draggable($right, {
+                trigger: `${"#right-bar".concat(props.id)}, ${"#top-right".concat(props.id)}, ${"#bottom-right".concat(props.id)}`,
+                cursor: "e-resize",
+                onDrag: updateRight,
+                onDragEnd: onResizeDragEnd,
                 onPress: function () {
-                    topLastY = this.y;
+                    rightLastX = this.x;
                     y[0].disable();
-                    topDraggable[0].update(true);
                 },
                 onRelease: function () {
                     y[0].enable();
                 }
             });
+
+            function updateRight() {
+                var diffX = this.x - rightLastX;
+                TweenMax.set("#".concat(props.id), { width: "+=" + diffX });
+                changeY=me.position.y+this.y
+                changeX=me.position.x+this.x
+                rightLastX = this.x;
+            }
+
+            var bottomLastY = 0;
+            var bottomDraggable = new Draggable($bottom, {
+                trigger: `${"#bottom-bar".concat(props.id)}, ${"#bottom-right".concat(props.id)}, ${"#bottom-left".concat(props.id)}`,
+                cursor: "s-resize",
+                onDrag: updateBottom,
+                onDragEnd: onResizeDragEnd,
+                onPress: function () {
+                    bottomLastY = this.y;
+                    y[0].disable();
+                },
+                onRelease: function () {
+                    y[0].enable();
+                }
+            });
+
+            function updateBottom() {
+                var diffY = this.y - bottomLastY;
+                TweenMax.set("#".concat(props.id), { height: "+=" + diffY });
+                changeY=me.position.y+this.y
+                changeX=me.position.x+this.x
+                bottomLastY = this.y;
+            }
+
+            var topLastY = 0;
+            var topDraggable = new Draggable($top, {
+                trigger: `${"#top-bar".concat(props.id)}, ${"#top-right".concat(props.id)}, ${"#top-left".concat(props.id)}`,
+                cursor: "n-resize",
+                onDrag: updateTop,
+                onDragEnd: onResizeDragEnd,
+                onPress: function () {
+                    topLastY = this.y;
+                    y[0].disable();
+                },
+                onRelease: function () {
+                    y[0].enable();
+                }
+            });
+            var changeY;
+            function updateTop() {
+                var diffY = this.y - topLastY;
+                TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
+                changeY=me.position.y+this.y
+                changeX=me.position.x+this.x
+                topLastY = this.y;
+            }
+
+            var leftLastX = 0;
+            var leftDraggable = new Draggable($left, {
+                trigger: `${"#left-bar".concat(props.id)}, ${"#top-left".concat(props.id)}, ${"#bottom-left".concat(props.id)}`,
+                cursor: "w-resize",
+                onDrag: updateLeft,
+                onDragEnd: onResizeDragEnd,
+                onPress: function () {
+                    leftLastX = this.x;
+                    y[0].disable();
+                },
+                onRelease: function () {
+                    y[0].enable();
+                }
+            });
+            var changeX;
+            function updateLeft() {
+                var diffX = this.x - leftLastX;
+                TweenMax.set("#".concat(props.id), { width: "-=" + diffX, x: "+=" + diffX });
+                changeY=me.position.y+this.y
+                changeX=me.position.x+this.x
+                leftLastX = this.x;
+            }
+
 
 
             // warning: can't use arrow functions here since that messes up the "this" binding
@@ -110,7 +189,6 @@ const GenericCard = props => {
                             store.changeContainerSizeLocal({ width: `10000px`, height: '10000px' })
                         }
                         y[0].update(true)
-                        console.log("CHECK ", { x: this.x, y: this.y })
                         store.changePosition(props.id, { x: this.x, y: this.y })
                     },
                     onDragEnd: dragStop,
@@ -120,7 +198,16 @@ const GenericCard = props => {
             if (store.isSelectingCard) {
                 y[0].disable();
             }
-            return () => { y[0].kill(); topDraggable[0].kill(); }
+            return () => {
+                y[0].kill();
+                leftDraggable.kill();
+                topDraggable.kill();
+                bottomDraggable.kill(); rightDraggable.kill();
+                $top.remove();
+                $bottom.remove();
+                $left.remove();
+                $right.remove();
+            }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
@@ -185,14 +272,21 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    // minWidth: me.size.width,
-                    // minHeight: me.size.height,
+                    // minWidth: 200,
+                    // minHeight: 200,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1
                 }}
             >
                 <div className="top-bar" id={"top-bar".concat(props.id)}></div>
+                <div className="top-left" id={"top-left".concat(props.id)}></div>
+                <div className="right-bar" id={"right-bar".concat(props.id)}></div>
+                <div className="bottom-bar" id={"bottom-bar".concat(props.id)}></div>
+                <div className="left-bar" id={"left-bar".concat(props.id)}></div>
+                <div className="bottom-right" id={"bottom-right".concat(props.id)}></div>
+                <div className="top-right" id={"top-right".concat(props.id)}></div>
+                <div className="bottom-left" id={"bottom-left".concat(props.id)}></div>
                 {
                     me.type === 'text' && me.editing && !me.editing[store.userID] ?
                         <div className="action-loader">
