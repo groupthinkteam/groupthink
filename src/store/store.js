@@ -288,6 +288,10 @@ export var storeObject = {
             .catch(err => console.log("error saving new content for", id, err))
     },
         500),
+    changeSize(id,size){
+        console.log("triggered local size change on", id);
+        this.cards[id]["size"] = size;
+    },
     changeContent(id, newContent) {
         console.log("triggered local content change on", id);
         this.cards[id]["content"] = newContent;

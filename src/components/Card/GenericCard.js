@@ -10,6 +10,7 @@ import "../../styles/Cards/GenericCard.scss";
 import MenuCard from "../DocumentCanvas/Cards/types/MenuCard";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import cardSizeConstant from "../../constants/CardSizeConstant";
+import throttle from "lodash.throttle";
 
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable, TweenMax);
@@ -50,7 +51,7 @@ const GenericCard = props => {
             var $left = document.createElement("div");
             const cardDOM = document.getElementById(props.id).style;
             function getMatrix(element) {
-                const values = element.style.transform.split(/\w+\(|\);?/);
+                const values = element.transform.split(/\w+\(|\);?/);
                 const transform = values[1].split(',');
                 return {
                     x: parseInt(transform[0]),
@@ -58,16 +59,21 @@ const GenericCard = props => {
                 };
             }
             function onResizeDragEnd() {
-                store.resize(props.id, { width: cardDOM.width, height: cardDOM.height });
-                const ex = getMatrix(document.getElementById(props.id))
-                store.savePosition(props.id, ex)
+                store.resize(props.id, { width: parseInt(cardDOM.width), height: parseInt(cardDOM.height) });
+                const cardDomSize = getMatrix(cardDOM)
+                store.savePosition(props.id, cardDomSize)
             }
+            // function updateSizePosition() {
+            //     console.log(cardDOM.width, getMatrix(cardDOM));
+            //     store.changePosition(props.id, getMatrix(cardDOM));
+            //     store.changeSize(props.id, { width: parseInt(cardDOM.width), height: parseInt(cardDOM.height) })
+            // }
             var rightLastX = 0;
             var rightDraggable = new Draggable($right, {
                 trigger: `${"#right-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}`,
                 cursor: "e-resize",
                 onDrag: updateRight,
-                onDragStart:closeContextMenu,
+                onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
                 onPress: function () {
                     rightLastX = this.x;
@@ -89,7 +95,7 @@ const GenericCard = props => {
                 trigger: `${"#bottom-bar-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
                 cursor: "s-resize",
                 onDrag: updateBottom,
-                onDragStart:closeContextMenu,
+                onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
                 onPress: function () {
                     bottomLastY = this.y;
@@ -103,6 +109,7 @@ const GenericCard = props => {
             function updateBottom() {
                 var diffY = this.y - bottomLastY;
                 TweenMax.set("#".concat(props.id), { height: "+=" + diffY });
+                console.log("sd")
                 bottomLastY = this.y;
             }
 
@@ -111,7 +118,7 @@ const GenericCard = props => {
                 trigger: `${"#top-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}`,
                 cursor: "n-resize",
                 onDrag: updateTop,
-                onDragStart:closeContextMenu,
+                onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
                 onPress: function () {
                     topLastY = this.y;
@@ -132,7 +139,7 @@ const GenericCard = props => {
                 trigger: `${"#left-bar-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
                 cursor: "w-resize",
                 onDrag: updateLeft,
-                onDragStart:closeContextMenu,
+                onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
                 onPress: function () {
                     leftLastX = this.x;
@@ -170,7 +177,6 @@ const GenericCard = props => {
             let y = Draggable.create(
                 "#".concat(props.id),
                 {
-
                     autoScroll: 1,
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
