@@ -29,7 +29,7 @@ const GenericCard = props => {
         setShowPopper(false);
         setContextMenu(null);
     }
-    
+
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
 
@@ -53,20 +53,21 @@ const GenericCard = props => {
                 const values = element.style.transform.split(/\w+\(|\);?/);
                 const transform = values[1].split(',');
                 return {
-                  x: parseInt(transform[0]),
-                  y: parseInt(transform[1])
+                    x: parseInt(transform[0]),
+                    y: parseInt(transform[1])
                 };
             }
             function onResizeDragEnd() {
                 store.resize(props.id, { width: cardDOM.width, height: cardDOM.height });
                 const ex = getMatrix(document.getElementById(props.id))
-                store.savePosition(props.id,ex)
+                store.savePosition(props.id, ex)
             }
             var rightLastX = 0;
             var rightDraggable = new Draggable($right, {
                 trigger: `${"#right-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}`,
                 cursor: "e-resize",
                 onDrag: updateRight,
+                onDragStart:closeContextMenu,
                 onDragEnd: onResizeDragEnd,
                 onPress: function () {
                     rightLastX = this.x;
@@ -88,6 +89,7 @@ const GenericCard = props => {
                 trigger: `${"#bottom-bar-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
                 cursor: "s-resize",
                 onDrag: updateBottom,
+                onDragStart:closeContextMenu,
                 onDragEnd: onResizeDragEnd,
                 onPress: function () {
                     bottomLastY = this.y;
@@ -109,6 +111,7 @@ const GenericCard = props => {
                 trigger: `${"#top-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}`,
                 cursor: "n-resize",
                 onDrag: updateTop,
+                onDragStart:closeContextMenu,
                 onDragEnd: onResizeDragEnd,
                 onPress: function () {
                     topLastY = this.y;
@@ -129,6 +132,7 @@ const GenericCard = props => {
                 trigger: `${"#left-bar-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
                 cursor: "w-resize",
                 onDrag: updateLeft,
+                onDragStart:closeContextMenu,
                 onDragEnd: onResizeDragEnd,
                 onPress: function () {
                     leftLastX = this.x;
@@ -166,7 +170,7 @@ const GenericCard = props => {
             let y = Draggable.create(
                 "#".concat(props.id),
                 {
-                    
+
                     autoScroll: 1,
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
@@ -275,14 +279,21 @@ const GenericCard = props => {
                     zIndex: 1
                 }}
             >
-                <div className="top-bar-generic" id={"top-bar-generic".concat(props.id)}></div>
-                <div className="top-left-generic" id={"top-left-generic".concat(props.id)}></div>
-                <div className="right-bar-generic" id={"right-bar-generic".concat(props.id)}></div>
-                <div className="bottom-bar-generic" id={"bottom-bar-generic".concat(props.id)}></div>
-                <div className="left-bar-generic" id={"left-bar-generic".concat(props.id)}></div>
-                <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)}></div>
-                <div className="top-right-generic" id={"top-right-generic".concat(props.id)}></div>
-                <div className="bottom-left-generic" id={"bottom-left-generic".concat(props.id)}></div>
+                {
+                    me.type === 'text' ?
+                        <>
+                            <div className="top-bar-generic" id={"top-bar-generic".concat(props.id)}></div>
+                            <div className="top-left-generic" id={"top-left-generic".concat(props.id)}></div>
+                            <div className="right-bar-generic" id={"right-bar-generic".concat(props.id)}></div>
+                            <div className="bottom-bar-generic" id={"bottom-bar-generic".concat(props.id)}></div>
+                            <div className="left-bar-generic" id={"left-bar-generic".concat(props.id)}></div>
+                            <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)}></div>
+                            <div className="top-right-generic" id={"top-right-generic".concat(props.id)}></div>
+                            <div className="bottom-left-generic" id={"bottom-left-generic".concat(props.id)}></div>
+                        </>
+                        : null
+                }
+
                 {
                     me.type === 'text' && me.editing && !me.editing[store.userID] ?
                         <div className="action-loader">
