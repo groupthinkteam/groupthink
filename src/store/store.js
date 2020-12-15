@@ -110,7 +110,7 @@ export var storeObject = {
                     "name": this.currentUser.displayName,
                 }
             },
-            ...projectTemplates(tempId || 'blank')
+            ...projectTemplates[tempId || 'blank']
         }
         
         const newProjectID = database.ref("documents").push(template).key
