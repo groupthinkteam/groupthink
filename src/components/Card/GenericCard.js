@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { gsap, Draggable } from "gsap/all";
+import { gsap, Draggable, TweenMax } from "gsap/all";
 
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
@@ -9,13 +9,14 @@ import '../../styles/PopperMenu.scss';
 import "../../styles/Cards/GenericCard.scss";
 import MenuCard from "../DocumentCanvas/Cards/types/MenuCard";
 import ContextMenu from "../ContextMenu/ContextMenu";
+import cardSizeConstant from "../../constants/CardSizeConstant";
 
 // register gsap plugin so it doesn't get discarded during tree shake
-gsap.registerPlugin(Draggable);
+gsap.registerPlugin(Draggable, TweenMax);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 const GenericCard = props => {
-    let store = useStore();
+    const store = useStore();
     const me = store.cards[props.id];
     const CardType = cardChooser(me.type);
     const cardRef = useRef(null);
@@ -28,6 +29,7 @@ const GenericCard = props => {
         setShowPopper(false);
         setContextMenu(null);
     }
+    
     // if size changes, animate it
     useEffect(() => { gsap.set("#".concat(props.id), me.size) }, [me, props.id])
 
@@ -42,6 +44,107 @@ const GenericCard = props => {
     // init draggable
     useEffect(
         () => {
+            var $right = document.createElement("div");
+            var $bottom = document.createElement("div");
+            var $top = document.createElement("div");
+            var $left = document.createElement("div");
+            const cardDOM = document.getElementById(props.id).style;
+            function getMatrix(element) {
+                const values = element.style.transform.split(/\w+\(|\);?/);
+                const transform = values[1].split(',');
+                return {
+                  x: parseInt(transform[0]),
+                  y: parseInt(transform[1])
+                };
+            }
+            function onResizeDragEnd() {
+                store.resize(props.id, { width: cardDOM.width, height: cardDOM.height });
+                const ex = getMatrix(document.getElementById(props.id))
+                store.savePosition(props.id,ex)
+            }
+            var rightLastX = 0;
+            var rightDraggable = new Draggable($right, {
+                trigger: `${"#right-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}`,
+                cursor: "e-resize",
+                onDrag: updateRight,
+                onDragEnd: onResizeDragEnd,
+                onPress: function () {
+                    rightLastX = this.x;
+                    y[0].disable();
+                },
+                onRelease: function () {
+                    y[0].enable();
+                }
+            });
+
+            function updateRight() {
+                var diffX = this.x - rightLastX;
+                TweenMax.set("#".concat(props.id), { width: "+=" + diffX });
+                rightLastX = this.x;
+            }
+
+            var bottomLastY = 0;
+            var bottomDraggable = new Draggable($bottom, {
+                trigger: `${"#bottom-bar-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
+                cursor: "s-resize",
+                onDrag: updateBottom,
+                onDragEnd: onResizeDragEnd,
+                onPress: function () {
+                    bottomLastY = this.y;
+                    y[0].disable();
+                },
+                onRelease: function () {
+                    y[0].enable();
+                }
+            });
+
+            function updateBottom() {
+                var diffY = this.y - bottomLastY;
+                TweenMax.set("#".concat(props.id), { height: "+=" + diffY });
+                bottomLastY = this.y;
+            }
+
+            var topLastY = 0;
+            var topDraggable = new Draggable($top, {
+                trigger: `${"#top-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}`,
+                cursor: "n-resize",
+                onDrag: updateTop,
+                onDragEnd: onResizeDragEnd,
+                onPress: function () {
+                    topLastY = this.y;
+                    y[0].disable();
+                },
+                onRelease: function () {
+                    y[0].enable();
+                }
+            });
+            function updateTop() {
+                var diffY = this.y - topLastY;
+                TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
+                topLastY = this.y;
+            }
+
+            var leftLastX = 0;
+            var leftDraggable = new Draggable($left, {
+                trigger: `${"#left-bar-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
+                cursor: "w-resize",
+                onDrag: updateLeft,
+                onDragEnd: onResizeDragEnd,
+                onPress: function () {
+                    leftLastX = this.x;
+                    y[0].disable();
+                },
+                onRelease: function () {
+                    y[0].enable();
+                }
+            });
+
+            function updateLeft() {
+                var diffX = this.x - leftLastX;
+                TweenMax.set("#".concat(props.id), { width: "-=" + diffX, x: "+=" + diffX });
+                leftLastX = this.x;
+            }
+
             // warning: can't use arrow functions here since that messes up the "this" binding
             function dragStop() {
                 gsap.to("#".concat(props.id), {
@@ -63,6 +166,7 @@ const GenericCard = props => {
             let y = Draggable.create(
                 "#".concat(props.id),
                 {
+                    
                     autoScroll: 1,
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
@@ -90,7 +194,16 @@ const GenericCard = props => {
             if (store.isSelectingCard) {
                 y[0].disable();
             }
-            return () => y[0].kill();
+            return () => {
+                y[0].kill();
+                leftDraggable.kill();
+                topDraggable.kill();
+                bottomDraggable.kill(); rightDraggable.kill();
+                $top.remove();
+                $bottom.remove();
+                $left.remove();
+                $right.remove();
+            }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
@@ -109,7 +222,7 @@ const GenericCard = props => {
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
     let showCompatibleOverlay = (store.isSelectingCard && store.actionsList[store.selectedAction]["types"].includes(me.type))
-    
+
     return (
         <>
             <div id={props.id} tabIndex={0}
@@ -155,13 +268,23 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
+                    // minWidth:cardSizeConstant[me.type].width ,
+                    // minHeight:cardSizeConstant[me.type].height ,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1
                 }}
             >
+                <div className="top-bar-generic" id={"top-bar-generic".concat(props.id)}></div>
+                <div className="top-left-generic" id={"top-left-generic".concat(props.id)}></div>
+                <div className="right-bar-generic" id={"right-bar-generic".concat(props.id)}></div>
+                <div className="bottom-bar-generic" id={"bottom-bar-generic".concat(props.id)}></div>
+                <div className="left-bar-generic" id={"left-bar-generic".concat(props.id)}></div>
+                <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)}></div>
+                <div className="top-right-generic" id={"top-right-generic".concat(props.id)}></div>
+                <div className="bottom-left-generic" id={"bottom-left-generic".concat(props.id)}></div>
                 {
-                    me.type === 'text'&& me.editing && !me.editing[store.userID]  ?
+                    me.type === 'text' && me.editing && !me.editing[store.userID] ?
                         <div className="action-loader">
                             <div className="loader-text">
                                 {editingUser.name} is Editing this

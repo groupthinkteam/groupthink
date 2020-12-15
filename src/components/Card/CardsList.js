@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import React from "react"
 import { useStore } from "../../store/hook"
 import CollapsedCard from "./CollapsedCard";
-import GenericCard from "./GenericCard"
+import GenericCard from "./GenericCard";
 
 function CardsList() {
     let store = useStore();
@@ -16,7 +16,7 @@ function CardsList() {
                         if(store.collapsedID[id])
                         return (<CollapsedCard key={id} id={id} cardsCollapsed={store.collapsedID[id]}/>)
                         else
-                        return( <GenericCard key={id} id={id} />)
+                        return(<GenericCard key={id} id={id} />)
                     })
             }
         </div>
