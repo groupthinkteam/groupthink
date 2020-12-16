@@ -20,6 +20,7 @@ const RoomConnect = (props) => {
   const [isJoined, setIsJoined] = useState(false);
   const globalStore = useStore();
   const [isPopupExpanded, setPopupExpanded] = useState(false);
+  const [isMuted, setMuted] = useState(false);
 
   useEffect(() => {
     const me = globalStore.users[globalStore.userID];
@@ -39,11 +40,11 @@ const RoomConnect = (props) => {
       <Provider store={store}>
         <SWRTC.Provider configUrl={CONFIG_URL} displayName={props.currentUser.uid}>
           <SWRTC.Connecting>
-            <p>Connecting...</p>
+            {null}
           </SWRTC.Connecting>
           <SWRTC.Connected>
             <div>
-              <SWRTC.Room name={ROOM_NAME} password={ROOM_PASSWORD} join={{autoJoinCall: false}} >
+              <SWRTC.Room name={ROOM_NAME} password={ROOM_PASSWORD} join={{ autoJoinCall: false }} >
                 {roomprops =>
                   <>
                     {isJoined ?
@@ -66,37 +67,49 @@ const RoomConnect = (props) => {
                             Call controls
                     </div>
                           <div className="call-controls">
+                            <span className="subtitle">
+                              {isJoined ? "You’re in. Say something brilliant!" : "You are not currently on the call."}
+                            </span>
                             {
                               isJoined ?
-                                <button className="leave-call"
+                                <button className="callbutton leave-call"
                                   onClick={() => {
                                     store.dispatch(leaveCall(roomprops.room.address, true));
                                     setIsJoined(false);
                                   }}>
                                   Leave Call
                               </button>
-                                : <button className="join-call"
+                                : <button className="callbutton join-call"
                                   onClick={() => {
                                     store.dispatch(joinCall(roomprops.room.address));
                                     setIsJoined(true)
                                   }}>
-                                  Join Call
+                                  Join {roomprops.peers.filter((peer) => globalStore.users[peer.displayName]["joinedCall"]).length > 0 ? "Ongoing" : ""} Call
                               </button>
                             }
                             {
                               isJoined ?
                                 <SWRTC.UserControls>
                                   {userprops =>
-                                    <div className="mute-unmute" onClick={() => { userprops.isMuted ? userprops.unmute() : userprops.mute() }}>
-                                      {userprops.isMuted ? "Unmute" : "Click to Mute"}
-                                    </div>
+                                    <button className="callbutton" onClick={() => {
+                                      if (userprops.isMuted) {
+                                        userprops.unmute();
+                                        setMuted(false);
+                                      }
+                                      else {
+                                        userprops.mute();
+                                        setMuted(true);
+                                      }
+                                    }}>
+                                      {userprops.isMuted ? "Click to Unmute" : "Click to Mute"}
+                                    </button>
                                   }
                                 </SWRTC.UserControls>
                                 : null
                             }
                           </div>
                           <div className="section-heading">
-                            Currently on the call ({roomprops.peers.filter((peer) => globalStore.users[peer.displayName]["joinedCall"]).length})
+                            Participants ({roomprops.peers.filter((peer) => globalStore.users[peer.displayName]["joinedCall"]).length})
                         </div>
                           <div className="users-list">
                             {
@@ -105,6 +118,7 @@ const RoomConnect = (props) => {
                                 <div key={"voiceuserlist-self"} className="users-list-item">
                                   <div className="speaking-placeholder">
                                     {userIsSpeaking(store.getState()) ? <img src={require("../../assets/voice/speaking.svg")} alt="speaking indicator" /> : null}
+                                    { isMuted ? <img src={require("../../assets/voice/muted.svg")} alt="muted indicator" /> : null}
                                   </div>
                                   <img src={globalStore.currentUser.photoURL} alt={globalStore.currentUser.displayName} className={"user-profile" + (userIsSpeaking(store.getState()) ? " speaking" : "")} />
                                   {globalStore.currentUser.displayName} (You)
@@ -122,6 +136,7 @@ const RoomConnect = (props) => {
                                     <div key={"voiceuserlist" + peer.displayName} className="users-list-item">
                                       <div className="speaking-placeholder">
                                         {peer.speaking ? <img src={require("../../assets/voice/speaking.svg")} alt="speaking indicator" /> : null}
+                                        {!peer.hasActiveMicrophone ? <img src={require("../../assets/voice/muted.svg")} alt="muted indicator" /> : null}
                                       </div>
                                       <img src={user.photoURL} alt={user.name} className={"user-profile" + (peer.speaking ? " speaking" : "")} />
                                       {user.name}

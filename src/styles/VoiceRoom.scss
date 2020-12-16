@@ -63,6 +63,32 @@
         margin-top: 30px;
     }
 
+    .call-controls {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        .callbutton {
+            border: none;
+            height: 30px;
+            font-family: Overpass;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 0px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            &.join-call {
+                background-color: #48BB35;
+                color: #f6f6f6;
+            }
+            &.leave-call {
+                background-color: #FC611E;
+                color: #f6f6f6;
+            }
+        }
+    }
+
     .users-list {
         display: flex;
         flex-flow: column nowrap;
