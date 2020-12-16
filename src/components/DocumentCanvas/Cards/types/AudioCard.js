@@ -10,12 +10,25 @@ import "../../../../styles/Cards/AudioCard.scss";
 const AudioCard = (props) => {
     return (
         <div className="audio-card">
-            {props.content.metadata.name}
+            <div className="header">
+                <img src={require("../../../../assets/card-icons/audio.svg")} alt="audio" />
+                <span className="name">
+                    {props.content.metadata.name}
+                </span>
+            </div>
             <AudioPlayer
                 src={props.content.url}
                 showDownloadProgress="false"
                 preload="metadata"
                 style={{ width: "100%" }}
+                showSkipControls={false}
+                showJumpControls={false}
+                loop={false}
+                // customIcons={
+                //     {
+                //         play: <img src={require("../../../../assets/card-icons/audio.svg")}/>
+                //     }
+                // }
             />
         </div>
 
