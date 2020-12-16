@@ -199,7 +199,8 @@ const GenericCard = props => {
                     },
                     onDragEnd: dragStop,
                     cursor: "grab",
-                    activeCursor: "grabbing"
+                    activeCursor: "grabbing",
+                    
                 })
             if (store.isSelectingCard) {
                 y[0].disable();

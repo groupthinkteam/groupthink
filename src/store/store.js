@@ -4,7 +4,6 @@ import { database, storage, auth, servertime, functions } from "../services/fire
 import projectTemplates from "../constants/projectTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
-import { snap } from "gsap/all"
 
 export var storeObject = {
     filteredProjectID: [],

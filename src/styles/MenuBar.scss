@@ -82,6 +82,7 @@
 
     .menu-bar-panel-right {
         justify-content: flex-end;
+        align-items: center;
     }
 
     .menu-action-button {
@@ -110,7 +111,7 @@
     .menu-bar-user-profile-picture {
         height: 36px;
         width: 36px;
-        border: 1px solid black;
+        // border: 1px solid black;
         border-radius: 25px;
         cursor: pointer;
     }

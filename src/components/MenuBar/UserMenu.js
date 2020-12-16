@@ -19,12 +19,8 @@ const UserMenu = (props) => {
         };
     }, [buttonRef]);
     return (
-
-
-        <div>
+        <>
             <img alt="" onClick={() => setShowPopper(!showPopper)} className={props.imageClass} src={props.photoURL} ref={buttonRef} />
-
-
             <PopperMenu
                 buttonref={buttonRef}
                 position="bottom"
@@ -53,13 +49,9 @@ const UserMenu = (props) => {
                         {/* <a href="true" target="blank" style={{ color: "black" }}>Help About</a> */}
                         <a href="true" onClick={props.signOut} className="colororange">Logout</a>
                     </div>
-
                 </div>
             </PopperMenu>
-
-
-
-        </div>
+        </>
     );
 };
 
