@@ -43,7 +43,7 @@ const RoomConnect = (props) => {
           </SWRTC.Connecting>
           <SWRTC.Connected>
             <div>
-              <SWRTC.Room name={ROOM_NAME} password={ROOM_PASSWORD}>
+              <SWRTC.Room name={ROOM_NAME} password={ROOM_PASSWORD} join={{autoJoinCall: false}} >
                 {roomprops =>
                   <>
                     {isJoined ?
@@ -72,13 +72,12 @@ const RoomConnect = (props) => {
                                   onClick={() => {
                                     store.dispatch(leaveCall(roomprops.room.address, true));
                                     setIsJoined(false);
-                                    // console.log("remove media", removeAllMedia("audio"));
                                   }}>
                                   Leave Call
                               </button>
                                 : <button className="join-call"
                                   onClick={() => {
-                                    joinCall(roomprops.room.address);
+                                    store.dispatch(joinCall(roomprops.room.address));
                                     setIsJoined(true)
                                   }}>
                                   Join Call
@@ -119,7 +118,6 @@ const RoomConnect = (props) => {
                                 : roomprops.peers.filter((peer) => globalStore.users[peer.displayName]["joinedCall"]).map((peer) => {
                                   // displayName is actually uid for other users
                                   let user = globalStore.users[peer.displayName]
-                                  console.log(peer)
                                   return (
                                     <div key={"voiceuserlist" + peer.displayName} className="users-list-item">
                                       <div className="speaking-placeholder">
