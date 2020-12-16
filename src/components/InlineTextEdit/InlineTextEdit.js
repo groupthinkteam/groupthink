@@ -25,9 +25,10 @@ function InlineTextEdit(props, ref) {
         <TextareaAutosize
             style={prevStyle}
             className="inline-input"
+            id="inline-input"
             placeholder={props.placeholder || "Type something here..."}
             value={props.text}
-            onClick={(e) => console.log("clicked textedit")}
+            onClick={props.onClick}
             onChange={props.onChange}
             onBlur={props.onSave}
             disabled={props.disabled}

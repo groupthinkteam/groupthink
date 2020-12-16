@@ -10,7 +10,7 @@ import "../../styles/Cards/GenericCard.scss";
 import MenuCard from "../DocumentCanvas/Cards/types/MenuCard";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import cardSizeConstant from "../../constants/CardSizeConstant";
-import throttle from "lodash.throttle";
+
 
 // register gsap plugin so it doesn't get discarded during tree shake
 gsap.registerPlugin(Draggable, TweenMax);
@@ -222,6 +222,7 @@ const GenericCard = props => {
             if (cardRef.current && !cardRef.current.contains(event.target)) {
                 closeContextMenu();
             }
+            //console.log("CLICKED OUT GENERIC CARD",event.target)
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
