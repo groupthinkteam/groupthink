@@ -7,6 +7,7 @@ import { useStore } from '../../store/hook';
 
 import Popup from "../PopupMenu/PopupMenu"
 import { joinCall, leaveCall, removeAllMedia } from '@andyet/simplewebrtc/actions';
+import { userIsSpeaking } from '@andyet/simplewebrtc/Selectors';
 
 const API_KEY = '120319f9263e8477a01064c0';
 
@@ -69,9 +70,9 @@ const RoomConnect = (props) => {
                               isJoined ?
                                 <button className="leave-call"
                                   onClick={() => {
-                                    leaveCall(roomprops.room.address, true);
+                                    store.dispatch(leaveCall(roomprops.room.address, true));
                                     setIsJoined(false);
-                                    console.log("remove media", removeAllMedia("audio"));
+                                    // console.log("remove media", removeAllMedia("audio"));
                                   }}>
                                   Leave Call
                               </button>
@@ -100,16 +101,32 @@ const RoomConnect = (props) => {
                         </div>
                           <div className="users-list">
                             {
+                              // the client user
+                              isJoined ?
+                                <div key={"voiceuserlist-self"} className="users-list-item">
+                                  <div className="speaking-placeholder">
+                                    {userIsSpeaking(store.getState()) ? <img src={require("../../assets/voice/speaking.svg")} alt="speaking indicator" /> : null}
+                                  </div>
+                                  <img src={globalStore.currentUser.photoURL} alt={globalStore.currentUser.displayName} className={"user-profile" + (userIsSpeaking(store.getState()) ? " speaking" : "")} />
+                                  {globalStore.currentUser.displayName} (You)
+                                </div>
+                                : null
+                            }
+                            {
+                              // all other users
                               roomprops.peers.filter((peer) => globalStore.users[peer.displayName]["joinedCall"]).length < 1
                                 ? <span className="subtitle">There are no users on the call yet.</span>
                                 : roomprops.peers.filter((peer) => globalStore.users[peer.displayName]["joinedCall"]).map((peer) => {
-                                  // displayName is actually uid
+                                  // displayName is actually uid for other users
                                   let user = globalStore.users[peer.displayName]
                                   console.log(peer)
                                   return (
                                     <div key={"voiceuserlist" + peer.displayName} className="users-list-item">
-                                      <img src={user.photoURL} alt={user.name} className="user-profile" />
-                                      {user.name} {peer.speaking ? "is speaking" : null}
+                                      <div className="speaking-placeholder">
+                                        {peer.speaking ? <img src={require("../../assets/voice/speaking.svg")} alt="speaking indicator" /> : null}
+                                      </div>
+                                      <img src={user.photoURL} alt={user.name} className={"user-profile" + (peer.speaking ? " speaking" : "")} />
+                                      {user.name}
                                     </div>
                                   )
                                 })}
