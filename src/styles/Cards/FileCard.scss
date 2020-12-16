@@ -3,18 +3,32 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 10px 10px 10px 10px;
-    .file-card-name {
-        font-family: "Overpass";
-        font-style: normal;
-        font-weight: bold;
-        font-size: 16px;
-        line-height: 24px;
-        color: #32AAFF;
-        text-overflow: ellipsis;
-        display: inline-block;
-        white-space: nowrap;
-        overflow: hidden;
+    padding: 6px 6px 6px 6px;
+    a {
+        max-width: 100%;
+    }
+    .file-card-header {
+        display: flex;
+        flex-flow: row nowrap;
+        max-width: 100%;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 3px;
+        .name {
+            font-family: "Overpass";
+            font-style: normal;
+            font-weight: 700;
+            font-size: 14px;
+            color: #32aaff;
+            text-overflow: ellipsis;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 100%;
+            vertical-align: middle;
+            padding-left: 3px;
+            padding-top: 2px;
+        }
     }
     .file-card-info {
         display: flex;
@@ -26,7 +40,8 @@
         font-weight: normal;
         font-size: 10px;
         line-height: 16px;
-        color: #DEDEDE;
+        color: #dedede;
         width: 100%;
+        margin-left: 2px;
     }
 }

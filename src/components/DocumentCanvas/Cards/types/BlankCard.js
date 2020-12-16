@@ -22,8 +22,8 @@ function BlankCard(props) {
             width: 230
         },
         file: {
-            height: 60,
-            width: 200
+            height: 50,
+            width: 250
         },
         audio: {
             height: 113,
