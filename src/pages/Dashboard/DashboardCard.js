@@ -1,17 +1,32 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Button from "../../components/Button/Button"
 import TimeAgo from "react-timeago"
-
 import { useStore } from "../../store/hook"
 import { observer } from "mobx-react-lite"
-
+import "../../styles/Cards/GenericCard.scss";
 import "../../styles/DashboardCard.scss"
 import "../../styles/custom.scss"
+import MenuCard from "../../components/DocumentCanvas/Cards/types/MenuCard"
 
 const DashboardCard = props => {
     const store = useStore();
     let [isHover, setHover] = useState(false);
     const me = store.projects[props.id]
+    const [showPopper, setShowPopper] = useState(false);
+    const buttonRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+                setShowPopper(false);
+            }
+            //console.log("CLICKED OUT GENERIC CARD",event.target)
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [buttonRef]);
 
     if (!me.metadata || !me.users) return null;
 
@@ -45,13 +60,47 @@ const DashboardCard = props => {
                 <span className="text" onClick={props.onOpen}>{me.metadata.name}</span>
                 {
                     isHover && me.users[store.userID].permission === "admin" ?
-                        <Button
-                            className="delete-button"
-                            handleClick={() => store.deleteProject(props.id)}>
-                            Delete
-                            </Button>
+                        <div></div>
                         : null
                 }
+
+
+            </div>
+            <div className="title">
+            { me.users[store.userID].permission === "admin" ?
+                
+                <div>
+                    <div>
+                    <Button ref={buttonRef} className="kebab"
+                        handleClick={() => {
+                            setShowPopper(!showPopper);
+                        }}
+                    >
+                        <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
+                    </Button>
+                    </div>
+                    
+                
+                {showPopper ?
+                    <MenuCard
+                        buttonref={buttonRef.current}
+                        position="right-start"
+                        offset={[0, 4]}
+                        tooltipclass="tooltips"
+                        arrowclass="arrow"
+                        showpopper={true}//{store.currentActive === props.id}
+                        zIndex={1}
+                    >
+                        <Button className="delete-button"
+                            handleClick={() => store.deleteProject(props.id)}>
+                            Delete
+                        </Button>
+                    </MenuCard>
+                    : null
+                }
+                </div>
+                : null
+            }
             </div>
             <div className="rest">
                 <div className="date">

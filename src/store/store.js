@@ -61,7 +61,6 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
-
     addToRecentSearch(id) {
         console.log("Check recent search ID", id, this.projectID);
         const k = this.projectID
@@ -92,7 +91,7 @@ export var storeObject = {
     addNewProject(callback, tempId, projectName) {
         const thumbnails = [require("../assets/1.webp"), require("../assets/2.webp"), require("../assets/3.webp"), require("../assets/4.webp")]
         const thumbnailURL = thumbnails[Math.floor(Math.random() * thumbnails.length)]
-        
+
         const template = {
             metadata: {
                 name: projectName,
@@ -112,7 +111,7 @@ export var storeObject = {
             },
             ...projectTemplates[tempId || 'blank']
         }
-        
+
         const newProjectID = database.ref("documents").push(template).key
         this.userRef.child(newProjectID).set({
             access: "admin",
@@ -288,7 +287,7 @@ export var storeObject = {
             .catch(err => console.log("error saving new content for", id, err))
     },
         500),
-    changeSize(id,size){
+    changeSize(id, size) {
         console.log("triggered local size change on", id);
         this.cards[id]["size"] = size;
     },
@@ -729,7 +728,6 @@ export var storeObject = {
 
     // project templates
     useTemplate(name, callback) {
-            
         if (name === "classDash") {
             this.addNewProject(data => callback(data), name, this.templatesList[`${name}`].title)
         }
@@ -746,7 +744,12 @@ export var storeObject = {
         "classDash": {
             id: "classDash",
             title: "Class Dashboard",
-            description: "Take Notes, Organize Articles, Make Summaries and more with this template."
+            description: "Take notes, organize articles, make summaries and more with this template."
+        },
+        "tripPlanning": {
+            id: "tripPlanning",
+            title: "Trip Planning",
+            description: "Plan your dream vacation easily with this template."
         }
     },
     templatesUI: {
