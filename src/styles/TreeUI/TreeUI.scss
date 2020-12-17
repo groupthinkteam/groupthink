@@ -1,3 +1,35 @@
+.tree-trigger {
+    position: absolute;
+    left: -90px;
+    top: 80px;
+    z-index: 99999999;
+    width: 120px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    padding: 6px;
+    border: 1px solid #dfdcdc;
+
+    cursor: pointer;
+
+    font-family: Overpass;
+    font-size: 16px;
+    background-color: white;
+    color: #32aaff;
+    transition: 0.2s;
+    &:hover {
+        left: 0px;
+    }
+    .tree-arrow {
+        margin-left: 10px;
+        height: 16px;
+    }
+}
+
 .treeui {
     position: absolute;
     left: 0;
@@ -9,6 +41,7 @@
     width: 250px;
     border-right: 1px solid #dfdcdc;
     padding: 10px;
+    font-family: Overpass;
     .heading {
         font-family: Overpass;
         font-style: normal;
@@ -16,6 +49,15 @@
         font-size: 18px;
         color: #413d45;
         margin-bottom: 10px;
+        width: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        .tree-arrow {
+            rotate: 180deg;
+            cursor: pointer;
+        }
     }
     .treelist {
         margin-left: 10px;
@@ -34,9 +76,10 @@
                 }
             }
             .treeitem {
-                border: 1px solid black;
-                margin: 10px 0px;
+                // border: 1px solid black;
+                margin: 5px 0px;
                 width: fit-content;
+                white-space: nowrap;
             }
         }
     }

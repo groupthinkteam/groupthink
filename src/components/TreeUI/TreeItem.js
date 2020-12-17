@@ -9,7 +9,7 @@ function TreeItem(props) {
     if (props.cardID === "dummy") return null;
     return (
         <div className="treeitem">
-            <div className="content">{props.cardID}</div>
+            <div className="content">{props.cardID === "root" ? store.projectName : props.cardID}</div>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/hook";
 import TreeList from "./TreeList";
@@ -10,11 +10,30 @@ import "../../styles/TreeUI/TreeUI.scss";
 // import SortableTree from 'react-sortable-tree';
 
 function TreeUI(props) {
-    let store = useStore()
+    let store = useStore();
+    let [expanded, setExpanded] = useState(false);
+
+    if (!expanded) {
+        return (
+            <div className="tree-trigger" onClick={() => setExpanded(true)}>
+                Aerial View
+                <img className="tree-arrow"
+                    src={require("../../assets/treeui/arrow-blue.svg")}
+                    alt="open tree UI"
+                />
+            </div>
+        );
+    }
+
     return (
         <div className="treeui">
             <div className="heading">
                 Aerial View
+                <img className="tree-arrow"
+                    src={require("../../assets/treeui/arrow-blue.svg")}
+                    alt="close tree UI"
+                    onClick={() => setExpanded(false)}
+                />
             </div>
             <TreeList cardID="root" />
         </div>
