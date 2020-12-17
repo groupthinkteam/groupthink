@@ -19,6 +19,7 @@ export var storeObject = {
     documentLoadPercent: 0,
     currentContext: '',
     recentSearches: {},
+    clickTargetGeneric:'',
     get userID() {
         return this.currentUser && this.currentUser.uid
     },

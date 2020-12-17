@@ -3,6 +3,8 @@ import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 import 'react-quill/dist/quill.bubble.css'
 import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
+import { gsap, Draggable } from "gsap/all";
+gsap.registerPlugin(Draggable);
 function TextCard(props) {
     const quillRef = useRef(null);
     const textNodeRef = useRef(null);
@@ -20,23 +22,34 @@ function TextCard(props) {
         }
     }
     const pasteAtLast = (text) => {
-        if (quillRef.current) {
-            setTimeout(() => {
-                pointerAtLast()
-            }, 10);
-        }
+        var quillEditor = quillRef.current.getEditor();
+        console.log(quillEditor.selection)
+        const selectionIndex = quillEditor.getSelection()?.index;
+        setTimeout(() => {
+            if (selectionIndex)
+                quillEditor.setSelection(selectionIndex + text.length, 0);
+        }, 1)
     }
     useEffect(() => {
-        if (props.typeAPI.currentActive === props.id && quillRef.current) {
+
+        if (props.typeAPI.currentActive === props.id) {
+            const clickedTarget = props.typeAPI.clickTargetGeneric;
+            // console.log("cLICKED THROUGH STORE",clickedTarget? clickedTarget.tagName.toLowerCase():'no');
             if (me.content.initialRender)
                 quillRef.current.focus();
             if (me.editing && !me.editing[props.typeAPI.userID]) {
                 var quillEditor = quillRef.current.getEditor();
                 quillEditor.enable(false)
             }
-        }
-    }, [props.id, props.typeAPI.currentActive, me.editing, props.typeAPI.userID, me.content.initialRender]);
+            if (clickedTarget) {
+                if (clickedTarget.tagName.toLowerCase() === 'textarea')
+                    InlineTextEditRef.current.focus();
+                else if (textNodeRef.current.contains(clickedTarget))
+                    quillRef.current.focus()
+            }
 
+        }
+    }, [props, textLength, me.content.shrinked, props.content.title, props.id, props.typeAPI.currentActive, me.editing, props.typeAPI.userID, me.content.initialRender]);
     useEffect(() => {
         function handleClickOutside(e) {
             const store = props.typeAPI;
@@ -56,7 +69,7 @@ function TextCard(props) {
                     store.removeUserEditing(props.id, 'editing')
                 }
             }
-            // console.log("CHECK ", e.target === InlineTextEditRef.current, e.target.contains(textNodeRef.current), textNodeRef.current.contains(e.target), textNodeRef.current, e.target)
+            console.log("CHECK ", e.target === InlineTextEditRef.current, e.target.contains(textNodeRef.current), textNodeRef.current.contains(e.target), textNodeRef.current, e.target)
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -73,7 +86,6 @@ function TextCard(props) {
             props.typeAPI.saveContent(props.id, { text: value || "", title: props.content.title || null })
         }
     }
-    
     const onSave = (e) => {
         e.stopPropagation();
         props.typeAPI.saveContent(props.id, { title: props.content.title || null, text: props.content.text })
@@ -86,11 +98,9 @@ function TextCard(props) {
         e.stopPropagation();
     }
     const onFocusTitle = (event) => {
-        //if (me.content.shrinked) {
         const store = props.typeAPI;
         store.resize(props.id, { width: me.size.width, height: 200 });
         store.saveContent(props.id, { title: props.content.title || null, text: props.content.text, shrinked: null })
-        //}
     }
     return (
         <>
@@ -100,12 +110,13 @@ function TextCard(props) {
                     (props.typeAPI.currentActive === props.id || props.content.title) || me.content.shrinked ?
                         <InlineTextEdit
                             ref={InlineTextEditRef}
+                            id={`text-${props.id}`}
                             onChange={(e) => onChangeTitle(e)}
                             onSave={(e) => onSave(e)}
                             onFocus={(e) => onFocusTitle(e)}
                             text={props.content.title}
                             placeholder="ADD Title"
-                            style={{ fontSize: '20px', padding: '0px 10px', textAlign: !textLength ? 'center' : '' }}
+                            style={{color:'blue', fontSize: '20px', padding: '0px 10px', textAlign: !textLength ? 'center' : '' }}
                         />
                         : null
                 }
@@ -113,7 +124,6 @@ function TextCard(props) {
                     (props.typeAPI.currentActive === props.id || textLength) && !me.content.shrinked ?
                         <ReactQuill ref={quillRef}
                             theme="bubble"
-                            style={{ height: me.size.height - 50, cursor: 'auto' }}
                             value={me.content.text}
                             modules={modules}
                             onFocus={pointerAtLast}

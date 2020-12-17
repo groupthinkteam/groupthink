@@ -181,8 +181,8 @@ const GenericCard = props => {
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
-                    dragClickables: false,
-                    onClick: () => { cardRef.current.focus(); closeContextMenu(); },
+                    dragClickables: me.type === 'text',//false,
+                    onClick: (e) => { onClickTextCard(e.target)  },
                     onDragStart: dragStart,
                     onDrag: function drag() {
                         if (this.x > parseInt(store.container.width)) {
@@ -200,7 +200,7 @@ const GenericCard = props => {
                     onDragEnd: dragStop,
                     cursor: "grab",
                     activeCursor: "grabbing",
-                    
+
                 })
             if (store.isSelectingCard) {
                 y[0].disable();
@@ -218,10 +218,23 @@ const GenericCard = props => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
+    const onClickTextCard = (element) => {
+        // console.log("GENERIC CARD CLICKED", element.target, element.target.parentNode.className); 
+        if (me.type === 'text') {
+            store.clickTargetGeneric = element;
+            if(element.parentNode.className==='context-menu')
+            element.click();
+        }
+        if(cardRef.current)
+        cardRef.current.focus(); 
+        closeContextMenu();
+    }
     useEffect(() => {
         function handleClickOutside(event) {
             if (cardRef.current && !cardRef.current.contains(event.target)) {
                 closeContextMenu();
+                store.clickTargetGeneric = '';
+
             }
             //console.log("CLICKED OUT GENERIC CARD",event.target)
         }
@@ -229,7 +242,7 @@ const GenericCard = props => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [cardRef]);
+    }, [cardRef, store.clickTargetGeneric]);
 
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
