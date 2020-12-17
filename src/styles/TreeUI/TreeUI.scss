@@ -1,0 +1,43 @@
+.treeui {
+    position: absolute;
+    left: 0;
+    top: 50px;
+    z-index: 99999999;
+    background-color: white;
+    height: calc(100vh - 50px);
+    overflow: auto;
+    width: 250px;
+    border-right: 1px solid #dfdcdc;
+    padding: 10px;
+    .heading {
+        font-family: Overpass;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 18px;
+        color: #413d45;
+        margin-bottom: 10px;
+    }
+    .treelist {
+        margin-left: 10px;
+        .content {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-start;
+            align-items: center;
+            .arrow-placeholder {
+                min-width: 20px;
+            }
+            .tree-arrow {
+                transition: 0.2s;
+                &.collapsed {
+                    rotate: -90deg;
+                }
+            }
+            .treeitem {
+                border: 1px solid black;
+                margin: 10px 0px;
+                width: fit-content;
+            }
+        }
+    }
+}
