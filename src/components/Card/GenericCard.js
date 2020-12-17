@@ -109,7 +109,6 @@ const GenericCard = props => {
             function updateBottom() {
                 var diffY = this.y - bottomLastY;
                 TweenMax.set("#".concat(props.id), { height: "+=" + diffY });
-                console.log("sd")
                 bottomLastY = this.y;
             }
 

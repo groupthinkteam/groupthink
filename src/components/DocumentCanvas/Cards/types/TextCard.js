@@ -98,9 +98,11 @@ function TextCard(props) {
         e.stopPropagation();
     }
     const onFocusTitle = (event) => {
-        const store = props.typeAPI;
-        store.resize(props.id, { width: me.size.width, height: 200 });
-        store.saveContent(props.id, { title: props.content.title || null, text: props.content.text, shrinked: null })
+        if (!textLength&&me.editing && me.editing[props.typeAPI.userID]) {
+            const store = props.typeAPI;
+            store.resize(props.id, { width: me.size.width, height: 200 });
+            store.saveContent(props.id, { title: props.content.title || null, text: props.content.text, shrinked: null })
+        }
     }
     return (
         <>
@@ -116,7 +118,7 @@ function TextCard(props) {
                             onFocus={(e) => onFocusTitle(e)}
                             text={props.content.title}
                             placeholder="ADD Title"
-                            style={{color:'blue', fontSize: '20px', padding: '0px 10px', textAlign: !textLength ? 'center' : '' }}
+                            style={{ color: 'blue', fontSize: '20px', padding: '0px 10px', textAlign: !textLength ? 'center' : '' }}
                         />
                         : null
                 }
