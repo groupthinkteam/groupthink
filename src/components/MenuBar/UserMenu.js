@@ -31,7 +31,7 @@ const UserMenu = (props) => {
                 showpopper={showPopper}
             >
 
-                <div ref={contentRef}>
+                <div>
                     <div className="photo">
                         <img alt="" src={props.photoURL} className="profimage"></img>
                     </div>

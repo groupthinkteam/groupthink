@@ -109,11 +109,48 @@
     }
 
     .menu-bar-user-profile-picture {
+        position: relative;
+        top: 5px;
+        img {
         height: 36px;
         width: 36px;
-        // border: 1px solid black;
+        border: 1px solid black;
         border-radius: 25px;
+        }
         cursor: pointer;
+        .menu-thumbnail {
+            height: 80px;
+            width: 80px;
+            border-radius: 40px;
+        }
+    }
+    .menu-bar-user-profile-picture .user-menu {
+        visibility: visible;
+        border: solid black 1px;
+        width: 150px;
+        background-color: white;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        top: 105%;
+        left: -155%;
+        margin-left: -60px;
+    }
+    .menu-bar-user-profile-picture .user-menu::before {
+        content: "";
+        border: 1px solid black;
+        bottom: 50%;
+        background-color: white;
+        box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+        position: absolute;
+        top: -6px;
+        left: 126px;
+        transform: rotate(45deg);
+        width: 10px;
+        height: 10px;
     }
 
     .menu-bar-logo {
