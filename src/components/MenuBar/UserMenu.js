@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import PopperMenu from '../PopperMenu/PopperMenu'
 import '../../styles/UserMenu.scss'
+import { Link } from "react-router-dom";
 
 const UserMenu = (props) => {
 
@@ -43,7 +44,8 @@ const UserMenu = (props) => {
                     <hr className="separator" />
                     <div className="options">
                         {/* <a href="true" target="blank" style={{ color: "black" }}>Profile</a> */}
-                        <a href="/dashboard" className="colorblack">Dashboard</a>
+                        {/* <a href="/dashboard" className="colorblack">Dashboard</a> */}
+                        <Link to="/dashboard" className="colorblack">Dashboard</Link>
                         <br />
                         {/* <a href="true" target="blank" style={{ color: "black" }}>Settings</a> */}
                         {/* <a href="true" target="blank" style={{ color: "black" }}>Help About</a> */}

@@ -20,11 +20,11 @@ function TextCard(props) {
         }
     }
     const pasteAtLast = (text) => {
-        var quillEditor = quillRef.current.getEditor();
-        const selectionIndex = quillEditor.getSelection().index;
-        setTimeout(() => {
-            quillEditor.setSelection(selectionIndex + text.length, 0);
-        }, 1)
+        if (quillRef.current) {
+            setTimeout(() => {
+                pointerAtLast()
+            }, 10);
+        }
     }
     useEffect(() => {
         if (props.typeAPI.currentActive === props.id && quillRef.current) {
@@ -56,7 +56,7 @@ function TextCard(props) {
                     store.removeUserEditing(props.id, 'editing')
                 }
             }
-            console.log("CHECK ", e.target === InlineTextEditRef.current, e.target.contains(textNodeRef.current), textNodeRef.current.contains(e.target), textNodeRef.current, e.target)
+            // console.log("CHECK ", e.target === InlineTextEditRef.current, e.target.contains(textNodeRef.current), textNodeRef.current.contains(e.target), textNodeRef.current, e.target)
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -73,7 +73,7 @@ function TextCard(props) {
             props.typeAPI.saveContent(props.id, { text: value || "", title: props.content.title || null })
         }
     }
-    console.log(textLength, props.typeAPI.currentActive, props.typeAPI.currentActive === props.id)
+    
     const onSave = (e) => {
         e.stopPropagation();
         props.typeAPI.saveContent(props.id, { title: props.content.title || null, text: props.content.text })
@@ -87,9 +87,9 @@ function TextCard(props) {
     }
     const onFocusTitle = (event) => {
         //if (me.content.shrinked) {
-            const store = props.typeAPI;
-            store.resize(props.id, { width: me.size.width, height: 200 });
-            store.saveContent(props.id, { title: props.content.title || null, text: props.content.text, shrinked: null })
+        const store = props.typeAPI;
+        store.resize(props.id, { width: me.size.width, height: 200 });
+        store.saveContent(props.id, { title: props.content.title || null, text: props.content.text, shrinked: null })
         //}
     }
     return (
