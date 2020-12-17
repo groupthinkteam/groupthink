@@ -1,11 +1,11 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
 import RoomConnect from "../Voice/RoomConnect"
 import SearchBar from "../Search/SearchBar"
 import PersonaList from "../PersonaList/PersonaList"
-import UserMenu from "./UserMenu"
+import UserMenu from "../UserMenu/UserMenu"
 import { useStore } from "../../store/hook"
 import { observer } from "mobx-react-lite"
 import ActionsMenu from "../Actions/ActionsMenu"
@@ -15,7 +15,20 @@ import '../../styles/ShareLink.scss'
 function MenuBar(props) {
     let store = useStore()
     let [isEditingTitle, setEditingTitle] = useState(false);
-
+    const buttonRef = useRef(null);
+    const [showMenu, setShowMenu] = useState(false);  
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+                setShowMenu(false);
+            }
+            //console.log("CLICKED OUT GENERIC CARD",event.target)
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [buttonRef]);
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -46,7 +59,7 @@ function MenuBar(props) {
                     </span>
                 }
             </div>
-            
+
             <div className="menu-bar-panel menu-bar-panel-right">
                 <RoomConnect projectID={store.projectID} currentUser={store.currentUser} />
                 <PersonaList />
@@ -57,13 +70,17 @@ function MenuBar(props) {
                     currentUser={store.currentUser}
                 />
                 <div className="menu-bar-separator" />
-                <UserMenu
-                    photoURL={store.currentUser.photoURL}
-                    username={store.currentUser.displayName}
-                    imageClass="menu-bar-user-profile-picture"
-                    logOutClass="menu-action-button"
-                    signOut={props.signOut}
-                />
+                <div className="menu-bar-user-profile-picture">
+                    <img alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} />
+
+                    {showMenu ?
+                        <span className="user-menu">
+                            <img alt={store.currentUser.displayName} className="menu-thumbnail" src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef}/>
+                            <UserMenu 
+                            signOut={props.signOut}/>
+                        </span> : null}
+                </div>
+                
             </div>
         </div>
     );
