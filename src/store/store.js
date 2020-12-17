@@ -60,7 +60,6 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
-
     addToRecentSearch(id) {
         console.log("Check recent search ID", id, this.projectID);
         const k = this.projectID
@@ -728,8 +727,12 @@ export var storeObject = {
 
     // project templates
     useTemplate(name, callback) {
-        this.addNewProject(data => 
-            callback(data), name, this.templatesList[`${name}`].title)
+        if (name === "classDash") {
+            this.addNewProject(data => callback(data), name, this.templatesList[`${name}`].title)
+        }
+        if (name === "blank") {
+            this.addNewProject(data => callback(data), name, this.templatesList[`${name}`].title)
+        }
     },
     templatesList: {
         "blank": {

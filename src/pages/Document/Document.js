@@ -5,6 +5,7 @@ import CardContainer from "../../components/DocumentCanvas/CardContainer";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/hook";
 import { useHistory, useParams, useLocation } from "react-router-dom";
+import TreeUI from "../../components/TreeUI/TreeUI";
 
 function Document() {
   let store = useStore();
@@ -41,6 +42,7 @@ function Document() {
   return (
     <div>
       <MenuBar document signOut={signOut} projectID={projectID} />
+      <TreeUI />
       <CardContainer />
     </div>
   );
