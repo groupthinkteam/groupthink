@@ -1,16 +1,15 @@
-
+import { observe } from "mobx";
 import React from "react";
+import { Link } from "react-router-dom";
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../../store/hook'
 import '../../styles/UserMenu.scss'
-import { Link } from "react-router-dom";
 
 const UserMenu = (props) => {
-    let store = useStore();
-   
+  let store = useStore();
     return (
         <div>
-              <div style={{color: "black"}}>
+              <div className="colorblack">
                 <h4>{store.currentUser.displayName}</h4>
               </div>
               <div className="info">

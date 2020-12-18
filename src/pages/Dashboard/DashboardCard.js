@@ -13,27 +13,26 @@ const DashboardCard = props => {
     let [isHover, setHover] = useState(false);
     const me = store.projects[props.id]
     const [showPopper, setShowPopper] = useState(false);
-    const buttonRef = useRef(null);
+    const dashKebabRef = useRef(null);
 
     useEffect(() => {
         function handleClickOutside(event) {
-            if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+            if (dashKebabRef.current && !dashKebabRef.current.contains(event.target)) {
                 setShowPopper(false);
             }
-            //console.log("CLICKED OUT GENERIC CARD",event.target)
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [buttonRef]);
+    }, [dashKebabRef]);
 
     if (!me.metadata || !me.users) return null;
 
-
-    let personas = Object.entries(me.users).filter(([userID, values]) => userID !== store.userID).slice(0, 3)
-    let extraUsers = Object.keys(me.users).length - (personas.length + 1)
+    const personas = Object.entries(me.users).filter(([userID, _]) => userID !== store.userID).slice(0, 3)
+    const extraUsers = Object.keys(me.users).length - (personas.length + 1)
     console.log("project", me)
+
     return (
         <div id={props.id}
             className="dashboard-card"
@@ -67,40 +66,40 @@ const DashboardCard = props => {
 
             </div>
             <div className="title">
-            { me.users[store.userID].permission === "admin" ?
-                
-                <div>
-                    <div>
-                    <Button ref={buttonRef} className="kebab"
-                        handleClick={() => {
-                            setShowPopper(!showPopper);
-                        }}
-                    >
-                        <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
-                    </Button>
-                    </div>
-                    
-                
-                {showPopper ?
-                    <MenuCard
-                        buttonref={buttonRef.current}
-                        position="right-start"
-                        offset={[0, 4]}
-                        tooltipclass="tooltips"
-                        arrowclass="arrow"
-                        showpopper={true}//{store.currentActive === props.id}
-                        zIndex={1}
-                    >
-                        <Button className="delete-button"
-                            handleClick={() => store.deleteProject(props.id)}>
-                            Delete
+                {me.users[store.userID].permission === "admin" ?
+
+                    <div ref={dashKebabRef}>
+                        <div>
+                            <Button className="kebab"
+                                handleClick={() => {
+                                    setShowPopper(!showPopper);
+                                }}
+                            >
+                                <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
+                            </Button>
+                        </div>
+
+
+                        {showPopper ?
+                            <MenuCard
+                                buttonref={dashKebabRef.current}
+                                position="right-start"
+                                offset={[0, 4]}
+                                tooltipclass="tooltips"
+                                arrowclass="arrow"
+                                showpopper={true}
+                                zIndex={1}
+                            >
+                                <Button className="delete-button"
+                                    handleClick={() => store.deleteProject(props.id)}>
+                                    Delete
                         </Button>
-                    </MenuCard>
+                            </MenuCard>
+                            : null
+                        }
+                    </div>
                     : null
                 }
-                </div>
-                : null
-            }
             </div>
             <div className="rest">
                 <div className="date">

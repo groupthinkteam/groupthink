@@ -85,6 +85,7 @@ const GenericCard = props => {
             });
 
             function updateRight() {
+                
                 var diffX = this.x - rightLastX;
                 TweenMax.set("#".concat(props.id), { width: "+=" + diffX });
                 rightLastX = this.x;
@@ -233,9 +234,7 @@ const GenericCard = props => {
             if (cardRef.current && !cardRef.current.contains(event.target)) {
                 closeContextMenu();
                 store.clickTargetGeneric = '';
-
             }
-            //console.log("CLICKED OUT GENERIC CARD",event.target)
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -292,8 +291,10 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    // minWidth:cardSizeConstant[me.type].width ,
-                    // minHeight:cardSizeConstant[me.type].height ,
+                    minHeight:me.type==='text'?'40px':'',
+                    minWidth:me.type==='text'?'250px':'',
+                    maxHeight:"600px",
+                    maxWidth:"600px",
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1

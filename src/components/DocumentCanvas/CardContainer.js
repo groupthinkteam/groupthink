@@ -9,13 +9,7 @@ import CardsList from "../Card/CardsList";
 import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
 function CardContainer(props) {
-    let store = useStore()
-    let containerElement = document.querySelector(".card-container")
-    // let transformOrigin = {
-    //     x: window.innerWidth / 2 + containerElement?.scrollLeft,
-    //     y: (window.innerHeight - 50) / 2 + containerElement?.scrollTop
-    // }
-
+    const store = useStore()
     return (
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>

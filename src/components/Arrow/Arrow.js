@@ -49,7 +49,7 @@ const Arrow = (props) => {
         path = updatePath(linePathDragging.x, linePathDragging.y, head.x, head.y)
     }
     else {
-        path = updatePath(head.x, head.y, tail.x, tail.y - 5)
+        path = updatePath(head.x, head.y, tail.x, tail.y - 19)
     }
 
 

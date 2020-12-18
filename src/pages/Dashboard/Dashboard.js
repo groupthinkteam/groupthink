@@ -6,17 +6,16 @@ import "../../styles/Dashboard.scss"
 import { useStore } from '../../store/hook'
 import { useHistory, useLocation } from 'react-router-dom'
 import SearchBar from '../../components/Search/SearchBar'
-import { propTypes } from 'pdf-viewer-reactjs'
 import UserMenu from "../../components/UserMenu/UserMenu"
 
 const Dashboard = observer(() => {
-  let store = useStore();
+  const store = useStore();
   const history = useHistory();
   const buttonRef = useRef(null);
   const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
   const [filterProject, setFilterProject] = useState('All Projects');
-  // console.log(store.filteredProjectID)
+
   useEffect(() => {
     if (store.filteredProjectID.length)
       setFilterProject('Searching Project')
@@ -33,28 +32,22 @@ const Dashboard = observer(() => {
     store.signout();
     history.push('/login', { from: location });
   }
-//   useEffect(() => {
-//     function handleClickOutside(event) {
-//         if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-//             setShowMenu(false);
-//         }
-//         //console.log("CLICKED OUT GENERIC CARD",event.target)
-//     }
-//     document.addEventListener("mousedown", handleClickOutside);
-//     return () => {
-//         document.removeEventListener("mousedown", handleClickOutside);
-//     };
-// }, [buttonRef]);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+        setShowMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [buttonRef]);
 
   const onOpen = (id) => {
     store.setProjectID(id);
     history.push("/project/" + id, { from: location })
   }
-
-  // const signOut = () => {
-  //   store.signout();
-  //   history.push('/login', { from: location });
-  // }
 
   const sortProject = () => {
     switch (filterProject) {
@@ -81,12 +74,12 @@ const Dashboard = observer(() => {
             <span className="welcome-bold">Welcome,</span>
             <span className="user-name">{store.currentUser.displayName}</span>
           </div>
-          <div className="profile-picture">
-            <img alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef}/>
-            { showMenu ?
-            <span className="user-menu">
-              <UserMenu signOut={signOut} />
-            </span> : null}
+          <div ref={buttonRef} className="profile-picture">
+            <img alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} />
+            {showMenu ?
+              <span className="user-menu">
+                <UserMenu signOut={signOut} />
+              </span> : null}
           </div>
         </div>
       </div>

@@ -47,7 +47,7 @@ const MidPointInArrow = (props) => {
                 style={{ position: "absolute" }}
                 id={"mid".concat(id)}
                 cx={linePathDragging ? linePathDragging.x : midPoint.x}
-                cy={linePathDragging ? linePathDragging.y : midPoint.y}
+                cy={linePathDragging ? linePathDragging.y : midPoint.y-15/1.8}
                 r="3"
                 stroke="black"
                 strokeWidth="0px"

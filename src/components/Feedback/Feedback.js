@@ -1,6 +1,5 @@
 import React, { useState } from "react"
-import PopupMenu from "../PopupMenu/PopupMenu"
-import Button from '../Button/Button'
+import PopupMenu from "../PopupMenu/PopupMenu";
 import "../../styles/Feedback/Feedback.scss"
 import { observer } from "mobx-react-lite"
 import { useStore } from "../../store/hook"

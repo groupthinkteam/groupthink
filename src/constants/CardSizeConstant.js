@@ -1,38 +1,39 @@
 const cardSizeConstant = {
     'blank': {
-        width: 275, height: 45
+        minWidth: 275, 
+        minHeight: 45,
     },
     text: {
-        height: 200,
-        width: 280
+        minHeight: '200px',
+        minWidth: '280px'
     },
     todo: {
-        height: 300,
-        width: 230
+        minHeight: 300,
+        minWidth: 230
     },
     file: {
-        height: 60,
-        width: 200
+        minHeight: 60,
+        minWidth: 200
     },
     audio: {
-        height: 113,
-        width: 300
+        minHeight: 113,
+        minWidth: 300
     },
     link: {
-        height: 112,
-        width: 400
+        minHeight: 112,
+        minWidth: 400
     },
     'VideoLink': {
-        width: 300,
-        height: 200
+        minWidth: 300,
+        minHeight: 200
     },
     video:{
-        width: 300,
-        height: 200
+        minWidth: 300,
+        minHeight: 200
     },
     image:{
-        width: 100,
-        height: 100
+        minWidth: 100,
+        minHeight: 100
     }
 }
 export default cardSizeConstant;

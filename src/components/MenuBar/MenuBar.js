@@ -7,28 +7,35 @@ import SearchBar from "../Search/SearchBar"
 import PersonaList from "../PersonaList/PersonaList"
 import UserMenu from "../UserMenu/UserMenu"
 import { useStore } from "../../store/hook"
+import { useHistory, useLocation } from 'react-router-dom'
 import { observer } from "mobx-react-lite"
 import ActionsMenu from "../Actions/ActionsMenu"
 import Feedback from "../Feedback/Feedback"
 import '../../styles/ShareLink.scss'
 
 function MenuBar(props) {
-    let store = useStore()
+    const store = useStore()
     let [isEditingTitle, setEditingTitle] = useState(false);
     const buttonRef = useRef(null);
-    const [showMenu, setShowMenu] = useState(false);  
-    // useEffect(() => {
-    //     function handleClickOutside(event) {
-    //         if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-    //             setShowMenu(false);
-    //         }
-    //         //console.log("CLICKED OUT GENERIC CARD",event.target)
-    //     }
-    //     document.addEventListener("mousedown", handleClickOutside);
-    //     return () => {
-    //         document.removeEventListener("mousedown", handleClickOutside);
-    //     };
-    // }, [buttonRef]);
+    const [showMenu, setShowMenu] = useState(false);
+    const history = useHistory();
+    const location = useLocation();
+    const signOut = () => {
+        console.log("SIGNOUT ")
+        store.signout();
+        history.push('/login', { from: location });
+      }
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+                setShowMenu(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [buttonRef]);
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -74,13 +81,13 @@ function MenuBar(props) {
                     <img alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} />
 
                     {showMenu ?
-                        <span className="user-menu">
+                        <span className="user-menu" ref={buttonRef}>
                             <img alt={store.currentUser.displayName} className="menu-thumbnail" src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef}/>
                             <UserMenu
                             signOut={props.signOut}/>
                         </span> : null}
                 </div>
-                
+
             </div>
         </div>
     );
