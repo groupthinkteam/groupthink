@@ -85,6 +85,7 @@ const GenericCard = props => {
             });
 
             function updateRight() {
+                
                 var diffX = this.x - rightLastX;
                 TweenMax.set("#".concat(props.id), { width: "+=" + diffX });
                 rightLastX = this.x;
@@ -290,8 +291,10 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    // minWidth:cardSizeConstant[me.type].minWidth ,
-                    // minHeight:cardSizeConstant[me.type].minHeight ,
+                    minHeight:me.type==='text'?'40px':'',
+                    minWidth:me.type==='text'?'250px':'',
+                    maxHeight:"600px",
+                    maxWidth:"600px",
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1

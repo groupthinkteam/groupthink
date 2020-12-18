@@ -4,8 +4,8 @@ const cardSizeConstant = {
         minHeight: 45,
     },
     text: {
-        minHeight: 200,
-        minWidth: 280
+        minHeight: '200px',
+        minWidth: '280px'
     },
     todo: {
         minHeight: 300,
