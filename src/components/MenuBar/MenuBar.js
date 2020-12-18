@@ -13,16 +13,15 @@ import Feedback from "../Feedback/Feedback"
 import '../../styles/ShareLink.scss'
 
 function MenuBar(props) {
-    let store = useStore()
+    const store = useStore()
     let [isEditingTitle, setEditingTitle] = useState(false);
     const buttonRef = useRef(null);
-    const [showMenu, setShowMenu] = useState(false);  
+    const [showMenu, setShowMenu] = useState(false);
     useEffect(() => {
         function handleClickOutside(event) {
             if (buttonRef.current && !buttonRef.current.contains(event.target)) {
                 setShowMenu(false);
             }
-            //console.log("CLICKED OUT GENERIC CARD",event.target)
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -74,13 +73,12 @@ function MenuBar(props) {
                     <img alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} />
 
                     {showMenu ?
-                        <span className="user-menu">
-                            <img alt={store.currentUser.displayName} className="menu-thumbnail" src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef}/>
-                            <UserMenu 
-                            signOut={props.signOut}/>
+                        <span className="user-menu" ref={buttonRef}>
+                            <img alt={store.currentUser.displayName} className="menu-thumbnail" src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} />
+                            <UserMenu store={store} document />
                         </span> : null}
                 </div>
-                
+
             </div>
         </div>
     );

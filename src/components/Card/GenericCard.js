@@ -233,9 +233,7 @@ const GenericCard = props => {
             if (cardRef.current && !cardRef.current.contains(event.target)) {
                 closeContextMenu();
                 store.clickTargetGeneric = '';
-
             }
-            //console.log("CLICKED OUT GENERIC CARD",event.target)
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -292,8 +290,8 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    // minWidth:cardSizeConstant[me.type].width ,
-                    // minHeight:cardSizeConstant[me.type].height ,
+                    // minWidth:cardSizeConstant[me.type].minWidth ,
+                    // minHeight:cardSizeConstant[me.type].minHeight ,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1

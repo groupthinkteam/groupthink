@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { observer } from "mobx-react-lite"
 import { useStore } from "../../store/hook"
 import Popup from "../PopupMenu/PopupMenu"
@@ -60,4 +60,4 @@ function TemplateItem({ template, onClick }) {
     )
 }
 
-export default ChooseTemplate;
+export default observer(ChooseTemplate);
