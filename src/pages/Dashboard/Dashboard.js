@@ -28,18 +28,23 @@ const Dashboard = observer(() => {
     return () => store.removeDashboardListeners()
   }, [store])
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-        if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-            setShowMenu(false);
-        }
-        //console.log("CLICKED OUT GENERIC CARD",event.target)
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-    };
-}, [buttonRef]);
+  const signOut = () => {
+    console.log("SIGNOUT ")
+    store.signout();
+    history.push('/login', { from: location });
+  }
+//   useEffect(() => {
+//     function handleClickOutside(event) {
+//         if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+//             setShowMenu(false);
+//         }
+//         //console.log("CLICKED OUT GENERIC CARD",event.target)
+//     }
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => {
+//         document.removeEventListener("mousedown", handleClickOutside);
+//     };
+// }, [buttonRef]);
 
   const onOpen = (id) => {
     store.setProjectID(id);
@@ -80,7 +85,7 @@ const Dashboard = observer(() => {
             <img alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef}/>
             { showMenu ?
             <span className="user-menu">
-              <UserMenu />
+              <UserMenu signOut={signOut} />
             </span> : null}
           </div>
         </div>

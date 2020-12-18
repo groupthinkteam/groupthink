@@ -1,0 +1,246 @@
+.settings-page {
+    background-color: #FCFBF9;
+    transition: 0.2s;
+    overflow: scroll;
+    font-family: Overpass;
+    min-height: 100vh;
+    .top-bar {
+        margin: 30px 30px 10px 30px;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        .site-title {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            width: fit-content;
+            img {
+                height: 40px;
+            }
+        }
+        .user-welcome {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            .welcome-text {
+                display: flex;
+                flex-flow: column nowrap;
+                align-items: flex-end;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 18px;
+                line-height: 25px;
+                .user-name {
+                    font-weight: 700;
+                }
+            }
+            .profile-picture {
+                position: relative;
+                margin-left: 20px;
+                img {
+                    height: 60px;
+                    width: 60px;
+                    border-radius: 30px;
+                }
+            }
+            .profile-picture .user-menu {
+                visibility: visible;
+                border: solid black 1px;
+                width: 150px;
+                background-color: white;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px 0;
+                position: absolute;
+                z-index: 1;
+                top: 105%;
+                left: -49%;
+                margin-left: -60px;
+            }
+            .profile-picture .user-menu::before {
+                content: "";
+                border: 1px solid black;
+                bottom: 50%;
+                background-color: white;
+                box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+                position: absolute;
+                top: -6px;
+                left: 115px;
+                transform: rotate(45deg);
+                width: 10px;
+                height: 10px;
+            }
+        }
+    }
+    .main-section {
+        margin-left: 100px;
+        margin-right: 100px;
+        margin-top: 50px;
+        display: flex;
+        height: 10%;
+        align-items: center;
+        overflow: scroll;
+        flex-flow: column nowrap;
+        justify-content: center;
+        // border: 2px solid black;
+        .profile-picture {
+            position: relative;
+            img {
+                height: 120px;
+                width: 120px;
+                border-radius: 60px;
+            }
+        }
+        .name-heading {
+            position: relative;
+            .name {
+                font-size: 25px;
+                font-weight: 700
+            }
+        }
+        .profile-section {
+                display: flex;
+                flex-flow: column nowrap;
+                justify-content: space-between;
+                width: 500px;
+                
+
+            .profile-sub-section {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                
+                .content {
+                    display: flex;
+                    flex-flow: column nowrap;
+                    justify-content: left;
+                    
+                    .heading {
+                        font-family: Overpass;
+                        font-style: normal;
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: #32aaff;
+                    }
+                    .hr {
+                        width: 1000px;
+                    }
+                    .subcontent {
+                        display: flex;
+                        flex-flow: column nowrap;
+                        justify-content: left;
+                        .field {
+                            display: flex;
+                            flex-flow: row nowrap;
+                            .field-name {
+                            color: black
+                        }
+                        .field-content {
+                            color: gray;
+                            margin-left: 50px;
+                        }
+                    }
+                    }
+                }
+            }
+
+            .project-section-header {
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                .header-left-container {
+                    display: flex;
+                    flex-flow: row nowrap;
+                    .dashboard-title {
+                        display: flex;
+                        align-items: center;
+                        .select {
+                            font-family: "Overpass";
+                            font-style: normal;
+                            font-weight: bold;
+                            font-size: 24px;
+                            line-height: 24px;
+                            background-color: transparent;
+                            border: 1.5px solid transparent;
+                            border-radius: 6px;
+                            padding: 5px;
+                            &:hover {
+                                border: 1.5px solid black;
+                            }
+                        }
+                    }
+                }
+                .addnew {
+                    background-color: #32aaff;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    height: 40px;
+                    width: 100px;
+                    font-family: Overpass;
+                    font-style: normal;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding-top: 4px;
+                    margin-left: 15px;
+                }
+            }
+            .project-section-content {
+                display: flex;
+                flex-flow: column nowrap;
+                overflow: auto;
+                margin-top: 7px;
+                .row-headings {
+                    position: sticky;
+                    top: 0px;
+                    display: flex;
+                    flex-flow: row nowrap;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                    margin: 20px 0px 0px 0px;
+                    border-top: 1px solid #413d45;
+                    border-bottom: 1px solid #413d45;
+                    padding: 10px 15px 10px 15px;
+                    // padding: 5px 10px;
+                    .rest {
+                        width: 70%;
+                        display: flex;
+                        flex-flow: row nowrap;
+                        justify-content: flex-end;
+                        align-items: center;
+                    }
+                    .heading {
+                        font-family: Overpass;
+                        font-style: normal;
+                        font-weight: 600;
+                        font-size: 18px;
+                        // color: #413d45;
+                        display: flex;
+                        flex-flow: row nowrap;
+                        align-items: center;
+                        &.title {
+                            width: 30%;
+                            justify-content: flex-start;
+                            padding-left: 45px;
+                        }
+                        &.shared {
+                            width: calc(max(20%, 200px));
+                            justify-content: flex-end;
+                        }
+                        &.date {
+                            width: 150px;
+                            justify-content: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

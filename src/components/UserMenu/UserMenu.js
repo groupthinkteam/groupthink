@@ -3,6 +3,7 @@ import React from "react";
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../../store/hook'
 import '../../styles/UserMenu.scss'
+import { Link } from "react-router-dom";
 
 const UserMenu = (props) => {
     let store = useStore();
@@ -17,9 +18,9 @@ const UserMenu = (props) => {
               </div>
               <hr className="separator" />
               <div className="options">
-                <a href="/dashboard" className="colorblack">Dashboard</a>
+              <Link to="/dashboard" className="colorblack">Dashboard</Link>
                 <br />
-                <a href="/dashboard" className="colorblack">Settings</a>
+                <Link to="/settings" className="colorblack">Settings</Link>
                 <br />
                 <a href="true" onClick={props.signOut} className="colororange">Logout</a>
               </div>

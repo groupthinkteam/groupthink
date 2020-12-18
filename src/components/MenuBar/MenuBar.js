@@ -17,18 +17,18 @@ function MenuBar(props) {
     let [isEditingTitle, setEditingTitle] = useState(false);
     const buttonRef = useRef(null);
     const [showMenu, setShowMenu] = useState(false);  
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-                setShowMenu(false);
-            }
-            //console.log("CLICKED OUT GENERIC CARD",event.target)
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [buttonRef]);
+    // useEffect(() => {
+    //     function handleClickOutside(event) {
+    //         if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+    //             setShowMenu(false);
+    //         }
+    //         //console.log("CLICKED OUT GENERIC CARD",event.target)
+    //     }
+    //     document.addEventListener("mousedown", handleClickOutside);
+    //     return () => {
+    //         document.removeEventListener("mousedown", handleClickOutside);
+    //     };
+    // }, [buttonRef]);
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -76,7 +76,7 @@ function MenuBar(props) {
                     {showMenu ?
                         <span className="user-menu">
                             <img alt={store.currentUser.displayName} className="menu-thumbnail" src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef}/>
-                            <UserMenu 
+                            <UserMenu
                             signOut={props.signOut}/>
                         </span> : null}
                 </div>

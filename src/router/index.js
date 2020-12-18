@@ -10,6 +10,7 @@ import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Document from "../pages/Document/Document";
 import ErrorsPage from "../pages/Errors/ErrorsPage";
+import Settings from "../pages/Settings/Settings";
 
 function AppRoutes(props) {
   const { syncUser, currentUser, createSharedUser } = useStore();
@@ -62,6 +63,9 @@ function AppRoutes(props) {
         </Route>
         <PrivateRoute isSignedIn={isSignedIn} path="/dashboard">
           <Dashboard />
+        </PrivateRoute>
+        <PrivateRoute isSignedIn={isSignedIn} path="/settings">
+          <Settings />
         </PrivateRoute>
         <Route path="/error">
           <ErrorsPage />
