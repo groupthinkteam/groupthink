@@ -29,7 +29,8 @@ export default class SearchElements {
             if (key !== "root")
                 switch (val.type) {
                     case "text":
-                        projectArray.push({ id: key, text: val.content.text.replace(/<[^>]+>/g,' ').replace(/^\s+|\s+$/g, '').split(/\s+/) });
+                        if (val.content.title) projectArray.push({ id: key, title: val.content.title });
+                        projectArray.push({ id: key, text: val.content.text.replace(/<[^>]+>/g, ' ').replace(/^\s+|\s+$/g, '').split(/\s+/) });
                         break;
                     case "todo":
                         projectArray.push({ id: key, title: val.content.title })
@@ -44,24 +45,24 @@ export default class SearchElements {
                         break;
                     case "image":
 
-                        projectArray.push({ id: key, fileName: val.content.metadata?.name})
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name })
                         projectArray.push({ id: key, extention: val.content.metadata?.contentType });
                         projectArray.push({ id: key, description: val.content.label?.description });
                         projectArray.push({ id: key, captions: val.content.captions });
 
                         break;
                     case "audio":
-                        projectArray.push({ id: key, fileName: val.content.metadata?.name})
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name })
                         projectArray.push({ id: key, extention: val.content.metadata?.contentType });
 
                         break;
                     case "VideoFile":
-                        projectArray.push({ id: key, fileName: val.content.metadata?.name})
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name })
                         projectArray.push({ id: key, extention: val.content.metadata?.contentType });
 
                         break;
                     case 'file':
-                        projectArray.push({ id: key, fileName: val.content.metadata?.name})
+                        projectArray.push({ id: key, fileName: val.content.metadata?.name })
                         projectArray.push({ id: key, extention: val.content.metadata?.contentType });
 
                         break;
