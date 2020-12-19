@@ -44,7 +44,7 @@ function BlankCard(props) {
         else {
             const outcome = getTypeFromURL(e.target.value);
             if (outcome === 'NoLink') {
-                props.typeAPI.changeType(props.id, "text", defaultSize["text"],{ text: `<p>${e.target.value}</p>` , initialRender:true})
+                props.typeAPI.changeType(props.id, "text", defaultSize["text"], { text: `<p>${e.target.value}</p>`, initialRender: true })
             }
             else if (outcome === 'VideoLink') {
                 getMetadataFromURL(e.target.value, metadata => {
@@ -116,9 +116,9 @@ function BlankCard(props) {
 
     return (
         uploadState
-            ? <div style={{ position: "relative", height: "100%", width: "100%", display: "flex", flexFlow: "row nowrap", justifyContent: "flex-start" }}>
-                <div id={"uploadfiller".concat(props.id)} style={{ width: 0, height: "100%", backgroundColor: "#32AAFF" }} />
-                <div style={{ position: "absolute", top: "50%" }}>Uploading</div>
+            ? <div style={{ position: "relative", height: "100%", width: "100%", margin: "0px", display: "flex", flexFlow: "row nowrap", justifyContent: "center", alignItems: "center" }}>
+                <div style={{position: "relative", zIndex: 3, fontFamily: "Overpass"}}>Uploading...</div>
+                <div id={"uploadfiller".concat(props.id)} style={{ position: "absolute", left: 0, width: 0, height: "100%", backgroundColor: "#32AAFF", borderRadius: "6px" }} />
             </div>
             :
             <div className="blankcard">
