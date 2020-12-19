@@ -15,6 +15,18 @@
     font-family: Overpass;
 
     transition: 0.2s;
+
+    .kebab {
+        outline: none;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        &:active, &:focus {
+            outline: none;
+            border: none;
+        }
+    }
+
     &:hover {
         background-color: #f6f6f6;
         border: 1.5px solid #413d45;
