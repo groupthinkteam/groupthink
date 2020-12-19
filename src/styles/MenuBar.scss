@@ -66,14 +66,14 @@
             max-width: 100%;
             &.display {
                 &:hover {
-                    border: 1px solid #939393;
+                    border: 1.5px solid #939393;
                     border-radius: 6px;
                 }
             }
             &.edit {
                 &:focus {
                     outline: none;
-                    border: 1px solid #32AAFF;
+                    border: 1.5px solid #32AAFF;
                     border-radius: 6px;
                 }
             }
@@ -114,7 +114,7 @@
         img {
         height: 36px;
         width: 36px;
-        border: 1px solid black;
+        border: 1.5px solid black;
         border-radius: 25px;
         }
         cursor: pointer;
@@ -141,7 +141,7 @@
     }
     .menu-bar-user-profile-picture .user-menu::before {
         content: "";
-        border: 1px solid black;
+        border: 1.5px solid black;
         bottom: 50%;
         background-color: white;
         box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
