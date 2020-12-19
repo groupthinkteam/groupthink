@@ -22,6 +22,7 @@ function AppRoutes(props) {
     }
   )
   let isSignedIn = !!currentUser;
+  
 
   return (
     <Router>

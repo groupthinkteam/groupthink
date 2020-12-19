@@ -11,6 +11,7 @@ const LoginPage = observer(() => {
   const { currentUser, firebaseConfig } = useStore();
   let path = "/dashboard";
   console.log("LOGIN ")
+  
   if (location.state?.from !== undefined)
     path = location.state.from.pathname
   return (
