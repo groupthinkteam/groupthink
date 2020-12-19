@@ -48,7 +48,7 @@ export default class SearchElements {
                         projectArray.push({ id: key, fileName: val.content.metadata?.name })
                         projectArray.push({ id: key, extention: val.content.metadata?.contentType });
                         projectArray.push({ id: key, description: val.content.label?.description });
-                        projectArray.push({ id: key, captions: val.content.captions });
+                        projectArray.push({ id: key, captions: val.content.caption });
 
                         break;
                     case "audio":

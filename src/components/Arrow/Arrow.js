@@ -21,12 +21,49 @@ const Arrow = (props) => {
     const store = useStore();
     const child = store.cards[props.id];
 
-    if(!child) return null
-    if (child.parent === "root") return null;
-    
+    if (!child) return null
+
+
     const parent = store.cards[child.parent];
-    
-    if(!parent) return null;
+
+    if (!parent) return null;
+
+    if (child.parent === "root") {
+        if (store.currentActive !== props.id) return null;
+        let path;
+        const tailRoot = {
+            x: child.position.x + child.size.width / 2,
+            y: child.position.y + child.size.height + 10
+        }
+        if (linePathDragging?.head) {
+            path = updatePath(linePathDragging.x, linePathDragging.y, tailRoot.x, tailRoot.y)
+        }
+        return (
+            <>
+
+                <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
+                    <defs>
+                        <linearGradient id={"grad3".concat(props.id)} x1={'0%'} y1="0%" x2={"100%"} y2="0%">
+                            <stop offset="0%" stopColor="#FF6B43" stopOpacity="1" />
+                            <stop offset="100%" stopColor="#5FA2F1" stopOpacity="1" />
+                        </linearGradient>
+                    </defs>
+                    <path
+                        className="arrow-path"
+                        strokeWidth="2"
+                        fill="none"
+                        stroke={`url(#grad3${props.id})`}
+                        d={path} />
+                </svg>
+                < HeadArrow
+                    id={props.id}
+                    head={tailRoot}
+                    linePathDragging={linePathDragging}
+                    setLinePathDragging={setLinePathDragging}
+                />
+            </>
+        );
+    }
     const head = {
         x: parent.position.x + parent.size.width / 2,
         y: parent.position.y + parent.size.height + 9,
@@ -40,8 +77,8 @@ const Arrow = (props) => {
         y: (tail.y + head.y) / 2
     }
 
-    let path;
 
+    let path;
     if (linePathDragging?.tail) {
         path = updatePath(linePathDragging.x, linePathDragging.y, tail.x, tail.y)
     }
@@ -67,9 +104,9 @@ const Arrow = (props) => {
         <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
             <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
                 <defs>
-                    <linearGradient id={"grad3".concat(props.id)} x1={head.x>tail.x ? "100%" : '0%'} y1="0%" x2={head.x>tail.x ?"0%":"100%"} y2="0%">
-                        <stop offset="0%" stopColor="#FF6B43" stopOpacity="1"  />
-                        <stop offset="100%"  stopColor="#5FA2F1" stopOpacity="1" />
+                    <linearGradient id={"grad3".concat(props.id)} x1={head.x > tail.x ? "100%" : '0%'} y1="0%" x2={head.x > tail.x ? "0%" : "100%"} y2="0%">
+                        <stop offset="0%" stopColor="#FF6B43" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#5FA2F1" stopOpacity="1" />
                     </linearGradient>
                 </defs>
                 <path
@@ -79,8 +116,12 @@ const Arrow = (props) => {
                     stroke={`url(#grad3${props.id})`}
                     d={path} />
             </svg>
+            
+            
+
+
             {
-                linePathDragging?.head || !linePathDragging ?
+                (linePathDragging?.head || !linePathDragging) ?
                     <HeadArrow
                         id={props.id}
                         head={head}
