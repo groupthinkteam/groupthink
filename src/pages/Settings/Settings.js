@@ -46,6 +46,9 @@ function Settings() {
         console.log(location);
         history.push('/dashboard', { from: location });
     }
+    if (uploadState == 100) {
+        setUploadState(false)
+    }
     console.log("up state: ", uploadState)
     return (
         <div className="settings-page">
@@ -69,7 +72,14 @@ function Settings() {
             </div>
             <div className="main-section">
                 <div className="profile-picture">
-                    <img alt='' src={store.currentUser.photoURL} />
+                    { uploadState?
+                    <div className="pfp-loader">
+                        <div className="loader-text">
+                            Uploading
+                        </div>
+                    </div>
+                    : <img src={store.currentUser.photoURL} />}
+                    
                 </div>
                 <button onClick={() => inputFile.current.click()}>
                     Update Picture

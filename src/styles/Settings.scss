@@ -38,12 +38,35 @@
             .profile-picture {
                 position: relative;
                 margin-left: 20px;
+                height: 60px;
+                width: 60px;
+                border-radius: 30px;
                 img {
                     height: 60px;
                     width: 60px;
                     border-radius: 30px;
                     background-image:url('default pfp/strooper.jpg');
                 }
+                .pfp-loader {
+                    position: absolute;
+                    height: 60px;
+                    width: 60px;
+                    border-radius: 30px;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    justify-content: center;
+                    align-items: center;
+                    background: rgba(255, 255, 255, 0.75);
+                    color: #413d45;
+                    z-index: 99999999999;
+            
+                    .loader-text {
+                        padding: 5px 5px 5px 5px;
+                        //background: white;
+                        //border: 2px solid black;
+                    }
+                }
+            
             }
             .profile-picture .user-menu {
                 visibility: visible;
