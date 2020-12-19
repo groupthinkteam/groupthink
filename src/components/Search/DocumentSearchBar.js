@@ -30,42 +30,40 @@ const DocumentSearchBar = (props) => {
             {
                 expanded ?
                     <Popup handleClose={() => { closeSearchBar() }}>
-                        <div className="actions-container">
+                        <div className="search-container">
                             <div className="title">
-                                <img className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
-                            Search
-                        </div>
-                            <div className="subtitle">
-                                Search automatically extracts important keywords from your cards to help you find things easily.
-                        </div>
-                            <div className="new">
-                                <div className="new-search-input" style={props.dashboard ? { border: "2px solid black" } : {}}>
-                                    <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
-                                    <InlineTextEdit
-                                        style={{ fontSize: "14px", fontFamily: "Overpass", margin: '5px 7px 7px' }}
-                                        borderColor='black'
-                                        placeholder={"Type in a name, keyword, or description"}
-                                        onChange={(e) => searchValues(e.target.value)}
-                                    />
-                                </div>
-                                {
-                                    (results.matches.length || actionResult.matches.length)
-                                        ? <SearchDropdown
-                                            results={results} actionResult={actionResult} document
-                                            closeSearchBar={closeSearchBar}
-                                        />
-                                        : null
-                                }
+                                {/* <img className="search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} /> */}
+                                Search
                             </div>
-                            <div className="title">
-                                Recent Searches
-                        </div>
-                            <div className="recent-search">
+                            <div className="subtitle">
+                                Search intelligently extracts important keywords from your cards to help you find things easily.
+                            </div>
+                            <div className="search-input">
+                                <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
+                                <input className="input-text"
+                                    placeholder="type in a name, keyword, or description"
+                                    onChange={(e) => searchValues(e.target.value)}
+                                />
+                            </div>
+                            {
+                                (results.matches.length || actionResult.matches.length)
+                                    ? <SearchDropdown
+                                        results={results} actionResult={actionResult} document
+                                        closeSearchBar={closeSearchBar}
+                                    />
+                                    : null
+                            }
+                            <div className="section-heading">
+                                Recently Searched
+                            </div>
+                            <div className="recently-searched">
                                 {
                                     Object.entries(recentSearches)
                                         .filter(([_, projectID]) => projectID === props.projectID)
                                         .map(([cardID, _]) =>
-                                            <DisabledCard key={cardID} id={cardID} handleClick={() => closeSearchBar(cardID)} />
+                                            <div className="search-item">
+                                                <DisabledCard key={cardID} id={cardID} handleClick={() => closeSearchBar(cardID)} />
+                                            </div>
                                         )
                                 }
                             </div>

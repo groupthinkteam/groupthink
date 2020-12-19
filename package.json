@@ -39,6 +39,7 @@
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.2.0",
     "react-firebaseui": "^4.1.0",
+    "react-floater": "^0.7.2",
     "react-google-docs-viewer": "^1.0.1",
     "react-h5-audio-player": "^3.4.1",
     "react-hls-player": "^1.1.0",
