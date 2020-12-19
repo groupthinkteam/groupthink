@@ -10,9 +10,16 @@ const CollapsedCard = (props) => {
     const me = store.cards[props.id];
     let count = 1;
     const childArray = {};
+    const arrayTypeCount = {};
     const collapseCardRef = useRef(null);
     const countCollapseCard = (id) => {
         const currentCard = store.cards[id];
+        const check = 1;
+        if (arrayTypeCount[currentCard.type]) {
+            arrayTypeCount[currentCard.type] = arrayTypeCount[currentCard.type] + 1
+        }
+        else arrayTypeCount[currentCard.type] = check 
+
         if (currentCard?.children) {
             count = count + Object.keys(currentCard.children).length
             Object.keys(currentCard.children).forEach(cardID => {
@@ -24,13 +31,14 @@ const CollapsedCard = (props) => {
                 childArray[cardID] = { x: x_DIff, y: y_Diff };
                 countCollapseCard(cardID)
             });
-            return count;
+            return [arrayTypeCount, count];
         }
         else {
-            return count
+            return [arrayTypeCount, count];
         }
 
     }
+
     useEffect(() => { gsap.set("#".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
         , [props.id, me.position])
     // if size changes, animate it
@@ -92,10 +100,19 @@ const CollapsedCard = (props) => {
             height: 45,
             borderTopLeftRadius: me.editingUser ? "0px" : "6px",
             tabIndex: -1,
-            textAlign:'center',
+            textAlign: 'center',
             backgroundColor: 'white'
         }}>
-            <span>{countCollapseCard(props.id)} Cards are Collapsed</span>
+            <span>
+                {
+                    countCollapseCard(props.id)
+                        .filter((item) => typeof item === 'object')
+                        .map((item) => {
+                            return Object.entries(item).map(([type, count]) =>
+                                <>{type} : {count}</>
+                            )
+                        })
+                } Cards are Collapsed</span>
         </div>
     )
 }

@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, {  useRef, useState, useCallback } from "react";
 import "../../styles/Settings.scss"
 import UserMenu from "../../components/UserMenu/UserMenu"
 import { useHistory, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../../store/hook'
-import { getTypeFromMetadata } from "../../components/DocumentCanvas/Cards/cardTypeUtils";
 
 function Settings() {
     let store = useStore();
@@ -27,9 +26,6 @@ function Settings() {
         console.log("triggered file upload")
         console.log(file)
         if (!file) return;
-
-        const type = getTypeFromMetadata(file?.type);
-
         let uploadPath = file.name;
         var typemeta = {
             contentType: file.type,
@@ -63,7 +59,7 @@ function Settings() {
                         <span className="user-name">{store.currentUser.displayName}</span>
                     </div>
                     <div className="profile-picture">
-                        <img src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef} />
+                        <img alt='no pic' src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef} />
                         {showMenu ?
                             <span className="user-menu">
                                 <UserMenu signOut={signOut} />
@@ -73,7 +69,7 @@ function Settings() {
             </div>
             <div className="main-section">
                 <div className="profile-picture">
-                    <img src={store.currentUser.photoURL} />
+                    <img alt='' src={store.currentUser.photoURL} />
                 </div>
                 <button onClick={() => inputFile.current.click()}>
                     Update Picture
