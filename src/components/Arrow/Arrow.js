@@ -116,10 +116,6 @@ const Arrow = (props) => {
                     stroke={`url(#grad3${props.id})`}
                     d={path} />
             </svg>
-            
-            
-
-
             {
                 (linePathDragging?.head || !linePathDragging) ?
                     <HeadArrow
