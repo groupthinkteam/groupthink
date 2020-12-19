@@ -4,13 +4,33 @@ import { useStore } from "../../store/hook"
 import Arrow from "./Arrow"
 
 function ArrowList(props) {
-    let store = useStore();
+    const store = useStore();
+    const showSelectedArrow = (id) =>{
+        if(store.cards[id]?.children)
+        return [
+                Object.keys(store.cards[id]?.children)
+                .map((Id) => {
+                    return <Arrow key={"arrow".concat(Id)} id={"".concat(Id)} />
+                })
+                , <Arrow key={"arrow".concat(id)} id={"".concat(id)} />
+            ]
+        else
+        return <Arrow key={"arrow".concat(id)} id={"".concat(id)} />
+    }
     return (
         <div className="arrows">
             {
                 Object.entries(store.cards)
                     .filter(([id, value]) => id && id !== "root" && !value?.isCollapse)
-                    .map(([id, _]) => <Arrow key={"arrow".concat(id)} id={"".concat(id)} />)
+                    .map(([id, _]) => {
+                        if (props.showAllArrow)
+                            return <Arrow key={"arrow".concat(id)} id={"".concat(id)} />
+                        else if (store.currentActive === id) {
+                            return showSelectedArrow(id)
+                        }
+                        else return null
+
+                    })
             }
         </div>
     )
