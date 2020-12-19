@@ -44,13 +44,18 @@ function Settings() {
                     }
             }, "pfp");
         
-    }, [store])
+    }, [store]);
+
+    const gotoDashboard = () => {
+        console.log(location);
+        history.push('/dashboard', { from: location });
+    }
     console.log("up state: ", uploadState)
     return (
         <div className="settings-page">
             <div className="top-bar">
                 <div className="site-title">
-                    <img src={require("../../assets/dashboard/logo.svg")} alt="logo" />
+                    <img onClick={gotoDashboard} src={require("../../assets/dashboard/logo.svg")} alt="logo" />
                 </div>
                 <div className="user-welcome">
                     <div className="welcome-text">
