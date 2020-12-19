@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 
 const LoginPage = observer(() => {
   const location = useLocation();
-  const {currentUser,firebaseConfig} = useStore();
+  const { currentUser, firebaseConfig } = useStore();
   let path = "/dashboard";
   console.log("LOGIN ")
   if (location.state?.from !== undefined)
@@ -23,18 +23,16 @@ const LoginPage = observer(() => {
       />
       :
       <div id="login">
-      <div className="container">
-        <div className="row" style={{padding:'5px 34px 10px'}}>
-          <img src={require("../../assets/dashboard/logo.svg")} alt="logo"/>
+        <div className="container">
+          <img src={require("../../assets/dashboard/logo.svg")} alt="logo" />
+          <div className="login">
+            Sign in to continue
+            <StyledFirebaseAuth className="landing-login" uiConfig={firebaseConfig} firebaseAuth={auth()} />
+          </div>
         </div>
-        <div className="row" style={{padding:'5px 70px 10px'}}>
-          Sign in to continue
+        <img src={require("../../assets/login/graphic-right.svg")} className="graphic-right" alt="decoration"/>
+        <img src={require("../../assets/login/graphic-left.svg")} className="graphic-left" alt="decoration"/>
       </div>
-        <div className="row">
-          <StyledFirebaseAuth className="landing-login" uiConfig={firebaseConfig} firebaseAuth={auth()} />
-        </div>
-      </div>
-    </div>
   )
 })
 export default LoginPage;
