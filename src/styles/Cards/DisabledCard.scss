@@ -1,7 +1,5 @@
-.searched-card-overlay {
-    position: absolute;
-    background:transparent;
-    color: #413d45;
-    z-index: 99999999999;
-    cursor: pointer;
+.disabledcard {
+    transform-origin: center center;
+    background-color: white;
+    transform-box: content-box;
 }

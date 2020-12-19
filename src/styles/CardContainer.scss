@@ -18,7 +18,7 @@
         /* kite white */
         background: #fcfbf9;
         /* kite dark gray */
-        border: 1px solid #a29fa5;
+        border: 1.5px solid #a29fa5;
         border-radius: 5px;
 
         position: fixed;
@@ -63,13 +63,13 @@
             transition: 0.2s;
             width: 60px;
             text-align: center;
-            border: 1px solid transparent;
+            border: 1.5px solid transparent;
             border-radius: 6px;
             &:hover {
-                border: 1px solid #a29fa5;
+                border: 1.5px solid #a29fa5;
             }
             &:focus {
-                border: 1px solid black;
+                border: 1.5px solid black;
             }
         }
     }

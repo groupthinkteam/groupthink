@@ -42,11 +42,11 @@
             justify-content: flex-start;
             align-items: center;
             cursor: pointer;
-            border: 1px solid transparent;
+            border: 1.5px solid transparent;
             transition: 0.2s;
             &:hover {
                 background: #f6f6f6;
-                border: 1px solid #413d45;
+                border: 1.5px solid #413d45;
                 box-sizing: border-box;
                 border-radius: 8px;
             }
@@ -77,7 +77,7 @@
 }
 
 .top-band {
-    border: 1.5px solid #939393;
+    border: 1.5px solid #FF7E1D;
     border-radius: 8px;
     display: flex;
     flex-flow: row nowrap;
@@ -92,7 +92,6 @@
     &:hover {
         border-color: #ff7e1d;
     }
-
     .action-name {
         display: flex;
         flex-flow: row nowrap;
@@ -123,12 +122,8 @@
         width: 25px;
         max-height: 23px;
         object-fit: scale-down;
-
         &:hover {
             border-color: #ff7e1d;
-        }
-        &:hover path {
-            fill: white;
         }
     }
 }

@@ -1,6 +1,6 @@
 .tooltips {
   // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid #32AAFF;
+  border: 1.5px solid #32AAFF;
   border-radius: 6px;
   background-color: white;
   padding: 6px;
@@ -30,7 +30,7 @@ p .arrow::before {
 
 .tooltipsuser {
   // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  border: 1px solid black;
+  border: 1.5px solid black;
   border-radius: 6px;
   background-color: white;
   padding: 6px;
@@ -49,7 +49,7 @@ p .arrow::before {
 
 .arrowuser::before {
   content: " ";
-  border: 1px solid black;
+  border: 1.5px solid black;
   bottom: 50%;
   background-color: white;
   box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);

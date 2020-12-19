@@ -6,7 +6,7 @@
     padding: 10px 0px 10px 10px;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid transparent;
+    border: 1.5px solid transparent;
     margin: 5px 15px;
 
     font-style: normal;
@@ -17,7 +17,7 @@
     transition: 0.2s;
     &:hover {
         background-color: #f6f6f6;
-        border: 1px solid #413d45;
+        border: 1.5px solid #413d45;
         box-sizing: border-box;
         border-radius: 8px;
     }
@@ -70,7 +70,7 @@
                 min-width: 36px;
                 border-radius: 18px;
                 margin: 3px;
-                border: 1px solid #413d45;
+                border: 1.5px solid #413d45;
                 display: flex;
                 justify-content: center;
                 align-items: center;
