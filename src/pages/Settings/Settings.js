@@ -1,21 +1,51 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import "../../styles/Settings.scss"
 import UserMenu from "../../components/UserMenu/UserMenu"
 import { useHistory, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../../store/hook'
+import { getTypeFromMetadata } from "../../components/DocumentCanvas/Cards/cardTypeUtils";
 
 function Settings() {
     let store = useStore();
     const [showMenu, setShowMenu] = useState(false);
     const buttonRef = useRef(null);
+    const { v4: uuidv4 } = require('uuid');
+    const uuid = uuidv4();
     const history = useHistory();
     const location = useLocation();
+    let inputFile = useRef(null);
+    let [uploadState, setUploadState] = useState(false)
     const signOut = () => {
         console.log("SIGNOUT ")
         store.signout();
         history.push('/login', { from: location });
-      }
+    }
+
+    const upload = useCallback((files) => {
+        let file = files[0];
+        console.log("triggered file upload")
+        console.log(file)
+        if (!file) return;
+
+        const type = getTypeFromMetadata(file?.type);
+
+        let uploadPath = file.name;
+        var typemeta = {
+            contentType: file.type,
+            
+        };
+        store.requestUpload(uploadPath, file, typemeta,
+            (status) => {
+                if (typeof status === "number")
+                    setUploadState(status);
+                    else {
+                        store.updateProfilePicture()
+                    }
+            }, "pfp");
+        
+    }, [store])
+    console.log("up state: ", uploadState)
     return (
         <div className="settings-page">
             <div className="top-bar">
@@ -28,18 +58,25 @@ function Settings() {
                         <span className="user-name">{store.currentUser.displayName}</span>
                     </div>
                     <div className="profile-picture">
-                        <img alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef} />
+                        <img src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef} />
                         {showMenu ?
                             <span className="user-menu">
-                                <UserMenu signOut={signOut}/>
+                                <UserMenu signOut={signOut} />
                             </span> : null}
                     </div>
                 </div>
             </div>
             <div className="main-section">
                 <div className="profile-picture">
-                    <img alt={store.currentUser.displayName} src={store.currentUser.photoURL} />
+                    <img src={store.currentUser.photoURL} />
                 </div>
+                <button onClick={() => inputFile.current.click()}>
+                    Update Picture
+                </button>
+                <input type="file"
+                    onChange={(e) => upload(e.target.files)}
+                    ref={inputFile}
+                    style={{ display: 'none' }} />
                 <div className="name-heading">
                     <span className="name">{store.currentUser.displayName}</span>
                 </div>
@@ -91,7 +128,7 @@ function Settings() {
                                         Early Access
                                     </div>
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
@@ -113,7 +150,7 @@ function Settings() {
                                         Default
                                     </div>
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>

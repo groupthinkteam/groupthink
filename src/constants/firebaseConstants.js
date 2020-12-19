@@ -6,6 +6,10 @@ export const FIREBASE_CONSTANTS = {
         signInFlow: 'popup',
         //signInSuccessUrl: APP_CONSTANTS.URLS.DASHBOARD_URL,
         signInOptions: [
+            {
+                provider: auth.EmailAuthProvider.PROVIDER_ID,
+                requireDisplayName: true
+            },
             auth.GoogleAuthProvider.PROVIDER_ID,
             auth.FacebookAuthProvider.PROVIDER_ID,
         ],

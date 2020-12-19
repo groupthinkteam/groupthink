@@ -338,15 +338,30 @@ export var storeObject = {
         }
         console.log("didn't reparent because it was just not a valid request. do better next time.")
     },
-    requestUpload(uploadPath, file, metadata, statusCallback) {
-        let custom = {
-            ...metadata,
-            customMetadata: {
-                [this.userID]: this.users[this.userID].permission
+    requestUpload(uploadPath, file, metadata, statusCallback, use) {
+        console.log("userID", this.users)
+        var custom = {}
+        var path =''
+        if (use != "pfp"){
+            custom = {
+                ...metadata,
+                customMetadata: {
+                    [this.userID]: this.users[this.userID].permission
+                }
             }
+            path = "root/" + this.projectID + "/" + uploadPath;
         }
+        else {
+            custom = {
+                ...metadata,
+                customMetadata: {
+                    [this.userID]: "admin"
+                }
+            }
+            path = "root/profiles/" + this.userID+ "/pfp/profilePic"; //+ uploadPath;
+        }
+
         console.log("metadata sent was", custom)
-        const path = "root/" + this.projectID + "/" + uploadPath;
         let requestedPathRef = storage().ref(path);
         let uploadTask = requestedPathRef.put(file, custom);
         let unsubscribe = uploadTask.on(storage.TaskEvent.STATE_CHANGED,
@@ -363,6 +378,17 @@ export var storeObject = {
                 requestedPathRef.getMetadata()
                     .then((metadata) => callback(url, JSON.parse(JSON.stringify(metadata))))
                     .catch((reason) => console.log("failed to fetch metadata for", path, "because", reason))
+            })
+            .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
+    },
+    updateProfilePicture() {
+        const path = `root/profiles/${this.userID}/pfp/profilePic`;
+        const requestedPathRef = storage().ref(path)
+        requestedPathRef.getDownloadURL()
+            .then((url) => {
+                auth().currentUser.updateProfile({
+                    photoURL: url
+                })
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
@@ -555,6 +581,9 @@ export var storeObject = {
         auth().signOut()
     },
 
+    updateProfilePic() {
+
+    },
 
     // actions
     // ------------
