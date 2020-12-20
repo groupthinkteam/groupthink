@@ -27,6 +27,7 @@ export var storeObject = {
     currentUser: false,
     zoom: 1,
     validproject: '',
+    toggleArrows:true,
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },

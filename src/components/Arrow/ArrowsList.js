@@ -6,9 +6,10 @@ import Arrow from "./Arrow"
 function ArrowList(props) {
     const store = useStore();
     const showSelectedArrow = (id) =>{
-        if(store.cards[id]?.children)
+        if(store.cards[id]?.children )
         return [
                 Object.keys(store.cards[id]?.children)
+                .filter((Id)=>!store.cards[Id].isCollapse)
                 .map((Id) => {
                     return <Arrow key={"arrow".concat(Id)} id={"".concat(Id)} />
                 })
@@ -23,7 +24,7 @@ function ArrowList(props) {
                 Object.entries(store.cards)
                     .filter(([id, value]) => id && id !== "root" && !value?.isCollapse)
                     .map(([id, _]) => {
-                        if (props.showAllArrow)
+                        if (store.toggleArrows)
                             return <Arrow key={"arrow".concat(id)} id={"".concat(id)} />
                         else if (store.currentActive === id) {
                             return showSelectedArrow(id)

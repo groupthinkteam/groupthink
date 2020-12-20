@@ -18,11 +18,11 @@ function Zoom(props) {
         }
     }
     const onToggleClick =() =>{
-        props.setShowAllArrow();
+        store.toggleArrows=!store.toggleArrows;
     }
     return (
         <div className="zoom-widget" tabIndex="-1" >
-            <button onClick={onToggleClick}>Toggle {props.showAllArrow?'true':'false'}</button>
+            <button onClick={onToggleClick}>Toggle {store.toggleArrows?'true':'false'}</button>
                 <img className="zoom-icon" onClick={() => updateZoom((store.zoom - .25) * 100 + "%")} src={require("../../assets/zoom/minus.svg")} alt="minus" />
                 <input
                     className="input"

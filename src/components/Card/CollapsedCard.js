@@ -18,7 +18,7 @@ const CollapsedCard = (props) => {
         if (arrayTypeCount[currentCard.type]) {
             arrayTypeCount[currentCard.type] = arrayTypeCount[currentCard.type] + 1
         }
-        else arrayTypeCount[currentCard.type] = check 
+        else arrayTypeCount[currentCard.type] = check
 
         if (currentCard?.children) {
             count = count + Object.keys(currentCard.children).length
@@ -38,7 +38,11 @@ const CollapsedCard = (props) => {
         }
 
     }
-
+    const changeCurrentActive = () => {
+        if (store.currentActive === props.id) {
+            store.currentActive = null;
+        }
+    }
     useEffect(() => { gsap.set("#".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
         , [props.id, me.position])
     // if size changes, animate it
@@ -91,18 +95,42 @@ const CollapsedCard = (props) => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     );
-
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (collapseCardRef.current && !collapseCardRef.current.contains(event.target)) {
+                store.clickTargetGeneric = '';
+                if (store.currentActive === props.id) {
+                    store.currentActive = null;
+                }
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [collapseCardRef, store.clickTargetGeneric, props.id, store.currentActive]);
     return (
-        <div id={props.id} ref={collapseCardRef} className="collapse-card " tabIndex={0} style={{
-            position: "absolute",
-            opacity: 0,
-            width: 275,
-            height: 45,
-            borderTopLeftRadius: me.editingUser ? "0px" : "6px",
-            tabIndex: -1,
-            textAlign: 'center',
-            backgroundColor: 'white'
-        }}>
+        <div onLoad={changeCurrentActive} id={props.id} ref={collapseCardRef} className="collapse-card " tabIndex={0}
+            onBlur={(e) => {
+                changeCurrentActive();
+                e.stopPropagation();
+                store.removeUserEditing(props.id, 'editing')
+            }}
+            onFocus={e => {
+                store.currentActive = props.id;
+                store.addUserEditing(props.id, 'editing')
+                e.stopPropagation();
+            }}
+            style={{
+                position: "absolute",
+                opacity: 0,
+                width: 275,
+                height: 45,
+                borderTopLeftRadius: me.editingUser ? "0px" : "6px",
+                tabIndex: -1,
+                textAlign: 'center',
+                backgroundColor: 'white'
+            }}>
             <span key={props.id}>
                 {
                     countCollapseCard(props.id)

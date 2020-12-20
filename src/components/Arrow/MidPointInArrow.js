@@ -16,6 +16,10 @@ const MidPointInArrow = (props) => {
         if (childrenId === id)
             store.collapsedID[id] ?
                 store.expandCard(id, 'main') : store.collapseCard(id, 'main')
+        else if (!store.toggleArrows)
+        {
+            currentCard.isCollapse ? store.expandCard(childrenId):store.collapseCard(childrenId)
+        }
         else
             collapse ?
                 store.expandCard(childrenId) : store.collapseCard(childrenId);

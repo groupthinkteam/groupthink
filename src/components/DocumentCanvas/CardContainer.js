@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React  from "react";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite"
 
@@ -10,12 +10,11 @@ import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
 function CardContainer(props) {
     const store = useStore();
-    const [showAllArrow , setShowAllArrow] = useState(true);
     
     return (
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
-            <Zoom setShowAllArrow={()=>setShowAllArrow(!showAllArrow)} showAllArrow={showAllArrow}/>
+            <Zoom />
             {
                 Object.keys(store.cards).length < 2 ?
                     <div className="double-click">
@@ -50,7 +49,7 @@ function CardContainer(props) {
                     );
                 }}
             >
-                <ArrowList showAllArrow={showAllArrow}/>
+                <ArrowList />
                 <CursorsList />
                 <CardsList />
             </div>

@@ -85,7 +85,7 @@ const GenericCard = props => {
             });
 
             function updateRight() {
-                
+
                 var diffX = this.x - rightLastX;
                 TweenMax.set("#".concat(props.id), { width: "+=" + diffX });
                 rightLastX = this.x;
@@ -182,7 +182,7 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
                     dragClickables: me.type === 'text',//false,
-                    onClick: (e) => { onClickTextCard(e.target)  },
+                    onClick: (e) => { onClickTextCard(e.target) },
                     onDragStart: dragStart,
                     onDrag: function drag() {
                         if (this.x > parseInt(store.container.width)) {
@@ -222,11 +222,11 @@ const GenericCard = props => {
         // console.log("GENERIC CARD CLICKED", element.target, element.target.parentNode.className); 
         if (me.type === 'text') {
             store.clickTargetGeneric = element;
-            if(element.parentNode.className==='context-menu')
-            element.click();
+            if (element.parentNode.className === 'context-menu')
+                element.click();
         }
-        if(cardRef.current)
-        cardRef.current.focus(); 
+        if (cardRef.current)
+            cardRef.current.focus();
         closeContextMenu();
     }
     useEffect(() => {
@@ -234,13 +234,16 @@ const GenericCard = props => {
             if (cardRef.current && !cardRef.current.contains(event.target)) {
                 closeContextMenu();
                 store.clickTargetGeneric = '';
+                if (store.currentActive === props.id) {
+                    store.currentActive = null;
+                }
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [cardRef, store.clickTargetGeneric]);
+    }, [cardRef, store.clickTargetGeneric,props.id,store.currentActive]);
 
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
@@ -291,10 +294,10 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    minHeight:me.type==='text'?'40px':'',
-                    minWidth:me.type==='text'?'250px':'',
-                    maxHeight:"600px",
-                    maxWidth:"600px",
+                    minHeight: me.type === 'text' ? '40px' : '',
+                    minWidth: me.type === 'text' ? '250px' : '',
+                    maxHeight: "600px",
+                    maxWidth: "600px",
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1
