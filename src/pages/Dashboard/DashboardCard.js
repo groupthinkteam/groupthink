@@ -44,14 +44,14 @@ const DashboardCard = props => {
                     {
                         me.users[store.userID].isStarred ?
                             <svg onClick={() => store.unStarredThisProject(props.id)} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.48999L13.09 6.74999L20 7.75999L15 12.63L16.18 19.51L10 16.26L3.82 19.51L5 12.63L0 7.75999L6.91 6.74999L10 0.48999Z" fill="#32AAFF" />
+                                <path fillRule="evenodd" clipRule="evenodd" d="M10 0.48999L13.09 6.74999L20 7.75999L15 12.63L16.18 19.51L10 16.26L3.82 19.51L5 12.63L0 7.75999L6.91 6.74999L10 0.48999Z" fill="#32AAFF" />
                             </svg>
                             : null
                     }
                     {
                         isHover && !me.users[store.userID].isStarred ?
                             <svg onClick={() => store.starredThisProject(props.id)} width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M11 1.48999L14.09 7.74999L21 8.75999L16 13.63L17.18 20.51L11 17.26L4.82 20.51L6 13.63L1 8.75999L7.91 7.74999L11 1.48999Z" stroke="#DFDCDC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path fillRule="evenodd" clipRule="evenodd" d="M11 1.48999L14.09 7.74999L21 8.75999L16 13.63L17.18 20.51L11 17.26L4.82 20.51L6 13.63L1 8.75999L7.91 7.74999L11 1.48999Z" stroke="#DFDCDC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                             : null
                     }
@@ -66,8 +66,7 @@ const DashboardCard = props => {
 
             </div>
             <div className="title">
-                {me.users[store.userID].permission === "admin" ?
-
+                {me.users[store.userID].permission === "admin" && isHover ?
                     <div ref={dashKebabRef}>
                         <div>
                             <Button className="kebab"
@@ -103,7 +102,9 @@ const DashboardCard = props => {
             </div>
             <div className="rest">
                 <div className="date">
-                    <TimeAgo date={me.users[store.userID].lastUpdatedAt} />
+                    {me.users[store.userID].lastUpdatedAt ?
+                        <TimeAgo date={me.users[store.userID].lastUpdatedAt} />
+                        : "never"}
                 </div>
                 <div className="date">
                     <TimeAgo date={me.metadata.datecreated} />

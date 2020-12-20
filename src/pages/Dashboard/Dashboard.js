@@ -7,7 +7,6 @@ import { useStore } from '../../store/hook'
 import { useHistory, useLocation } from 'react-router-dom'
 import SearchBar from '../../components/Search/SearchBar'
 import UserMenu from "../../components/UserMenu/UserMenu"
-import { auth } from "../../services/firebase"
 
 const Dashboard = observer(() => {
   const store = useStore();
@@ -16,11 +15,6 @@ const Dashboard = observer(() => {
   const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
   const [filterProject, setFilterProject] = useState('All Projects');
-  if (auth().currentUser.metadata.creationTime==auth().currentUser.metadata.lastSignInTime
-  && store.allProjects.length==0) {
-    store.addNewProject(data => console.log(data), "introProject", "Welcome! Start Here..")
-    //console.log("Projects ", store.allProjects.length!==0)
-  }
 
   useEffect(() => {
     if (store.filteredProjectID.length)

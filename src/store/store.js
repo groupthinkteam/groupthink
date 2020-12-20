@@ -19,7 +19,7 @@ export var storeObject = {
     documentLoadPercent: 0,
     currentContext: '',
     recentSearches: {},
-    clickTargetGeneric:'',
+    clickTargetGeneric: '',
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -27,7 +27,7 @@ export var storeObject = {
     currentUser: false,
     zoom: 1,
     validproject: '',
-    toggleArrows:true,
+    toggleArrows: true,
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },
@@ -342,8 +342,8 @@ export var storeObject = {
     requestUpload(uploadPath, file, metadata, statusCallback, use) {
         console.log("userID", this.users)
         var custom = {}
-        var path =''
-        if (use != "pfp"){
+        var path = ''
+        if (use != "pfp") {
             custom = {
                 ...metadata,
                 customMetadata: {
@@ -359,7 +359,7 @@ export var storeObject = {
                     [this.userID]: "admin"
                 }
             }
-            path = "root/profiles/" + this.userID+ "/pfp/profilePic"; //+ uploadPath;
+            path = "root/profiles/" + this.userID + "/pfp/profilePic"; //+ uploadPath;
         }
 
         console.log("metadata sent was", custom)
@@ -519,6 +519,7 @@ export var storeObject = {
     },
     // listener manipulation
     addDashboardListeners() {
+        this.addWelcomeIfNotExists()
         if (this.userRef && this.userID.length > 1) {
             this.userRef.on("child_added", (snap) => {
                 database.ref("documents").child(snap.key).child("metadata")
@@ -531,6 +532,18 @@ export var storeObject = {
                 database.ref("documents").child(snap.key).child("metadata").off();
                 delete this.projects[snap.key];
             })
+        }
+    },
+    addWelcomeIfNotExists() {
+        if (this.userID.length > 1) {
+            database.ref("users").child(this.userID).child("welcome").once("value")
+                .then((snap) => {
+                    if (!snap.val()) {
+                        database.ref("users").child(this.userID).child("welcome").set(true)
+                        this.addNewProject(data => { window.location.reload() }, "introProject", "Welcome! Start Here...")
+                    }
+                }
+                )
         }
     },
     addDocumentListeners() {

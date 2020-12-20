@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 import { useStore } from "../store/hook";
@@ -14,65 +14,67 @@ import Settings from "../pages/Settings/Settings";
 
 function AppRoutes(props) {
   const { syncUser, currentUser, createSharedUser } = useStore();
-  useEffect(
-    () => {
-      console.log("INDEX  ", isSignedIn, currentUser?.uid);
-      let unsubscribe = auth().onAuthStateChanged(_ => syncUser())
-      return () => unsubscribe()
-    }
-  )
+  let [pendingAuth, setPendingAuth] = useState(true);
   let isSignedIn = !!currentUser;
-  
+
+  useEffect(() => {
+    console.log("login status: pending | signedIn | currentUser:\n", pendingAuth, isSignedIn, currentUser?.uid);
+    let unsubscribe = auth().onAuthStateChanged(_ => { setPendingAuth(false); syncUser(); })
+    return () => unsubscribe()
+  }, [])
+
 
   return (
     <Router>
-      <Switch>
-        <Route path="/shared/:projectID/:keyID/:permission"
-          render={({ location }) =>
-            isSignedIn ? (
-              <PrivateRoute isSignedIn={isSignedIn} invitation validateInvitation={createSharedUser} path="/shared/:projectID/:keyID/:permission">
-                <Document />
-              </PrivateRoute>
-            ) : (
-                <Redirect
-                  to={{
-                    pathname: "/login",
-                    state: { from: location }
-                  }}
-                />
-              )
-          }>
-        </Route>
-        <Route path="/project/:projectID"
-          render={({ location }) =>
-            isSignedIn ? (
-              <PrivateRoute isSignedIn={isSignedIn} document path="/project/:projectID">
-                <Document />
-              </PrivateRoute>
-            ) : (
-                <Redirect
-                  to={{
-                    pathname: "/login",
-                    state: { from: location }
-                  }}
-                />
-              )
-          }>
-        </Route>
-        <Route path="/login" isSignedIn={isSignedIn}>
-          <LoginPage />
-        </Route>
-        <PrivateRoute isSignedIn={isSignedIn} path="/dashboard">
-          <Dashboard />
-        </PrivateRoute>
-        <PrivateRoute isSignedIn={isSignedIn} path="/settings">
-          <Settings />
-        </PrivateRoute>
-        <Route path="/error">
-          <ErrorsPage />
-        </Route>
-        <Redirect to={isSignedIn ? "/dashboard" : "/login"} />
-      </Switch>
+      { pendingAuth ? <h1>pending auth</h1> :
+        <Switch>
+          <Route path="/shared/:projectID/:keyID/:permission"
+            render={({ location }) =>
+              isSignedIn ? (
+                <PrivateRoute isSignedIn={isSignedIn} invitation validateInvitation={createSharedUser} path="/shared/:projectID/:keyID/:permission">
+                  <Document />
+                </PrivateRoute>
+              ) : (
+                  <Redirect
+                    to={{
+                      pathname: "/login",
+                      state: { from: location }
+                    }}
+                  />
+                )
+            }>
+          </Route>
+          <Route path="/project/:projectID"
+            render={({ location }) =>
+              isSignedIn ? (
+                <PrivateRoute isSignedIn={isSignedIn} document path="/project/:projectID">
+                  <Document />
+                </PrivateRoute>
+              ) : (
+                  <Redirect
+                    to={{
+                      pathname: "/login",
+                      state: { from: location }
+                    }}
+                  />
+                )
+            }>
+          </Route>
+          <Route path="/login" isSignedIn={isSignedIn}>
+            <LoginPage />
+          </Route>
+          <PrivateRoute isSignedIn={isSignedIn} path="/dashboard">
+            <Dashboard />
+          </PrivateRoute>
+          <PrivateRoute isSignedIn={isSignedIn} path="/settings">
+            <Settings />
+          </PrivateRoute>
+          <Route path="/error">
+            <ErrorsPage />
+          </Route>
+          <Redirect to={isSignedIn ? "/dashboard" : "/login"} />
+        </Switch>
+      }
     </Router>
   );
 }
