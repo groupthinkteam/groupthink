@@ -9,6 +9,8 @@
     background-color: #fcfbf9;
     font-family: Overpass;
     .container {
+        position: relative;
+        z-index: 1;
         display: flex;
         flex-flow: column nowrap;
         justify-content: center;
@@ -23,6 +25,7 @@
             padding-top: 15px;
             border: 1.5px solid #32AAFF;
             border-radius: 6px;
+            background-color: #fcfbf9;
         }
     }
     .graphic-right {
@@ -30,11 +33,13 @@
         right: 0;
         max-height: 100vh;
         object-fit: cover;
+        z-index: 0;
     }
     .graphic-left {
         position: absolute;
         left: 0;
         max-height: 100vh;
         object-fit: cover;
+        z-index: 0;
     }
 }

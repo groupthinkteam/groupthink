@@ -343,7 +343,7 @@ export var storeObject = {
         console.log("userID", this.users)
         var custom = {}
         var path = ''
-        if (use != "pfp") {
+        if (use !== "pfp") {
             custom = {
                 ...metadata,
                 customMetadata: {
@@ -536,6 +536,13 @@ export var storeObject = {
     },
     addWelcomeIfNotExists() {
         if (this.userID.length > 1) {
+            if (!this.currentUser.photoURL) {
+                storage().ref("root/default-profile/Frame 3.png")
+                    .getDownloadURL().then(
+                        (url) => auth().currentUser
+                            .updateProfile({ photoURL: url })
+                    ).catch((error) => { console.log("unable to set default profile picture because", error)})
+            }
             database.ref("users").child(this.userID).child("welcome").once("value")
                 .then((snap) => {
                     if (!snap.val()) {
@@ -593,10 +600,6 @@ export var storeObject = {
     // auth related actions
     signout() {
         auth().signOut()
-    },
-
-    updateProfilePic() {
-
     },
 
     // actions

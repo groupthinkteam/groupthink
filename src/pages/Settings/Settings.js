@@ -1,4 +1,4 @@
-import React, {  useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import "../../styles/Settings.scss"
 import UserMenu from "../../components/UserMenu/UserMenu"
 import { useHistory, useLocation } from 'react-router-dom'
@@ -7,14 +7,14 @@ import { useStore } from '../../store/hook'
 
 function Settings() {
     let store = useStore();
-    const [showMenu, setShowMenu] = useState(false);
     const buttonRef = useRef(null);
-    const { v4: uuidv4 } = require('uuid');
-    const uuid = uuidv4();
     const history = useHistory();
     const location = useLocation();
     let inputFile = useRef(null);
+
     let [uploadState, setUploadState] = useState(false)
+    const [showMenu, setShowMenu] = useState(false);
+
     const signOut = () => {
         console.log("SIGNOUT ")
         store.signout();
@@ -29,24 +29,23 @@ function Settings() {
         let uploadPath = file.name;
         var typemeta = {
             contentType: file.type,
-            
+
         };
         store.requestUpload(uploadPath, file, typemeta,
             (status) => {
                 if (typeof status === "number")
                     setUploadState(status);
-                    else {
-                        store.updateProfilePicture()
-                    }
+                else {
+                    store.updateProfilePicture()
+                }
             }, "pfp");
-        
+
     }, [store]);
 
     const gotoDashboard = () => {
-        console.log(location);
         history.push('/dashboard', { from: location });
     }
-    if (uploadState == 100) {
+    if (uploadState === 100) {
         setUploadState(false)
     }
     console.log("up state: ", uploadState)
@@ -72,14 +71,14 @@ function Settings() {
             </div>
             <div className="main-section">
                 <div className="profile-picture">
-                    { uploadState?
-                    <div className="pfp-loader">
-                        <div className="loader-text">
-                            Uploading
+                    {uploadState ?
+                        <div className="pfp-loader">
+                            <div className="loader-text">
+                                Uploading
                         </div>
-                    </div>
-                    : <img src={store.currentUser.photoURL} />}
-                    
+                        </div>
+                        : <img src={store.currentUser.photoURL} />}
+
                 </div>
                 <button onClick={() => inputFile.current.click()}>
                     Update Picture
