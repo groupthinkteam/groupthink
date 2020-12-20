@@ -61,6 +61,7 @@ const TailArrow = (props) => {
                 !linePathDragging ?
                     <>
                         <svg
+                            onClick={() => store.reparentCard(id, 'root')}
                             x={linePathDragging ? linePathDragging.x - 8 : tail.x - 13}
                             y={linePathDragging ? linePathDragging.y - 20 : tail.y - 40}
                             width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

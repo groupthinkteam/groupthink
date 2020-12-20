@@ -103,7 +103,7 @@ const CollapsedCard = (props) => {
             textAlign: 'center',
             backgroundColor: 'white'
         }}>
-            <span>
+            <span key={props.id}>
                 {
                     countCollapseCard(props.id)
                         .filter((item) => typeof item === 'object')
