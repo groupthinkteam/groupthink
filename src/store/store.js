@@ -518,8 +518,8 @@ export var storeObject = {
             .catch(error => console.log("Error raised in removeUserCallInfo because ", error))
     },
     // listener manipulation
-    addDashboardListeners() {
-        this.addWelcomeIfNotExists()
+    addDashboardListeners(forceRefreshCallback) {
+        this.addWelcomeIfNotExists(forceRefreshCallback)
         if (this.userRef && this.userID.length > 1) {
             this.userRef.on("child_added", (snap) => {
                 database.ref("documents").child(snap.key).child("metadata")
@@ -534,20 +534,24 @@ export var storeObject = {
             })
         }
     },
-    addWelcomeIfNotExists() {
+    addWelcomeIfNotExists(forceRefreshCallback) {
         if (this.userID.length > 1) {
             if (!this.currentUser.photoURL) {
-                storage().ref("root/default-profile/Frame 3.png")
+                let randomImageIndex = Math.floor(Math.random() * 4) + 3
+                storage().ref(`root/default-profile/Frame ${randomImageIndex}.png`)
                     .getDownloadURL().then(
-                        (url) => auth().currentUser
-                            .updateProfile({ photoURL: url })
-                    ).catch((error) => { console.log("unable to set default profile picture because", error)})
+                        (url) => {
+                            auth().currentUser
+                                .updateProfile({ photoURL: url })
+                                .then(forceRefreshCallback);
+                        }
+                    ).catch((error) => { console.log("unable to set default profile picture because", error) })
             }
             database.ref("users").child(this.userID).child("welcome").once("value")
                 .then((snap) => {
                     if (!snap.val()) {
                         database.ref("users").child(this.userID).child("welcome").set(true)
-                        this.addNewProject(data => { window.location.reload() }, "introProject", "Welcome! Start Here...")
+                        this.addNewProject(data => { forceRefreshCallback(); window.location.reload(); }, "introProject", "Welcome! Start Here...")
                     }
                 }
                 )

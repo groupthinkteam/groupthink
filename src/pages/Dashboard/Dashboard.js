@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useReducer } from 'react'
 import DashboardCard from "./DashboardCard"
 import { observer } from 'mobx-react-lite'
 import ChooseTemplate from '../../components/ChooseTemplate/ChooseTemplate'
@@ -15,6 +15,7 @@ const Dashboard = observer(() => {
   const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
   const [filterProject, setFilterProject] = useState('All Projects');
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   useEffect(() => {
     if (store.filteredProjectID.length)
@@ -23,7 +24,7 @@ const Dashboard = observer(() => {
   }, [store.filteredProjectID.length])
 
   useEffect(() => {
-    store.addDashboardListeners()
+    store.addDashboardListeners(forceUpdate)
     return () => store.removeDashboardListeners()
   }, [store])
 
