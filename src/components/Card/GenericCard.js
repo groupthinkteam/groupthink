@@ -158,14 +158,23 @@ const GenericCard = props => {
 
             // warning: can't use arrow functions here since that messes up the "this" binding
             function dragStop() {
+                setDragging(false);
+                function findClosestAxisPoint(val) {
+                    let gridSize = 10;
+                    return Math.round(val / gridSize) * gridSize;
+                }
+                let newPosition = {
+                    x: findClosestAxisPoint(this.x),
+                    y: findClosestAxisPoint(this.y)
+                }
                 gsap.to("#".concat(props.id), {
                     boxShadow: "none",
-                    duration: 0.5
+                    duration: 0.5,
+                    // ...newPosition
                 })
-                setDragging(false);
-                //container size 
+                //container size
                 store.saveContainerSize();
-                store.savePosition(props.id, { x: this.x, y: this.y });
+                store.savePosition(props.id, newPosition);
             }
             function dragStart() {
                 gsap.to("#".concat(props.id), {
@@ -243,7 +252,7 @@ const GenericCard = props => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [cardRef, store.clickTargetGeneric,props.id,store.currentActive]);
+    }, [cardRef, store.clickTargetGeneric, props.id, store.currentActive]);
 
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
