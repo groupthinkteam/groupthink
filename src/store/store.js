@@ -312,11 +312,43 @@ export var storeObject = {
     changeContainerSizeLocal(size) {
         this.container = size
     },
-    reparentCard(id, newParent) {
+    makeCardChild(id, newChildId) {
+        const parentID = this.cards[id].parent;
+        const dropParent = this.cards[newChildId].parent;
+        const updates = {};
+        console.log("Check", "ID THAT STARTED DRAG ", id, "ITS PARENT", parentID, "TO DROP ", newChildId, dropParent)
+        const throwParent = (ancestor) => {console.log("ANCESTOR",ancestor); return this.cards[ancestor]["parent"] }
+        function checkValidity(ancestor) {
+            if (parentID === 'root') {
+                updates[dropParent+"/children/"+newChildId]=null;
+                updates[id + "/children/" + newChildId] = 1;
+                updates[newChildId + "/parent/"] = id;
+                return true
+            }
+            else if (ancestor === "root") {
+                updates[dropParent+"/children/"+newChildId]=null;
+                updates[parentID + "/children/" + newChildId] = 1;
+                updates[newChildId + "/parent/"] = parentID;
+                return true
+            }
+            if (ancestor === newChildId) return false;
+            else if (ancestor === dropParent) return false;
+            const parent = throwParent(ancestor);
+            return checkValidity(parent);
+        }
+        // console.log("UPDATED ",Object.keys(updates).length ,"FOR ID ",checkValidity(parentID), "FOR DROPPED UD ",checkValidity(newChildId))
+        if (checkValidity(id)) {
+            this.projectRef.child("nodes")
+                .update(updates)
+                .then(console.log("successfully added the children of", id, "to", newChildId, updates))
+                .catch((reason) => console.log("error making child because", reason));
+        }
+    },
+    reparentCard(id, newParent, strategy) {
         this.updateLastActive()
         console.log("reparent requested for", id, "newparent", newParent);
-
         const throwParent = (ancestor) => { return this.cards[ancestor]["parent"] }
+
 
         function checkValidity(ancestor) {
             if (ancestor === "root") return true;
@@ -324,9 +356,8 @@ export var storeObject = {
             const parent = throwParent(ancestor)
             return checkValidity(parent);
         }
-
         if (checkValidity(newParent)) {
-            let updates = {};
+            const updates = {};
             let currentParent = this.cards[id]["parent"];
             updates[id + "/parent"] = newParent;
             updates[currentParent + "/children/" + id] = null;

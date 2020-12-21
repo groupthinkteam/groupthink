@@ -27,7 +27,7 @@ const Arrow = (props) => {
     const parent = store.cards[child.parent];
 
     if (!parent) return null;
-
+    
     if (child.parent === "root") {
         if (store.currentActive !== props.id) return null;
         let path;
@@ -92,12 +92,15 @@ const Arrow = (props) => {
 
     function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
-        var bezierWeight = 0;
-        var dx = Math.abs(x4 - x1) * bezierWeight;
-        var x2 = x1 - dx;
-        var x3 = x4 + dx;
-
-        return `M${x1} ${y1} C ${x2} ${y1} ${x3} ${y4} ${x4} ${y4}`;
+        var bezierWeightX =x4>x1?-3:3;
+        var dx = Math.abs(x4 - x1) / bezierWeightX;
+        var x2 = ( x1 - dx);
+        var x3 =(x4 + dx);
+        var bezierWeightY = y1>y4? 0.4:1;
+        var dy = Math.abs(y4 - y1) / bezierWeightY;
+        var y2 = (y1 - dy);
+        var y3 = (y4 + dy);
+        return `M${x4} ${y4} C${x2} ${y2} ${x3} ${y3} ${x1} ${y1}`;
     }
     // console.log("ARROW ", linePathDragging)
     return (
