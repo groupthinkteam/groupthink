@@ -43,7 +43,15 @@ const CollapsedCard = (props) => {
             store.currentActive = null;
         }
     }
-    useEffect(() => { gsap.set("#".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
+    useEffect(() => {
+        gsap.set("#".concat(props.id),
+            {
+                opacity: 1,
+                x: me.position.x,
+                y: me.position.y,
+                boxShadow: "0px 0px 0px 0px white"
+            })
+    }
         , [props.id, me.position])
     // if size changes, animate it
     // useEffect(() => { gsap.set("#".concat(props.id), { width: 275, height: 45 }) }, [me, props.id])
@@ -159,12 +167,11 @@ const CollapsedCard = (props) => {
             style={{
                 position: "absolute",
                 opacity: 0,
-                // width: 275,
-                // height: 45,
                 borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                 tabIndex: -1,
                 textAlign: 'center',
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                marginLeft: me.size.width / 2 + "px"
             }}>
             <div className="collapsed-cards-list">
                 {

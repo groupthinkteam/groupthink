@@ -1,4 +1,4 @@
-.loader-container{
+.loader-container {
   background-color: white;
   height: 100vh;
   width: 100vw;
@@ -6,7 +6,25 @@
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  .graphic-left {
+    position: absolute;
+    left: 0px;
+    height: 100vh;
+    z-index: 0;
+    user-select: none;
+  }
+  .graphic-right {
+    position: absolute;
+    right: 0px;
+    height: 100vh;
+    z-index: 0;
+    user-select: none;
+  }
   .loader-animation {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
   }
   .loader-text {
     font-family: "Overpass", sans-serif;

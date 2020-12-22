@@ -18,6 +18,9 @@ function Document() {
     console.log("opening project", projectID);
     store.projectID = projectID
     store.addDocumentListeners()
+    setTimeout(() => {
+        setIsLoaded(true)
+    }, 5000);
     return () => store.removeDocumentListeners()
   }, [store, projectID])
 
@@ -32,9 +35,9 @@ function Document() {
     history.push('/login', { from: location });
   }
 
-  if (store.documentLoadPercent > 1 && !isLoaded) {
-    setIsLoaded(true)
-  }
+  // if (store.documentLoadPercent > 1 && !isLoaded) {
+  //   setIsLoaded(true)
+  // }
 
   if (!isLoaded) {
     return <Loading />

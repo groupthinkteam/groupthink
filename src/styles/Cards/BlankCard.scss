@@ -1,3 +1,25 @@
+.blank-uploader {
+    margin: 6px;
+    .upload-filler {
+        background-image: linear-gradient(94.79deg, #fb7bbb 2.22%, #ffce00 112.48%);
+        background-color: black;
+        position: absolute;
+        left: 0px;
+        width: 0px;
+        top: 30px;
+        padding-bottom: 6px;
+        border-radius: 6px;
+        height: 10px;
+    }
+    .upload-kite {
+        position: absolute;
+        top: 5px;
+        left: 0;
+        height: 40px;
+        max-width: 70px;
+    }
+}
+
 .blankcard {
     display: flex;
     flex-flow: row nowrap;
@@ -8,16 +30,16 @@
         font-size: 12px;
         font-family: "Overpass", sans-serif;
         font-weight: 600;
-        /* gt better blue */ 
-        color: #32AAFF;
-        border: 1.5px solid #32AAFF;
+        /* gt better blue */
+        color: #32aaff;
+        border: 1.5px solid #32aaff;
         background-color: white;
         box-sizing: border-box;
         border-radius: 6px;
         height: 25px;
         margin-right: 3px;
         &:hover {
-            background: #32AAFF;
+            background: #32aaff;
             color: white;
         }
         &:focus {
