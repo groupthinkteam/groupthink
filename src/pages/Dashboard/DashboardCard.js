@@ -37,10 +37,41 @@ const DashboardCard = props => {
         <div id={props.id}
             className="dashboard-card"
             onMouseEnter={() => { setHover(true) }}
-            onMouseLeave={() => { setHover(false) }}
+            onMouseLeave={() => { setHover(false); setShowPopper(false) }}
         >
             <div className="title" >
-                <div className="star">
+                <div className="controls">
+                    {me.users[store.userID].permission === "admin" && isHover ?
+                        <div ref={dashKebabRef}>
+                            <div className="kebab">
+                                <Button
+                                    handleClick={() => {
+                                        setShowPopper(!showPopper);
+                                    }}
+                                >
+                                    <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
+                                </Button>
+                            </div>
+                            {showPopper ?
+                                <MenuCard
+                                    buttonref={dashKebabRef.current}
+                                    position="right-start"
+                                    offset={[0, 4]}
+                                    tooltipclass="tooltips"
+                                    arrowclass="arrow"
+                                    showpopper={true}
+                                    zIndex={1}
+                                >
+                                    <Button className="delete-button"
+                                        handleClick={() => store.deleteProject(props.id)}>
+                                        Delete
+                                    </Button>
+                                </MenuCard>
+                                : null
+                            }
+                        </div>
+                        : <div className="kebab" />
+                    }
                     {
                         me.users[store.userID].isStarred ?
                             <svg onClick={() => store.unStarredThisProject(props.id)} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -61,43 +92,6 @@ const DashboardCard = props => {
                     isHover && me.users[store.userID].permission === "admin" ?
                         <div></div>
                         : null
-                }
-
-
-            </div>
-            <div className="title">
-                {me.users[store.userID].permission === "admin" && isHover ?
-                    <div ref={dashKebabRef}>
-                        <div>
-                            <Button className="kebab"
-                                handleClick={() => {
-                                    setShowPopper(!showPopper);
-                                }}
-                            >
-                                <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
-                            </Button>
-                        </div>
-
-
-                        {showPopper ?
-                            <MenuCard
-                                buttonref={dashKebabRef.current}
-                                position="right-start"
-                                offset={[0, 4]}
-                                tooltipclass="tooltips"
-                                arrowclass="arrow"
-                                showpopper={true}
-                                zIndex={1}
-                            >
-                                <Button className="delete-button"
-                                    handleClick={() => store.deleteProject(props.id)}>
-                                    Delete
-                        </Button>
-                            </MenuCard>
-                            : null
-                        }
-                    </div>
-                    : null
                 }
             </div>
             <div className="rest">

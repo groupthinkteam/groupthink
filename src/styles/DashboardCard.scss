@@ -16,17 +16,6 @@
 
     transition: 0.2s;
 
-    .kebab {
-        outline: none;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        &:active, &:focus {
-            outline: none;
-            border: none;
-        }
-    }
-
     &:hover {
         background-color: #f6f6f6;
         border: 1.5px solid #413d45;
@@ -47,9 +36,32 @@
         align-items: center;
         justify-content: flex-start;
 
-        .star {
-            min-width: 25px;
+        .controls {
+            min-width: 50px;
+            height: 100%;
             margin-right: 10px;
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: center;
+            align-items: center;
+            .kebab {
+                min-width: 24px;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: center;
+                align-items: center;
+                button {
+                    outline: none;
+                    background-color: transparent;
+                    border: none;
+                    cursor: pointer;
+                    &:active,
+                    &:focus {
+                        outline: none;
+                        border: none;
+                    }
+                }
+            }
         }
 
         .delete-button {
@@ -89,7 +101,7 @@
             }
         }
         .date {
-            color: #A29FA5;
+            color: #a29fa5;
             font-size: 16px;
             font-weight: normal;
             width: 150px;
@@ -100,4 +112,3 @@
         }
     }
 }
-

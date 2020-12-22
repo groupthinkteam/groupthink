@@ -66,6 +66,8 @@ const Dashboard = observer(() => {
 
   return (
     <div className="dashboard-page">
+      <img src={require("../../assets/login/graphic-right.svg")} className="graphic-right" alt="decoration" />
+      <img src={require("../../assets/login/graphic-left.svg")} className="graphic-left" alt="decoration" />
       <div className="top-bar">
         <div className="site-title">
           <img src={require("../../assets/dashboard/logo.svg")} alt="logo" />

@@ -1,15 +1,33 @@
 .dashboard-page {
-    background-color: #FCFBF9;
+    background-color: #fcfbf9;
     transition: 0.2s;
-    overflow: scroll;
+    overflow: hidden;
     font-family: Overpass;
     min-height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+    .graphic-left {
+        position: absolute;
+        left: 0px;
+        height: 100vh;
+        z-index: 0;
+        user-select: none;
+    }
+    .graphic-right {
+        position: absolute;
+        right: 0px;
+        height: 100vh;
+        z-index: 0;
+        user-select: none;
+    }
     .top-bar {
         margin: 30px 30px 10px 30px;
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
+        position: relative;
         .site-title {
             display: flex;
             align-items: center;
@@ -43,7 +61,7 @@
                     height: 60px;
                     width: 60px;
                     border-radius: 30px;
-                    background-image:url('profile/default.png');
+                    background-image: url("profile/default.png");
                 }
             }
             .profile-picture .user-menu {
@@ -80,14 +98,22 @@
         margin-left: 100px;
         margin-right: 100px;
         margin-top: 50px;
-        height: 10%;
         overflow: scroll;
+        position: relative;
         // border: 2px solid black;
+        max-height: 100%;
+        display: flex;
+        flex-flow: column nowrap;
         .project-section {
+            display: flex;
+            flex-flow: column nowrap;
+            max-height: 100%;
+            overflow: scroll;
             .project-section-header {
                 display: flex;
                 flex-flow: row nowrap;
                 justify-content: space-between;
+                background-color: #fcfbf985;
                 .header-left-container {
                     display: flex;
                     flex-flow: row nowrap;
@@ -130,13 +156,16 @@
                 }
             }
             .project-section-content {
-                display: flex;
-                flex-flow: column nowrap;
+                // display: flex;
+                // flex-flow: column nowrap;
                 overflow: auto;
-                margin-top: 7px;
+                // margin-top: 7px;
+                background-color: #fcfbf985;
+                max-height: 100%;
                 .row-headings {
                     position: sticky;
                     top: 0px;
+                    background-color: #fcfbf9;
                     display: flex;
                     flex-flow: row nowrap;
                     justify-content: space-between;
@@ -166,7 +195,7 @@
                         &.title {
                             width: 30%;
                             justify-content: flex-start;
-                            padding-left: 45px;
+                            padding-left: 70px;
                         }
                         &.shared {
                             width: calc(max(20%, 200px));
