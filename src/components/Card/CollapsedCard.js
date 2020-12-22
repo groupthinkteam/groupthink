@@ -46,7 +46,7 @@ const CollapsedCard = (props) => {
     useEffect(() => { gsap.set("#".concat(props.id), { opacity: 1, ...me.position, boxShadow: "0px 0px 0px 0px white" }) }
         , [props.id, me.position])
     // if size changes, animate it
-    useEffect(() => { gsap.set("#".concat(props.id), { width: 275, height: 45 }) }, [me, props.id])
+    // useEffect(() => { gsap.set("#".concat(props.id), { width: 275, height: 45 }) }, [me, props.id])
 
     useEffect(
         () => {
@@ -109,8 +109,43 @@ const CollapsedCard = (props) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [collapseCardRef, store.clickTargetGeneric, props.id, store.currentActive]);
+
+    function typeToImage(type) {
+        function sanitizeType() {
+            switch (type) {
+                case "blank":
+                    return "text"
+                case "text":
+                    return "text"
+                case "VideoLink":
+                    return "video"
+                case "video":
+                    return "video"
+                case "VideoFile":
+                    return "video"
+                case "image":
+                    return "image"
+                case "audio":
+                    return "audio"
+                case "link":
+                    return "link"
+                case "file":
+                    return "file"
+                default:
+                    return "text"
+            }
+        }
+        return (
+            <img className="type-icon" src={require("../../assets/card-icons/" + sanitizeType() + ".svg")} alt={type} />
+        )
+    }
+
     return (
-        <div onLoad={changeCurrentActive} id={props.id} ref={collapseCardRef} className="collapse-card " tabIndex={0}
+        <div id={props.id}
+            ref={collapseCardRef}
+            className="collapsed-card "
+            tabIndex={0}
+            onLoad={changeCurrentActive}
             onBlur={(e) => {
                 changeCurrentActive();
                 e.stopPropagation();
@@ -124,23 +159,27 @@ const CollapsedCard = (props) => {
             style={{
                 position: "absolute",
                 opacity: 0,
-                width: 275,
-                height: 45,
+                // width: 275,
+                // height: 45,
                 borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                 tabIndex: -1,
                 textAlign: 'center',
                 backgroundColor: 'white'
             }}>
-            <span key={props.id}>
+            <div className="collapsed-cards-list">
                 {
                     countCollapseCard(props.id)
                         .filter((item) => typeof item === 'object')
                         .map((item) => {
                             return Object.entries(item).map(([type, count]) =>
-                                <>{type} : {count}</>
+                                <div className="card-count-indicator">
+                                    {count}
+                                    {typeToImage(type)}
+                                </div>
                             )
                         })
-                } Cards are Collapsed</span>
+                }
+            </div>
         </div>
     )
 }

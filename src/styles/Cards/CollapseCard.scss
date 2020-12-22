@@ -1,21 +1,42 @@
-.collapse-card{
+.collapsed-card {
     background: #ffffff;
     /* gt inactive grey */
     border: 1.5px solid #dedede;
     box-sizing: content-box;
     border-radius: 6px;
     overflow: visible;
+    padding: 6px;
+    font-family: Overpass;
+    font-size: 14px;
+    max-width: 120px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
     &:focus,
     &:focus-within {
         outline: none;
-        border: 1.5px solid #32AAFF;
+        border: 1.5px solid #32aaff;
     }
     &.active-card {
         /* Background / backgroundPrimary */
-        border: 1.5px solid #32AAFF;
+        border: 1.5px solid #32aaff;
     }
-
     &.searched-card {
         border: 1.5px solid green;
+    }
+
+    .collapsed-cards-list {
+        display: flex;
+        flex-flow: row wrap;
+        .card-count-indicator {
+            margin: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+                margin-left: 3px;
+            }
+        }
     }
 }
