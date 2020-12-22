@@ -1,0 +1,15 @@
+.custom-editor {
+    border-width: 0px;
+    background-color: transparent;
+    resize: none;
+    width: 95%;
+    margin: 15px auto;
+    min-height: 24px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    &:focus {
+        outline: none;
+    }
+}
