@@ -2,10 +2,9 @@ import React from "react"
 import TextareaAutosize from "react-textarea-autosize"
 import "../../styles/CustomEditor.scss"
 
-function CustomEditor(props, ref) {
-
+function CustomEditor(props) {
     return (
-        <TextareaAutosize
+        <textarea
             style={props.style}
             className="custom-editor"
             id={props.id}
@@ -19,9 +18,8 @@ function CustomEditor(props, ref) {
             onFocus={props.onFocus}
             href={props.href}
             target={props.target}
-            ref={ref}
         />
     )
 }
-const ForwardRef = React.forwardRef(CustomEditor);
-export default React.memo(ForwardRef);
+
+export default React.memo(CustomEditor);

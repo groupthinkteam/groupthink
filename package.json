@@ -45,6 +45,7 @@
     "react-hls-player": "^1.1.0",
     "react-iframe": "^1.8.0",
     "react-images": "^1.1.7",
+    "react-markdown": "^5.0.3",
     "react-minimap": "^0.7.4",
     "react-native-pdf-thumbnail": "^1.0.1",
     "react-photo-gallery": "^8.0.0",

@@ -1,0 +1,32 @@
+.text-card {
+  max-height: 100%;
+  overflow: hidden;
+  padding: 6px;
+  .md-container-wrapper {
+    height: inherit;
+    max-height: 100%;
+  }
+  textarea,
+  .md-container {
+    font-family: Overpass;
+    font-size: 14px;
+    height: 100%;
+    overflow: scroll;
+  }
+  .resize {
+    border: 1.5px solid black;
+    overflow: auto;
+  }
+  .resize.horizontal {
+    resize: horizontal;
+  }
+  .resize.vertical {
+    resize: vertical;
+  }
+  .resize.both {
+    resize: both;
+  }
+  .wrap {
+    max-width: 80%;
+  }
+}
