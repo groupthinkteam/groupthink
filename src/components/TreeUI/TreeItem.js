@@ -32,17 +32,14 @@ function TreeItem(props) {
         switch (me.type) {
             case 'root': nodesInfo = store.projectName; break;
             case 'text':
-                if (me.content.title)
-                    nodesInfo = me.content.title;
-                else
-                    nodesInfo = me.content.text.replace(/<[^>]+>/g, ' ').replace(/^\s+|\s+$/g, '').split(/\s+/).join('');
+                nodesInfo = me.content?.title || me.content.text;
                 break;
             case "todo": break;
-            case "link": nodesInfo = me.content.url; break;
+            case "link": nodesInfo = me.content.title; break;
             case "audio": nodesInfo = me.content.metadata?.name; break;
             case "image":
-                if (me.content.captions)
-                    nodesInfo = me.content.captions;
+                if (me.content.captions || me.content.label?.description)
+                    nodesInfo = me.content.label?.description|| me.content.captions;
                 else
                     nodesInfo = me.content.metadata?.name;
                 break;
