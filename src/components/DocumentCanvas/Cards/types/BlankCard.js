@@ -112,13 +112,15 @@ function BlankCard(props) {
 
     if (uploadState) {
         gsap.to("#uploadfiller".concat(props.id), { width: uploadState + "%" })
+        gsap.to("#kiteloader".concat(props.id), { left: Math.min(uploadState, 90) + "%" })
     }
 
     return (
         uploadState
-            ? <div style={{ position: "relative", height: "100%", width: "100%", margin: "0px", display: "flex", flexFlow: "row nowrap", justifyContent: "center", alignItems: "center" }}>
-                <div style={{position: "relative", zIndex: 3, fontFamily: "Overpass"}}>Uploading...</div>
-                <div id={"uploadfiller".concat(props.id)} style={{ position: "absolute", left: 0, width: 0, height: "100%", backgroundColor: "#32AAFF", borderRadius: "6px" }} />
+            ? <div className="blank-uploader" style={{ position: "relative", height: "100%", width: "100%", display: "flex", flexFlow: "row nowrap", justifyContent: "center", alignItems: "center" }}>
+                <div style={{ position: "relative", zIndex: 3, fontFamily: "Overpass" }}>Uploading...</div>
+                <img id={"kiteloader".concat(props.id)} className="upload-kite" src={require("../../../../assets/loaders/kite.svg")} alt="a kite" />
+                <div id={"uploadfiller".concat(props.id)} className="upload-filler" />
             </div>
             :
             <div className="blankcard">

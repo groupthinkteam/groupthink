@@ -31,7 +31,6 @@ const DashboardCard = props => {
 
     const personas = Object.entries(me.users).filter(([userID, _]) => userID !== store.userID).slice(0, 3)
     const extraUsers = Object.keys(me.users).length - (personas.length + 1)
-    console.log("project", me)
 
     return (
         <div id={props.id}
@@ -106,7 +105,7 @@ const DashboardCard = props => {
                 <div className="shared">
                     {
                         personas.map(([_, values]) =>
-                            <img className="shared-user-profile-picture" alt={values.displayName} src={values.photoURL} />
+                            <img key={values.uid} className="shared-user-profile-picture" alt={values.displayName} src={values.photoURL} />
                         )
                     }
                     {

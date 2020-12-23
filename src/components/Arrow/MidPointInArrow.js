@@ -16,9 +16,8 @@ const MidPointInArrow = (props) => {
         if (childrenId === id)
             store.collapsedID[id] ?
                 store.expandCard(id, 'main') : store.collapseCard(id, 'main')
-        else if (!store.toggleArrows)
-        {
-            currentCard.isCollapse ? store.expandCard(childrenId):store.collapseCard(childrenId)
+        else if (!store.toggleArrows) {
+            currentCard.isCollapse ? store.expandCard(childrenId) : store.collapseCard(childrenId)
         }
         else
             collapse ?
@@ -60,28 +59,28 @@ const MidPointInArrow = (props) => {
                 {
                     store.collapsedID[id] ?
                         <>
-                            <svg 
-                                x={linePathDragging ? linePathDragging.x-8 : midPoint.x - 8} y={linePathDragging ? linePathDragging.y - 3 / 1.8: midPoint.y - 19 / 1.8}
+                            <svg
+                                x={linePathDragging ? linePathDragging.x - 8 : midPoint.x - 8} y={linePathDragging ? linePathDragging.y - 3 / 1.8 : midPoint.y - 19 / 1.8}
                                 width="16" height="6" viewBox="0 0 16 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1.58398 1C1.58398 1 3.91732 4.5 8.00065 4.5C12.084 4.5 14.4173 1 14.4173 1" stroke="#413D45" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                             <svg
-                                x={linePathDragging ? linePathDragging.x-10 : midPoint.x - 10} y={linePathDragging ? linePathDragging.y - 1 / 1.8: midPoint.y - 17 / 1.8}
+                                x={linePathDragging ? linePathDragging.x - 10 : midPoint.x - 10} y={linePathDragging ? linePathDragging.y - 1 / 1.8 : midPoint.y - 17 / 1.8}
                                 width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M3.33398 1.33203L1.58398 3.66536" stroke="#413D45" stroke-width="1.5" stroke-linecap="round" />
                             </svg>
                             <svg
-                                x={linePathDragging ? linePathDragging.x-5 : midPoint.x -5} y={linePathDragging ? linePathDragging.y +3 / 1.8: midPoint.y - 13 / 1.8}
+                                x={linePathDragging ? linePathDragging.x - 5 : midPoint.x - 5} y={linePathDragging ? linePathDragging.y + 3 / 1.8 : midPoint.y - 13 / 1.8}
                                 width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M3.33398 1.33203L1.58398 3.66536" stroke="#413D45" stroke-width="1.5" stroke-linecap="round" />
                             </svg>
-                            <svg                                 
-                                x={linePathDragging ? linePathDragging.x : midPoint.x } y={linePathDragging ? linePathDragging.y+3 / 1.8 : midPoint.y - 13 / 1.8}
+                            <svg
+                                x={linePathDragging ? linePathDragging.x : midPoint.x} y={linePathDragging ? linePathDragging.y + 3 / 1.8 : midPoint.y - 13 / 1.8}
                                 width="4" height="5" viewBox="0 0 4 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1.45898 1.50008L2.60471 4.18229" stroke="#413D45" stroke-width="1.5" stroke-linecap="round" />
                             </svg>
                             <svg
-                                x={linePathDragging ? linePathDragging.x+5 : midPoint.x +5} y={linePathDragging ? linePathDragging.y-2 / 1.8 : midPoint.y - 18 / 1.8}
+                                x={linePathDragging ? linePathDragging.x + 5 : midPoint.x + 5} y={linePathDragging ? linePathDragging.y - 2 / 1.8 : midPoint.y - 18 / 1.8}
                                 width="4" height="5" viewBox="0 0 4 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1.45898 1.50008L2.60471 4.18229" stroke="#413D45" stroke-width="1.5" stroke-linecap="round" />
                             </svg>

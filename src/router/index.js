@@ -15,6 +15,7 @@ import Settings from "../pages/Settings/Settings";
 function AppRoutes(props) {
   const { syncUser, currentUser, createSharedUser } = useStore();
   let [pendingAuth, setPendingAuth] = useState(true);
+  let [animated, setAnimated] = useState(false);
   let isSignedIn = !!currentUser;
 
   useEffect(() => {
@@ -26,7 +27,10 @@ function AppRoutes(props) {
 
   return (
     <Router>
-      { pendingAuth ? <h1>pending auth</h1> :
+      { pendingAuth ?
+        <div style={{ width: "100vw", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          Auth Pending
+        </div> :
         <Switch>
           <Route path="/shared/:projectID/:keyID/:permission"
             render={({ location }) =>

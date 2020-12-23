@@ -209,8 +209,7 @@ const GenericCard = props => {
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
-                    dragClickables: me.type === 'text',//false,
-                    onClick: (e) => { onClickTextCard(e.target) },
+                    dragClickables: false, // me.type === 'text',//false,
                     onDragStart: dragStart,
                     onDrag: function drag() {
                         if (this.x > parseInt(store.container.width)) {
@@ -246,17 +245,6 @@ const GenericCard = props => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
-    const onClickTextCard = (element) => {
-        // console.log("GENERIC CARD CLICKED", element.target, element.target.parentNode.className); 
-        if (me.type === 'text') {
-            store.clickTargetGeneric = element;
-            if (element.parentNode.className === 'context-menu')
-                element.click();
-        }
-        if (cardRef.current)
-            cardRef.current.focus();
-        closeContextMenu();
-    }
     useEffect(() => {
         function handleClickOutside(event) {
             if (cardRef.current && !cardRef.current.contains(event.target)) {
