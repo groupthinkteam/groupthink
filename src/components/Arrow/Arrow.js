@@ -38,6 +38,7 @@ const Arrow = (props) => {
         if (linePathDragging?.head) {
             path = updatePath(linePathDragging.x, linePathDragging.y, tailRoot.x, tailRoot.y)
         }
+        if(child.children) return null
         return (
             <>
 
@@ -120,7 +121,7 @@ const Arrow = (props) => {
                     d={path} />
             </svg>
             {
-                (linePathDragging?.head || !linePathDragging) ?
+                (linePathDragging?.head || !linePathDragging)  ?
                     <HeadArrow
                         id={props.id}
                         head={head}

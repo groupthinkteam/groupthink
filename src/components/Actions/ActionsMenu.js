@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import { useStore } from "../../store/hook"
 import Popup from "../PopupMenu/PopupMenu"
-
+import ReactTooltip from 'react-tooltip'
 import "../../styles/Actions/ActionsMenu.scss"
 
 function ActionsMenu(props) {
@@ -11,7 +11,7 @@ function ActionsMenu(props) {
 
     return (
         <div>
-            <div className="top-band">
+            <div data-tip="Select Actions" className="top-band">
                 <img className="actions-button-icon"
                     onClick={() => setIsExpanded(true)}
                     src={require("../../assets/actions/bolt.svg")}
@@ -30,6 +30,7 @@ function ActionsMenu(props) {
                     : null
                 }
             </div>
+            <ReactTooltip  place="bottom" />
             {
                 isExpanded ?
                     <Popup handleClose={() => { setIsExpanded(false) }}>

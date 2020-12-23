@@ -13,7 +13,7 @@ const DocumentSearchBar = (props) => {
     const { setActionResult, setResults, scrollToID, searchValues,
         results,
         actionResult,
-        recentSearches } = props;
+        recentSearches, projectName } = props;
     const closeSearchBar = (id) => {
         setActionResult({ matches: [], suggest: [] });
         setResults({ matches: [], suggest: [] })
@@ -23,7 +23,7 @@ const DocumentSearchBar = (props) => {
     }
 
     return (
-        <div className="menu-bar-searchbox ">
+        <div data-tip={`Search In ${projectName}`} className="menu-bar-searchbox ">
             <div className="search-input">
                 <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
             </div>

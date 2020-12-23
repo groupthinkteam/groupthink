@@ -80,6 +80,7 @@ const SearchBar = (props) => {
                         actionResult={actionResult}
                         recentSearches={store.recentSearches}
                         projectID={store.projectID}
+                        projectName={store.projectName}
                     />
             }
         </>

@@ -22,9 +22,9 @@ function PersonaList(props) {
                     {users.map(
                         ([userID, values]) => {
                             return (
-                                <div key={"persona".concat(userID)} className="persona-item">
+                                <div data-tip={`${values.name}`} key={"persona".concat(userID)} className="persona-item">
                                     <img alt={values.displayName} src={values.photoURL} />
-                                    {values.displayName}
+                                    {/* {values.name} */}
                                 </div>
                             )
                         }

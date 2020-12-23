@@ -162,7 +162,7 @@ const ShareLink = (props) => {
     }
 
     return (
-        <div className="sharelink">
+        <div data-tip={`Share ${store.projectName}`} className="sharelink">
             <Button ref={buttonRef} className={props.buttonClassName} handleClick={() => { checkLinks(); togglePopup(); }}>
                 Share
             </Button>
