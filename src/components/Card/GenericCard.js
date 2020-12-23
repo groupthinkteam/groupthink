@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { gsap, Draggable, TweenMax } from "gsap/all";
+import { gsap, Draggable } from "gsap/all";
 
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
@@ -11,9 +11,8 @@ import MenuCard from "../DocumentCanvas/Cards/types/MenuCard";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import cardSizeConstant from "../../constants/CardSizeConstant";
 
-
 // register gsap plugin so it doesn't get discarded during tree shake
-gsap.registerPlugin(Draggable, TweenMax);
+gsap.registerPlugin(Draggable);
 
 // wrapper for CardType that abstracts away some functionality common to all CardTypes
 const GenericCard = props => {
@@ -45,10 +44,7 @@ const GenericCard = props => {
     // init draggable
     useEffect(
         () => {
-            var $right = document.createElement("div");
             var $bottom = document.createElement("div");
-            var $top = document.createElement("div");
-            var $left = document.createElement("div");
             const cardDOM = document.getElementById(props.id).style;
 
             function calculateSize() {
@@ -57,9 +53,6 @@ const GenericCard = props => {
                 var width = Math.max(parseInt(cardDOM.width), parseInt(cardSizeConstant[me.type].minWidth))
                 width = Math.min(parseInt(cardSizeConstant[me.type].maxWidth), width);
                 return { width: width, height: height }
-            }
-            function updateSizeForImage() {
-                store.changeSize(props.id, calculateSize());
             }
             function getMatrix(element) {
                 const values = element.transform.split(/\w+\(|\);?/);
@@ -71,48 +64,21 @@ const GenericCard = props => {
             }
             function onResizeDragEnd() {
                 store.resize(props.id, calculateSize());
-                const cardDomSize = getMatrix(cardDOM)
+                const cardDomSize = getMatrix(cardDOM);
                 store.savePosition(props.id, cardDomSize)
             }
-            // function updateSizePosition() {
-            //     console.log(cardDOM.width, getMatrix(cardDOM));
-            //     store.changePosition(props.id, getMatrix(cardDOM));
-            //     store.changeSize(props.id, { width: parseInt(cardDOM.width), height: parseInt(cardDOM.height) })
-            // }
             var rightLastX = 0;
-            var rightDraggable = new Draggable($right, {
-                trigger: `${"#right-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}`,
-                cursor: "e-resize",
-                autoScroll: 1,
-                onDrag: updateRight,
-                onDragStart: closeContextMenu,
-                onDragEnd: onResizeDragEnd,
-                onPress: function () {
-                    rightLastX = this.x;
-                    y[0].disable();
-                },
-                onRelease: function () {
-                    y[0].enable();
-                }
-            });
-
-            function updateRight() {
-
-                var diffX = this.x - rightLastX;
-                TweenMax.set("#".concat(props.id), { width: "+=" + diffX });
-                rightLastX = this.x;
-                updateSizeForImage()
-            }
-
             var bottomLastY = 0;
             var bottomDraggable = new Draggable($bottom, {
-                trigger: `${"#bottom-bar-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
-                cursor: "s-resize",
+                trigger: `${"#bottom-right-generic".concat(props.id)}`,
+                cursor: "nwse-resize",
+                activeCursor:"nwse-resize",
                 autoScroll: 1,
                 onDrag: updateBottom,
                 onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
                 onPress: function () {
+                    rightLastX = this.x;
                     bottomLastY = this.y;
                     y[0].disable();
                 },
@@ -123,56 +89,11 @@ const GenericCard = props => {
 
             function updateBottom() {
                 var diffY = this.y - bottomLastY;
-                TweenMax.set("#".concat(props.id), { height: "+=" + diffY });
+                var diffX = this.x - rightLastX;
+                gsap.set("#".concat(props.id), { height: "+=" + diffY, width: "+=" + diffX });
                 bottomLastY = this.y;
-                updateSizeForImage()
-            }
-
-            var topLastY = 0;
-            var topDraggable = new Draggable($top, {
-                trigger: `${"#top-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}`,
-                cursor: "n-resize",
-                autoScroll: 1,
-                onDrag: updateTop,
-                onDragStart: closeContextMenu,
-                onDragEnd: onResizeDragEnd,
-                onPress: function () {
-                    topLastY = this.y;
-                    y[0].disable();
-                },
-                onRelease: function () {
-                    y[0].enable();
-                }
-            });
-            function updateTop() {
-                var diffY = this.y - topLastY;
-                TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
-                topLastY = this.y;
-                updateSizeForImage()
-            }
-
-            var leftLastX = 0;
-            var leftDraggable = new Draggable($left, {
-                trigger: `${"#left-bar-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
-                autoScroll: 1,
-                cursor: "w-resize",
-                onDrag: updateLeft,
-                onDragStart: closeContextMenu,
-                onDragEnd: onResizeDragEnd,
-                onPress: function () {
-                    leftLastX = this.x;
-                    y[0].disable();
-                },
-                onRelease: function () {
-                    y[0].enable();
-                }
-            });
-
-            function updateLeft() {
-                var diffX = this.x - leftLastX;
-                TweenMax.set("#".concat(props.id), { width: "-=" + diffX, x: "+=" + diffX });
-                leftLastX = this.x;
-                updateSizeForImage()
+                rightLastX = this.x;
+                store.changeSize(props.id, calculateSize());
             }
 
             // warning: can't use arrow functions here since that messes up the "this" binding
@@ -209,7 +130,8 @@ const GenericCard = props => {
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
-                    dragClickables: false, // me.type === 'text',//false,
+                    dragClickables: me.type === 'text',//false,
+                    onClick: (e) => { onClickTextCard(e.target) },
                     onDragStart: dragStart,
                     onDrag: function drag() {
                         if (this.x > parseInt(store.container.width)) {
@@ -234,17 +156,23 @@ const GenericCard = props => {
             }
             return () => {
                 y[0].kill();
-                leftDraggable.kill();
-                topDraggable.kill();
-                bottomDraggable.kill(); rightDraggable.kill();
-                $top.remove();
+                bottomDraggable.kill();
                 $bottom.remove();
-                $left.remove();
-                $right.remove();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
+    const onClickTextCard = (element) => {
+        // console.log("GENERIC CARD CLICKED", element.target, element.target.parentNode.className); 
+        if (me.type === 'text') {
+            store.clickTargetGeneric = element;
+            if (element.parentNode.className === 'context-menu')
+                element.click();
+        }
+        if (cardRef.current)
+            cardRef.current.focus();
+        closeContextMenu();
+    }
     useEffect(() => {
         function handleClickOutside(event) {
             if (cardRef.current && !cardRef.current.contains(event.target)) {
@@ -259,7 +187,7 @@ const GenericCard = props => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [cardRef, store.clickTargetGeneric, props.id, store.currentActive]);
+    }, [cardRef, store.clickTargetGeneric, props.id, store.currentActive,store]);
 
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
@@ -321,16 +249,7 @@ const GenericCard = props => {
             >
                 {
                     me.type === 'text' ?
-                        <>
-                            <div className="top-bar-generic" id={"top-bar-generic".concat(props.id)}></div>
-                            <div className="top-left-generic" id={"top-left-generic".concat(props.id)}></div>
-                            <div className="right-bar-generic" id={"right-bar-generic".concat(props.id)}></div>
-                            <div className="bottom-bar-generic" id={"bottom-bar-generic".concat(props.id)}></div>
-                            <div className="left-bar-generic" id={"left-bar-generic".concat(props.id)}></div>
-                            <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)}></div>
-                            <div className="top-right-generic" id={"top-right-generic".concat(props.id)}></div>
-                            <div className="bottom-left-generic" id={"bottom-left-generic".concat(props.id)}></div>
-                        </>
+                        <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)}/>
                         : null
                 }
 

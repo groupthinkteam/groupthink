@@ -105,22 +105,6 @@
     }
 }
 
-.top-left-generic {
-    display: block;
-    position: absolute;
-    height: 15px;
-    width: 15px;
-
-    left: 0;
-    top: 0;
-
-    &:hover {
-        background: gray;
-    }
-}
-
-
-
 .bottom-right-generic {
     display: block;
     position: absolute;
@@ -129,78 +113,10 @@
     right: 0;
     bottom: 0;
 
-    &:hover {
+    //&:hover {
         background: gray;
-    }
-}
-
-.bottom-left-generic {
-    display: block;
-    position: absolute;
-    height: 15px;
-    width: 15px;
-    left: 0;
-    bottom: 0;
-
-    &:hover {
-        background: gray;
-    }
+    //}
 }
 
 
 
-.top-right-generic {
-    display: block;
-    position: absolute;
-    height: 15px;
-    width: 15px;
-    right: 0;
-    top: 0;
-
-    &:hover {
-        background: gray;
-    }
-}
-
-.top-bar-generic {
-    display: block;
-    position: absolute;
-    height: 3px;
-    width: 100%;
-
-    &:hover {
-        background: #32AAFF;
-    }
-}
-
-.bottom-bar-generic {
-    display: block;
-    position: absolute;
-    height: 3px;
-    width: 100%;
-    bottom: 0;
-    &:hover {
-        background: #32AAFF;
-    }
-}
-
-.left-bar-generic {
-    display: block;
-    position: absolute;
-    height: 100%;
-    width: 3px;
-    &:hover {
-        background: #32AAFF;
-    }
-}
-
-.right-bar-generic {
-    display: block;
-    position: absolute;
-    height: 100%;
-    width: 3px;
-    right: 0;
-    &:hover {
-        background: #32AAFF;
-    }
-}
