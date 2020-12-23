@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite"
 
@@ -10,10 +10,10 @@ import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
 function CardContainer(props) {
     const store = useStore();
-    
+
     return (
         <div className="card-container" id="card-container"
-            style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" ,backgroundColor:store.followAUser?"yellow":''}}>
+            style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw", backgroundColor: store.followAUser ? "yellow" : '' }}>
             <Zoom />
             {
                 Object.keys(store.cards).length < 2 ?
@@ -22,6 +22,7 @@ function CardContainer(props) {
                         </div>
                     : null
             }
+
             <div className="container-filler" id="container-filler"
                 style={{
                     ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0,
@@ -49,6 +50,10 @@ function CardContainer(props) {
                     );
                 }}
             >
+                {
+                    store.followAUser ? <div className="follow-user" /> : null
+                }
+
                 <ArrowList />
                 <CursorsList />
                 <CardsList />

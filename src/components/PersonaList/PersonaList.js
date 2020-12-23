@@ -28,7 +28,7 @@ function PersonaList(props) {
                     {users.map(
                         ([userID, values]) => {
                             return (
-                                <div key={"persona".concat(userID)} className="persona-item">
+                                <div key={"persona".concat(userID)} className="persona-item" style={{backgroundColor:store.followAUser?'yellow':''}}>
                                     <img onClick={() => {toggleFollowAUser(userID)}} alt={values.displayName} src={values.photoURL} />
                                     {values.displayName}
                                 </div>
