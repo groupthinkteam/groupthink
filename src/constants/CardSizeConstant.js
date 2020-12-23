@@ -37,8 +37,8 @@ const cardSizeConstant = {
     image:{
         minWidth: "100px",
         minHeight: "100px",
-        maxHeight: '800px',
-        maxWidth:'800px'
+        maxHeight: '1080px',
+        maxWidth:'1280px'
     }
 }
 export default cardSizeConstant;

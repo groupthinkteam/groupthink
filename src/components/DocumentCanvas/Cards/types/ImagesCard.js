@@ -9,19 +9,18 @@ const ImagesCard = (props) => {
   const textEditRef = useRef(null);
   const store = useStore();
   const me = store.cards[props.id];
-  
   useEffect(() => {
     if (store.currentActive === props.id && textEditRef.current) {
       textEditRef.current.focus();
     }
   }, [props.id, store.currentActive]);
-  
+
   return (
     <div className="image-card" key={"imagecard".concat(props.id)}>
       <div className="image-card-image"
         style={{
-          height: me.size.height-60 , 
-          width: me.size.width - 25
+          height: me.size.height-60,
+          width:me.size.width-25
         }}>
         <img
           alt={props.content.caption || "none"}
