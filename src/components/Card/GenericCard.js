@@ -26,6 +26,7 @@ const GenericCard = props => {
     const [showPopper, setShowPopper] = useState(false);
     const [contextMenu, setContextMenu] = useState(null);
     const [showLoader, setShowLoader] = useState(false);
+    const [changeSize , setChangeSize] = useState(false);
     const closeContextMenu = () => {
         setShowPopper(false);
         setContextMenu(null);
@@ -50,6 +51,10 @@ const GenericCard = props => {
             var $top = document.createElement("div");
             var $left = document.createElement("div");
             const cardDOM = document.getElementById(props.id).style;
+            
+            function updateSizeForImage() {
+                store.changeSize(props.id, { height: parseInt(cardDOM.height), width: parseInt(cardDOM.width) });
+            }
             function getMatrix(element) {
                 const values = element.transform.split(/\w+\(|\);?/);
                 const transform = values[1].split(',');
@@ -89,6 +94,7 @@ const GenericCard = props => {
                 var diffX = this.x - rightLastX;
                 TweenMax.set("#".concat(props.id), { width: "+=" + diffX });
                 rightLastX = this.x;
+                updateSizeForImage()
             }
 
             var bottomLastY = 0;
@@ -111,6 +117,7 @@ const GenericCard = props => {
                 var diffY = this.y - bottomLastY;
                 TweenMax.set("#".concat(props.id), { height: "+=" + diffY });
                 bottomLastY = this.y;
+                updateSizeForImage()
             }
 
             var topLastY = 0;
@@ -132,6 +139,7 @@ const GenericCard = props => {
                 var diffY = this.y - topLastY;
                 TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
                 topLastY = this.y;
+                updateSizeForImage()
             }
 
             var leftLastX = 0;
@@ -154,6 +162,7 @@ const GenericCard = props => {
                 var diffX = this.x - leftLastX;
                 TweenMax.set("#".concat(props.id), { width: "-=" + diffX, x: "+=" + diffX });
                 leftLastX = this.x;
+                updateSizeForImage()
             }
 
             // warning: can't use arrow functions here since that messes up the "this" binding
@@ -303,17 +312,17 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    minHeight: me.type === 'text' ? '40px' : '',
-                    minWidth: me.type === 'text' ? '250px' : '',
-                    maxHeight: "600px",
-                    maxWidth: "600px",
+                    // minHeight: me.type === 'text' ? '40px' : '',
+                    // minWidth: me.type === 'text' ? '250px' : '',
+                    // maxHeight: "600px",
+                    // maxWidth: "600px",
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1
                 }}
             >
                 {
-                    me.type === 'text' ?
+                    me.type === 'text' || me.type === 'image' ?
                         <>
                             <div className="top-bar-generic" id={"top-bar-generic".concat(props.id)}></div>
                             <div className="top-left-generic" id={"top-left-generic".concat(props.id)}></div>
@@ -404,7 +413,7 @@ const GenericCard = props => {
                     </MenuCard>
                     : null
                 }
-                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
+                <CardType changeSize={changeSize} typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
             </div>
         </>
     )
