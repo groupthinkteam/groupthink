@@ -26,7 +26,6 @@ const GenericCard = props => {
     const [showPopper, setShowPopper] = useState(false);
     const [contextMenu, setContextMenu] = useState(null);
     const [showLoader, setShowLoader] = useState(false);
-    const [changeSize , setChangeSize] = useState(false);
     const closeContextMenu = () => {
         setShowPopper(false);
         setContextMenu(null);
@@ -51,9 +50,16 @@ const GenericCard = props => {
             var $top = document.createElement("div");
             var $left = document.createElement("div");
             const cardDOM = document.getElementById(props.id).style;
-            
+
+            function calculateSize() {
+                var height = Math.max(parseInt(cardDOM.height), parseInt(cardSizeConstant[me.type].minHeight))
+                height = Math.min(parseInt(cardSizeConstant[me.type].maxHeight), height);
+                var width = Math.max(parseInt(cardDOM.width), parseInt(cardSizeConstant[me.type].minWidth))
+                width = Math.min(parseInt(cardSizeConstant[me.type].maxWidth), width);
+                return { width: width, height: height }
+            }
             function updateSizeForImage() {
-                store.changeSize(props.id, { height: parseInt(cardDOM.height), width: parseInt(cardDOM.width) });
+                store.changeSize(props.id, calculateSize());
             }
             function getMatrix(element) {
                 const values = element.transform.split(/\w+\(|\);?/);
@@ -64,7 +70,7 @@ const GenericCard = props => {
                 };
             }
             function onResizeDragEnd() {
-                store.resize(props.id, { width: parseInt(cardDOM.width), height: parseInt(cardDOM.height) });
+                store.resize(props.id, calculateSize());
                 const cardDomSize = getMatrix(cardDOM)
                 store.savePosition(props.id, cardDomSize)
             }
@@ -77,6 +83,7 @@ const GenericCard = props => {
             var rightDraggable = new Draggable($right, {
                 trigger: `${"#right-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}`,
                 cursor: "e-resize",
+                autoScroll: 1,
                 onDrag: updateRight,
                 onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
@@ -101,6 +108,7 @@ const GenericCard = props => {
             var bottomDraggable = new Draggable($bottom, {
                 trigger: `${"#bottom-bar-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
                 cursor: "s-resize",
+                autoScroll: 1,
                 onDrag: updateBottom,
                 onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
@@ -124,6 +132,7 @@ const GenericCard = props => {
             var topDraggable = new Draggable($top, {
                 trigger: `${"#top-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}`,
                 cursor: "n-resize",
+                autoScroll: 1,
                 onDrag: updateTop,
                 onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
@@ -145,6 +154,7 @@ const GenericCard = props => {
             var leftLastX = 0;
             var leftDraggable = new Draggable($left, {
                 trigger: `${"#left-bar-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
+                autoScroll: 1,
                 cursor: "w-resize",
                 onDrag: updateLeft,
                 onDragStart: closeContextMenu,
@@ -312,10 +322,10 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    // minHeight: me.type === 'text' ? '40px' : '',
-                    // minWidth: me.type === 'text' ? '250px' : '',
-                    // maxHeight: "600px",
-                    // maxWidth: "600px",
+                    minHeight: cardSizeConstant[me.type].minHeight,
+                    minWidth: cardSizeConstant[me.type].minWidth,
+                    maxHeight: cardSizeConstant[me.type].maxHeight,
+                    maxWidth: cardSizeConstant[me.type].maxWidth,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1
@@ -413,7 +423,7 @@ const GenericCard = props => {
                     </MenuCard>
                     : null
                 }
-                <CardType changeSize={changeSize} typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
+                <CardType typeAPI={store} content={{ ...me.content }} size={{ ...me.size }} position={me.position} id={props.id} />
             </div>
         </>
     )
