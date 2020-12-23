@@ -5,8 +5,9 @@ import "./ContextMenu.scss";
 
 function ContextMenu({ id, loaderCallback, closeContextMenu }) {
     let store = useStore()
-    let me = store.cards[id]
-
+    const me = store.cards[id]
+    const imageHeight = me.content?.displayHeight + 60;
+    const imageWidth = me.content?.displayWidth + 25
     let cardSpecificOptions = {
         "text": [
         ],
@@ -24,6 +25,30 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
             }
         ],
         "image": [
+            {
+                label: "Default Size",
+                onClick: () => {
+                    store.resize(id, { height: me.content.displayHeight + 60, width: me.content.displayWidth + 20 })
+                }
+            },
+            {
+                label: "Resize to Small",
+                onClick: () => {
+                    store.resize(id, { height: imageHeight * 0.75, width: imageWidth * 0.75 })
+                }
+            },
+            {
+                label: "Resize to Large",
+                onClick: () => {
+                    store.resize(id, { height: imageHeight * 3, width: imageWidth * 3 })
+                }
+            },
+            {
+                label: "Resize to Medium",
+                onClick: () => {
+                    store.resize(id, { height: imageHeight * 1.5, width: imageWidth * 1.5 })
+                }
+            },
             {
                 label: "Replace File",
                 onClick: () => { store.convertCardToBlank(id); closeContextMenu(); }
@@ -78,16 +103,20 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
                         <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeContextMenu() }} />)
             }
             {
-                cardSpecificOptions[me.type].map(
-                    ({ label, onClick }, index) =>
-                        <ContextMenuItem key={index} label={label} onClickHandler={() => { onClick(); closeContextMenu() }} />)
+                cardSpecificOptions[me.type]
+                    .map(
+                        ({ label, onClick }, index) =>
+                            <ContextMenuItem key={index} label={label} me={me} onClickHandler={() => { onClick(); closeContextMenu() }} />)
             }
         </div>
     )
 }
 
-function ContextMenuItem({ label, onClickHandler }) {
-    return <p style={{ cursor: 'pointer' }} onClick={onClickHandler}>{label}</p>;
+function ContextMenuItem({ label, onClickHandler, me }) {
+    if (label === 'Default Size' && me.size.height === me.content.displayHeight + 60)
+        return null
+    else
+        return <p style={{ cursor: 'pointer' }} onClick={onClickHandler}>{label}</p>;
 }
 
 export default observer(ContextMenu)
