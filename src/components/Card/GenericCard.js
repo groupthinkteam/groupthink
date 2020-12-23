@@ -50,6 +50,17 @@ const GenericCard = props => {
             var $top = document.createElement("div");
             var $left = document.createElement("div");
             const cardDOM = document.getElementById(props.id).style;
+
+            function calculateSize() {
+                var height = Math.max(parseInt(cardDOM.height), parseInt(cardSizeConstant[me.type].minHeight))
+                height = Math.min(parseInt(cardSizeConstant[me.type].maxHeight), height);
+                var width = Math.max(parseInt(cardDOM.width), parseInt(cardSizeConstant[me.type].minWidth))
+                width = Math.min(parseInt(cardSizeConstant[me.type].maxWidth), width);
+                return { width: width, height: height }
+            }
+            function updateSizeForImage() {
+                store.changeSize(props.id, calculateSize());
+            }
             function getMatrix(element) {
                 const values = element.transform.split(/\w+\(|\);?/);
                 const transform = values[1].split(',');
@@ -59,7 +70,7 @@ const GenericCard = props => {
                 };
             }
             function onResizeDragEnd() {
-                store.resize(props.id, { width: parseInt(cardDOM.width), height: parseInt(cardDOM.height) });
+                store.resize(props.id, calculateSize());
                 const cardDomSize = getMatrix(cardDOM)
                 store.savePosition(props.id, cardDomSize)
             }
@@ -72,6 +83,7 @@ const GenericCard = props => {
             var rightDraggable = new Draggable($right, {
                 trigger: `${"#right-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}`,
                 cursor: "e-resize",
+                autoScroll: 1,
                 onDrag: updateRight,
                 onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
@@ -89,12 +101,14 @@ const GenericCard = props => {
                 var diffX = this.x - rightLastX;
                 TweenMax.set("#".concat(props.id), { width: "+=" + diffX });
                 rightLastX = this.x;
+                updateSizeForImage()
             }
 
             var bottomLastY = 0;
             var bottomDraggable = new Draggable($bottom, {
                 trigger: `${"#bottom-bar-generic".concat(props.id)}, ${"#bottom-right-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
                 cursor: "s-resize",
+                autoScroll: 1,
                 onDrag: updateBottom,
                 onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
@@ -111,12 +125,14 @@ const GenericCard = props => {
                 var diffY = this.y - bottomLastY;
                 TweenMax.set("#".concat(props.id), { height: "+=" + diffY });
                 bottomLastY = this.y;
+                updateSizeForImage()
             }
 
             var topLastY = 0;
             var topDraggable = new Draggable($top, {
                 trigger: `${"#top-bar-generic".concat(props.id)}, ${"#top-right-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}`,
                 cursor: "n-resize",
+                autoScroll: 1,
                 onDrag: updateTop,
                 onDragStart: closeContextMenu,
                 onDragEnd: onResizeDragEnd,
@@ -132,11 +148,13 @@ const GenericCard = props => {
                 var diffY = this.y - topLastY;
                 TweenMax.set("#".concat(props.id), { height: "-=" + diffY, y: "+=" + diffY });
                 topLastY = this.y;
+                updateSizeForImage()
             }
 
             var leftLastX = 0;
             var leftDraggable = new Draggable($left, {
                 trigger: `${"#left-bar-generic".concat(props.id)}, ${"#top-left-generic".concat(props.id)}, ${"#bottom-left-generic".concat(props.id)}`,
+                autoScroll: 1,
                 cursor: "w-resize",
                 onDrag: updateLeft,
                 onDragStart: closeContextMenu,
@@ -154,6 +172,7 @@ const GenericCard = props => {
                 var diffX = this.x - leftLastX;
                 TweenMax.set("#".concat(props.id), { width: "-=" + diffX, x: "+=" + diffX });
                 leftLastX = this.x;
+                updateSizeForImage()
             }
 
             // warning: can't use arrow functions here since that messes up the "this" binding
@@ -303,17 +322,17 @@ const GenericCard = props => {
                     opacity: 0,
                     width: me.size.width,
                     height: me.size.height,
-                    minHeight: me.type === 'text' ? '40px' : '',
-                    minWidth: me.type === 'text' ? '250px' : '',
-                    maxHeight: "600px",
-                    maxWidth: "600px",
+                    minHeight: cardSizeConstant[me.type].minHeight,
+                    minWidth: cardSizeConstant[me.type].minWidth,
+                    maxHeight: cardSizeConstant[me.type].maxHeight,
+                    maxWidth: cardSizeConstant[me.type].maxWidth,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
                     zIndex: 1
                 }}
             >
                 {
-                    me.type === 'text' ?
+                    me.type === 'text' || me.type === 'image' ?
                         <>
                             <div className="top-bar-generic" id={"top-bar-generic".concat(props.id)}></div>
                             <div className="top-left-generic" id={"top-left-generic".concat(props.id)}></div>
