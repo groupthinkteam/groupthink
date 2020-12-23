@@ -332,7 +332,7 @@ const GenericCard = props => {
                 }}
             >
                 {
-                    me.type === 'text' || me.type === 'image' ?
+                    me.type === 'text' ?
                         <>
                             <div className="top-bar-generic" id={"top-bar-generic".concat(props.id)}></div>
                             <div className="top-left-generic" id={"top-left-generic".concat(props.id)}></div>
