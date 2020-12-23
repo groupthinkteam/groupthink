@@ -209,7 +209,7 @@ const GenericCard = props => {
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
-                    dragClickables: me.type === 'text',//false,
+                    dragClickables: false, // me.type === 'text',//false,
                     onDragStart: dragStart,
                     onDrag: function drag() {
                         if (this.x > parseInt(store.container.width)) {

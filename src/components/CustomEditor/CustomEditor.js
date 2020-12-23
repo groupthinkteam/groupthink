@@ -18,6 +18,7 @@ function CustomEditor(props) {
             onFocus={props.onFocus}
             href={props.href}
             target={props.target}
+            autoFocus
         />
     )
 }

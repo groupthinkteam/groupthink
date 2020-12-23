@@ -66,13 +66,13 @@ function TextCard(props) {
                     ref={customEditorRef}
                     id={`custom-editor-${props.id}`}
                     onChange={(e) => onChangeTitle(e, 'text')}
-                    onSave={(e) => onSave(e, 'text')}
+                    onSave={(e) => { onSave(e, 'text'); setEditing(false) }}
                     text={me.content.text}
                     placeholder="Enter your Text"
                 />
                 :
                 <div className="md-container-wrapper" onDoubleClick={() => { setEditing(true) }}>
-                    <ReactMarkdown children={me.content.text} allowDangerousHtml className="md-container"/>
+                    <ReactMarkdown children={me.content.text} allowDangerousHtml className="md-container" />
                 </div>
             }
         </div>
