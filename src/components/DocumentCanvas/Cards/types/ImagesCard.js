@@ -9,11 +9,11 @@ const ImagesCard = (props) => {
   const textEditRef = useRef(null);
   const store = useStore();
   const me = store.cards[props.id];
-  useEffect(() => {
-    if (store.currentActive === props.id && textEditRef.current) {
-      textEditRef.current.focus();
-    }
-  }, [props.id, store.currentActive]);
+  // useEffect(() => {
+  //   if (store.currentActive === props.id && textEditRef.current) {
+  //     textEditRef.current.focus();
+  //   }
+  // }, [props.id, store.currentActive]);
 
   return (
     <div className="image-card" key={"imagecard".concat(props.id)}>
