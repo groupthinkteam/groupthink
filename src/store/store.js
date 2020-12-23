@@ -20,6 +20,7 @@ export var storeObject = {
     currentContext: '',
     recentSearches: {},
     clickTargetGeneric: '',
+    followAUser :false,
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -61,6 +62,26 @@ export var storeObject = {
     },
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
+    },
+    addUserFollow(userId){
+        console.log("ADDED USER FOLLOW")
+        // this.users[userId] = {
+        //     ...this.users[userId] ,following: this.userID
+        // }
+        this.projectRef.child("users").child(userId)
+        .update({following:this.userID})
+        .then(console.log(this.userID," User Following ",userId))
+        .catch(reason=>console.log("Couldn;t follow because ",reason));
+    },
+    removeUserFollow(userId){
+        console.log("REMOVED USER FOLLOW")
+        // this.users[userId] = {
+        //     ...this.users[userId] ,following: null
+        // }
+        this.projectRef.child("users").child(userId)
+        .update({following:null})
+        .then(console.log(this.userID," User Following ",userId))
+        .catch(reason=>console.log("Couldn;t follow because ",reason));
     },
     addToRecentSearch(id) {
         console.log("Check recent search ID", id, this.projectID);

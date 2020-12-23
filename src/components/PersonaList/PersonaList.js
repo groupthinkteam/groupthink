@@ -5,9 +5,15 @@ import { useStore } from "../../store/hook"
 import "../../styles/PersonaList.scss"
 
 function PersonaList(props) {
-    let store = useStore()
+    const store = useStore()
     if (!store.users) return null;
-
+    const toggleFollowAUser = (userID) => {
+        store.followAUser = !store.followAUser;
+        if (store.followAUser)
+            store.addUserFollow(userID);
+        else
+            store.removeUserFollow(userID);
+    }
     let users =
         Object.entries(store.users).filter(
             ([userID, _]) =>
@@ -23,7 +29,7 @@ function PersonaList(props) {
                         ([userID, values]) => {
                             return (
                                 <div key={"persona".concat(userID)} className="persona-item">
-                                    <img alt={values.displayName} src={values.photoURL} />
+                                    <img onClick={() => {toggleFollowAUser(userID)}} alt={values.displayName} src={values.photoURL} />
                                     {values.displayName}
                                 </div>
                             )
