@@ -152,7 +152,7 @@ const CollapsedCard = (props) => {
         <div id={props.id}
             ref={collapseCardRef}
             className="collapsed-card "
-            tabIndex={0}
+            tabIndex={-1}
             onLoad={changeCurrentActive}
             onBlur={(e) => {
                 changeCurrentActive();
