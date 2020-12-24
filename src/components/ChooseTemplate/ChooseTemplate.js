@@ -4,37 +4,34 @@ import { useStore } from "../../store/hook"
 import Popup from "../PopupMenu/PopupMenu"
 import "../../styles/ChooseTemplate/ChooseTemplate.scss"
 
-const ChooseTemplate = (props) => {
+const ChooseTemplate = ({ openProject, isExpanded, setIsExpanded }) => {
     let store = useStore();
-    let [isExpanded, setIsExpanded] = useState(false);
-
     return (
         <div>
             <button className="addnew" onClick={() => setIsExpanded(true)}>
                 + Create
               </button>
             {isExpanded ?
-
                 <Popup handleClose={() => { setIsExpanded(false) }}>
                     <div className="actions-container">
                         <div className="title">
-                            Templates 
+                            Templates
                         </div>
                         <div className="subtitle">
                             Choose a template or start a blank project.
                         </div>
                         <div className="grid">
-                                {Object.entries(store.templatesList).map(
-                                    ([id, template]) => {
-                                        return (
-                                            <TemplateItem key={id} template={template}
-                                                onClick={() => {
-                                                    store.useTemplate(id, projectid => props.openProject(projectid))
-                                                    setIsExpanded(false)
-                                                }} />
-                                        )
-                                    }
-                                )}
+                            {Object.entries(store.templatesList).map(
+                                ([id, template]) => {
+                                    return (
+                                        <TemplateItem key={id} template={template}
+                                            onClick={() => {
+                                                store.useTemplate(id, projectid => openProject(projectid))
+                                                setIsExpanded(false)
+                                            }} />
+                                    )
+                                }
+                            )}
                         </div>
                     </div>
                 </Popup>

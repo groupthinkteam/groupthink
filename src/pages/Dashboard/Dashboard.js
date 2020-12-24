@@ -45,6 +45,8 @@ const Dashboard = observer(() => {
     };
   }, [buttonRef]);
 
+  let [isTemplateExpanded, setTemplateExpanded] = useState(false);
+
   const onOpen = (id) => {
     store.setProjectID(id);
     history.push("/project/" + id, { from: location })
@@ -86,7 +88,7 @@ const Dashboard = observer(() => {
           </div>
         </div>
       </div>
-      <div className="main-section">
+      <div className={"main-section" + (isTemplateExpanded ? " inherit-position" : "")}>
         <div className="project-section">
           <div className="project-section-header">
             <div className="header-left-container">
@@ -105,6 +107,8 @@ const Dashboard = observer(() => {
               </div>
               <ChooseTemplate
                 openProject={onOpen}
+                isExpanded={isTemplateExpanded}
+                setIsExpanded={(bool) => setTemplateExpanded(bool)}
               />
             </div>
             <SearchBar dashboard />
