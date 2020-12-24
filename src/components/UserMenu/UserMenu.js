@@ -1,4 +1,3 @@
-import { observe } from "mobx";
 import React from "react";
 import { Link } from "react-router-dom";
 import { observer } from 'mobx-react-lite'

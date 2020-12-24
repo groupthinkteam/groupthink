@@ -11,7 +11,7 @@ function ActionsMenu(props) {
 
     return (
         <div>
-            <div data-tip="Select Actions" className="top-band">
+            <div data-effect="solid" data-tip="Select Actions" className="top-band">
                 <img className="actions-button-icon"
                     onClick={() => setIsExpanded(true)}
                     src={require("../../assets/actions/bolt.svg")}

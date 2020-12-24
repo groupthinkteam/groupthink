@@ -2258,6 +2258,49 @@
     "@svgr/plugin-svgo" "^5.4.0"
     loader-utils "^2.0.0"
 
+"@syncfusion/ej2-base@~18.4.30", "@syncfusion/ej2-base@~18.4.31":
+  version "18.4.31"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-base/-/ej2-base-18.4.31.tgz#90a9202aa2aa93a9c4985226efba32f654fad09b"
+  integrity sha512-WT4SAqqk+igTs4jK6h8hylFd1VZWhuactRHSvVqdf1b3XHqG64BSyEEnMpQO3VynAkd66nNdnyUuaMPIIyCtdA==
+  dependencies:
+    "@syncfusion/ej2-icons" "~18.4.30"
+
+"@syncfusion/ej2-buttons@~18.4.30":
+  version "18.4.30"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-buttons/-/ej2-buttons-18.4.30.tgz#f7c5e26c31e53a50ab98cd881d8fe617b82d059f"
+  integrity sha512-rcsemtNOobwtmbsunYrpKDVFoBJ2R+M6tyhA+wWn0d/2CEgcJGaOvUCLIVECBKQTtIcqhOyxN5R6/VZDPHKVvQ==
+  dependencies:
+    "@syncfusion/ej2-base" "~18.4.30"
+
+"@syncfusion/ej2-icons@~18.4.30":
+  version "18.4.30"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-icons/-/ej2-icons-18.4.30.tgz#658f517a8163f0614453f9d420d0af03601ab9ee"
+  integrity sha512-kUSNE0xglgwXdIsfXFpa4so9hLRUkvxEsSbZIZhhrJrc7Z8Y3Y7O8HUM9+rIJzY6cLG8KWy+A8tBO9qVADujfQ==
+
+"@syncfusion/ej2-popups@18.4.30":
+  version "18.4.30"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-popups/-/ej2-popups-18.4.30.tgz#4a13399500660d07462c0c743d2066ec0e046261"
+  integrity sha512-APNzfUuWkM5lywV6/+/DYQGePMj/JhoAlrYI9OO8GNSMZj8xtSnWSkybUVLJyIgPQfh5B3YP7TsV1bjTC6fhXg==
+  dependencies:
+    "@syncfusion/ej2-base" "~18.4.30"
+    "@syncfusion/ej2-buttons" "~18.4.30"
+
+"@syncfusion/ej2-react-base@~18.4.30":
+  version "18.4.31"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-base/-/ej2-react-base-18.4.31.tgz#259e8585d4b1da6955de5acf0c98bab010545fff"
+  integrity sha512-CRLtdmU1yTvEwwvletGZxzWeWPXVDcW2mFhpwe6I7Q2ka885ewzyxWaMvvWifUK79Iu0pGsQZU+lDUrydBaXWQ==
+  dependencies:
+    "@syncfusion/ej2-base" "~18.4.31"
+
+"@syncfusion/ej2-react-popups@^18.4.30":
+  version "18.4.30"
+  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-popups/-/ej2-react-popups-18.4.30.tgz#764099bebad4d1c246305c44e80be039b10897bc"
+  integrity sha512-esDq+gjcclz+xWuj0X2dcc0vQeSoEStR9G0Br20cGnhw5ncncz+Sj9Y1XrdWFBS8qq3UhgP68WZVL2EVjXWA1A==
+  dependencies:
+    "@syncfusion/ej2-base" "~18.4.30"
+    "@syncfusion/ej2-popups" "18.4.30"
+    "@syncfusion/ej2-react-base" "~18.4.30"
+
 "@testing-library/dom@*":
   version "7.24.3"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.24.3.tgz#dae3071463cf28dc7755b43d9cf2202e34cbb85d"

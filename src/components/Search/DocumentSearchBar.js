@@ -23,7 +23,7 @@ const DocumentSearchBar = (props) => {
     }
 
     return (
-        <div data-tip={`Search In ${projectName}`} className="menu-bar-searchbox ">
+        <div data-effect="solid" data-tip={`Search In ${projectName}`} className="menu-bar-searchbox ">
             <div className="search-input">
                 <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
             </div>
