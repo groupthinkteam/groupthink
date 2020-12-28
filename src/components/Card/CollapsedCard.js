@@ -8,6 +8,7 @@ gsap.registerPlugin(Draggable);
 const CollapsedCard = (props) => {
     const store = useStore();
     const me = store.cards[props.id];
+    console.log("COLLAPSED ",me.size.width)
     let count = 1;
     const childArray = {};
     const arrayTypeCount = {};
@@ -55,7 +56,12 @@ const CollapsedCard = (props) => {
         , [props.id, me.position])
     // if size changes, animate it
     // useEffect(() => { gsap.set("#".concat(props.id), { width: 275, height: 45 }) }, [me, props.id])
-
+    const onLoadSizeDiv = () =>{
+        const cardDOM = document.getElementById(props.id).style;
+        console.log("check",cardDOM.width ,me.size.width , parseInt(cardDOM.marginLeft),Object.keys(countCollapseCard(props.id)[0]).length)
+        
+        // store.changeSize(props.id,{width:me.size.width - parseInt(cardDOM.marginLeft) , height:cardDOM.height})
+    }
     useEffect(
         () => {
             // warning: can't use arrow functions here since that messes up the "this" binding
@@ -147,13 +153,13 @@ const CollapsedCard = (props) => {
             <img className="type-icon" src={require("../../assets/card-icons/" + sanitizeType() + ".svg")} alt={type} />
         )
     }
-
+    
     return (
         <div id={props.id}
             ref={collapseCardRef}
             className="collapsed-card "
             tabIndex={-1}
-            onLoad={changeCurrentActive}
+            onLoad={()=>{changeCurrentActive(); onLoadSizeDiv()}}
             onBlur={(e) => {
                 changeCurrentActive();
                 e.stopPropagation();
@@ -171,13 +177,15 @@ const CollapsedCard = (props) => {
                 tabIndex: -1,
                 textAlign: 'center',
                 backgroundColor: 'white',
-                marginLeft: me.size.width / 2 + "px"
+                width: me.size.width /  (count) + "px",
+                marginLeft: (me.size.width /4.5) + "px"//2.5=1.5+1,3=1+2,3.5=0.5+3
             }}>
             <div className="collapsed-cards-list">
                 {
                     countCollapseCard(props.id)
                         .filter((item) => typeof item === 'object')
                         .map((item) => {
+                            console.log("ITEM ",Object.keys(item).length , count)
                             return Object.entries(item).map(([type, count]) =>
                                 <div className="card-count-indicator">
                                     {count}

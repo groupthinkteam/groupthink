@@ -22,7 +22,7 @@ const Arrow = (props) => {
     const [headPathDragging, setHeadPathDragging] = useState(false);
     const store = useStore();
     const child = store.cards[props.id];
-
+    console.log("ISCOLLAPSED",store.collapsedID[props.id])
     if (!child) return null
 
 
@@ -61,8 +61,9 @@ const Arrow = (props) => {
         x: parent.position.x + parent.size.width / 2,
         y: parent.position.y + parent.size.height + 9,
     }
+    
     const tail = {
-        x: child.position.x + child.size.width / 2,
+        x: child.position.x + (store.collapsedID[props.id] ? child.size.width*0.46 : child.size.width / 2),
         y: child.position.y - 7
     }
     const midPoint = {
