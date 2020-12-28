@@ -16,7 +16,7 @@ const MidPointInArrow = (props) => {
         if (childrenId === id)
             store.collapsedID[id] ?
                 store.expandCard(id, 'main') : store.collapseCard(id, 'main')
-        else if (!store.toggleArrows) {
+        else if (!store.toggleArrows || store.toggleCollapse) {
             currentCard.isCollapse ? store.expandCard(childrenId) : store.collapseCard(childrenId)
         }
         else
@@ -26,7 +26,7 @@ const MidPointInArrow = (props) => {
         if (currentCard?.children) {
             Object.keys(currentCard.children).map(childId => collapseChildren(childId))
         }
-
+        
         setCollapse(!collapse)
     }, [id, store, collapse])
 

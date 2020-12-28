@@ -20,6 +20,7 @@ export var storeObject = {
     currentContext: '',
     recentSearches: {},
     clickTargetGeneric: '',
+    toggleCollapse:false,
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
