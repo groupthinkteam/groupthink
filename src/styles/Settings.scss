@@ -1,9 +1,14 @@
 .settings-page {
-    background-color: #FCFBF9;
+    background-color: #fcfbf9;
     transition: 0.2s;
     overflow: scroll;
     font-family: Overpass;
     min-height: 100vh;
+    min-width: 100%;
+    // padding: 50px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
     .top-bar {
         margin: 30px 30px 10px 30px;
         display: flex;
@@ -45,7 +50,7 @@
                     height: 60px;
                     width: 60px;
                     border-radius: 30px;
-                    background-image:url('profile/default.png');
+                    background-image: url("profile/default.png");
                 }
                 .pfp-loader {
                     position: absolute;
@@ -59,18 +64,17 @@
                     background: rgba(255, 255, 255, 0.75);
                     color: #413d45;
                     z-index: 99999999999;
-            
+
                     .loader-text {
                         padding: 5px 5px 5px 5px;
                         //background: white;
-                        //border: 2px solid black;
+                        //border: 2px solid #413D45;
                     }
                 }
-            
             }
             .profile-picture .user-menu {
                 visibility: visible;
-                border: solid black 1px;
+                border: solid #413d45 1px;
                 width: 150px;
                 background-color: white;
                 color: #fff;
@@ -85,7 +89,7 @@
             }
             .profile-picture .user-menu::before {
                 content: "";
-                border: 1.5px solid black;
+                border: 1.5px solid #413d45;
                 bottom: 50%;
                 background-color: white;
                 box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
@@ -99,169 +103,102 @@
         }
     }
     .main-section {
-        margin-left: 100px;
-        margin-right: 100px;
-        margin-top: 50px;
         display: flex;
-        height: 10%;
         align-items: center;
-        overflow: scroll;
+        overflow: auto;
         flex-flow: column nowrap;
         justify-content: center;
-        // border: 2px solid black;
+        // border: 2px solid #413D45;
+        width: calc(min(65%, 600px));
+        align-self: center;
         .profile-picture {
             position: relative;
-            img {
-                height: 120px;
-                width: 120px;
-                border-radius: 60px;
-                background-image:url('profile/default.png');
+            .picture-wrapper {
+                height: 100px;
+                width: 100px;
+                border-radius: 75px;
+                overflow: hidden;
+                .upload-button {
+                    display: none;
+                }
+                &:hover {
+                    .upload-button {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        background-color: #413d45b2;
+                        color: white;
+                        position: absolute;
+                        top: 0px;
+                        height: 100px;
+                        width: 100px;
+                        border-radius: 75px;
+                    }
+                }
+                img {
+                    width: 100px;
+                    height: 100px;
+                    background-image: url("profile/default.png");
+                }
             }
         }
         .name-heading {
             position: relative;
+            margin-top: 10px;
             .name {
-                font-size: 25px;
-                font-weight: 700
+                font-family: Overpass;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 28px;
             }
         }
         .profile-section {
-                display: flex;
-                flex-flow: column nowrap;
-                justify-content: space-between;
-                width: 500px;
-                
-
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+            color: #413d45;
             .profile-sub-section {
                 display: flex;
-                flex-flow: row nowrap;
-                align-items: center;
-                
-                .content {
+                flex-flow: column nowrap;
+                // align-items: center;
+                width: 100%;
+                padding: 10px 0px;
+                .heading {
+                    font-family: Overpass;
+                    font-style: normal;
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #32aaff;
+                    padding-left: 30px;
+                    padding-right: 30px;
+                }
+                hr {
+                    width: 100%;
+                    margin: 7px 0px 15px 0px;
+                    border: 1px solid #dfdcdc;
+                }
+                .subcontent {
                     display: flex;
                     flex-flow: column nowrap;
                     justify-content: left;
-                    
-                    .heading {
-                        font-family: Overpass;
-                        font-style: normal;
-                        font-size: 16px;
-                        font-weight: 600;
-                        color: #32aaff;
-                    }
-                    .hr {
-                        width: 1000px;
-                    }
-                    .subcontent {
+                    font-size: 14px;
+                    .field {
                         display: flex;
-                        flex-flow: column nowrap;
-                        justify-content: left;
-                        .field {
-                            display: flex;
-                            flex-flow: row nowrap;
-                            .field-name {
-                            color: black
+                        flex-flow: row nowrap;
+                        padding: 5px 30px 5px 30px;
+                        align-items: center;
+                        .field-name {
+                            color: #413d45;
+                            min-width: 100px;
                         }
                         .field-content {
-                            color: gray;
-                            margin-left: 50px;
-                        }
-                    }
-                    }
-                }
-            }
-
-            .project-section-header {
-                display: flex;
-                flex-flow: row nowrap;
-                justify-content: space-between;
-                .header-left-container {
-                    display: flex;
-                    flex-flow: row nowrap;
-                    .dashboard-title {
-                        display: flex;
-                        align-items: center;
-                        .select {
-                            font-family: "Overpass";
-                            font-style: normal;
-                            font-weight: bold;
-                            font-size: 24px;
-                            line-height: 24px;
-                            background-color: transparent;
-                            border: 1.5px solid transparent;
-                            border-radius: 6px;
-                            padding: 5px;
-                            &:hover {
-                                border: 1.5px solid black;
+                            color: #a29fa5;
+                            img {
+                                height: 25px;
+                                object-fit: contain;
                             }
-                        }
-                    }
-                }
-                .addnew {
-                    background-color: #32aaff;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    height: 40px;
-                    width: 100px;
-                    font-family: Overpass;
-                    font-style: normal;
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: white;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding-top: 4px;
-                    margin-left: 15px;
-                }
-            }
-            .project-section-content {
-                display: flex;
-                flex-flow: column nowrap;
-                overflow: auto;
-                margin-top: 7px;
-                .row-headings {
-                    position: sticky;
-                    top: 0px;
-                    display: flex;
-                    flex-flow: row nowrap;
-                    justify-content: space-between;
-                    align-items: center;
-                    width: 100%;
-                    margin: 20px 0px 0px 0px;
-                    border-top: 1px solid #413d45;
-                    border-bottom: 1px solid #413d45;
-                    padding: 10px 15px 10px 15px;
-                    // padding: 5px 10px;
-                    .rest {
-                        width: 70%;
-                        display: flex;
-                        flex-flow: row nowrap;
-                        justify-content: flex-end;
-                        align-items: center;
-                    }
-                    .heading {
-                        font-family: Overpass;
-                        font-style: normal;
-                        font-weight: 600;
-                        font-size: 18px;
-                        // color: #413d45;
-                        display: flex;
-                        flex-flow: row nowrap;
-                        align-items: center;
-                        &.title {
-                            width: 30%;
-                            justify-content: flex-start;
-                            padding-left: 45px;
-                        }
-                        &.shared {
-                            width: calc(max(20%, 200px));
-                            justify-content: flex-end;
-                        }
-                        &.date {
-                            width: 150px;
-                            justify-content: center;
                         }
                     }
                 }

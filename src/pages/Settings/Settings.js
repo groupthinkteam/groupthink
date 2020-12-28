@@ -75,14 +75,17 @@ function Settings() {
                         <div className="pfp-loader">
                             <div className="loader-text">
                                 Uploading
+                            </div>
                         </div>
-                        </div>
-                        : <img src={store.currentUser.photoURL} />}
+                        :
+                        <div className="picture-wrapper">
+                            <img src={store.currentUser.photoURL} alt={store.currentUser.displayName} />
+                            <div className="upload-button" onClick={() => inputFile.current.click()}>
+                                Change
+                            </div>
+                        </div>}
 
                 </div>
-                <button onClick={() => inputFile.current.click()}>
-                    Update Picture
-                </button>
                 <input type="file"
                     onChange={(e) => upload(e.target.files)}
                     ref={inputFile}
@@ -90,81 +93,67 @@ function Settings() {
                 <div className="name-heading">
                     <span className="name">{store.currentUser.displayName}</span>
                 </div>
-                <br />
                 <div className="profile-section">
                     <div className="profile-sub-section">
-                        <div className="content">
-                            <div className="heading">
-                                Profile
-                            </div>
-                            <hr />
-                            <br />
-                            <div className="subcontent">
-                                <div className="field">
-                                    <div className="field-name">
-                                        Name
-                                </div>
-                                    <div className="field-content">
-                                        <span className="name">{store.currentUser.displayName}</span>
-                                    </div>
-                                </div>
-                                <div className="field">
-                                    <div className="field-name">
-                                        Email
-                                </div>
-                                    <div className="field-content">
-                                        <span className="name">{store.currentUser.email}</span>
-                                    </div>
-                                </div>
 
+                        <div className="heading">
+                            Profile
+                            </div>
+                        <hr />
+                        <div className="subcontent">
+                            <div className="field">
+                                <div className="field-name">
+                                    Name
+                                </div>
+                                <div className="field-content">
+                                    <span className="name">{store.currentUser.displayName}</span>
+                                </div>
+                            </div>
+                            <div className="field">
+                                <div className="field-name">
+                                    Email
+                                </div>
+                                <div className="field-content">
+                                    <span className="name">{store.currentUser.email}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <br />
-                    <br />
+
+
                     <div className="profile-sub-section">
-                        <div className="content">
-                            <div className="heading">
-                                Account
-                            </div>
-                            <hr />
-                            <br />
-                            <div className="subcontent">
-                                <div className="field">
-                                    <div className="field-name">
-                                        Plan
+                        <div className="heading">
+                            Account
+                        </div>
+                        <hr />
+                        <div className="subcontent">
+                            <div className="field">
+                                <div className="field-name">
+                                    Plan
                                 </div>
-                                    <div className="field-content">
-                                        Early Access
-                                    </div>
+                                <div className="field-content">
+                                    <img src={require("../../assets/menu/ealogo.svg")} alt="Early Access" />
                                 </div>
-
                             </div>
                         </div>
                     </div>
-                    <br />
-                    <br />
+
                     <div className="profile-sub-section">
-                        <div className="content">
-                            <div className="heading">
-                                Display Settings
+                        <div className="heading">
+                            Display Settings
                             </div>
-                            <hr />
-                            <br />
-                            <div className="subcontent">
-                                <div className="field">
-                                    <div className="field-name">
-                                        Theme
+                        <hr />
+                        <div className="subcontent">
+                            <div className="field">
+                                <div className="field-name">
+                                    Theme
                                 </div>
-                                    <div className="field-content">
-                                        Default
+                                <div className="field-content">
+                                    Default (more coming soon!)
                                     </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
