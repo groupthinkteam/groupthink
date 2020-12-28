@@ -7,6 +7,7 @@ import MidPointInArrow from "./MidPointInArrow";
 import TailArrow from "./TailArrow";
 
 import "../../styles/Arrow.scss"
+import PlaceArrowHead from "./PlaceArrowHead";
 
 gsap.registerPlugin(Draggable)
 
@@ -18,6 +19,7 @@ gsap.registerPlugin(Draggable)
 const Arrow = (props) => {
 
     const [linePathDragging, setLinePathDragging] = useState(false);
+    const [headPathDragging, setHeadPathDragging] = useState(false);
     const store = useStore();
     const child = store.cards[props.id];
 
@@ -28,42 +30,32 @@ const Arrow = (props) => {
 
     if (!parent) return null;
 
-    if (child.parent === "root") {
-        if (store.currentActive !== props.id) return null;
+    const PlaceArrow = (strategy) => {
         let path;
         const tailRoot = {
             x: child.position.x + child.size.width / 2,
             y: child.position.y + child.size.height + 10
         }
-        if (linePathDragging?.head) {
-            path = updatePath(linePathDragging.x, linePathDragging.y === tailRoot.y ? linePathDragging.y + 1 : linePathDragging.y, tailRoot.x, tailRoot.y)
+        if (headPathDragging?.head) {
+            path = updatePath(headPathDragging.x, headPathDragging.y === tailRoot.y ? headPathDragging.y + 1 : headPathDragging.y, tailRoot.x, tailRoot.y)
         }
-        if (child.children) return null
         return (
             <>
-
-                <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
-                    <defs>
-                        <linearGradient id={"grad3".concat(props.id)} x1={'0%'} y1="0%" x2={"100%"} y2="0%">
-                            <stop offset="0%" stopColor="#FF6B43" stopOpacity="1" />
-                            <stop offset="100%" stopColor="#5FA2F1" stopOpacity="1" />
-                        </linearGradient>
-                    </defs>
-                    <path
-                        className="arrow-path"
-                        strokeWidth="2"
-                        fill="none"
-                        stroke={`url(#grad3${props.id})`}
-                        d={path} />
-                </svg>
-                < HeadArrow
+                <PlaceArrowHead
+                    path={path}
                     id={props.id}
                     head={tailRoot}
-                    linePathDragging={linePathDragging}
-                    setLinePathDragging={setLinePathDragging}
+                    strategy={strategy}
+                    headPathDragging={headPathDragging}
+                    setHeadPathDragging={setHeadPathDragging}
                 />
             </>
         );
+    }
+    if (child.parent === "root") {
+        if (store.currentActive !== props.id) return null;
+        if (child.children) return null
+        return PlaceArrow()
     }
     const head = {
         x: parent.position.x + parent.size.width / 2,
@@ -90,7 +82,7 @@ const Arrow = (props) => {
     else {
         path = updatePath(head.x === tail.x ? head.x + 1 : head.x, head.y === tail.y - 19 ? head.y + 1 : head.y, tail.x, tail.y - 19)
     }
-    
+
     function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
         var bezierWeightX = x4 > x1 ? -3 : 3;
@@ -120,6 +112,11 @@ const Arrow = (props) => {
                     stroke={`url(#grad3${props.id})`}
                     d={path} />
             </svg>
+            {
+                (!child.children && store.currentActive === props.id) ?
+                    PlaceArrow("subChild")
+                    : null
+            }
             {
                 (linePathDragging?.head || !linePathDragging) ?
                     <HeadArrow

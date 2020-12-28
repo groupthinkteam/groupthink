@@ -312,14 +312,15 @@ export var storeObject = {
     changeContainerSizeLocal(size) {
         this.container = size
     },
-    makeCardChild(id, newChildId) {
+    makeCardChild(id, newChildId,strategy) {
         const parentID = this.cards[id].parent;
         const dropParent = this.cards[newChildId].parent;
         const updates = {};
         console.log("Check", "ID THAT STARTED DRAG ", id, "ITS PARENT", parentID, "TO DROP ", newChildId, dropParent)
         const throwParent = (ancestor) => {console.log("ANCESTOR",ancestor); return this.cards[ancestor]["parent"] }
         function checkValidity(ancestor) {
-            if (parentID === 'root') {
+            
+            if (parentID === 'root' || strategy) {
                 updates[dropParent+"/children/"+newChildId]=null;
                 updates[id + "/children/" + newChildId] = 1;
                 updates[newChildId + "/parent/"] = id;
@@ -331,6 +332,7 @@ export var storeObject = {
                 updates[newChildId + "/parent/"] = parentID;
                 return true
             }
+            
             if (ancestor === newChildId) return false;
             else if (ancestor === dropParent) return false;
             const parent = throwParent(ancestor);
