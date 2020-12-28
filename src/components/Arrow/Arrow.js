@@ -27,7 +27,7 @@ const Arrow = (props) => {
     const parent = store.cards[child.parent];
 
     if (!parent) return null;
-    
+
     if (child.parent === "root") {
         if (store.currentActive !== props.id) return null;
         let path;
@@ -36,9 +36,9 @@ const Arrow = (props) => {
             y: child.position.y + child.size.height + 10
         }
         if (linePathDragging?.head) {
-            path = updatePath(linePathDragging.x, linePathDragging.y, tailRoot.x, tailRoot.y)
+            path = updatePath(linePathDragging.x, linePathDragging.y === tailRoot.y ? linePathDragging.y + 1 : linePathDragging.y, tailRoot.x, tailRoot.y)
         }
-        if(child.children) return null
+        if (child.children) return null
         return (
             <>
 
@@ -84,20 +84,20 @@ const Arrow = (props) => {
         path = updatePath(linePathDragging.x, linePathDragging.y, tail.x, tail.y)
     }
     else if (linePathDragging?.head) {
-        path = updatePath(linePathDragging.x, linePathDragging.y, head.x, head.y)
+
+        path = updatePath(linePathDragging.x, linePathDragging.y, head.x, linePathDragging.y === head.y ? head.y + 1 : head.y)
     }
     else {
-        path = updatePath(head.x, head.y, tail.x, tail.y - 19)
+        path = updatePath(head.x === tail.x ? head.x + 1 : head.x, head.y === tail.y - 19 ? head.y + 1 : head.y, tail.x, tail.y - 19)
     }
-
-
+    
     function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
-        var bezierWeightX =x4>x1?-3:3;
+        var bezierWeightX = x4 > x1 ? -3 : 3;
         var dx = Math.abs(x4 - x1) / bezierWeightX;
-        var x2 = ( x1 - dx);
-        var x3 =(x4 + dx);
-        var bezierWeightY = y1>y4? 0.4:1;
+        var x2 = (x1 - dx);
+        var x3 = (x4 + dx);
+        var bezierWeightY = y1 > y4 ? 0.4 : 1;
         var dy = Math.abs(y4 - y1) / bezierWeightY;
         var y2 = (y1 - dy);
         var y3 = (y4 + dy);
@@ -121,7 +121,7 @@ const Arrow = (props) => {
                     d={path} />
             </svg>
             {
-                (linePathDragging?.head || !linePathDragging)  ?
+                (linePathDragging?.head || !linePathDragging) ?
                     <HeadArrow
                         id={props.id}
                         head={head}
