@@ -22,7 +22,7 @@ const Arrow = (props) => {
     const [headPathDragging, setHeadPathDragging] = useState(false);
     const store = useStore();
     const child = store.cards[props.id];
-    console.log("ISCOLLAPSED",store.collapsedID[props.id])
+    console.log("ISCOLLAPSED", store.collapsedID[props.id])
     if (!child) return null
 
 
@@ -61,9 +61,9 @@ const Arrow = (props) => {
         x: parent.position.x + parent.size.width / 2,
         y: parent.position.y + parent.size.height + 9,
     }
-    
+
     const tail = {
-        x: child.position.x + (store.collapsedID[props.id] ? child.size.width*0.46 : child.size.width / 2),
+        x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
         y: child.position.y - 7
     }
     const midPoint = {
@@ -72,11 +72,12 @@ const Arrow = (props) => {
     }
 
 
-    let path;
+    let path, childPath;
     if (linePathDragging?.tail) {
         path = updatePath(linePathDragging.x, linePathDragging.y, tail.x, tail.y)
     }
     else if (linePathDragging?.head) {
+        childPath = updatePath(head.x === tail.x ? head.x + 1 : head.x, head.y === tail.y - 19 ? head.y + 1 : head.y, tail.x, tail.y - 19)
 
         path = updatePath(linePathDragging.x, linePathDragging.y, head.x, linePathDragging.y === head.y ? head.y + 1 : head.y)
     }
@@ -119,28 +120,57 @@ const Arrow = (props) => {
                     : null
             }
             {
-                (linePathDragging?.head || !linePathDragging) ?
-                    <HeadArrow
-                        id={props.id}
-                        head={head}
-                        linePathDragging={linePathDragging}
-                        setLinePathDragging={setLinePathDragging}
-                    /> : null
+                linePathDragging?.head ?
+                    <>
+                        <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
+                            <path
+                                className="arrow-path"
+                                strokeWidth="2"
+                                fill="none"
+                                stroke={`url(#grad3${props.id})`}
+                                d={childPath} />
+                        </svg>
+                        <svg style={{ zIndex: -1, position: "absolute", overflow: "visible" }} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle style={{ position: "absolute" }}
+                                id={"headArrowstatic".concat(props.id)}
+                                cx={head.x}
+                                cy={head.y}
+                                r="11.25"
+                                fill="#FCFBF9" stroke="#413D45" stroke-width="1.5" />
+                            <svg x={head.x - 6}
+                                y={head.y - 5} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 1V11M6 11L11 7M6 11L1 7" stroke="#413D45" stroke-width="1.5" stroke-linecap="round" />
+                            </svg>
+                        </svg>
+                        <MidPointInArrow
+                            id={"k".concat(props.id)}
+                            midPoint={midPoint}
+                        />
+                        <TailArrow
+                            id={props.id}
+                            tail={tail}
+                            setLinePathDragging={setLinePathDragging}
+                        />
+                    </>
+                    : null
             }
+            <HeadArrow
+                id={props.id}
+                head={head}
+                linePathDragging={linePathDragging}
+                setLinePathDragging={setLinePathDragging}
+            />
             <MidPointInArrow
                 id={props.id}
                 midPoint={midPoint}
                 linePathDragging={linePathDragging}
             />
-            {
-                linePathDragging?.tail || !linePathDragging ?
-                    <TailArrow
-                        id={props.id}
-                        tail={tail}
-                        linePathDragging={linePathDragging}
-                        setLinePathDragging={setLinePathDragging}
-                    /> : null
-            }
+            <TailArrow
+                id={props.id}
+                tail={tail}
+                linePathDragging={linePathDragging}
+                setLinePathDragging={setLinePathDragging}
+            />
         </div>
     )
 };
