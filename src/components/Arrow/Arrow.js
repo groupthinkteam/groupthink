@@ -60,11 +60,42 @@ const Arrow = (props) => {
         x: parent.position.x + parent.size.width / 2,
         y: parent.position.y + parent.size.height + 9,
     }
-
-    const tail = {
+    /**
+     * ON RIGHT
+     * x: child.position.x ,
+     * y: child.position.y +(store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.height / 2)
+     * 
+     * ON LEFT 
+     * x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width ),
+        y: child.position.y + child.size.height/2
+     */
+    let tail = {
         x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
-        y: child.position.y - 7
+        y: child.position.y - 7,
+        position: 'top'
     }
+    //TAIL POSITIONING
+    if (parent.position.x > child.position.x + child.size.width) {
+        console.log("Left")
+        tail = {
+            x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width) + 35,
+            y: child.position.y + child.size.height,
+            position: 'left'
+        }
+    }
+    else if (parent.position.x < child.position.x - child.size.width) {
+        console.log("Right");
+        tail = {
+            x: child.position.x - 25,
+            y: child.position.y + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.height),
+            position: 'right'
+        }
+    }
+    // if(parent.position.y > child.position.y)
+    // console.log("TOP")
+    // else
+    // console.log("BOTTOM")
+
     const midPoint = {
         x: (tail.x + head.x) / 2,
         y: (tail.y + head.y) / 2
@@ -86,15 +117,15 @@ const Arrow = (props) => {
 
     function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
-        var bezierWeightX = x4 > x1 ? -3 : 3;
-        var dx = Math.abs(x4 - x1) / bezierWeightX;
+        var bezierWeightX = x4 > x1 ? -0.8 : 1;
+        var dx = Math.abs(x4 - x1) * bezierWeightX;
         var x2 = (x1 - dx);
         var x3 = (x4 + dx);
-        var bezierWeightY = y1 > y4 ? 0.4 : 1;
-        var dy = Math.abs(y4 - y1) / bezierWeightY;
+        var bezierWeightY = y1 > y4 ? -0.2 : 0.2;
+        var dy = Math.abs(y4 - y1) * bezierWeightY;
         var y2 = (y1 - dy);
         var y3 = (y4 + dy);
-        return `M${x4} ${y4} C${x2} ${y2} ${x3} ${y3} ${x1} ${y1}`;
+        return `M${x1} ${y1} C${x1} ${y1} ${x3} ${y3} ${x4} ${y4}`;
     }
     // console.log("ARROW ", linePathDragging)
     return (
@@ -164,12 +195,17 @@ const Arrow = (props) => {
                 midPoint={midPoint}
                 linePathDragging={linePathDragging}
             />
-            <TailArrow
-                id={props.id}
-                tail={tail}
-                linePathDragging={linePathDragging}
-                setLinePathDragging={setLinePathDragging}
-            />
+            {
+                linePathDragging?.tail || !linePathDragging ?
+                    <TailArrow
+                        id={props.id}
+                        tail={tail}
+                        linePathDragging={linePathDragging}
+                        setLinePathDragging={setLinePathDragging}
+                    />
+                    : null
+            }
+
         </div>
     )
 };
