@@ -24,7 +24,7 @@ const PlaceHeadArrow = (props) => {
                     setHeadPathDragging({ x: this.x, y: this.y, head: true })
                 },
                 onDragEnd: function () {
-                    console.log("HEAD DRAG END")
+                    console.log("HEAD DRAG END",id)
                     store.hitTestCards.filter(cardID => cardID !== 'root' && cardID !== id && !store.cards[cardID]?.isCollapse).every(cardID => {
                         if (this.hitTest("#".concat(cardID))) {
                             console.log("i hit", cardID)

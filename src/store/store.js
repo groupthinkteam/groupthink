@@ -20,7 +20,7 @@ export var storeObject = {
     currentContext: '',
     recentSearches: {},
     clickTargetGeneric: '',
-    toggleCollapse:false,
+    toggleCollapse: false,
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -313,38 +313,51 @@ export var storeObject = {
     changeContainerSizeLocal(size) {
         this.container = size
     },
-    makeCardChild(id, newChildId,strategy) {
+    makeCardChild(id, newChildId, strategy) {
         const parentID = this.cards[id].parent;
         const dropParent = this.cards[newChildId].parent;
         const updates = {};
         console.log("Check", "ID THAT STARTED DRAG ", id, "ITS PARENT", parentID, "TO DROP ", newChildId, dropParent)
-        const throwParent = (ancestor) => {console.log("ANCESTOR",ancestor); return this.cards[ancestor]["parent"] }
-        function checkValidity(ancestor) {
-            
-            if (parentID === 'root' || strategy) {
-                updates[dropParent+"/children/"+newChildId]=null;
+        const throwParent = (ancestor) => {
+            console.log("ANCESTOR", ancestor); 
+            return this.cards[ancestor]["parent"]
+        }
+        const throwChildren = (children) => {
+            return this.cards[children].children
+        }
+        function checkValiditys(ancestor) {
+            const parent = throwParent(ancestor)
+            const children = throwChildren(newChildId)
+            if (ancestor === newChildId) return false;
+            if (children && children[parentID]) return false
+            else if (ancestor === "root") return true
+
+            return checkValiditys(parent);
+        }
+        if (checkValiditys(parentID)) {
+            console.log("REPARENT - MAKE CHILD", id, newChildId)
+            if (dropParent === parentID) {
                 updates[id + "/children/" + newChildId] = 1;
                 updates[newChildId + "/parent/"] = id;
-                return true
             }
-            else if (ancestor === "root") {
-                updates[dropParent+"/children/"+newChildId]=null;
+            else if (!strategy) {
+                updates[dropParent + "/children/" + newChildId] = null;
                 updates[parentID + "/children/" + newChildId] = 1;
                 updates[newChildId + "/parent/"] = parentID;
-                return true
             }
-            
-            if (ancestor === newChildId) return false;
-            else if (ancestor === dropParent) return false;
-            const parent = throwParent(ancestor);
-            return checkValidity(parent);
-        }
-        // console.log("UPDATED ",Object.keys(updates).length ,"FOR ID ",checkValidity(parentID), "FOR DROPPED UD ",checkValidity(newChildId))
-        if (checkValidity(id)) {
+            else {
+                updates[dropParent + "/children/" + newChildId] = null;
+                updates[id + "/children/" + newChildId] = 1;
+                updates[newChildId + "/parent/"] = id;
+            }
+
             this.projectRef.child("nodes")
                 .update(updates)
                 .then(console.log("successfully added the children of", id, "to", newChildId, updates))
                 .catch((reason) => console.log("error making child because", reason));
+        }
+        else {
+            console.log("DONT Make CHILD")
         }
     },
     reparentCard(id, newParent, strategy) {

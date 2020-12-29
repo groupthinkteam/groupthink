@@ -22,9 +22,8 @@ const Arrow = (props) => {
     const [headPathDragging, setHeadPathDragging] = useState(false);
     const store = useStore();
     const child = store.cards[props.id];
-    console.log("ISCOLLAPSED", store.collapsedID[props.id])
-    if (!child) return null
 
+    if (!child) return null
 
     const parent = store.cards[child.parent];
 

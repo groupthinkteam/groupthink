@@ -122,7 +122,7 @@ const CollapsedCard = (props) => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [collapseCardRef, store.clickTargetGeneric, props.id, store.currentActive]);
+    }, [collapseCardRef, store.clickTargetGeneric, props.id, store.currentActive,store]);
     const expandChildren = (childrenId) => {
         const currentCard = store.cards[childrenId];
 
