@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite"
 
@@ -10,7 +10,7 @@ import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
 function CardContainer(props) {
     const store = useStore();
-    
+
     return (
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
@@ -38,6 +38,24 @@ function CardContainer(props) {
                     }
                     else {
                         console.log("registered a double click on a card and did absolutely nothing about it")
+                    }
+                }}
+                onClick={(e) => {
+                    if (e.target.className === "container-filler") {
+                        if (store.currentActive) {
+                            store.removeUserEditing(store.currentActive, 'editing');
+                            store.currentActive = null;
+                        }
+                        // leaving room for other side effects
+                        store.currentContext = null;
+                        store.editingCard = null;
+                    }
+                    // TODO - handle closing things when the user clicks on any regular card instead 
+                    // of the bare canvas
+                    else {
+                        let className = e.target.className;
+                        if (className === "")
+                            store.currentContext = null;
                     }
                 }}
                 onMouseMove={(e) => {

@@ -22,11 +22,11 @@ const GenericCard = props => {
     const cardRef = useRef(null);
     const blankRef = useRef(null);
     const [isDragging, setDragging] = useState(false);
-    const [showPopper, setShowPopper] = useState(false);
-    const [contextMenu, setContextMenu] = useState(null);
     const [showLoader, setShowLoader] = useState(false);
+    const [contextMenu, setContextMenu] = useState(false);
+
     const closeContextMenu = () => {
-        setShowPopper(false);
+        store.currentContext = null;
         setContextMenu(null);
     }
 
@@ -72,7 +72,7 @@ const GenericCard = props => {
             var bottomDraggable = new Draggable($bottom, {
                 trigger: `${"#bottom-right-generic".concat(props.id)}`,
                 cursor: "nwse-resize",
-                activeCursor:"nwse-resize",
+                activeCursor: "nwse-resize",
                 autoScroll: 1,
                 onDrag: updateBottom,
                 onDragStart: closeContextMenu,
@@ -129,9 +129,15 @@ const GenericCard = props => {
                     autoScroll: 1,
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
-                    // dragClickables: store.currentActive !== props.id,
-                    dragClickables: me.type === 'text',//false,
-                    onClick: (e) => { onClickTextCard(e.target) },
+                    dragClickables: store.currentActive !== props.id,
+                    // dragClickables: true, //me.type === 'text',//false,
+                    onClick: (e) => {
+                        if (store.currentActive !== props.id) {
+                            store.currentActive = props.id;
+                            store.addUserEditing(props.id, 'editing')
+                        }
+                        e.stopPropagation();
+                    },
                     onDragStart: dragStart,
                     onDrag: function drag() {
                         if (this.x > parseInt(store.container.width)) {
@@ -162,32 +168,6 @@ const GenericCard = props => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
-    const onClickTextCard = (element) => {
-        // console.log("GENERIC CARD CLICKED", element.target, element.target.parentNode.className); 
-        if (me.type === 'text') {
-            store.clickTargetGeneric = element;
-            if (element.parentNode.className === 'context-menu')
-                element.click();
-        }
-        if (cardRef.current)
-            cardRef.current.focus();
-        closeContextMenu();
-    }
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (cardRef.current && !cardRef.current.contains(event.target)) {
-                closeContextMenu();
-                store.clickTargetGeneric = '';
-                if (store.currentActive === props.id) {
-                    store.currentActive = null;
-                }
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [cardRef, store.clickTargetGeneric, props.id, store.currentActive,store]);
 
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
@@ -195,14 +175,16 @@ const GenericCard = props => {
 
     return (
         <>
-            <div id={props.id} tabIndex={-1}
-                className={"generic-card" + (showCompatibleOverlay ? " compat-cursor" : "")}
+            <div id={props.id}
+                className={"generic-card" +
+                    (showCompatibleOverlay ? " compat-cursor" : "") +
+                    (store.currentActive === props.id ? " active-card" : "")}
                 ref={cardRef}
                 onContextMenu={(event) => {
                     event.preventDefault();
                     store.currentContext = props.id;
+                    store.currentActive = props.id;
                     var cardContainerElement = document.querySelector('.card-container');
-                    setShowPopper(false);
                     var x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft / store.zoom - me.position.x);
                     var y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollTop / store.zoom - me.position.y - 50);
                     if (store.zoom === 1) {
@@ -215,18 +197,6 @@ const GenericCard = props => {
                             offsetX: store.zoom >= 1 ? 0 : x * store.zoom, //left
                             offsetY: store.zoom >= 1 ? y : y * store.zoom //top
                         })
-                }}
-                onBlur={(e) => {
-                    if (store.currentActive === props.id) {
-                        store.currentActive = null;
-                    }
-                    e.stopPropagation();
-                    store.removeUserEditing(props.id, 'editing')
-                }}
-                onFocus={e => {
-                    store.currentActive = props.id;
-                    store.addUserEditing(props.id, 'editing')
-                    e.stopPropagation();
                 }}
                 onKeyDown={(e) => {
                     if (e.key === "Delete" && me.type !== "text") {
@@ -249,7 +219,7 @@ const GenericCard = props => {
             >
                 {
                     me.type === 'text' ?
-                        <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)}/>
+                        <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)} />
                         : null
                 }
 
@@ -295,7 +265,7 @@ const GenericCard = props => {
                 <button className="kebab"
                     onClick={() => {
                         store.currentContext = props.id;
-                        setContextMenu(null); setShowPopper(!showPopper);
+                        setContextMenu(null);
                     }}
 
                 >
@@ -315,9 +285,9 @@ const GenericCard = props => {
                             : { zIndex: 1, position: "absolute" }
                     }
                 />
-                {(contextMenu || showPopper) && store.currentContext === props.id ?
+                {store.currentContext === props.id ?
                     <MenuCard
-                        buttonref={showPopper ? cardRef.current : blankRef.current}
+                        buttonref={!contextMenu ? cardRef.current : blankRef.current}
                         position="right-start"
                         offset={[0, (1 - store.zoom) * me.size.width + 16]}
                         tooltipclass="tooltips"
