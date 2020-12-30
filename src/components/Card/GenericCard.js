@@ -22,11 +22,11 @@ const GenericCard = props => {
     const cardRef = useRef(null);
     const blankRef = useRef(null);
     const [isDragging, setDragging] = useState(false);
-    const [showPopper, setShowPopper] = useState(false);
-    const [contextMenu, setContextMenu] = useState(null);
     const [showLoader, setShowLoader] = useState(false);
+    const [contextMenu, setContextMenu] = useState(false);
+
     const closeContextMenu = () => {
-        setShowPopper(false);
+        store.currentContext = null;
         setContextMenu(null);
     }
 
@@ -183,8 +183,8 @@ const GenericCard = props => {
                 onContextMenu={(event) => {
                     event.preventDefault();
                     store.currentContext = props.id;
+                    store.currentActive = props.id;
                     var cardContainerElement = document.querySelector('.card-container');
-                    setShowPopper(false);
                     var x = Math.floor(event.clientX / store.zoom + cardContainerElement.scrollLeft / store.zoom - me.position.x);
                     var y = Math.floor(event.clientY / store.zoom + cardContainerElement.scrollTop / store.zoom - me.position.y - 50);
                     if (store.zoom === 1) {
@@ -265,7 +265,7 @@ const GenericCard = props => {
                 <button className="kebab"
                     onClick={() => {
                         store.currentContext = props.id;
-                        setContextMenu(null); setShowPopper(!showPopper);
+                        setContextMenu(null);
                     }}
 
                 >
@@ -285,9 +285,9 @@ const GenericCard = props => {
                             : { zIndex: 1, position: "absolute" }
                     }
                 />
-                {(contextMenu || showPopper) && store.currentContext === props.id ?
+                {store.currentContext === props.id ?
                     <MenuCard
-                        buttonref={showPopper ? cardRef.current : blankRef.current}
+                        buttonref={!contextMenu ? cardRef.current : blankRef.current}
                         position="right-start"
                         offset={[0, (1 - store.zoom) * me.size.width + 16]}
                         tooltipclass="tooltips"

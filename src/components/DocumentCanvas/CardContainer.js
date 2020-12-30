@@ -47,6 +47,7 @@ function CardContainer(props) {
                             store.currentActive = null;
                         }
                         // leaving room for other side effects
+                        store.currentContext = null;
                     }
                 }}
                 onMouseMove={(e) => {
