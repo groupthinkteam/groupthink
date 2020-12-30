@@ -48,6 +48,14 @@ function CardContainer(props) {
                         }
                         // leaving room for other side effects
                         store.currentContext = null;
+                        store.editingCard = null;
+                    }
+                    // TODO - handle closing things when the user clicks on any regular card instead 
+                    // of the bare canvas
+                    else {
+                        let className = e.target.className;
+                        if (className === "")
+                            store.currentContext = null;
                     }
                 }}
                 onMouseMove={(e) => {

@@ -12,36 +12,6 @@ function TextCard(props) {
     const textNodeRef = useRef(null);
     let store = useStore()
     const me = store.cards[props.id];
-    const textLength = me.content.text.length;
-
-    let [editing, setEditing] = useState(false);
-
-    //  useEffect(() => {
-    //     function handleClickOutside(e) {
-    //         const store = store;
-    //         if (textNodeRef.current) {
-    //             if (e.target.contains(textNodeRef.current)) {
-    //                 //trueclicked outside
-
-    //                 if (!textLength) {
-    //                     const store = store;
-    //                     store.resize(props.id, { width: me.size.width, height: 40 })
-    //                     store.saveContent(props.id, { title: me.content.title || null, text: me.content.text, shrinked: true })
-    //                 }
-    //                 if (store.currentActive === props.id) {
-    //                     store.currentActive = null;
-    //                 }
-    //                 e.stopPropagation();
-    //                 store.removeUserEditing(props.id, 'editing')
-    //             }
-    //         }
-    //         console.log("CHECK ", e.target === InlineTextEditRef.current, e.target.contains(textNodeRef.current), textNodeRef.current.contains(e.target), textNodeRef.current, e.target)
-    //     }
-    //     document.addEventListener("mousedown", handleClickOutside);
-    //     return () => {
-    //         document.removeEventListener("mousedown", handleClickOutside);
-    //     };
-    // }, [props.id, store, me.size.width, me.content.title, me.content.text, textLength]);
 
     const onSave = (e) => {
         e.stopPropagation();
@@ -51,27 +21,23 @@ function TextCard(props) {
         store.changeContent(props.id, { text: event.target.value });
         event.stopPropagation();
     }
-    const onBlurTextNode = (e) => {
-        setEditing(false)
-        e.stopPropagation();
-    }
 
     return (
         <div ref={textNodeRef}
             className="text-card"
             id={"text-node".concat(props.id)}
-            onBlur={onBlurTextNode}>
-            {editing ?
+        >
+            {store.editingCard === props.id ?
                 <CustomEditor
                     ref={customEditorRef}
                     id={`custom-editor-${props.id}`}
                     onChange={(e) => onChangeTitle(e, 'text')}
-                    onSave={(e) => { onSave(e, 'text'); setEditing(false) }}
+                    onSave={(e) => { onSave(e, 'text') }}
                     text={me.content.text}
-                    placeholder="Enter your Text"
+                    placeholder="Enter your Te\xt"
                 />
                 :
-                <div className="md-container-wrapper" onDoubleClick={() => { setEditing(true) }}>
+                <div className="md-container-wrapper" onDoubleClick={() => { store.editingCard = props.id }}>
                     <ReactMarkdown children={me.content.text} allowDangerousHtml className="md-container" />
                 </div>
             }

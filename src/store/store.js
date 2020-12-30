@@ -18,6 +18,7 @@ export var storeObject = {
     collapsedID: {},
     documentLoadPercent: 0,
     currentContext: '',
+    editingCard: null,
     recentSearches: {},
     clickTargetGeneric: '',
     toggleCollapse: false,
