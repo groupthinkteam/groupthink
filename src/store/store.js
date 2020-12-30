@@ -319,11 +319,19 @@ export var storeObject = {
         const updates = {};
         console.log("Check", "ID THAT STARTED DRAG ", id, "ITS PARENT", parentID, "TO DROP ", newChildId, dropParent)
         const throwParent = (ancestor) => {
-            console.log("ANCESTOR", ancestor); 
+            console.log("ANCESTOR", ancestor);
             return this.cards[ancestor]["parent"]
         }
         const throwChildren = (children) => {
-            return this.cards[children].children
+            return this.cards[children]?.children
+        }
+        const checkChildrens = (childrens) => {
+            const subChildrens = throwChildren(childrens);
+            console.log("SUBCHILDRENS ",typeof subChildrens, subChildrens, childrens, newChildId)
+            if (!childrens) return true
+            if (childrens && childrens[newChildId]) return false
+            
+            return checkValiditys(subChildrens)
         }
         function checkValiditys(ancestor) {
             const parent = throwParent(ancestor)
@@ -331,6 +339,11 @@ export var storeObject = {
             if (ancestor === newChildId) return false;
             if (children && children[parentID]) return false
             else if (ancestor === "root") return true
+
+            const ancestorChildren = throwChildren(ancestor);
+            console.log("CHILDRENs", ancestorChildren);
+            //One Level Down of Each parent - checkChildrens() for chidlren heirarchy
+            if (ancestorChildren && ancestorChildren[newChildId]) return false
 
             return checkValiditys(parent);
         }

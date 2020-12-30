@@ -20,6 +20,7 @@ const Arrow = (props) => {
 
     const [linePathDragging, setLinePathDragging] = useState(false);
     const [headPathDragging, setHeadPathDragging] = useState(false);
+    const [showArrowButtons, setShowArrowButtons] = useState(false);
     const store = useStore();
     const child = store.cards[props.id];
 
@@ -60,16 +61,7 @@ const Arrow = (props) => {
         x: parent.position.x + parent.size.width / 2,
         y: parent.position.y + parent.size.height + 9,
     }
-    /**
-     * ON RIGHT
-     * x: child.position.x ,
-     * y: child.position.y +(store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.height / 2)
-     * 
-     * ON LEFT 
-     * x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width ),
-        y: child.position.y + child.size.height/2
-     */
-    let tail = {
+    var tail = {
         x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
         y: child.position.y - 7,
         position: 'top'
@@ -78,7 +70,7 @@ const Arrow = (props) => {
     if (parent.position.x > child.position.x + child.size.width) {
         console.log("Left")
         tail = {
-            x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width) + 35,
+            x: child.position.x + (store.collapsedID[props.id] ? 193 : child.size.width) + 35,
             y: child.position.y + child.size.height,
             position: 'left'
         }
@@ -86,8 +78,8 @@ const Arrow = (props) => {
     else if (parent.position.x < child.position.x - child.size.width) {
         console.log("Right");
         tail = {
-            x: child.position.x - 25,
-            y: child.position.y + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.height),
+            x: child.position.x - 25 + (store.collapsedID[props.id] ? 63 : 0),
+            y: child.position.y + (store.collapsedID[props.id] ? child.size.height : child.size.height),
             position: 'right'
         }
     }
@@ -104,7 +96,22 @@ const Arrow = (props) => {
 
     let path, childPath;
     if (linePathDragging?.tail) {
-        path = updatePath(linePathDragging.x, linePathDragging.y, tail.x, tail.y)
+        let tempX, tempY;
+        switch (tail.position) {
+            case "right":
+                tempX = tail.x + 25
+                tempY = tail.y - (child.size.height / 2)
+                break;
+            case "left":
+                tempX = tail.x - 33
+                tempY = tail.y - (child.size.height / 2)
+                break;
+            default:
+                tempX = tail.x
+                tempY = tail.y
+                break;
+        }
+        path = updatePath(linePathDragging.x, linePathDragging.y, tempX, tempY)
     }
     else if (linePathDragging?.head) {
         childPath = updatePath(head.x === tail.x ? head.x + 1 : head.x, head.y === tail.y - 19 ? head.y + 1 : head.y, tail.x, tail.y - 19)
@@ -112,24 +119,61 @@ const Arrow = (props) => {
         path = updatePath(linePathDragging.x, linePathDragging.y, head.x, linePathDragging.y === head.y ? head.y + 1 : head.y)
     }
     else {
-        path = updatePath(head.x === tail.x ? head.x + 1 : head.x, head.y === tail.y - 19 ? head.y + 1 : head.y, tail.x, tail.y - 19)
+        let tempX, tempY;
+        switch (tail.position) {
+            case "right":
+                tempX = tail.x
+                tempY = tail.y - 19
+                break;
+            case "left":
+                tempX = tail.x - 7
+                tempY = tail.y - 17
+                break;
+            default:
+                tempX = tail.x
+                tempY = tail.y - 18
+                break;
+        }
+        path = updatePath(head.x === tail.x ? head.x + 1 : head.x, head.y === tail.y - 19 ? head.y + 1 : head.y, tempX, tempY)
     }
-
+    var slopeX, slopeY;
     function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
-        var bezierWeightX = x4 > x1 ? -0.8 : 1;
+        var bezierWeightX = x4 > x1 ? -0.8 : 1.1;
+        if (tail && tail?.position === 'top')
+            bezierWeightX = x4 > x1 ? 0.1 : -0.1
         var dx = Math.abs(x4 - x1) * bezierWeightX;
         var x2 = (x1 - dx);
         var x3 = (x4 + dx);
-        var bezierWeightY = y1 > y4 ? -0.2 : 0.2;
+        var bezierWeightY = y1 > y4 ? -0.01 : 0.01;
+        if (tail && tail?.position === 'top')
+            bezierWeightY = y1 > y4 ? 1 : -1
         var dy = Math.abs(y4 - y1) * bezierWeightY;
         var y2 = (y1 - dy);
         var y3 = (y4 + dy);
+        switch (tail?.position) {
+            case "right":
+                slopeX = ((x3 + midPoint.x) / 2) + (x4 > x1 ? 15 : -10);
+                slopeY = ((y3 + midPoint.y) / 2) + (y1 > y4 ? -3 : -2);
+                break;
+            case "left":
+                slopeX = ((x3 + midPoint.x) / 2) + (x4 > x1 ? 1 : -(x3 / 100));
+                slopeY = ((y3 + midPoint.y) / 2) + (y1 > y4 ? -2 : -((y3 - 2) / 100));
+                break;
+            case "top":
+                slopeX = (x4 + midPoint.x) / 2;
+                slopeY = (y3 + midPoint.y) / 2;
+                break;
+            default: break;
+        }
         return `M${x1} ${y1} C${x1} ${y1} ${x3} ${y3} ${x4} ${y4}`;
     }
     // console.log("ARROW ", linePathDragging)
     return (
-        <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}>
+        <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}
+            onMouseEnter={() => setShowArrowButtons(true)}
+            onMouseLeave={() => setShowArrowButtons(false)}
+        >
             <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
                 <defs>
                     <linearGradient id={"grad3".concat(props.id)} x1={head.x > tail.x ? "100%" : '0%'} y1="0%" x2={head.x > tail.x ? "0%" : "100%"} y2="0%">
@@ -174,6 +218,8 @@ const Arrow = (props) => {
                         </svg>
                         <MidPointInArrow
                             id={"k".concat(props.id)}
+                            slopeX={-10}
+                            slopeY={-10}
                             midPoint={midPoint}
                         />
                         <TailArrow
@@ -190,16 +236,24 @@ const Arrow = (props) => {
                 linePathDragging={linePathDragging}
                 setLinePathDragging={setLinePathDragging}
             />
-            <MidPointInArrow
-                id={props.id}
-                midPoint={midPoint}
-                linePathDragging={linePathDragging}
-            />
+            {
+                showArrowButtons ?
+                    <MidPointInArrow
+                        id={props.id}
+                        slopeX={slopeX}
+                        slopeY={slopeY}
+                        midPoint={midPoint}
+                        linePathDragging={linePathDragging}
+                    />
+                    : null
+            }
+
             {
                 linePathDragging?.tail || !linePathDragging ?
                     <TailArrow
                         id={props.id}
                         tail={tail}
+                        showArrowButtons={showArrowButtons}
                         linePathDragging={linePathDragging}
                         setLinePathDragging={setLinePathDragging}
                     />

@@ -143,8 +143,8 @@ const GenericCard = props => {
                         else {
                             store.changeContainerSizeLocal({ width: `10000px`, height: '10000px' })
                         }
+                        store.changePosition(props.id, { x: this.x, y: this.y });
                         y[0].update(true)
-                        store.changePosition(props.id, { x: this.x, y: this.y })
                     },
                     onDragEnd: dragStop,
                     cursor: "grab",
