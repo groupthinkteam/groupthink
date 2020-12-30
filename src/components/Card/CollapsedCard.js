@@ -91,9 +91,13 @@ const CollapsedCard = (props) => {
                     allowContextMenu: true,
                     trigger: "#".concat(props.id),
                     // dragClickables: store.currentActive !== props.id,
-                    dragClickables: false,
-                    onClick: () => { collapseCardRef.current.focus(); },
+                    dragClickables: true,
                     onDragStart: dragStart,
+                    onClick: function click() {
+                        if (store.currentActive !== props.id) {
+                            store.currentActive = props.id
+                        }
+                    },
                     onDrag: function drag() {
                         gsap.to("#".concat(props.id), {
                             boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
@@ -109,20 +113,7 @@ const CollapsedCard = (props) => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     );
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (collapseCardRef.current && !collapseCardRef.current.contains(event.target)) {
-                store.clickTargetGeneric = '';
-                if (store.currentActive === props.id) {
-                    store.currentActive = null;
-                }
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [collapseCardRef, store.clickTargetGeneric, props.id, store.currentActive,store]);
+
     const expandChildren = (childrenId) => {
         const currentCard = store.cards[childrenId];
 
@@ -173,22 +164,10 @@ const CollapsedCard = (props) => {
         <div id={props.id}
             ref={collapseCardRef}
             className="collapsed-card "
-            tabIndex={-1}
-            onLoad={() => { changeCurrentActive(); onLoadSizeDiv() }}
-            onBlur={(e) => {
-                changeCurrentActive();
-                e.stopPropagation();
-                store.removeUserEditing(props.id, 'editing')
-            }}
-            onFocus={e => {
-                store.currentActive = props.id;
-                store.addUserEditing(props.id, 'editing')
-                e.stopPropagation();
-            }}
+            onLoad={() => { onLoadSizeDiv() }}
             style={{
                 position: "absolute",
                 opacity: 0,
-                borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                 tabIndex: -1,
                 textAlign: 'center',
                 backgroundColor: 'white',
@@ -209,7 +188,7 @@ const CollapsedCard = (props) => {
                             )
                         })
                 }
-                <div className="card-count-indicator" style={{padding:'0px 5px', cursor: 'pointer' }} onClick={() => { expandChildren(props.id) }}>
+                <div className="card-count-indicator" style={{ padding: '0px 5px', cursor: 'pointer' }} onClick={() => { expandChildren(props.id) }}>
 
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle
