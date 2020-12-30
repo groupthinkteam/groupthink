@@ -42,8 +42,11 @@ function CardContainer(props) {
                 }}
                 onClick={(e) => {
                     if (e.target.className === "container-filler") {
-                        store.removeUserEditing(store.currentActive, 'editing')
-                        store.currentActive = null
+                        if (store.currentActive) {
+                            store.removeUserEditing(store.currentActive, 'editing');
+                            store.currentActive = null;
+                        }
+                        // leaving room for other side effects
                     }
                 }}
                 onMouseMove={(e) => {
