@@ -328,10 +328,10 @@ export var storeObject = {
         }
         const checkChildrens = (childrens) => {
             const subChildrens = throwChildren(childrens);
-            console.log("SUBCHILDRENS ",typeof subChildrens, subChildrens, childrens, newChildId)
+            console.log("SUBCHILDRENS ", typeof subChildrens, subChildrens, childrens, newChildId)
             if (!childrens) return true
             if (childrens && childrens[newChildId]) return false
-            
+
             return checkValiditys(subChildrens)
         }
         function checkValiditys(ancestor) {
