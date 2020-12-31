@@ -28,7 +28,7 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
             {
                 label: "Default Size",
                 onClick: () => {
-                    store.resize(id, { height: me.content.displayHeight + 60, width: me.content.displayWidth + 20 })
+                    store.resize(id, { height: me.content.displayHeight + 60, width: me.content.displayWidth + 14 })
                 }
             },
             {
