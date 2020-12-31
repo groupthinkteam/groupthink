@@ -89,11 +89,11 @@ const Arrow = (props) => {
             position: 'right'
         }
     }
-    else if (parent.position.y > child.position.y - child.size.height) {
+    else if (parent.position.y > child.position.y ) {
         console.log("TOP");
         tail = {
             x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
-            y: child.position.y + child.size.height * 2 - 12,
+            y: child.position.y + child.size.height + 35  ,
             position: 'top'
         }
     }
