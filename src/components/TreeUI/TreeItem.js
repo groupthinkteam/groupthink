@@ -69,8 +69,8 @@ function TreeItem(props) {
             case "link": nodesInfo = me.content.title; break;
             case "audio": nodesInfo = me.content.metadata?.name; break;
             case "image":
-                if (me.content.captions || me.content.label?.description)
-                    nodesInfo = me.content.label?.description || me.content.captions;
+                if (me.content.caption || me.content.label?.description)
+                    nodesInfo = me.content.label?.description || me.content.caption;
                 else
                     nodesInfo = me.content.metadata?.name;
                 break;
