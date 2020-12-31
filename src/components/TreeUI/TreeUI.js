@@ -10,8 +10,8 @@ import "../../styles/TreeUI/TreeUI.scss";
 // import SortableTree from 'react-sortable-tree';
 
 function TreeUI(props) {
-    let store = useStore();
-    let [expanded, setExpanded] = useState(false);
+    const store = useStore();
+    let [expanded, setExpanded] = useState(true);
 
     if (!expanded) {
         return (

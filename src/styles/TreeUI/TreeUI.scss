@@ -21,9 +21,11 @@
     background-color: white;
     color: #32aaff;
     transition: 0.2s;
+
     &:hover {
         left: 0px;
     }
+
     .tree-arrow {
         margin-left: 10px;
         height: 16px;
@@ -42,6 +44,7 @@
     border-right: 1px solid #dfdcdc;
     padding: 10px;
     font-family: Overpass;
+
     .heading {
         font-family: Overpass;
         font-style: normal;
@@ -54,32 +57,57 @@
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
+
         .tree-arrow {
-            rotate: 180deg;
+            transform:rotate( 180deg);
             cursor: pointer;
+            transform: -ms-transform-rotate(180deg);
+            /* IE 9 */
+            transform: -moz-transform-rotate(180deg);
+            /* Firefox */
+            transform: -webkit-transform-rotate(180deg);
+            /* Safari and Chrome */
+            transform: -o-transform-rotate(180deg);
         }
     }
+
     .treelist {
         margin-left: 10px;
+
         .content {
             display: flex;
             flex-flow: row nowrap;
             justify-content: flex-start;
             align-items: center;
+
             .arrow-placeholder {
                 min-width: 20px;
             }
+
             .tree-arrow {
-                transition: 0.2s;
+                transform:transition( 1s);
+
                 &.collapsed {
-                    rotate: -90deg;
+                    transform:rotate( -90deg);
+                    transform: -ms-transform-rotate(-90deg);
+                    /* IE 9 */
+                    transform: -moz-transform-rotate(-90deg);
+                    /* Firefox */
+                    transform: -webkit-transform-rotate(-90deg);
+                    /* Safari and Chrome */
+                    transform: -o-transform-rotate(-90deg);
                 }
             }
+
             .treeitem {
                 // border: 1.5px solid black;
                 margin: 5px 0px;
                 width: fit-content;
                 white-space: nowrap;
+            }
+
+            .type-icon {
+                padding: 0px 8px 0px 0px;
             }
         }
     }

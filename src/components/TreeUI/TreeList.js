@@ -6,9 +6,9 @@ import TreeItem from "./TreeItem";
 import "../../styles/TreeUI/TreeUI.scss";
 
 function TreeList(props) {
-    let store = useStore()
+    const store = useStore()
     let children = store.cards[props.cardID]?.children
-    let [expanded, setExpanded] = useState(false);
+    let [expanded, setExpanded] = useState(true);
     // need tree arrow state here
 
     return (
