@@ -3,6 +3,24 @@
     min-height: 100%;
     display: flex;
     flex-flow: column nowrap;
+    .toolbar {
+        position: absolute;
+        // top: -35px;
+        width: calc(100% + 2.5px);
+        height: 50px;
+        border: 1.5px solid #32aaff;
+        border-bottom: none;
+        left: -1px;
+        border-radius: 6px;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+        background-color: transparent;
+        padding: 10px;
+        box-sizing: border-box;
+        opacity: 0;
+        display: none;
+        background-color: #dedede;
+    }
     .custom-editor {
         border-width: 0px;
         background-color: transparent;

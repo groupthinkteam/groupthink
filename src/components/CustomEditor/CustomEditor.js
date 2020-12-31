@@ -1,11 +1,19 @@
-import React, { useRef } from "react"
+import React, { useEffect, useRef } from "react"
+import { gsap } from "gsap/all"
 import "../../styles/CustomEditor.scss"
 
 function CustomEditor(props) {
+
+    useEffect(() => {
+        gsap.to("#toolbar" + props.id, { display: "block", top: "-40px", opacity: 1, duration: 0.2 });
+    }, [props.id])
+
     let textareaRef = useRef(null);
     return (
         <div className="editor-wrapper" onBlur={props.onLeave}>
-            <button onClick={() => { textareaRef.current.select() }}>bold</button>
+            <div className={"toolbar"} id={"toolbar" + props.id}>
+                <button onClick={() => { textareaRef.current.select() }}>bold</button>
+            </div>
             <textarea
                 ref={textareaRef}
                 style={props.style}
