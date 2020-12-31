@@ -58,7 +58,7 @@ const CollapsedCard = (props) => {
     // useEffect(() => { gsap.set("#".concat(props.id), { width: 275, height: 45 }) }, [me, props.id])
     const onLoadSizeDiv = () => {
         const cardDOM = document.getElementById(props.id).style;
-        console.log("check", cardDOM.width, me.size.width, parseInt(cardDOM.marginLeft), Object.keys(countCollapseCard(props.id)[0]).length)
+        console.log("check",cardDOM.height, cardDOM.width, me.size.width, parseInt(cardDOM.marginLeft), Object.keys(countCollapseCard(props.id)[0]).length)
 
         // store.changeSize(props.id,{width:me.size.width - parseInt(cardDOM.marginLeft) , height:cardDOM.height})
     }

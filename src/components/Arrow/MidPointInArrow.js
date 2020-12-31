@@ -40,7 +40,7 @@ const MidPointInArrow = (props) => {
                     gsap.set("#mid".concat(id), { top: midPoint.y, left: midPoint.x })
                     mid[0].update()
                 },
-                onClick: function () { collapseChildren(id) }
+                // onClick: function () { collapseChildren(id) }
             })
         return () => { if (mid[0]) mid[0].kill() }
     }, [id, midPoint.x, midPoint.y, collapseChildren]);
@@ -56,8 +56,7 @@ const MidPointInArrow = (props) => {
     console.log("SLOPE",Math.floor(props.slopeX) ,Math.floor( props.slopeY),slope)
     return (
         <>
-
-            <svg style={{ position: "absolute", overflow: "visible", zIndex: -1 }} x={linePathDragging ? linePathDragging.x : midPoint.x}
+            <svg onClick={()=>{ collapseChildren(id) }} style={{cursor:'pointer', position: "absolute", overflow: "visible", zIndex: -1 }} x={linePathDragging ? linePathDragging.x : midPoint.x}
                 y={linePathDragging ? linePathDragging.y : midPoint.y - 15 / 1.8} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle
                     id={"mid".concat(id)}

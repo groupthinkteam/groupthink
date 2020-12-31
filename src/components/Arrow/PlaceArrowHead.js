@@ -15,6 +15,7 @@ const PlaceHeadArrow = (props) => {
                 cursor: 'pointer',
                 activeCursor: "pointer",
                 autoScroll: 1,
+                dragClickables:true,
                 onDragStart: function () {
                     gsap.set("#PlaceHeadArrow".concat(id), { top: head.y, left: head.x });
                     PlaceHeadArrow[0].update()
@@ -60,6 +61,8 @@ const PlaceHeadArrow = (props) => {
                     stroke={`url(#grad33${props.id})`}
                     d={path} />
             </svg>
+            
+
             <svg style={{ zIndex: -1, position: "absolute", overflow: "visible" }} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle style={{ position: "absolute" }}
                     id={"PlaceHeadArrow".concat(id)}
@@ -67,11 +70,10 @@ const PlaceHeadArrow = (props) => {
                     cy={headPathDragging ? headPathDragging.y : head.y}
                     r="11.25"
                     fill="#FCFBF9" stroke="#413D45" stroke-width="1.5" />
-                <svg x={headPathDragging ? headPathDragging.x - 6 : head.x - 6}
+                <svg x={headPathDragging ? headPathDragging.x - 6 : head.x - 6}  
                     y={headPathDragging ? headPathDragging.y - 5 : head.y - 5} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 1V11M6 11L11 7M6 11L1 7" stroke="#413D45" stroke-width="1.5" stroke-linecap="round" />
                 </svg>
-
             </svg>
         </>
     )

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { gsap, Draggable } from "gsap/all";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite";
@@ -21,9 +21,14 @@ const Arrow = (props) => {
     const [linePathDragging, setLinePathDragging] = useState(false);
     const [headPathDragging, setHeadPathDragging] = useState(false);
     const [showArrowButtons, setShowArrowButtons] = useState(false);
+    
     const store = useStore();
     const child = store.cards[props.id];
-
+    useEffect(()=>{
+        if(headPathDragging && store.currentActive === props.id){
+            setShowArrowButtons(false);
+        }
+    },[headPathDragging,props.id,store.currentActive])
     if (!child) return null
 
     const parent = store.cards[child.parent];
@@ -31,13 +36,15 @@ const Arrow = (props) => {
     if (!parent) return null;
 
     const PlaceArrow = (strategy) => {
+        console.log("PLACE",strategy)
         let path;
         const tailRoot = {
-            x: child.position.x + child.size.width / 2,
+            x: child.position.x + child.size.width / 2 -(strategy? 20:0),
             y: child.position.y + child.size.height + 10
         }
+        if (store.collapsedID[props.id]) return null
         if (headPathDragging?.head) {
-            path = updatePath(headPathDragging.x, headPathDragging.y === tailRoot.y ? headPathDragging.y + 1 : headPathDragging.y, tailRoot.x, tailRoot.y)
+            path = updatePath(headPathDragging.x, headPathDragging.y === tailRoot.y ? headPathDragging.y + 1 : headPathDragging.y, tailRoot.x, tailRoot.y-7)
         }
         return (
             <>
@@ -54,24 +61,23 @@ const Arrow = (props) => {
     }
     if (child.parent === "root") {
         if (store.currentActive !== props.id) return null;
-        if (child.children) return null
         return PlaceArrow()
     }
-    const head = {
+    var head = {
         x: parent.position.x + parent.size.width / 2,
-        y: parent.position.y + parent.size.height + 9,
+        y: parent.position.y + parent.size.height  ,
     }
     var tail = {
         x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
         y: child.position.y - 7,
-        position: 'top'
+        position: 'bottom'
     }
     //TAIL POSITIONING
     if (parent.position.x > child.position.x + child.size.width) {
         console.log("Left")
         tail = {
-            x: child.position.x + (store.collapsedID[props.id] ? 193 : child.size.width) + 35,
-            y: child.position.y + child.size.height,
+            x: child.position.x + (store.collapsedID[props.id] ? 200 : child.size.width) + 35,
+            y: child.position.y + 17 + (store.collapsedID[props.id] ? 28 : (child.size.height / 2)),
             position: 'left'
         }
     }
@@ -79,14 +85,18 @@ const Arrow = (props) => {
         console.log("Right");
         tail = {
             x: child.position.x - 25 + (store.collapsedID[props.id] ? 63 : 0),
-            y: child.position.y + (store.collapsedID[props.id] ? child.size.height : child.size.height),
+            y: child.position.y + 17 + (store.collapsedID[props.id] ? 28 : child.size.height / 2),
             position: 'right'
         }
     }
-    // if(parent.position.y > child.position.y)
-    // console.log("TOP")
-    // else
-    // console.log("BOTTOM")
+    else if (parent.position.y > child.position.y - child.size.height) {
+        console.log("TOP");
+        tail = {
+            x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
+            y: child.position.y + child.size.height * 2 - 12,
+            position: 'top'
+        }
+    }
 
     const midPoint = {
         x: (tail.x + head.x) / 2,
@@ -105,6 +115,10 @@ const Arrow = (props) => {
             case "left":
                 tempX = tail.x - 33
                 tempY = tail.y - (child.size.height / 2)
+                break;
+            case "top":
+                tempX = tail.x
+                tempY = tail.y - 30
                 break;
             default:
                 tempX = tail.x
@@ -129,49 +143,62 @@ const Arrow = (props) => {
                 tempX = tail.x - 7
                 tempY = tail.y - 17
                 break;
+            case "top":
+                tempX = tail.x + 8
+                tempY = tail.y - 7
+                break;
             default:
                 tempX = tail.x
                 tempY = tail.y - 18
                 break;
         }
-        path = updatePath(head.x === tail.x ? head.x + 1 : head.x, head.y === tail.y - 19 ? head.y + 1 : head.y, tempX, tempY)
+        path = updatePath(
+            head.x === tail.x ? head.x + 1 : head.x, 
+            head.y === tail.y - 19 ? head.y + 1 : head.y
+            , tempX, tempY
+        )
     }
     var slopeX, slopeY;
     function updatePath(x1, y1, x4, y4) {
         // Amount to offset control points
         var bezierWeightX = x4 > x1 ? -0.8 : 1.1;
-        if (tail && tail?.position === 'top')
+        if (tail && (tail?.position === 'bottom' || tail?.position === 'top'))
             bezierWeightX = x4 > x1 ? 0.1 : -0.1
         var dx = Math.abs(x4 - x1) * bezierWeightX;
-        var x2 = (x1 - dx);
+        // var x2 = (x1 - dx);
         var x3 = (x4 + dx);
         var bezierWeightY = y1 > y4 ? -0.01 : 0.01;
-        if (tail && tail?.position === 'top')
+        if (tail && (tail?.position === 'bottom' || tail?.position === 'top'))
             bezierWeightY = y1 > y4 ? 1 : -1
         var dy = Math.abs(y4 - y1) * bezierWeightY;
-        var y2 = (y1 - dy);
+        // var y2 = (y1 - dy);
         var y3 = (y4 + dy);
         switch (tail?.position) {
             case "right":
-                slopeX = ((x3 + midPoint.x) / 2) + (x4 > x1 ? 15 : -10);
-                slopeY = ((y3 + midPoint.y) / 2) + (y1 > y4 ? -3 : -2);
+                slopeX = ((x3 + midPoint.x) / 2) + (x3 / 40)//+ (x4 > x1 ? 15 : -10);
+                slopeY = ((y3 + midPoint.y) / 2) - (y3 / 120)//+ (y1 > y4 ? -3 : -2);
                 break;
             case "left":
-                slopeX = ((x3 + midPoint.x) / 2) + (x4 > x1 ? 1 : -(x3 / 100));
-                slopeY = ((y3 + midPoint.y) / 2) + (y1 > y4 ? -2 : -((y3 - 2) / 100));
+                slopeX = ((x3 + midPoint.x) / 2) - (x3 / 40) //+ (x4 > x1 ? (x3) : -(x3 / 40));
+                slopeY = ((y3 + midPoint.y) / 2) - (y3 / 120)//+ (y1 > y4 ? -2 : -9);
+                break;
+            case "bottom":
+                slopeX = (x4 + midPoint.x) / 2;
+                slopeY = (y3 + midPoint.y) / 2;
                 break;
             case "top":
                 slopeX = (x4 + midPoint.x) / 2;
                 slopeY = (y3 + midPoint.y) / 2;
                 break;
-            default: break;
+            default:
+                break;
         }
         return `M${x1} ${y1} C${x1} ${y1} ${x3} ${y3} ${x4} ${y4}`;
     }
     // console.log("ARROW ", linePathDragging)
     return (
         <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}
-            onMouseEnter={() => setShowArrowButtons(true)}
+            onMouseEnter={() => headPathDragging?null: setShowArrowButtons(true)}
             onMouseLeave={() => setShowArrowButtons(false)}
         >
             <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
@@ -181,6 +208,13 @@ const Arrow = (props) => {
                         <stop offset="100%" stopColor="#5FA2F1" stopOpacity="1" />
                     </linearGradient>
                 </defs>
+                {/* Duplicated for extra width on hover */}
+                <path
+                    className="arrow-path"
+                    strokeWidth="25"
+                    fill="none"
+                    stroke={`transparent`}
+                    d={path} />
                 <path
                     className="arrow-path"
                     strokeWidth="2"
@@ -188,11 +222,6 @@ const Arrow = (props) => {
                     stroke={`url(#grad3${props.id})`}
                     d={path} />
             </svg>
-            {
-                (!child.children && store.currentActive === props.id) ?
-                    PlaceArrow("subChild")
-                    : null
-            }
             {
                 linePathDragging?.head ?
                     <>
@@ -204,24 +233,6 @@ const Arrow = (props) => {
                                 stroke={`url(#grad3${props.id})`}
                                 d={childPath} />
                         </svg>
-                        <svg style={{ zIndex: -1, position: "absolute", overflow: "visible" }} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle style={{ position: "absolute" }}
-                                id={"headArrowstatic".concat(props.id)}
-                                cx={head.x}
-                                cy={head.y}
-                                r="11.25"
-                                fill="#FCFBF9" stroke="#413D45" stroke-width="1.5" />
-                            <svg x={head.x - 6}
-                                y={head.y - 5} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 1V11M6 11L11 7M6 11L1 7" stroke="#413D45" stroke-width="1.5" stroke-linecap="round" />
-                            </svg>
-                        </svg>
-                        <MidPointInArrow
-                            id={"k".concat(props.id)}
-                            slopeX={-10}
-                            slopeY={-10}
-                            midPoint={midPoint}
-                        />
                         <TailArrow
                             id={props.id}
                             tail={tail}
@@ -230,14 +241,14 @@ const Arrow = (props) => {
                     </>
                     : null
             }
-            <HeadArrow
-                id={props.id}
-                head={head}
-                linePathDragging={linePathDragging}
-                setLinePathDragging={setLinePathDragging}
-            />
             {
-                showArrowButtons ?
+                store.currentActive === props.id ?
+                        PlaceArrow("subChild")
+                    : null
+            }
+
+            {
+                showArrowButtons || linePathDragging ?
                     <MidPointInArrow
                         id={props.id}
                         slopeX={slopeX}
