@@ -262,7 +262,7 @@ const GenericCard = props => {
                         }} />
                         : null
                 }
-                <button className="kebab"
+                {/* <button className="kebab"
                     onClick={() => {
                         store.currentContext = props.id;
                         setContextMenu(null);
@@ -270,7 +270,7 @@ const GenericCard = props => {
 
                 >
                     <img alt='Menu' width="5px" src={require('../../assets/kebab.svg')} />
-                </button>
+                </button> */}
                 {
                     // editingUser &&
                     // <div className="generic-card-active-user-list">

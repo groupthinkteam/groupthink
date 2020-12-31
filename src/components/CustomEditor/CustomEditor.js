@@ -4,7 +4,7 @@ import "../../styles/CustomEditor.scss"
 function CustomEditor(props) {
     let textareaRef = useRef(null);
     return (
-        <div onBlur={props.onLeave} style={{height: "100%", width: "100%"}}>
+        <div className="editor-wrapper" onBlur={props.onLeave}>
             <button onClick={() => { textareaRef.current.select() }}>bold</button>
             <textarea
                 ref={textareaRef}

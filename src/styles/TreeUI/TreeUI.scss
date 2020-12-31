@@ -59,7 +59,7 @@
         align-items: center;
 
         .tree-arrow {
-            transform:rotate( 180deg);
+            transform: rotate(180deg);
             cursor: pointer;
             transform: -ms-transform-rotate(180deg);
             /* IE 9 */
@@ -85,10 +85,10 @@
             }
 
             .tree-arrow {
-                transform:transition( 1s);
+                transform: transition(1s);
 
                 &.collapsed {
-                    transform:rotate( -90deg);
+                    transform: rotate(-90deg);
                     transform: -ms-transform-rotate(-90deg);
                     /* IE 9 */
                     transform: -moz-transform-rotate(-90deg);
