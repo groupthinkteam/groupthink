@@ -5,7 +5,7 @@ import "../../styles/CustomEditor.scss"
 function CustomEditor(props) {
 
     useEffect(() => {
-        gsap.to("#toolbar" + props.id, { display: "block", top: "-40px", opacity: 1, duration: 0.2 });
+        gsap.to("#toolbar" + props.id, { display: "block", top: "-35px", opacity: 1, duration: 0.2 });
     }, [props.id])
 
     let textareaRef = useRef(null);

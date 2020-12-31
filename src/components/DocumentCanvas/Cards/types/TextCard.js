@@ -34,7 +34,7 @@ function TextCard(props) {
                     onChange={(e) => onChangeTitle(e, 'text')}
                     onSave={(e) => { onSave(e, 'text') }}
                     text={me.content.text}
-                    placeholder="Enter your Te\xt"
+                    placeholder="type here..."
                 />
                 :
                 <div className="md-container-wrapper" onDoubleClick={() => { store.editingCard = props.id }}>
