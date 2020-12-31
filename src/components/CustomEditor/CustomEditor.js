@@ -12,7 +12,13 @@ function CustomEditor(props) {
     return (
         <div className="editor-wrapper" onBlur={props.onLeave}>
             <div className={"toolbar"} id={"toolbar" + props.id}>
-                <button onClick={() => { textareaRef.current.select() }}>bold</button>
+                <button onClick={() => {
+                    let start = textareaRef.current.selectionStart
+                    let end = textareaRef.current.selectionEnd
+                    let newText = props.text.substring(0, start) + "**" + props.text.substring(start, end) + "**" + props.text.substring(end, props.text.length);
+                    console.log(start, end, newText)
+                    props.onChange({ target: { value: newText} })
+                }}>bold</button>
             </div>
             <textarea
                 ref={textareaRef}

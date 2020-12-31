@@ -19,7 +19,8 @@ function TextCard(props) {
     }
     const onChangeTitle = (event) => {
         store.changeContent(props.id, { text: event.target.value });
-        event.stopPropagation();
+        if (event.stopPropagation)
+            event.stopPropagation();
     }
 
     return (
