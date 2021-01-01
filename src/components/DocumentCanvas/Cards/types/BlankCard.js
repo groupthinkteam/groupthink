@@ -5,6 +5,29 @@ import "../../../../styles/Cards/BlankCard.scss";
 import InlineTextEdit from "../../../InlineTextEdit/InlineTextEdit";
 import { detectDimension, getTypeFromURL, getMetadataFromURL, getTypeFromMetadata, resizeDimension } from "../cardTypeUtils";
 
+const defaultSize = {
+    text: {
+        height: 200,
+        width: 280
+    },
+    todo: {
+        height: 300,
+        width: 230
+    },
+    file: {
+        height: 50,
+        width: 250
+    },
+    audio: {
+        height: 113,
+        width: 300
+    },
+    link: {
+        height: 112,
+        width: 400
+    }
+};
+
 /**
  * @description The BlankCard type provides the UI for a newly-added card. It 
  * has buttons that let the user select which card type they want to use. Hence,
@@ -12,28 +35,6 @@ import { detectDimension, getTypeFromURL, getMetadataFromURL, getTypeFromMetadat
  * @param {*} props 
  */
 function BlankCard(props) {
-    const defaultSize = {
-        text: {
-            height: 200,
-            width: 280
-        },
-        todo: {
-            height: 300,
-            width: 230
-        },
-        file: {
-            height: 50,
-            width: 250
-        },
-        audio: {
-            height: 113,
-            width: 300
-        },
-        link: {
-            height: 112,
-            width: 400
-        }
-    };
 
     let inputFile = useRef(null);
     let [uploadState, setUploadState] = useState(false)
