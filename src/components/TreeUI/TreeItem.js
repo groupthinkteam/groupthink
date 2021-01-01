@@ -59,7 +59,7 @@ function TreeItem(props) {
     }
     if (id !== 'dummy') {
         const me = store.cards[id];
-        console.log("ME ", id, me)
+        // console.log("ME ", id, me)
         switch (me?.type) {
             case 'root': nodesInfo = store.projectName; break;
             case 'text':
@@ -82,12 +82,13 @@ function TreeItem(props) {
         }
     }
     if (props.cardID === "dummy") return null;
-    console.log(nodesInfo,"INFO")
+    // console.log(nodesInfo,"INFO")
     return (
         <div className="treeitem"
             onClick={() => id === 'root' ? null : scrollToID()}
             style={store.currentActive === id ? nodeFocus : {}}>
             <div className="content">
+                
                 {
                     id !== 'root' && me?
                     typeToImage(me.type):null
@@ -100,6 +101,7 @@ function TreeItem(props) {
                             nodesInfo.length > 21 ? nodesInfo.substring(0, 15).concat('...') : nodesInfo
                             : nodesInfo
                 }
+                
             </div>
         </div>
     )

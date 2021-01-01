@@ -10,7 +10,7 @@ function TreeList(props) {
     let children = store.cards[props.cardID]?.children
     let [expanded, setExpanded] = useState(true);
     // need tree arrow state here
-
+    console.log("CHILDREN",children)
     return (
         <div className="treelist">
             <div className="content">

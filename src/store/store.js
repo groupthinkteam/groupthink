@@ -314,65 +314,40 @@ export var storeObject = {
     changeContainerSizeLocal(size) {
         this.container = size
     },
-    makeCardChild(id, newChildId, strategy) {
-        const parentID = this.cards[id].parent;
-        const dropParent = this.cards[newChildId].parent;
-        const updates = {};
-        console.log("Check", "ID THAT STARTED DRAG ", id, "ITS PARENT", parentID, "TO DROP ", newChildId, dropParent)
-        const throwParent = (ancestor) => {
-            console.log("ANCESTOR", ancestor);
-            return this.cards[ancestor]["parent"]
-        }
+    makeCardChild(id, newParent, strategy) {
+        this.updateLastActive()
+        console.log("reparent requested for", id, "newparent", newParent);
+        const throwParent = (ancestor) => { return this.cards[ancestor]["parent"] }
+
         const throwChildren = (children) => {
             return this.cards[children]?.children
         }
-        const checkChildrens = (childrens) => {
-            const subChildrens = throwChildren(childrens);
-            console.log("SUBCHILDRENS ", typeof subChildrens, subChildrens, childrens, newChildId)
-            if (!childrens) return true
-            if (childrens && childrens[newChildId]) return false
+        function checkValidity(ancestor) {
+            const children = throwChildren(ancestor)
+            const parent = throwParent(id);
+            console.log("CHECK VALIDITY ", ancestor, id, " \n TO DROP ", newParent, children ? children[id] : "No children")
 
-            return checkValiditys(subChildrens)
+            if(!children) return true
+            if(children[id]) return false
+            if(children[parent]) return false
+            
+            return Object.keys(children).map(children => {
+                return checkValidity(children)
+            });
         }
-        function checkValiditys(ancestor) {
-            const parent = throwParent(ancestor)
-            const children = throwChildren(newChildId)
-            if (ancestor === newChildId) return false;
-            if (children && children[parentID]) return false
-            else if (ancestor === "root") return true
-
-            const ancestorChildren = throwChildren(ancestor);
-            console.log("CHILDRENs", ancestorChildren);
-            //One Level Down of Each parent - checkChildrens() for chidlren heirarchy
-            if (ancestorChildren && ancestorChildren[newChildId]) return false
-
-            return checkValiditys(parent);
-        }
-        if (checkValiditys(parentID)) {
-            console.log("REPARENT - MAKE CHILD", id, newChildId)
-            if (dropParent === parentID) {
-                updates[id + "/children/" + newChildId] = 1;
-                updates[newChildId + "/parent/"] = id;
-            }
-            else if (!strategy) {
-                updates[dropParent + "/children/" + newChildId] = null;
-                updates[parentID + "/children/" + newChildId] = 1;
-                updates[newChildId + "/parent/"] = parentID;
-            }
-            else {
-                updates[dropParent + "/children/" + newChildId] = null;
-                updates[id + "/children/" + newChildId] = 1;
-                updates[newChildId + "/parent/"] = id;
-            }
-
+        if (checkValidity(newParent)) {
+            const updates = {};
+            let currentParent = this.cards[id]["parent"];
+            updates[newParent + "/parent/"] = id;
+            updates[currentParent + "/children/" + newParent] = null;
+            updates[id + "/children/" + newParent] = 1;
             this.projectRef.child("nodes")
                 .update(updates)
-                .then(console.log("successfully added the children of", id, "to", newChildId, updates))
-                .catch((reason) => console.log("error making child because", reason));
+                .then(console.log("successfully changed the parent of", id, "from", currentParent, "to", newParent))
+                .catch((reason) => console.log("error reparenting because", reason));
+            return;
         }
-        else {
-            console.log("DONT Make CHILD")
-        }
+        console.log("didn't reparent because it was just not a valid request. do better next time.")
     },
     reparentCard(id, newParent, strategy) {
         this.updateLastActive()
