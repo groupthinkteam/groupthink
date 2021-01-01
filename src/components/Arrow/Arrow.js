@@ -236,7 +236,6 @@ const Arrow = (props) => {
                         <TailArrow
                             id={props.id}
                             tail={tail}
-                            setLinePathDragging={setLinePathDragging}
                         />
                     </>
                     : null
@@ -266,7 +265,6 @@ const Arrow = (props) => {
                         tail={tail}
                         showArrowButtons={showArrowButtons}
                         linePathDragging={linePathDragging}
-                        setLinePathDragging={setLinePathDragging}
                     />
                     : null
             }

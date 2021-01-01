@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { gsap, Draggable } from "gsap/all";
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/hook';
@@ -30,20 +30,6 @@ const MidPointInArrow = (props) => {
         setCollapse(!collapse)
     }, [id, store, collapse])
 
-    useEffect(() => {
-        const mid = Draggable.create("#mid".concat(id),
-            {
-                type: "top,left",
-                cursor: 'pointer',
-                activeCursor: "pointer",
-                onDragStart: function () {
-                    gsap.set("#mid".concat(id), { top: midPoint.y, left: midPoint.x })
-                    mid[0].update()
-                },
-                // onClick: function () { collapseChildren(id) }
-            })
-        return () => { if (mid[0]) mid[0].kill() }
-    }, [id, midPoint.x, midPoint.y, collapseChildren]);
     let openEye = {
         x:linePathDragging ? linePathDragging.x - 8 : props.slopeX - 8 ,
         y:linePathDragging ? linePathDragging.y - 12 / 1.8 : props.slopeY - 5
