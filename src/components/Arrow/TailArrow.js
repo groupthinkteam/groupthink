@@ -79,8 +79,6 @@ const TailArrow = (props) => {
 
         <svg style={{ zIndex: -1, position: "absolute", overflow: "visible" }}>
             {displayTail()}
-
-
             {
                 props.showArrowButtons ?
                     <>

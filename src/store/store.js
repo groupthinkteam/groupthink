@@ -317,25 +317,27 @@ export var storeObject = {
     makeCardChild(id, newParent, strategy) {
         this.updateLastActive()
         console.log("reparent requested for", id, "newparent", newParent);
-        const throwParent = (ancestor) => { return this.cards[ancestor]["parent"] }
+        const throwParent = (ancestor) => { return this.cards[ancestor]?.parent }
 
         const throwChildren = (children) => {
             return this.cards[children]?.children
         }
-        function checkValidity(ancestor) {
+        function checkValidity(ancestor,dragAncestor) {
             const children = throwChildren(ancestor)
-            const parent = throwParent(id);
+            
             console.log("CHECK VALIDITY ", ancestor, id, " \n TO DROP ", newParent, children ? children[id] : "No children")
 
             if (!children) return true
+            if(dragAncestor === ancestor) return false
             if (children[id]) return false
-            if (children[parent]) return false
+            else if (children[dragAncestor]) return false
 
             return Object.keys(children).map(children => {
-                return checkValidity(children)
+                const parent = throwParent(dragAncestor);
+                return checkValidity(children,parent)
             });
         }
-        if (checkValidity(newParent)) {
+        if (checkValidity(newParent,throwParent(id))) {
             const updates = {};
             let currentParent = this.cards[newParent]["parent"];
             updates[newParent + "/parent/"] = id;
