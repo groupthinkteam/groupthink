@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.689ca81a.chunk.css",
-    "main.js": "/static/js/main.0b0b82bd.chunk.js",
+    "main.css": "/static/css/main.ab33220a.chunk.css",
+    "main.js": "/static/js/main.732ddb63.chunk.js",
     "reactPlayerDailyMotion.js": "/static/js/reactPlayerDailyMotion.92c67735.chunk.js",
     "reactPlayerFacebook.js": "/static/js/reactPlayerFacebook.d3286dfb.chunk.js",
     "reactPlayerFilePlayer.js": "/static/js/reactPlayerFilePlayer.6d38fc14.chunk.js",
@@ -16,9 +16,9 @@
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.343ed612.chunk.js",
     "runtime-main.js": "/static/js/runtime-main.de16623a.js",
     "static/css/14.ddfb208a.chunk.css": "/static/css/14.ddfb208a.chunk.css",
-    "static/js/14.42b390fb.chunk.js": "/static/js/14.42b390fb.chunk.js",
+    "static/js/14.8600588a.chunk.js": "/static/js/14.8600588a.chunk.js",
     "index.html": "/index.html",
-    "static/js/14.42b390fb.chunk.js.LICENSE.txt": "/static/js/14.42b390fb.chunk.js.LICENSE.txt",
+    "static/js/14.8600588a.chunk.js.LICENSE.txt": "/static/js/14.8600588a.chunk.js.LICENSE.txt",
     "static/media/1.webp": "/static/media/1.5073cef3.webp",
     "static/media/2.webp": "/static/media/2.5b0e1d6f.webp",
     "static/media/3.webp": "/static/media/3.63de2fa9.webp",
@@ -56,8 +56,8 @@
   "entrypoints": [
     "static/js/runtime-main.de16623a.js",
     "static/css/14.ddfb208a.chunk.css",
-    "static/js/14.42b390fb.chunk.js",
-    "static/css/main.689ca81a.chunk.css",
-    "static/js/main.0b0b82bd.chunk.js"
+    "static/js/14.8600588a.chunk.js",
+    "static/css/main.ab33220a.chunk.css",
+    "static/js/main.732ddb63.chunk.js"
   ]
 }

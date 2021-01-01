@@ -5,8 +5,8 @@ const cardSizeConstant = {
         minHeight: "45px",
     },
     text: {
-        minHeight: '200px',
-        minWidth: '280px',
+        minHeight: '40px',
+        minWidth: '80px',
         maxHeight: '600px',
         maxWidth:'600px'
     },
