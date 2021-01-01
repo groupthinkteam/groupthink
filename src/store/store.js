@@ -327,17 +327,17 @@ export var storeObject = {
             const parent = throwParent(id);
             console.log("CHECK VALIDITY ", ancestor, id, " \n TO DROP ", newParent, children ? children[id] : "No children")
 
-            if(!children) return true
-            if(children[id]) return false
-            if(children[parent]) return false
-            
+            if (!children) return true
+            if (children[id]) return false
+            if (children[parent]) return false
+
             return Object.keys(children).map(children => {
                 return checkValidity(children)
             });
         }
         if (checkValidity(newParent)) {
             const updates = {};
-            let currentParent = this.cards[id]["parent"];
+            let currentParent = this.cards[newParent]["parent"];
             updates[newParent + "/parent/"] = id;
             updates[currentParent + "/children/" + newParent] = null;
             updates[id + "/children/" + newParent] = 1;
@@ -351,29 +351,17 @@ export var storeObject = {
     },
     reparentCard(id, newParent, strategy) {
         this.updateLastActive()
-        console.log("reparent requested for", id, "newparent", newParent);
-        const throwParent = (ancestor) => { return this.cards[ancestor]["parent"] }
+        const updates = {}
+        let currentParent = this.cards[id]["parent"];
+        updates[id + "/parent"] = newParent;
+        updates[currentParent + "/children/" + id] = null;
+        updates[newParent + "/children/" + id] = 1;
+        this.projectRef.child("nodes")
+            .update(updates)
+            .then(console.log("successfully changed the parent of", id, "from", currentParent, "to", newParent))
+            .catch((reason) => console.log("error reparenting because", reason));
+        return;
 
-
-        function checkValidity(ancestor) {
-            if (ancestor === "root") return true;
-            if (ancestor === id) return false;
-            const parent = throwParent(ancestor)
-            return checkValidity(parent);
-        }
-        if (checkValidity(newParent)) {
-            const updates = {};
-            let currentParent = this.cards[id]["parent"];
-            updates[id + "/parent"] = newParent;
-            updates[currentParent + "/children/" + id] = null;
-            updates[newParent + "/children/" + id] = 1;
-            this.projectRef.child("nodes")
-                .update(updates)
-                .then(console.log("successfully changed the parent of", id, "from", currentParent, "to", newParent))
-                .catch((reason) => console.log("error reparenting because", reason));
-            return;
-        }
-        console.log("didn't reparent because it was just not a valid request. do better next time.")
     },
     requestUpload(uploadPath, file, metadata, statusCallback, use) {
         console.log("userID", this.users)
