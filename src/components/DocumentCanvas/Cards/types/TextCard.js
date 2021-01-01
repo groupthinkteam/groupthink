@@ -23,6 +23,10 @@ function TextCard(props) {
             event.stopPropagation();
     }
 
+    if (me.content.initialRender) {
+        store.editingCard = props.id;
+    }
+
     return (
         <div ref={textNodeRef}
             className="text-card"
