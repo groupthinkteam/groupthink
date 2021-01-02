@@ -4,14 +4,14 @@ import "../../styles/CustomEditor.scss"
 
 function CustomEditor(props) {
 
-    useEffect(() => {
-        gsap.to("#toolbar" + props.id, { display: "block", top: "-35px", opacity: 1, duration: 0.2 });
-    }, [props.id])
+    // useEffect(() => {
+    //     gsap.to("#toolbar" + props.id, { display: "block", top: "-35px", opacity: 1, duration: 0.2 });
+    // }, [props.id])
 
     let textareaRef = useRef(null);
     return (
         <div className="editor-wrapper" onBlur={props.onLeave}>
-            <div className={"toolbar"} id={"toolbar" + props.id}>
+            {/* <div className={"toolbar"} id={"toolbar" + props.id}>
                 <button onClick={() => {
                     let start = textareaRef.current.selectionStart
                     let end = textareaRef.current.selectionEnd
@@ -19,7 +19,7 @@ function CustomEditor(props) {
                     console.log(start, end, newText)
                     props.onChange({ target: { value: newText} })
                 }}>bold</button>
-            </div>
+            </div> */}
             <textarea
                 ref={textareaRef}
                 style={props.style}
