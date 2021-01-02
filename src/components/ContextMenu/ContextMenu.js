@@ -89,7 +89,7 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
         {
             label: 'Delete',
             onClick: () => {
-                store.removeCard(id, "recursive", me["parent"]);
+                store.removeCard(id, "reparent", me["parent"]);
                 closeContextMenu();
             }
         }

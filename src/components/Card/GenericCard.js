@@ -200,7 +200,7 @@ const GenericCard = props => {
                 }}
                 onKeyDown={(e) => {
                     if (e.key === "Delete" && me.type !== "text") {
-                        store.removeCard(props.id, "recursive")
+                        store.removeCard(props.id, "reparent",me.parent)
                     }
                 }}
                 style={{

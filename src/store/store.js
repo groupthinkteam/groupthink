@@ -220,7 +220,10 @@ export var storeObject = {
                 break;
             case "reparent":
                 Object.keys(this.cards[id]["children"])
-                    .forEach(child => updates[child + "/parent"] = newParent);
+                    .forEach(child =>{ 
+                        updates[newParent+"/children/"+child]=1
+                        updates[child + "/parent"] = newParent
+                    });
                 break;
             default:
                 break;
