@@ -36,8 +36,8 @@ const Arrow = (props) => {
     const PlaceArrow = (strategy) => {
         let path;
         const tailRoot = {
-            x: child.position.x + child.size.width / 2 - (strategy ? 20 : 0),
-            y: child.position.y + child.size.height + 10
+            x: child.position.x + child.size.width / 2 ,
+            y: child.position.y + child.size.height + 5
         }
         if (store.collapsedID[props.id]) return null
         if (headPathDragging?.head) {
@@ -167,7 +167,7 @@ const Arrow = (props) => {
         return `M${x1} ${y1} C${x1} ${y1} ${x3} ${y3} ${x4} ${y4}`;
     }
     return (
-        <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}
+        <div style={{ position: "absolute", overflow: "visible", zIndex: store.currentActive === props.id && !headPathDragging? 90000 : -1 }}
             onMouseEnter={() => headPathDragging ? null : setShowArrowButtons(true)}
             onMouseLeave={() => setShowArrowButtons(false)}
         >

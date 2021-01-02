@@ -49,6 +49,7 @@ const PlaceHeadArrow = (props) => {
 
     return (
         <>
+            <div style={{ position: "absolute", overflow: "visible", zIndex: store.currentActive === props.id && !headPathDragging? 90000 : -1 }}>
             <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
                 <defs>
                     <linearGradient id={"grad33".concat(props.id)} x1={'0%'} y1="0%" x2={"100%"} y2="0%">
@@ -76,7 +77,9 @@ const PlaceHeadArrow = (props) => {
             <svg id={"downArrow".concat(id)} style={{ zIndex: -1, position: "absolute", overflow: "visible" }} x={headPathDragging ? headPathDragging.x - 6 : head.x - 6}  
                     y={headPathDragging ? headPathDragging.y - 5 : head.y - 5} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 1V11M6 11L11 7M6 11L1 7" stroke="#413D45" stroke-width="1.5" stroke-linecap="round" />
-                </svg></svg>
+            </svg>
+            </svg>
+            </div>
         </>
     )
 }
