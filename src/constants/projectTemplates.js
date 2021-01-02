@@ -16,204 +16,1089 @@ const projectTemplates = {
             }
         }
     },
-    classDash:{
-        container: {
-            height: "10000px",
-            width: "10000px"
+    classDash:
+    {
+      "container" : {
+        "height" : "10000px",
+        "width" : "10000px"
+      },
+      "cursors" : {
+        "81imDMnwqsXaoJcFSBM8wyhsQaG2" : {
+          "x" : 1018,
+          "y" : 58
         },
-        nodes : {
-            "ClassDashCard1" : {
-              "children" : {
-                "ClassDashCard2" : 1
-              },
-              "content" : {
-                "displayHeight" : 197,
-                "displayWidth" : 350,
-                "metadata" : {
-                  "author_name" : "3Blue1Brown",
-                  "author_url" : "https://www.youtube.com/c/3blue1brown",
-                  "height" : 197,
-                  "html" : "\n<iframe width=\" 350\" height=\"197\" src=\"https://www.youtube.com/embed/qb40J4N1fa4?feature=oembed\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe>\n",
-                  "provider_name" : "YouTube",
-                  "provider_url" : "https://www.youtube.com/",
-                  "thumbnail_height" : 360,
-                  "thumbnail_url" : "https://i.ytimg.com/vi/qb40J4N1fa4/hqdefault.jpg",
-                  "thumbnail_width" : 480,
-                  "title" : "Implicit differentiation, what's going on here? | Essence of calculus, chapter 6",
-                  "type" : "video",
-                  "url" : "https://www.youtube.com/watch?v=qb40J4N1fa4",
-                  "version" : "1.0",
-                  "width" : 350
-                },
-                "url" : "https://www.youtube.com/watch?v=qb40J4N1fa4&list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr&index=6"
-              },
-              "parent" : "root",
-              "position" : {
-                "x" : 893,
-                "y" : 44
-              },
-              "size" : {
-                "height" : 237,
-                "width" : 370
-              },
-              "type" : "VideoLink"
-            },
-            "ClassDashCard3" : {
-              "children" : {
-                "ClassDashCard4" : 1,
-                "ClassDashCard5" : 1,
-                "ClassDashCard6" : 1
-              },
-              "content" : {
-                "text" : "<p><strong>Assignments:</strong></p><p><br></p><ol><li>Solve five problems from Calculus, by Gilbert Strang.</li><li>Write essay on the topic, \"Essence of Calculus\".</li><li>Check the deadlines and register for the examination.</li></ol>"
-              },
-              "parent" : "root",
-              "position" : {
-                "x" : 97,
-                "y" : 20
-              },
-              "size" : {
-                "height" : 200,
-                "width" : 280
-              },
-              "type" : "text"
-            },
-            "ClassDashCard4" : {
-              "content" : {
-                "caption" : "Assignment 1",
-                "displayHeight" : 400,
-                "displayWidth" : 373,
-                "height" : 1262,
-                "label" : {
-                  "description" : "Text White Line Black"
-                },
-                "metadata" : {
-                  "bucket" : "groupthink-fc4b2.appspot.com",
-                  "contentDisposition" : "inline; filename*=utf-8''Screen%20Shot%202020-12-15%20at%208.15.50%20PM.png",
-                  "contentEncoding" : "identity",
-                  "contentType" : "image/png",
-                  "customMetadata" : {
-                    "JtTSZ6HMPUZN0H6TQVKuYeQvqYN2" : "admin"
-                  },
-                  "fullPath" : "root/-MOakhGJgSb96yXZ3edt/ClassDashCard4/Screen Shot 2020-12-15 at 8.15.50 PM.png",
-                  "generation" : "1608043638153483",
-                  "md5Hash" : "zdq86lJ0hSM+xyYZ/44I+g==",
-                  "metageneration" : "1",
-                  "name" : "Screen Shot 2020-12-15 at 8.15.50 PM.png",
-                  "size" : 272420,
-                  "timeCreated" : "2020-12-15T14:47:18.153Z",
-                  "type" : "file",
-                  "updated" : "2020-12-15T14:47:18.153Z"
-                },
-                "url" : "https://firebasestorage.googleapis.com/v0/b/groupthink-fc4b2.appspot.com/o/root%2F-MOakhGJgSb96yXZ3edt%2FClassDashCard4%2FScreen%20Shot%202020-12-15%20at%208.15.50%20PM.png?alt=media&token=1966ef98-a991-4ddd-a7d2-aa21d534b83d",
-                "width" : 1178
-              },
-              "parent" : "ClassDashCard3",
-              "position" : {
-                "x" : 519,
-                "y" : 302
-              },
-              "size" : {
-                "height" : 460,
-                "width" : 393
-              },
-              "type" : "image"
-            },
-            "ClassDashCard5" : {
-              "children" : {
-                "ClassDashCard7" : 1
-              },
-              "content" : {
-                "description" : "[Essence of Calculus|Notes] Introduction——The core idea in calculus, Programmer Sought, the best programmer technical posts sharing site.",
-                "domain" : "programmersought.com",
-                "img" : "https://programmersought.com/images/620/34771cc635265047cd88593936c31b44.png",
-                "title" : "[Essence of Calculus|Notes] Introduction——The core idea in calculus - Programmer Sought",
-                "url" : "https://programmersought.com/article/94675408840/"
-              },
-              "parent" : "ClassDashCard3",
-              "position" : {
-                "x" : 41,
-                "y" : 363
-              },
-              "size" : {
-                "height" : 112,
-                "width" : 400
-              },
-              "type" : "link"
-            },
-            "ClassDashCard7" : {
-              "content" : {
-                "text" : "<p><strong>Summary:</strong></p><p><br></p><ol><li>Introduction-The core idea in calculus - Programmer Sought Introduction-The core idea in calculus.</li><li>Viewing the derivation of the circle area formula from the perspective of the infinitesimal method and area approximation.</li><li>If a suitable area calculation formula can be found for each ring, the area of ​​the entire circle can be calculated by summing the areas of all the rings.</li><li>The idea of ​​solving the area under the irregular curve-lead to the basic theorem of calculus.</li><li>As shown in the figure, if you want to request the area under a certain parabola, by moving the boundary line x=k, the area will naturally change.</li><li>Consider the amount of change in the area enclosed by the curve: when I move the straight line to the horizontal axis a little bit to compare the small change in the area.</li><li>Fundamental Theorem of Calculus Description: Through the derivative of the area function under a certain image, the function that defines the image can be restored, which is called \"The basic theorem of calculus\".</li><li><br></li></ol>"
-              },
-              "parent" : "ClassDashCard5",
-              "position" : {
-                "x" : 96,
-                "y" : 536
-              },
-              "size" : {
-                "height" : 200,
-                "width" : 400
-              },
-              "type" : "text"
-            },
-            "ClassDashCard2" : {
-              "content" : {
-                "text" : "<p><strong>Video Script:</strong></p><p><br></p><p>Let me share with you something I found particularly weird when I was a student first learning calculus. Let’s say you have a circle with radius 5 centered at the origin of the xy-coordinate plane, which is defined using the equation x^2 + y^2 = 5^2. That is, all points on this circle are a distance 5 from the origin, as encapsulated by the pythagorean theorem with the sum of the squares of the legs of this triangle equalling the square of the hypotenuse, 52. And suppose you want to find the slope of a tangent line to this circle, maybe at the point (x, y) = (3, 4). Now, if you’re savvy with geometry, you might already know that this tangent line is perpendicular to the radius line touching that point. But let’s say you don’t already know that, or that you want a technique that generalizes to curves other than circles. As with other problems about slope of tangent lines, they key thought here is to zoom in close enough that the curve basically looks just like its own tangent line, then ask about a tiny step along that curve. The y-component of that little step is what you might call dy, and the x-component is a little dx, so the slope we’re looking for is the rise over run dy/dx. But unlike other tangent-slope problems in calculus, this curve is not the graph of a function, so we cannot take a simple derivative, asking about the size of a tiny nudge to the output of a function caused by some tiny nudge to the input. x is not an input and y is not an output in this case, they’re both just interdependent values related by some equation. This is called an “implicit curve”; it’s just the set of all points (x, y) that satisfy some property written in terms of the two variables x and y. The procedure for finding dy/dx here is what I found very weird as a calculus student, you take the derivative of both sides of this equation like this: For the derivative of x2 you write 2x*dx, similarly y2 becomes 2y*dy, and the derivative of the constant 52 on the right is 0. You can see why this feels strange, right? What does it mean to take a derivative of an expression with multiple variables? And why are we tacking on the little dy and dx in this way? But if you just blindly move forward with what you get here, you can rearrange to find an expression for dy/dx, which in this case comes out to -x/y. So at a point with coordinates (x, y) = (3, 4), that slope would be -¾, evidently. This strange process is called “implicit differentiation”. Don’t worry, I have an explanation for how you can interpret taking a derivative of an expression with two variables like this. But first, I want to set aside this particular problem, and show how this is related to a different type of calculus problem: Related rates. Imagine a 5 meter long ladder up against a wall, where the top of the ladder starts of 4 meters above the ground, which, by the pythagorean theorem, means the bottom is 3 meters away from the wall. And say it’s slipping down the wall in such a way that the top of the ladder is dropping at 1 meter per second. The question is, in that initial moment, what is the rate at which the bottom of the ladder is moving away from the wall. It’s interesting, right? That distance from the bottom of the ladder to the wall is 100% determined by the distance between the top of the ladder and the floor, so we should have enough information to figure out how the rates of change for each value depend on each other, but it might not be entirely clear at first how to relate the two. First thing’s first, it’s always nice to give names to the quantities we care about. So label the distance from the top of the ladder to the ground y(t), written as a function of time because it’s changing. Likewise, label the distance between the bottom of the ladder and the wall x(t). They key equation here that relates these terms is the pythagorean theorem: x(t)2 + y(t)2 = 52. What makes this equation powerful is that it’s true at all points in time. One way to solve this would be to isolate x(t), figure out what what y(t) must be based this 1 meter/second drop rate, then take a derivative of the resulting function; dx/dt, the rate at which x is changing with respect to time. And that’s fine; it involves a couple layers of using the chain rule, and it will definitely work for you. But I want to show a different way to think about the same thing. This left-hand side of the equation is a function of time, right? It just so happens to equal a constant, meaning this value evidently doesn’t change while time passes, but it’s still written as an expression dependent on time which we can manipulate like any other function with t as an input. In particular, we can take a derivative of the left hand side, which is a way of saying “If I let a little bit of time pass, dt, which causes y to slightly decrease, and x to slightly increase, how much does this expression change”. On the one hand, we know that derivative should be 0, since this expression equals a constant, and constants don’t care about your tiny nudge to time, they remain unchanged. But on the other hand, what do you get by computing the derivative of this left-hand-side? The derivative of x(t)2 is 2*x(t)*(the derivative of x). That’s the chain rule I talked about last video. 2x*dx represents the size of a change to x2 caused by a change to x, and we’re dividing by dt. Likewise, the rate at which y(t)2 is changing is 2*y(t)*(the derivative of y). Evidently, this whole expression must be zero, which is equivalent to saying x2+y2 doesn’t change while the ladder moves. And at the very start, t=0, the height y(t) is 4 meters, the distance x(t) is 3 meters, and since the top of the ladder is dropping at a rate of 1 meter per second, that derivative dy/dt is -1 meters/second. Now this gives us enough information to isolate the derivative dx/dt, which, when you work it out, is (4/3) meters per second. Now compare this to the problem of finding the slope of tangent line to the circle. In both cases, we had the equation x2 + y2 = 52, and in both cases we ended up taking the derivative of each side of this expression. But for the ladder problem, these expressions were functions of time, so taking the derivative has a clear meaning: it’s the rate at which this expression changes as time change. But what makes the circle situation strange is that rather than saying a small amount of time dt has passed, which causes x and y to change, the derivative has the tiny nudges dx and dy both just floating free, not tied to some other common variable like time. Let me show you how you can think about this: Give this expression x2 + y2 a name, maybe S. S is essentially a function of two variables, it takes every point (x, y) on the plane and associates it with a number. For points on this circle, that number is 25. If you step off that circle away from the center, that value would be bigger. For other points (x, y) closer to the origin, that value is smaller. What it means to take a derivative of this expression, a derivative of S, is to consider a tiny change to both these variables, some tiny change dx to x, and some tiny change dy to y –and not necessarily one that keeps you on this circle, by the way, it’s just some tiny step in any direction on the xy-plane– and ask how much the value of S changes. That difference in the value of S, from the original point to the nudged point, is what I’m writing as “dS”. For example, in this picture we’re starting at a point where x is 3 and y is 4, and let’s just say that step dx is... -0.02, and that dy is -0.01. Then the decrease to S, the amount the x2+y2 changes over that step, will be around 2(3)(-0.02) + 2(4)(-0.01). That’s what this derivative expression 2x*dx + 2y*dy means, it tells you how much the value x2+y2 changes, as determined by the point (x, y) where you started, and the tiny step (dx, dy) that you take. As with all things derivative, this is only an approximation, but it gets more and more true for smaller and smaller choices of dx and dy. The key point is that when you restrict yourself to steps along this circle, you’re essentially saying you want to ensure that this value S doesn’t change; it starts at a value of 25, and you want to keep it at a value of 25; that is, dS should be 0. So setting this expression 2x*dx + 2y*dy equal to 0 is the condition under which a tiny step stays on the circle. Again, this is only an approximation. Speaking more precisely, that condition keeps you on a tangent line of the circle, not the circle itself, but for tiny enough steps those are essentially the same thing. Of course, there’s nothing special about the expression x2+y2 = 52 here. You could have some other expression involving x’s and y’s, representing some other curve, and taking the derivative of both sides like this would give you a way to relate dx to dy for tiny steps along that curve. It’s always nice to think through more examples, so consider the expression sin(x)*y2 = x, which corresponds to many U-shaped curves on the plane. Those curves represent all the points (x, y) of the plane where the value of sin(x)*y2 equals the value of x. Now imagine taking some tiny step with components (dx, dy), and not necessarily one that keeps you on the curve. Taking the derivative of each side of this equation will tell us how much the value of that side changes during this step. On the left side, the product rule that we found in the last video tells us that this should be “left d-right plus right d-left”: sin(x)*(the change to y2), which is 2y*dy, plus y2*(the change to sin(x)), which is cos(x)*dx. The right side is simply x, so the size of a change to the value is exactly dx, right? Setting these two sides equal to each other is a way of saying “whatever your tiny step with coordinates (dx, dy) is, if it’s going to keep us on this curve, the values of both the left-hand side and the right-hand side must change by the same amount.” That’s the only way this top equation can remain true. From there, depending on what problem you’re solving, you could manipulate further with algebra, where perhaps the most common goal is to find dy divided by dx. As one more example, let me show how you can use this technique to help find new derivative formulas. I’ve mentioned in a footnote video that the derivative of ex is itself, but what about the derivative of its inverse function the natural log of x? The graph of ln(x) can be thought of as an implicit curve; all the points on the xy plane where y = ln(x), it just happens to be the case that the x’s and y’s of this equation aren’t as intermingled as they were in other examples. The slope of this graph, dy/dx, should be the derivative of ln(x), right? Well, to find that, first rearrange this equation y = ln(x) to be ey = x. This is exactly what the natural log of x means; it’s saying e to the what equals x. Since we know the derivative of ey, we can take the derivative of both sides, effectively asking how a tiny step with components (dx, dy) changes the value of each side. To ensure the step stays on the curve, the change to the left side of the equation, which is ey*dy, must equals the change to the right side, which is dx. Rearranging, this means dy/dx, the slope of our graph, equals 1/ey. And when we’re on this curve, ey is by definition the same as x, so evidently the slope is 1/x. An expression for the slope of the graph of function in terms of x like this is the derivative of that function, so evidently the derivative of ln(x) is 1/x. By the way, all of this is a little peek into multivariable calculus, where you consider functions with multiple inputs, and how they change as you tweak those inputs. The key, as always, is to have a clear image in your head of what tiny nudges are at play, and how exactly they depend on each other. Next up, I’ll talk about about what exactly a limit is, and how it’s used to formalize the idea of a derivative.</p>"
-              },
-              "parent" : "ClassDashCard1",
-              "position" : {
-                "x" : 963,
-                "y" : 371
-              },
-              "size" : {
-                "height" : 200,
-                "width" : 400
-              },
-              "type" : "text"
-            },
-            "ClassDashCard6" : {
-              "content" : {
-                "description" : "The CLEP Calculus exam covers skills and concepts that are usually taught in a one-semester college course in calculus.",
-                "domain" : "clep.collegeboard.org",
-                "img" : "https://clep.collegeboard.org/sites/default/files/2021-clep-official-study-guide.jpg",
-                "title" : "Calculus Exam – CLEP – The College Board",
-                "url" : "https://clep.collegeboard.org/science-and-mathematics/calculus"
-              },
-              "editing" : {
-                "JtTSZ6HMPUZN0H6TQVKuYeQvqYN2" : 1608044212552
-              },
-              "parent" : "ClassDashCard3",
-              "position" : {
-                "x" : 442,
-                "y" : 81
-              },
-              "size" : {
-                "height" : 112,
-                "width" : 400
-              },
-              "type" : "link"
-            },
-            "root" : {
-              "children" : {
-                "ClassDashCard1" : 1,
-                "ClassDashCard3" : 1,
-                "dummy" : 1
-              }
-            }
+        "JtTSZ6HMPUZN0H6TQVKuYeQvqYN2" : {
+          "x" : 1139,
+          "y" : 1
+        },
+        "oZLtu8gyabSH5cyfWF2m72RimMz2" : {
+          "x" : 687,
+          "y" : 5
+        }
+      },
+      "lastActive" : {
+        "81imDMnwqsXaoJcFSBM8wyhsQaG2" : 1609523325129
+      },
+      "metadata" : {
+        "datecreated" : 1609523325129,
+        "name" : "Class Dashboard Template",
+        "thumbnailURL" : "/static/media/2.5b0e1d6f.webp"
+      },
+      "nodes" : {
+        "-MPz3SUkUuJrR1j8leGk" : {
+          "children" : {
+            "-MPz3ba3BR0bmZaSFfRY" : 1
           },
+          "content" : {
+            "text" : "## Syllabus link/pdf"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 80,
+            "y" : 30
+          },
+          "size" : {
+            "height" : 60,
+            "width" : 194
+          },
+          "type" : "text"
+        },
+        "-MPz3ba3BR0bmZaSFfRY" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MPz3SUkUuJrR1j8leGk",
+          "position" : {
+            "x" : 30,
+            "y" : 120
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "-MPz3ixeAURPNGeOc_GJ" : {
+          "children" : {
+            "-MPz3qi_L86oPsAuH7q-" : 1,
+            "-MPz4F4FSz72DojDwlZ3" : 1,
+            "-MPz5-SXQPYy5ZoMJksK" : 1
+          },
+          "content" : {
+            "text" : "## Important Dates"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 350,
+            "y" : 30
+          },
+          "size" : {
+            "height" : 54,
+            "width" : 187
+          },
+          "type" : "text"
+        },
+        "-MPz3kc2zJvyhMg_nwsY" : {
+          "children" : {
+            "-MPz3z2kJNSwv9qrmfZE" : 1,
+            "-MPz50lT3dF8dimDZ5dr" : 1
+          },
+          "content" : {
+            "text" : "## Assignments"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 670,
+            "y" : 30
+          },
+          "size" : {
+            "height" : 54,
+            "width" : 157
+          },
+          "type" : "text"
+        },
+        "-MPz3qi_L86oPsAuH7q-" : {
+          "content" : {
+            "text" : "**Final Exam:**\n\n3rd May 2021  \n10am"
+          },
+          "parent" : "-MPz3ixeAURPNGeOc_GJ",
+          "position" : {
+            "x" : 540,
+            "y" : 320
+          },
+          "size" : {
+            "height" : 76,
+            "width" : 133
+          },
+          "type" : "text"
+        },
+        "-MPz3z2kJNSwv9qrmfZE" : {
+          "children" : {
+            "-MPz5bXNJtZAqpmcvmSU" : 1
+          },
+          "content" : {
+            "text" : "**By Tuesday**\n\nTake notes on Lecture 1\n\n\n> (link to Google Doc in the card on the right)\n"
+          },
+          "parent" : "-MPz3kc2zJvyhMg_nwsY",
+          "position" : {
+            "x" : 850,
+            "y" : 150
+          },
+          "size" : {
+            "height" : 115,
+            "width" : 157
+          },
+          "type" : "text"
+        },
+        "-MPz4F4FSz72DojDwlZ3" : {
+          "content" : {
+            "text" : "**Midterm 1**\n\n22nd Feb 2021\n\n1pm (in class)"
+          },
+          "parent" : "-MPz3ixeAURPNGeOc_GJ",
+          "position" : {
+            "x" : 540,
+            "y" : 140
+          },
+          "size" : {
+            "height" : 75,
+            "width" : 134
+          },
+          "type" : "text"
+        },
+        "-MPz5-SXQPYy5ZoMJksK" : {
+          "content" : {
+            "text" : "**Final Project Due**\n\n28th April 2021\n\nmidnight (sakai)"
+          },
+          "parent" : "-MPz3ixeAURPNGeOc_GJ",
+          "position" : {
+            "x" : 540,
+            "y" : 230
+          },
+          "size" : {
+            "height" : 78,
+            "width" : 134
+          },
+          "type" : "text"
+        },
+        "-MPz50lT3dF8dimDZ5dr" : {
+          "children" : {
+            "-MPz5i1WsCjymHHpc6v6" : 1
+          },
+          "content" : {
+            "text" : "**By Thursday** \n\nWatch videos for discussion section"
+          },
+          "parent" : "-MPz3kc2zJvyhMg_nwsY",
+          "position" : {
+            "x" : 850,
+            "y" : 280
+          },
+          "size" : {
+            "height" : 91,
+            "width" : 160
+          },
+          "type" : "text"
+        },
+        "-MPz5bXNJtZAqpmcvmSU" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MPz3z2kJNSwv9qrmfZE",
+          "position" : {
+            "x" : 1130,
+            "y" : 180
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "-MPz5i1WsCjymHHpc6v6" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MPz50lT3dF8dimDZ5dr",
+          "position" : {
+            "x" : 1130,
+            "y" : 310
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "-MPz6eeOifRjXDuIEwm8" : {
+          "children" : {
+            "-MPz6t8HOUTkGdtGZTRA" : 1
+          },
+          "content" : {
+            "text" : "### Textbook link/pdf"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 70,
+            "y" : 210
+          },
+          "size" : {
+            "height" : 46,
+            "width" : 188
+          },
+          "type" : "text"
+        },
+        "-MPz6t8HOUTkGdtGZTRA" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MPz6eeOifRjXDuIEwm8",
+          "position" : {
+            "x" : 30,
+            "y" : 290
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "-MPz7ZnmbSElcdF-7UXs" : {
+          "children" : {
+            "-MPz7eD4DFrQvbGLLPpn" : 1,
+            "-MPz7toSPrgsr_OfrjDe" : 1
+          },
+          "content" : {
+            "text" : "## Week 1"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 290,
+            "y" : 490
+          },
+          "size" : {
+            "height" : 56,
+            "width" : 103
+          },
+          "type" : "text"
+        },
+        "-MPz7eD4DFrQvbGLLPpn" : {
+          "children" : {
+            "-MPz8UJjRxumRJlePjEA" : 1
+          },
+          "content" : {
+            "text" : "### Readings"
+          },
+          "parent" : "-MPz7ZnmbSElcdF-7UXs",
+          "position" : {
+            "x" : 100,
+            "y" : 590
+          },
+          "size" : {
+            "height" : 51,
+            "width" : 135
+          },
+          "type" : "text"
+        },
+        "-MPz7toSPrgsr_OfrjDe" : {
+          "children" : {
+            "-MPz8PvbAW2ycUYSFP3w" : 1
+          },
+          "content" : {
+            "text" : "### Notes"
+          },
+          "parent" : "-MPz7ZnmbSElcdF-7UXs",
+          "position" : {
+            "x" : 449,
+            "y" : 590
+          },
+          "size" : {
+            "height" : 51,
+            "width" : 123
+          },
+          "type" : "text"
+        },
+        "-MPz8PvbAW2ycUYSFP3w" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MPz7toSPrgsr_OfrjDe",
+          "position" : {
+            "x" : 379,
+            "y" : 690
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "-MPz8UJjRxumRJlePjEA" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MPz7eD4DFrQvbGLLPpn",
+          "position" : {
+            "x" : 30,
+            "y" : 690
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "-MQ1wOiKQ1xfH5aRvAII" : {
+          "children" : {
+            "-MQ1wTHmzcK1wa3-_gRs" : 1,
+            "-MQ1wXzJ-u8MWfqKD78n" : 1
+          },
+          "content" : {
+            "text" : "## Week 2"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 990,
+            "y" : 480
+          },
+          "size" : {
+            "height" : 56,
+            "width" : 107
+          },
+          "type" : "text"
+        },
+        "-MQ1wTHmzcK1wa3-_gRs" : {
+          "children" : {
+            "-MQ1wXCwYZqOjEoIq-oE" : 1
+          },
+          "content" : {
+            "text" : "### Readings"
+          },
+          "parent" : "-MQ1wOiKQ1xfH5aRvAII",
+          "position" : {
+            "x" : 840,
+            "y" : 580
+          },
+          "size" : {
+            "height" : 56,
+            "width" : 111
+          },
+          "type" : "text"
+        },
+        "-MQ1wXCwYZqOjEoIq-oE" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MQ1wTHmzcK1wa3-_gRs",
+          "position" : {
+            "x" : 740,
+            "y" : 700
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "-MQ1wXzJ-u8MWfqKD78n" : {
+          "children" : {
+            "-MQ1wc5fvHXliNoENq7c" : 1
+          },
+          "content" : {
+            "text" : "### Notes\n "
+          },
+          "parent" : "-MQ1wOiKQ1xfH5aRvAII",
+          "position" : {
+            "x" : 1130,
+            "y" : 580
+          },
+          "size" : {
+            "height" : 52,
+            "width" : 104
+          },
+          "type" : "text"
+        },
+        "-MQ1wc5fvHXliNoENq7c" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MQ1wXzJ-u8MWfqKD78n",
+          "position" : {
+            "x" : 1080,
+            "y" : 700
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "root" : {
+          "children" : {
+            "-MPz3SUkUuJrR1j8leGk" : 1,
+            "-MPz3ba3BR0bmZaSFfRY" : 1,
+            "-MPz3ixeAURPNGeOc_GJ" : 1,
+            "-MPz3kc2zJvyhMg_nwsY" : 1,
+            "-MPz3z2kJNSwv9qrmfZE" : 1,
+            "-MPz4F4FSz72DojDwlZ3" : 1,
+            "-MPz4O3Ayaje3lR110br" : 1,
+            "-MPz50lT3dF8dimDZ5dr" : 1,
+            "-MPz6eeOifRjXDuIEwm8" : 1,
+            "-MPz6t8HOUTkGdtGZTRA" : 1,
+            "-MPz7ZnmbSElcdF-7UXs" : 1,
+            "-MPz7eD4DFrQvbGLLPpn" : 1,
+            "-MPz7toSPrgsr_OfrjDe" : 1,
+            "-MQ1wOiKQ1xfH5aRvAII" : 1,
+            "-MQ1wTHmzcK1wa3-_gRs" : 1,
+            "-MQ1wXzJ-u8MWfqKD78n" : 1,
+            "dummy" : 1
+          }
+        }
+      }
     },
     introProject: {
-      container: {
-        height: "10000px",
-        width: "10000px"
-    },
-    nodes: {
-        root: {
-            children: {
-                "dummy": 1
-            }
+      "container" : {
+        "height" : "10000px",
+        "width" : "10000px"
+      },
+      "cursors" : {
+        "81imDMnwqsXaoJcFSBM8wyhsQaG2" : {
+          "x" : 124,
+          "y" : 2
+        },
+        "JtTSZ6HMPUZN0H6TQVKuYeQvqYN2" : {
+          "x" : 2706,
+          "y" : 490
+        },
+        "oZLtu8gyabSH5cyfWF2m72RimMz2" : {
+          "x" : 336,
+          "y" : 24
         }
-    }
+      },
+      "lastActive" : {
+        "81imDMnwqsXaoJcFSBM8wyhsQaG2" : 1609525745042
+      },
+      "metadata" : {
+        "datecreated" : 1609525745042,
+        "name" : "Welcome Project",
+        "thumbnailURL" : "/static/media/4.f5da83f2.webp"
+      },
+      "nodes" : {
+        "-MPzCVhArHHqasEFX2Kh" : {
+          "content" : {
+            "text" : "### Hello! Welcome to Kite 👋\nThis is a Kite canvas. You can also think of it like a document or project.\nEach canvas is an infinite space that can store all kinds of stuff. You can also share a canvas with others.\n"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 40,
+            "y" : 30
+          },
+          "size" : {
+            "height" : 142,
+            "width" : 319
+          },
+          "type" : "text"
+        },
+        "-MPzDHB2YBzHqjaiCNOD" : {
+          "content" : {
+            "caption" : "We're so glad you're here! ",
+            "displayHeight" : 238,
+            "displayWidth" : 400,
+            "height" : 298,
+            "metadata" : {
+              "bucket" : "groupthink-fc4b2-test",
+              "contentDisposition" : "inline; filename*=utf-8''oh%20hello.gif",
+              "contentEncoding" : "identity",
+              "contentType" : "image/gif",
+              "fullPath" : "root/-MPzCSKLDcN-3A50Y001/-MPzDHB2YBzHqjaiCNOD/oh hello.gif",
+              "generation" : "1609525968600237",
+              "md5Hash" : "joa++rCwkOlSRO7nEsE+0w==",
+              "metageneration" : "1",
+              "name" : "oh hello.gif",
+              "size" : 895821,
+              "timeCreated" : "2021-01-01T18:32:48.600Z",
+              "type" : "file",
+              "updated" : "2021-01-01T18:32:48.600Z"
+            },
+            "url" : "https://firebasestorage.googleapis.com/v0/b/groupthink-fc4b2.appspot.com/o/root%2Ftemplate_files%2Foh%20hello.gif?alt=media&token=9a136bd0-0dd3-4944-95e1-862b74673378",
+            "width" : 500
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 40,
+            "y" : 180
+          },
+          "size" : {
+            "height" : 223.5,
+            "width" : 318.75
+          },
+          "type" : "image"
+        },
+        "-MPzDbVF6pHyVr9OBsNI" : {
+          "children" : {
+            "-MPzDnpjZhweLooV46oG" : 1,
+            "-MPzDwjYVp_LLGG_zsWs" : 1
+          },
+          "content" : {
+            "text" : "To add a blank card, just double click anywhere on the canvas!"
+          },
+          "parent" : "-MPzGK7I-_FywocZUEF9",
+          "position" : {
+            "x" : 640,
+            "y" : 210
+          },
+          "size" : {
+            "height" : 74,
+            "width" : 274
+          },
+          "type" : "text"
+        },
+        "-MPzDnpjZhweLooV46oG" : {
+          "children" : {
+            "-MPzEKsi0FEPbJB8ABcD" : 1
+          },
+          "content" : {
+            "text" : "**Try it out!**\n\nPaste a link to the card below"
+          },
+          "parent" : "-MPzDbVF6pHyVr9OBsNI",
+          "position" : {
+            "x" : 530,
+            "y" : 350
+          },
+          "size" : {
+            "height" : 74,
+            "width" : 216
+          },
+          "type" : "text"
+        },
+        "-MPzDwjYVp_LLGG_zsWs" : {
+          "children" : {
+            "-MPzEWZq5yQBYzyPWVO2" : 1
+          },
+          "content" : {
+            "text" : "**Try it out!**\n\nUpload a file to the card below"
+          },
+          "parent" : "-MPzDbVF6pHyVr9OBsNI",
+          "position" : {
+            "x" : 910,
+            "y" : 350
+          },
+          "size" : {
+            "height" : 74,
+            "width" : 216
+          },
+          "type" : "text"
+        },
+        "-MPzEKsi0FEPbJB8ABcD" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MPzDnpjZhweLooV46oG",
+          "position" : {
+            "x" : 500,
+            "y" : 490
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "-MPzEWZq5yQBYzyPWVO2" : {
+          "content" : {
+            "text" : ""
+          },
+          "parent" : "-MPzDwjYVp_LLGG_zsWs",
+          "position" : {
+            "x" : 880,
+            "y" : 490
+          },
+          "size" : {
+            "height" : 45,
+            "width" : 275
+          },
+          "type" : "blank"
+        },
+        "-MPzEx76RArSayFI_n04" : {
+          "children" : {
+            "-MPzFKylCUn-G2t-uoG1" : 1
+          },
+          "content" : {
+            "text" : "### Markdown\nText cards support markdown, and we’ve provided a basic guide for using it. Click on the text card below to see how it works."
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 40,
+            "y" : 430
+          },
+          "size" : {
+            "height" : 139,
+            "width" : 244
+          },
+          "type" : "text"
+        },
+        "-MPzFKylCUn-G2t-uoG1" : {
+          "content" : {
+            "text" : "# Heading 1\n\n## Heading 2\n\n### Heading 3\n\n*Bold*\n\n**Italics**\n\n<u>Underline</u>"
+          },
+          "parent" : "-MPzEx76RArSayFI_n04",
+          "position" : {
+            "x" : 300,
+            "y" : 600
+          },
+          "size" : {
+            "height" : 198,
+            "width" : 161
+          },
+          "type" : "text"
+        },
+        "-MPzGK7I-_FywocZUEF9" : {
+          "children" : {
+            "-MPzDbVF6pHyVr9OBsNI" : 1
+          },
+          "content" : {
+            "text" : "# 1. Cards"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 460,
+            "y" : 50
+          },
+          "size" : {
+            "height" : 74,
+            "width" : 131
+          },
+          "type" : "text"
+        },
+        "-MPzGiKibr1qjrttL3B5" : {
+          "children" : {
+            "-MPzGoFMJw8fqM_-CYmI" : 1,
+            "-MPzKIAgvhTeDzvemape" : 1
+          },
+          "content" : {
+            "text" : "# 2. Arrows"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 1440,
+            "y" : 110
+          },
+          "size" : {
+            "height" : 70,
+            "width" : 158
+          },
+          "type" : "text"
+        },
+        "-MPzGoFMJw8fqM_-CYmI" : {
+          "content" : {
+            "text" : "Arrows connect any two cards, creating a hierarchy/relationship (i.e. a parent to child).\n    \n\nCollapsing an arrow minimizes all the connected cards in its branch.\n    \n\nDeleting an arrow deletes the connection only. The cards themselves will remain."
+          },
+          "parent" : "-MPzGiKibr1qjrttL3B5",
+          "position" : {
+            "x" : 1240,
+            "y" : 350
+          },
+          "size" : {
+            "height" : 255,
+            "width" : 226
+          },
+          "type" : "text"
+        },
+        "-MPzHupvNMqAc5za3wqD" : {
+          "content" : {
+            "text" : "**Try it out!**\n\n\nConnect this card..."
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 1240,
+            "y" : 730
+          },
+          "size" : {
+            "height" : 73,
+            "width" : 146
+          },
+          "type" : "text"
+        },
+        "-MPzI1ZErxxYJUUyTpvY" : {
+          "content" : {
+            "text" : "...with this card"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 1800,
+            "y" : 740
+          },
+          "size" : {
+            "height" : 73,
+            "width" : 124
+          },
+          "type" : "text"
+        },
+        "-MPzKIAgvhTeDzvemape" : {
+          "content" : {
+            "caption" : "How arrows work",
+            "displayHeight" : 160,
+            "displayWidth" : 400,
+            "height" : 240,
+            "metadata" : {
+              "bucket" : "groupthink-fc4b2-test",
+              "contentDisposition" : "inline; filename*=utf-8''arrows%20tutorial%20gif.gif",
+              "contentEncoding" : "identity",
+              "contentType" : "image/gif",
+              "fullPath" : "root/-MPzCSKLDcN-3A50Y001/-MPzKIAgvhTeDzvemape/arrows tutorial gif.gif",
+              "generation" : "1609527808892059",
+              "md5Hash" : "QaIztw7b1byEZpAPs62gVw==",
+              "metageneration" : "1",
+              "name" : "arrows tutorial gif.gif",
+              "size" : 158019,
+              "timeCreated" : "2021-01-01T19:03:28.891Z",
+              "type" : "file",
+              "updated" : "2021-01-01T19:03:28.891Z"
+            },
+            "url" : "https://firebasestorage.googleapis.com/v0/b/groupthink-fc4b2.appspot.com/o/root%2Ftemplate_files%2Farrows%20tutorial%20gif.gif?alt=media&token=fe7d68dd-69a9-4fcc-83b4-a565a1034a0a",
+            "width" : 600
+          },
+          "parent" : "-MPzGiKibr1qjrttL3B5",
+          "position" : {
+            "x" : 1500,
+            "y" : 480
+          },
+          "size" : {
+            "height" : 220,
+            "width" : 420
+          },
+          "type" : "image"
+        },
+        "-MPzR2lRq_W34NBzf97B" : {
+          "children" : {
+            "-MPzRNXEKsXCTUFcf5sz" : 1,
+            "-MPzUyMdCi-1P1bvoO3r" : 1
+          },
+          "content" : {
+            "text" : "# 3. Actions"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 2210,
+            "y" : 210
+          },
+          "size" : {
+            "height" : 75,
+            "width" : 157
+          },
+          "type" : "text"
+        },
+        "-MPzRNXEKsXCTUFcf5sz" : {
+          "content" : {
+            "text" : "Actions are like extra tools that you can use on cards to do common actions like: summarize the content in a link or change an image to grayscale.\n\n\nDepending on the action, you can only apply it to certain card types. For example, the *summarize a link* action would not work on an image card.\n"
+          },
+          "parent" : "-MPzR2lRq_W34NBzf97B",
+          "position" : {
+            "x" : 1990,
+            "y" : 420
+          },
+          "size" : {
+            "height" : 199,
+            "width" : 273
+          },
+          "type" : "text"
+        },
+        "-MPzUyMdCi-1P1bvoO3r" : {
+          "children" : {
+            "-MPzWBs3GUWQY45u_fKx" : 1
+          },
+          "content" : {
+            "caption" : "Test out actions!",
+            "displayHeight" : 44,
+            "displayWidth" : 400,
+            "height" : 98,
+            "metadata" : {
+              "bucket" : "groupthink-fc4b2-test",
+              "contentDisposition" : "inline; filename*=utf-8''menu%20bar.png",
+              "contentEncoding" : "identity",
+              "contentType" : "image/png",
+              "fullPath" : "root/-MPzCSKLDcN-3A50Y001/-MPzUyMdCi-1P1bvoO3r/menu bar.png",
+              "generation" : "1609530606835096",
+              "md5Hash" : "Am370Z7t2yyhimwdZY7Fhw==",
+              "metageneration" : "1",
+              "name" : "menu bar.png",
+              "size" : 6701,
+              "timeCreated" : "2021-01-01T19:50:06.834Z",
+              "type" : "file",
+              "updated" : "2021-01-01T19:50:06.834Z"
+            },
+            "url" : "https://firebasestorage.googleapis.com/v0/b/groupthink-fc4b2.appspot.com/o/root%2Ftemplate_files%2Fmenu%20bar.png?alt=media&token=65849c48-aae7-4a5d-984b-825240cc7b68",
+            "width" : 882
+          },
+          "parent" : "-MPzR2lRq_W34NBzf97B",
+          "position" : {
+            "x" : 2280,
+            "y" : 420
+          },
+          "size" : {
+            "height" : 104,
+            "width" : 420
+          },
+          "type" : "image"
+        },
+        "-MPzV9tsEDDA6Q-DC1QQ" : {
+          "content" : {
+            "description" : "Recently the National Air and Space Museum hosted Kites of Asia Family Day. ",
+            "domain" : "airandspace.si.edu",
+            "img" : "https://airandspace.si.edu/sites/default/files/styles/callout_tile/public/images/editoral-stories/thumbnails/kite_diagram.jpg?itok=81wf87Ia",
+            "title" : "How Kites Fly",
+            "url" : "https://airandspace.si.edu/stories/editorial/how-kites-fly#:~:text=Lift%20is%20generated%20by%20differences,air%20moving%20over%20the%20bottom.&text=To%20launch%20a%20kite%20into,than%20the%20force%20of%20weight."
+          },
+          "parent" : "-MPzWBs3GUWQY45u_fKx",
+          "position" : {
+            "x" : 2330,
+            "y" : 800
+          },
+          "size" : {
+            "height" : 112,
+            "width" : 400
+          },
+          "type" : "link"
+        },
+        "-MPzWBs3GUWQY45u_fKx" : {
+          "children" : {
+            "-MPzV9tsEDDA6Q-DC1QQ" : 1
+          },
+          "content" : {
+            "text" : "**Try it out!**\n\nClick on the actions button and apply the *summarize this link* action to the card below\n"
+          },
+          "parent" : "-MPzUyMdCi-1P1bvoO3r",
+          "position" : {
+            "x" : 2410,
+            "y" : 620
+          },
+          "size" : {
+            "height" : 100,
+            "width" : 256
+          },
+          "type" : "text"
+        },
+        "-MPz_aQz78qlBIBB4LIv" : {
+          "children" : {
+            "-MPz_g5ypoTLkf0biHdA" : 1
+          },
+          "content" : {
+            "text" : "# 4. Collaboration"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 2830,
+            "y" : 110
+          },
+          "size" : {
+            "height" : 73,
+            "width" : 241
+          },
+          "type" : "text"
+        },
+        "-MPz_g5ypoTLkf0biHdA" : {
+          "children" : {
+            "-MPzbbOGi2Iepw0sfPr2" : 1
+          },
+          "content" : {
+            "text" : "One of the core beliefs we have is to make collaboration as seamless as possible. That’s why we also support **voice calls** straight from the canvas!\n\n\nSimply **share a canvas** with a friend, and then, press the voice call button on the right of the menu bar to chat away...\n"
+          },
+          "parent" : "-MPz_aQz78qlBIBB4LIv",
+          "position" : {
+            "x" : 2820,
+            "y" : 220
+          },
+          "size" : {
+            "height" : 200,
+            "width" : 280
+          },
+          "type" : "text"
+        },
+        "-MPzbbOGi2Iepw0sfPr2" : {
+          "content" : {
+            "caption" : "Voice calls? From a canvas? Yes, boomer, the future is now.",
+            "displayHeight" : 69,
+            "displayWidth" : 400,
+            "height" : 98,
+            "metadata" : {
+              "bucket" : "groupthink-fc4b2-test",
+              "contentDisposition" : "inline; filename*=utf-8''voice%20call%20+%20share.png",
+              "contentEncoding" : "identity",
+              "contentType" : "image/png",
+              "fullPath" : "root/-MPzCSKLDcN-3A50Y001/-MPzbbOGi2Iepw0sfPr2/voice call + share.png",
+              "generation" : "1609532613165596",
+              "md5Hash" : "kvYeWFaamJNkYvP9QUKMSA==",
+              "metageneration" : "1",
+              "name" : "voice call + share.png",
+              "size" : 5270,
+              "timeCreated" : "2021-01-01T20:23:33.165Z",
+              "type" : "file",
+              "updated" : "2021-01-01T20:23:33.165Z"
+            },
+            "url" : "https://firebasestorage.googleapis.com/v0/b/groupthink-fc4b2.appspot.com/o/root%2Ftemplate_files%2Fvoice%20call%20%2B%20share.png?alt=media&token=ee48619a-58b4-4123-86b3-d01aa94876b6",
+            "width" : 568
+          },
+          "parent" : "-MPz_g5ypoTLkf0biHdA",
+          "position" : {
+            "x" : 2940,
+            "y" : 540
+          },
+          "size" : {
+            "height" : 129,
+            "width" : 420
+          },
+          "type" : "image"
+        },
+        "-MPzbwzE7N22Ct2NxqDg" : {
+          "children" : {
+            "-MPzc2bsJ7dwoqQ_M2u4" : 1,
+            "-MPzc9JBVFfzvusvywhe" : 1
+          },
+          "content" : {
+            "text" : "# Navigating the canvas"
+          },
+          "parent" : "root",
+          "position" : {
+            "x" : 3560,
+            "y" : 300
+          },
+          "size" : {
+            "height" : 75,
+            "width" : 327
+          },
+          "type" : "text"
+        },
+        "-MPzc2bsJ7dwoqQ_M2u4" : {
+          "children" : {
+            "-MPzf_Q2QimbU7Z6_fTM" : 1
+          },
+          "content" : {
+            "text" : "## Search\nYou can use the **search button in the menu bar** to find a card on the canvas. You may be surprised at the range of inputs that are allowed. For example, YouTube links can be searched by channel name, and images can be found just by entering a description of what’s in them."
+          },
+          "parent" : "-MPzbwzE7N22Ct2NxqDg",
+          "position" : {
+            "x" : 3480,
+            "y" : 680
+          },
+          "size" : {
+            "height" : 219,
+            "width" : 279
+          },
+          "type" : "text"
+        },
+        "-MPzc9JBVFfzvusvywhe" : {
+          "children" : {
+            "-MPzgKnUsf6X3P-0pmKl" : 1
+          },
+          "content" : {
+            "text" : "## Aerial View\nGet a bird’s eye view of everything on your canvas with **aerial view on the left side of the canvas**. You can see the hierarchical organization on the canvas including the card type. If you click on one of the elements in aerial view, you will be taken to that card's canvas location.\n"
+          },
+          "parent" : "-MPzbwzE7N22Ct2NxqDg",
+          "position" : {
+            "x" : 3910,
+            "y" : 530
+          },
+          "size" : {
+            "height" : 219,
+            "width" : 294
+          },
+          "type" : "text"
+        },
+        "-MPzf_Q2QimbU7Z6_fTM" : {
+          "content" : {
+            "caption" : "no more frantic searching!",
+            "displayHeight" : 301,
+            "displayWidth" : 400,
+            "height" : 362,
+            "metadata" : {
+              "bucket" : "groupthink-fc4b2-test",
+              "contentDisposition" : "inline; filename*=utf-8''frantic%20search.gif",
+              "contentEncoding" : "identity",
+              "contentType" : "image/gif",
+              "fullPath" : "root/-MPzCSKLDcN-3A50Y001/-MPzf_Q2QimbU7Z6_fTM/frantic search.gif",
+              "generation" : "1609533650852075",
+              "md5Hash" : "bVBTLYxbw6gz/mM09Ya2mA==",
+              "metageneration" : "1",
+              "name" : "frantic search.gif",
+              "size" : 833387,
+              "timeCreated" : "2021-01-01T20:40:50.851Z",
+              "type" : "file",
+              "updated" : "2021-01-01T20:40:50.851Z"
+            },
+            "url" : "https://firebasestorage.googleapis.com/v0/b/groupthink-fc4b2.appspot.com/o/root%2Ftemplate_files%2Ffrantic%20search.gif?alt=media&token=08d278b6-9a72-4755-8774-98795c4bf6b5",
+            "width" : 480
+          },
+          "parent" : "-MPzc2bsJ7dwoqQ_M2u4",
+          "position" : {
+            "x" : 3350,
+            "y" : 1120
+          },
+          "size" : {
+            "height" : 270.75,
+            "width" : 318.75
+          },
+          "type" : "image"
+        },
+        "-MPzgKnUsf6X3P-0pmKl" : {
+          "content" : {
+            "caption" : "a wise sponge once said...",
+            "displayHeight" : 300,
+            "displayWidth" : 400,
+            "height" : 360,
+            "metadata" : {
+              "bucket" : "groupthink-fc4b2-test",
+              "contentDisposition" : "inline; filename*=utf-8''see%20everything.gif",
+              "contentEncoding" : "identity",
+              "contentType" : "image/gif",
+              "fullPath" : "root/-MPzCSKLDcN-3A50Y001/-MPzgKnUsf6X3P-0pmKl/see everything.gif",
+              "generation" : "1609533853001506",
+              "md5Hash" : "JohHMPcBf5MP8e7k8hrnBQ==",
+              "metageneration" : "1",
+              "name" : "see everything.gif",
+              "size" : 5199850,
+              "timeCreated" : "2021-01-01T20:44:13.001Z",
+              "type" : "file",
+              "updated" : "2021-01-01T20:44:13.001Z"
+            },
+            "url" : "https://firebasestorage.googleapis.com/v0/b/groupthink-fc4b2.appspot.com/o/root%2Ftemplate_files%2Fsee%20everything.gif?alt=media&token=e5d8c141-62c4-46b4-a697-12e1f0008004",
+            "width" : 480
+          },
+          "parent" : "-MPzc9JBVFfzvusvywhe",
+          "position" : {
+            "x" : 3940,
+            "y" : 880
+          },
+          "size" : {
+            "height" : 270,
+            "width" : 318.75
+          },
+          "type" : "image"
+        },
+        "root" : {
+          "children" : {
+            "-MPzCVhArHHqasEFX2Kh" : 1,
+            "-MPzDHB2YBzHqjaiCNOD" : 1,
+            "-MPzDbVF6pHyVr9OBsNI" : 1,
+            "-MPzEKsi0FEPbJB8ABcD" : 1,
+            "-MPzEWZq5yQBYzyPWVO2" : 1,
+            "-MPzEx76RArSayFI_n04" : 1,
+            "-MPzFKylCUn-G2t-uoG1" : 1,
+            "-MPzGK7I-_FywocZUEF9" : 1,
+            "-MPzGiKibr1qjrttL3B5" : 1,
+            "-MPzGoFMJw8fqM_-CYmI" : 1,
+            "-MPzHupvNMqAc5za3wqD" : 1,
+            "-MPzI1ZErxxYJUUyTpvY" : 1,
+            "-MPzKIAgvhTeDzvemape" : 1,
+            "-MPzR2lRq_W34NBzf97B" : 1,
+            "-MPzRNXEKsXCTUFcf5sz" : 1,
+            "-MPzUyMdCi-1P1bvoO3r" : 1,
+            "-MPz_aQz78qlBIBB4LIv" : 1,
+            "-MPz_g5ypoTLkf0biHdA" : 1,
+            "-MPzbwzE7N22Ct2NxqDg" : 1,
+            "-MPzc2bsJ7dwoqQ_M2u4" : 1,
+            "-MPzc9JBVFfzvusvywhe" : 1,
+            "dummy" : 1
+          }
+        }
+      }
     }
 }
 export default projectTemplates;

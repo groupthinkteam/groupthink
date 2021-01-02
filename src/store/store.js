@@ -640,6 +640,8 @@ export var storeObject = {
         let addCard = this.addCard
         let saveContent = this.saveContent
         let projectId = this.projectID
+        let projectRef = this.projectRef
+        let requestDownload = this.requestDownload
 
         function summarize() {
             const API_KEY = "89A59B5393";
@@ -697,19 +699,53 @@ export var storeObject = {
                 .catch(() => callback(false))
         }
         function convFile() {
-            var convToPdf = functions.httpsCallable('fileConv')
+            var convToPdf = functions.httpsCallable('fileConvTest')
+            let newCardKey = projectRef.child("nodes").push().key;
+            var tempPath = `root/${projectId}/${newCardKey}/`
             const customMetadata = card.content.metadata.customMetadata
+            
             const data = {
-                fullpath: card.content.metadata.fullPath,
+                inPath: card.content.metadata.fullPath,
+                outPath: tempPath,
+                fileName: card.content.metadata.name,
                 outformat: "pdf",
                 updateMetadata: {
+                    [Object.keys(customMetadata)[0]]: customMetadata[Object.keys(customMetadata)[0]],
                     metadata: {
-                        [Object.keys(customMetadata)[0]]: customMetadata[Object.keys(customMetadata)[0]]
                     }
                 }
             }
-            convToPdf(data).then(() => callback(true)).catch(() => callback(false))
-
+            convToPdf(data)
+            .then((status) => {
+                console.log(status)
+                if (status.data !== 'finished') {
+                    alert("File could not be converted")
+                }
+                else {
+                    console.log(`Path: ${newCardKey}/${card.content.metadata.name}`)
+                    requestDownload(`${newCardKey}/${card.content.metadata.name}`, (url, metadata) => {
+                        console.log("reqDownData", url, metadata)
+                        addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
+                            {
+                                height: 50,
+                                width: 250
+                            },id
+                            ,
+                            "file",
+                            (newID) => {
+                                saveContent(newID ,{
+                                    url:url,
+                                    metadata:metadata
+                                })
+                            })
+                    })
+                    console.log(`${tempPath}${card.content.metadata.name}`)
+                    storage().ref(`${tempPath}${card.content.metadata.name}`).delete()
+                    .then(() => console.log("deleted temp file"))
+                    .catch((e) => console.log("Deletion Error: ", e))
+                }
+                callback(true)
+            }).catch(() => callback(false))
         }
         function convertLinksToCitation() {
             var fullText = []
