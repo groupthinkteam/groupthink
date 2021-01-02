@@ -65,15 +65,23 @@ const Arrow = (props) => {
         y: parent.position.y + parent.size.height,
     }
     var tail = {
-        x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
+        x: child.position.x + (store.collapsedID[props.id] ?( 135 /2 ) : child.size.width / 2),
         y: child.position.y - 7,
         position: 'bottom'
     }
     //TAIL POSITIONING
-    if (parent.position.x > child.position.x + child.size.width) {
+    if(store.collapsedID[props.id] && parent.position.x > child.position.x +130 ){
+        console.log("COLLAPSED LEFT")
+        tail = {
+            x: child.position.x + (store.collapsedID[props.id] ? 135 : child.size.width) + 35,
+            y: child.position.y + 17 + (store.collapsedID[props.id] ? 28 : (child.size.height / 2)),
+            position: 'left'
+        }
+    }
+    else if (parent.position.x > child.position.x + child.size.width) {
         console.log("Left")
         tail = {
-            x: child.position.x + (store.collapsedID[props.id] ? 200 : child.size.width) + 35,
+            x: child.position.x + (store.collapsedID[props.id] ? 135 : child.size.width) + 35,
             y: child.position.y + 17 + (store.collapsedID[props.id] ? 28 : (child.size.height / 2)),
             position: 'left'
         }
@@ -81,7 +89,7 @@ const Arrow = (props) => {
     else if (parent.position.x +parent.size.width< child.position.x ) {
         console.log("Right");
         tail = {
-            x: child.position.x - 25 + (store.collapsedID[props.id] ? 63 : 0),
+            x: child.position.x - 25 + (store.collapsedID[props.id] ? (0) : 0),
             y: child.position.y + 17 + (store.collapsedID[props.id] ? 28 : child.size.height / 2),
             position: 'right'
         }
@@ -89,18 +97,11 @@ const Arrow = (props) => {
     else if (parent.position.y + parent.size.height > child.position.y) {
         console.log("TOP");
         tail = {
-            x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
+            x: child.position.x + (store.collapsedID[props.id] ? (135/2): child.size.width / 2),
             y: child.position.y + child.size.height + 35,
             position: 'top'
         }
     }
-
-    const midPoint = {
-        x: (tail.x + head.x) / 2,
-        y: (tail.y + head.y) / 2
-    }
-
-
     let path;
 
     let tempX, tempY;
