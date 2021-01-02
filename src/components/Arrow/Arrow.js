@@ -78,7 +78,7 @@ const Arrow = (props) => {
             position: 'left'
         }
     }
-    else if (parent.position.x < child.position.x - child.size.width) {
+    else if (parent.position.x +parent.size.width< child.position.x ) {
         console.log("Right");
         tail = {
             x: child.position.x - 25 + (store.collapsedID[props.id] ? 63 : 0),
@@ -86,7 +86,7 @@ const Arrow = (props) => {
             position: 'right'
         }
     }
-    else if (parent.position.y > child.position.y) {
+    else if (parent.position.y + parent.size.height > child.position.y) {
         console.log("TOP");
         tail = {
             x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
@@ -115,7 +115,7 @@ const Arrow = (props) => {
             break;
         case "top":
             tempX = tail.x + 8
-            tempY = tail.y - 7
+            tempY = tail.y - 10
             break;
         default:
             tempX = tail.x
@@ -123,8 +123,8 @@ const Arrow = (props) => {
             break;
     }
     path = updatePath(
-        head.x === tail.x ? head.x + 1 : head.x,
-        head.y === tail.y - 19 ? head.y + 1 : head.y
+        head.x === tempX ? head.x + 1 : head.x,
+        head.y === tempY ? head.y + 1 : head.y
         , tempX, tempY
     )
 
@@ -145,27 +145,26 @@ const Arrow = (props) => {
         var y3 = (y4 + dy);
         switch (tail?.position) {
             case "right":
-                slopeX = ((x3 + midPoint.x) / 2) + (x3 / 40)//+ (x4 > x1 ? 15 : -10);
-                slopeY = ((y3 + midPoint.y) / 2) - (y3 / 120)//+ (y1 > y4 ? -3 : -2);
+                slopeX = tail.x-38;
+                slopeY = tail.y-18;
                 break;
             case "left":
-                slopeX = ((x3 + midPoint.x) / 2) - (x3 / 40) //+ (x4 > x1 ? (x3) : -(x3 / 40));
-                slopeY = ((y3 + midPoint.y) / 2) - (y3 / 120)//+ (y1 > y4 ? -2 : -9);
+                slopeX = tail.x+32;
+                slopeY = tail.y -18;
                 break;
             case "bottom":
-                slopeX = (x4 + midPoint.x) / 2;
-                slopeY = (y3 + midPoint.y) / 2;
+                slopeX = tail.x-2;
+                slopeY = tail.y-55;
                 break;
             case "top":
-                slopeX = (x4 + midPoint.x) / 2;
-                slopeY = (y3 + midPoint.y) / 2;
+                slopeX = tail.x+8;
+                slopeY = tail.y+32;
                 break;
             default:
                 break;
         }
         return `M${x1} ${y1} C${x1} ${y1} ${x3} ${y3} ${x4} ${y4}`;
     }
-    // console.log("ARROW ", linePathDragging)
     return (
         <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}
             onMouseEnter={() => headPathDragging ? null : setShowArrowButtons(true)}
@@ -204,7 +203,7 @@ const Arrow = (props) => {
                         id={props.id}
                         slopeX={slopeX}
                         slopeY={slopeY}
-                        midPoint={midPoint}
+                        midPoint={tail}
                     />
                     : null
             }
