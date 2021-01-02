@@ -172,7 +172,7 @@ const CollapsedCard = (props) => {
                 textAlign: 'center',
                 backgroundColor: 'white',
                 width: me.size.width / (count) + "px",
-                marginLeft: (me.size.width / 4.5) + "px"//2.5=1.5+1,3=1+2,3.5=0.5+3
+                // marginLeft: (me.size.width / 4.5) + "px"//2.5=1.5+1,3=1+2,3.5=0.5+3
             }}>
             <div className="collapsed-cards-list">
                 {

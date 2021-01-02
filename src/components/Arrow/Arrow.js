@@ -36,8 +36,8 @@ const Arrow = (props) => {
     const PlaceArrow = (strategy) => {
         let path;
         const tailRoot = {
-            x: child.position.x + child.size.width / 2 - (strategy ? 20 : 0),
-            y: child.position.y + child.size.height + 10
+            x: child.position.x + child.size.width / 2,
+            y: child.position.y + child.size.height + 5
         }
         if (store.collapsedID[props.id]) return null
         if (headPathDragging?.head) {
@@ -65,42 +65,43 @@ const Arrow = (props) => {
         y: parent.position.y + parent.size.height,
     }
     var tail = {
-        x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
+        x: child.position.x + (store.collapsedID[props.id] ? (135 / 2) : child.size.width / 2),
         y: child.position.y - 7,
         position: 'bottom'
     }
     //TAIL POSITIONING
-    if (parent.position.x > child.position.x + child.size.width) {
-        console.log("Left")
+    if (store.collapsedID[props.id] && parent.position.x > child.position.x + 130) {
+        console.log("COLLAPSED LEFT")
         tail = {
-            x: child.position.x + (store.collapsedID[props.id] ? 200 : child.size.width) + 35,
+            x: child.position.x + (store.collapsedID[props.id] ? 135 : child.size.width) + 35,
             y: child.position.y + 17 + (store.collapsedID[props.id] ? 28 : (child.size.height / 2)),
             position: 'left'
         }
     }
-    else if (parent.position.x < child.position.x - child.size.width) {
+    else if (parent.position.x > child.position.x + child.size.width) {
+        console.log("Left")
+        tail = {
+            x: child.position.x + (store.collapsedID[props.id] ? 135 : child.size.width) + 35,
+            y: child.position.y + 17 + (store.collapsedID[props.id] ? 28 : (child.size.height / 2)),
+            position: 'left'
+        }
+    }
+    else if (parent.position.x + parent.size.width < child.position.x) {
         console.log("Right");
         tail = {
-            x: child.position.x - 25 + (store.collapsedID[props.id] ? 63 : 0),
+            x: child.position.x - 25 + (store.collapsedID[props.id] ? (0) : 0),
             y: child.position.y + 17 + (store.collapsedID[props.id] ? 28 : child.size.height / 2),
             position: 'right'
         }
     }
-    else if (parent.position.y > child.position.y) {
+    else if (parent.position.y + parent.size.height > child.position.y) {
         console.log("TOP");
         tail = {
-            x: child.position.x + (store.collapsedID[props.id] ? child.size.width * 0.46 : child.size.width / 2),
+            x: child.position.x + (store.collapsedID[props.id] ? (135 / 2) : child.size.width / 2),
             y: child.position.y + child.size.height + 35,
             position: 'top'
         }
     }
-
-    const midPoint = {
-        x: (tail.x + head.x) / 2,
-        y: (tail.y + head.y) / 2
-    }
-
-
     let path;
 
     let tempX, tempY;
@@ -115,7 +116,7 @@ const Arrow = (props) => {
             break;
         case "top":
             tempX = tail.x + 8
-            tempY = tail.y - 7
+            tempY = tail.y - 10
             break;
         default:
             tempX = tail.x
@@ -123,8 +124,8 @@ const Arrow = (props) => {
             break;
     }
     path = updatePath(
-        head.x === tail.x ? head.x + 1 : head.x,
-        head.y === tail.y - 19 ? head.y + 1 : head.y
+        head.x === tempX ? head.x + 1 : head.x,
+        head.y === tempY ? head.y + 1 : head.y
         , tempX, tempY
     )
 
@@ -145,77 +146,79 @@ const Arrow = (props) => {
         var y3 = (y4 + dy);
         switch (tail?.position) {
             case "right":
-                slopeX = ((x3 + midPoint.x) / 2) + (x3 / 40)//+ (x4 > x1 ? 15 : -10);
-                slopeY = ((y3 + midPoint.y) / 2) - (y3 / 120)//+ (y1 > y4 ? -3 : -2);
+                slopeX = tail.x - 38;
+                slopeY = tail.y - 18;
                 break;
             case "left":
-                slopeX = ((x3 + midPoint.x) / 2) - (x3 / 40) //+ (x4 > x1 ? (x3) : -(x3 / 40));
-                slopeY = ((y3 + midPoint.y) / 2) - (y3 / 120)//+ (y1 > y4 ? -2 : -9);
+                slopeX = tail.x + 32;
+                slopeY = tail.y - 18;
                 break;
             case "bottom":
-                slopeX = (x4 + midPoint.x) / 2;
-                slopeY = (y3 + midPoint.y) / 2;
+                slopeX = tail.x - 2;
+                slopeY = tail.y - 55;
                 break;
             case "top":
-                slopeX = (x4 + midPoint.x) / 2;
-                slopeY = (y3 + midPoint.y) / 2;
+                slopeX = tail.x + 8;
+                slopeY = tail.y + 32;
                 break;
             default:
                 break;
         }
         return `M${x1} ${y1} C${x1} ${y1} ${x3} ${y3} ${x4} ${y4}`;
     }
-    // console.log("ARROW ", linePathDragging)
     return (
-        <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}
-            onMouseEnter={() => headPathDragging ? null : setShowArrowButtons(true)}
-            onMouseLeave={() => setShowArrowButtons(false)}
-        >
-            <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
-                <defs>
-                    <linearGradient id={"grad3".concat(props.id)} x1={head.x > tail.x ? "100%" : '0%'} y1="0%" x2={head.x > tail.x ? "0%" : "100%"} y2="0%">
-                        <stop offset="0%" stopColor="#FF6B43" stopOpacity="1" />
-                        <stop offset="100%" stopColor="#5FA2F1" stopOpacity="1" />
-                    </linearGradient>
-                </defs>
-                {/* Duplicated for extra width on hover */}
-                <path
-                    className="arrow-path"
-                    strokeWidth="25"
-                    fill="none"
-                    stroke={`transparent`}
-                    d={path} />
-                <path
-                    className="arrow-path"
-                    strokeWidth="2"
-                    fill="none"
-                    stroke={`url(#grad3${props.id})`}
-                    d={path} />
-            </svg>
+        <>
             {
                 store.currentActive === props.id ?
                     PlaceArrow("subChild")
                     : null
             }
+            <div style={{ position: "absolute", overflow: "visible", zIndex: -1 }}
+                onMouseEnter={() => headPathDragging ? null : setShowArrowButtons(true)}
+                onMouseLeave={() => setShowArrowButtons(false)}
+            >
+                <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
+                    <defs>
+                        <linearGradient id={"grad3".concat(props.id)} x1={head.x > tail.x ? "100%" : '0%'} y1="0%" x2={head.x > tail.x ? "0%" : "100%"} y2="0%">
+                            <stop offset="0%" stopColor="#FF6B43" stopOpacity="1" />
+                            <stop offset="100%" stopColor="#5FA2F1" stopOpacity="1" />
+                        </linearGradient>
+                    </defs>
+                    {/* Duplicated for extra width on hover */}
+                    <path
+                        className="arrow-path"
+                        strokeWidth="25"
+                        fill="none"
+                        stroke={`transparent`}
+                        d={path} />
+                    <path
+                        className="arrow-path"
+                        strokeWidth="2"
+                        fill="none"
+                        stroke={`url(#grad3${props.id})`}
+                        d={path} />
+                </svg>
 
-            {
-                showArrowButtons ?
-                    <MidPointInArrow
-                        id={props.id}
-                        slopeX={slopeX}
-                        slopeY={slopeY}
-                        midPoint={midPoint}
-                    />
-                    : null
-            }
 
-            <TailArrow
-                id={props.id}
-                tail={tail}
-                showArrowButtons={showArrowButtons}
-            />
+                {
+                    showArrowButtons && !store.collapsedID[props.id] ?
+                        <MidPointInArrow
+                            id={props.id}
+                            slopeX={slopeX}
+                            slopeY={slopeY}
+                            midPoint={tail}
+                        />
+                        : null
+                }
 
-        </div>
+                <TailArrow
+                    id={props.id}
+                    tail={tail}
+                    showArrowButtons={showArrowButtons}
+                />
+
+            </div>
+        </>
     )
 };
 
