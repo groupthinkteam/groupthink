@@ -199,7 +199,7 @@ const Arrow = (props) => {
             }
 
             {
-                showArrowButtons ?
+                showArrowButtons && !store.collapsedID[props.id] ?
                     <MidPointInArrow
                         id={props.id}
                         slopeX={slopeX}
