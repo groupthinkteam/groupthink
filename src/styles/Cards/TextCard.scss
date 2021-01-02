@@ -6,6 +6,7 @@
   overflow: visible;
   padding: 6px;
   display: flex;
+  // box-sizing: content-box;
   .md-container-wrapper {
     height: inherit;
     max-height: 100%;
@@ -15,6 +16,7 @@
     // width: 100%;
     display: flex;
     margin: 0;
+    padding: 0;
   }
   textarea,
   .md-container {
@@ -22,10 +24,12 @@
     font-size: 14px;
     line-height: normal;
     height: auto;
-    overflow: scroll;
+    overflow: auto;
     width: 100%;
     margin: 0;
     overflow-wrap: break-word;
+    // box-sizing: content-box;
+    padding: 0;
   }
   .resize {
     overflow: auto;
