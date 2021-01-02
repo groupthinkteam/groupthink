@@ -318,29 +318,16 @@ export var storeObject = {
         this.updateLastActive()
         console.log("reparent requested for", id, "newparent", newParent);
         const throwParent = (ancestor) => { return this.cards[ancestor]?.parent }
-
-        const throwChildren = (children) => {
-            return this.cards[children]?.children
+        function checkValidity(ancestor) {
+            if (ancestor === 'root') return true
+            if (ancestor === newParent) return false
+            const parent = throwParent(ancestor);
+            return checkValidity(parent)
         }
-        function checkValidity(ancestor,dragAncestor) {
-            const children = throwChildren(ancestor)
-            
-            console.log("CHECK VALIDITY ", ancestor, id, " \n TO DROP ", newParent, children ? children[id] : "No children")
-
-            if (!children) return true
-            if(dragAncestor === ancestor) return false
-            if (children[id]) return false
-            else if (children[dragAncestor]) return false
-
-            return Object.keys(children).map(children => {
-                const parent = throwParent(dragAncestor);
-                return checkValidity(children,parent)
-            });
-        }
-        if (checkValidity(newParent,throwParent(id))) {
+        if (checkValidity(id)) {
             const updates = {};
             let currentParent = this.cards[newParent]["parent"];
-            updates[newParent + "/parent/"] = id;
+            updates[newParent + "/parent"] = id;
             updates[currentParent + "/children/" + newParent] = null;
             updates[id + "/children/" + newParent] = 1;
             this.projectRef.child("nodes")
