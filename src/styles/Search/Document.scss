@@ -1,5 +1,12 @@
 .searchbar-search-icon {
-    height: 24px;
+    height: 20px;
+    transition: 0.2s;
+    &:hover {
+        path {
+            transition: 0.2s;
+            stroke: white;
+        }
+    }
 }
 
 .menu-bar-searchbox {
@@ -7,16 +14,16 @@
         // padding: 5px 3px 3px 6px;
         width: 30px;
         height: 30px;
-        border: 1.5px solid grey;
+        // border: 1.5px solid #413D45;
+        border: 1.5px solid #32aaff;
+        background-color: white;
         border-radius: 6px;
-        background-color: transparent;
         display: flex;
         justify-content: center;
         align-items: center;
         transition: 0.2s;
-        padding-top: 3px;
         &:hover {
-            border: 1.5px solid grey;
+            background-color: #32aaff;
         }
     }
     .search-container {
@@ -72,7 +79,8 @@
         .search-dropdown {
             width: 100%;
         }
-        .search-results, .recently-searched {
+        .search-results,
+        .recently-searched {
             display: flex;
             flex-flow: row wrap;
             justify-content: space-between;
@@ -81,7 +89,7 @@
             width: 100%;
         }
         .search-item {
-            background-color: #F6F6F6;
+            background-color: #f6f6f6;
             height: 210px;
             width: 210px;
             border-radius: 6px;

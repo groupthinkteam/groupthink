@@ -66,7 +66,7 @@ function Feedback(props) {
             <button data-effect="solid" data-tip="Feedback" className="fb-button" onClick={() => { togglePopup(); }}>
                 Feedback
             </button>
-            <ReactTooltip  place="bottom" />
+            <ReactTooltip delayShow={2000} place="bottom" />
             {isOpen &&
                 <PopupMenu handleClose={togglePopup}>
                     <div className="container">

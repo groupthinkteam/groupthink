@@ -17,10 +17,10 @@ gsap.registerPlugin(ScrollToPlugin)
  */
 const SearchBar = (props) => {
     const store = useStore();
-    
+
     const [results, setResults] = useState({ matches: [], suggest: [] });
     const [actionResult, setActionResult] = useState({ matches: [], suggest: [] });
-    
+
     const scrollToID = (id) => {
         let height = document.getElementById("card-container").style.height;
         let x = store.cards[id].position.x - window.innerWidth - 100;
@@ -55,7 +55,7 @@ const SearchBar = (props) => {
 
             const searchObject = new SearchElements(indexes);
             const [result, suggestions] = searchObject.getResult(text, store.projects);
-            console.log("RESULT ",text, result);
+            console.log("RESULT ", text, result);
             console.log("Suggestion", text, suggestions);
             setResults({ matches: result, suggest: suggestions });
             store.highlightSearched(result, 'projects');
@@ -85,6 +85,6 @@ const SearchBar = (props) => {
             }
         </>
     )
-    
+
 }
 export default React.memo(observer(SearchBar));
