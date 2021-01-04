@@ -211,23 +211,22 @@ export var storeObject = {
                     stack.concat(Object.keys(this.cards[poppedID]["children"]))
             }
         }
-
-        switch (strategy) {
-            case "recursive":
-                console.log("RECURSIVE ", this.cards[id]["children"])
-                if (this.cards[id]["children"])
+        if (this.cards[id]?.children)
+            switch (strategy) {
+                case "recursive":
+                    console.log("RECURSIVE ", this.cards[id]["children"])
                     depthFirstTraversal(Object.keys(this.cards[id]["children"]));
-                break;
-            case "reparent":
-                Object.keys(this.cards[id]["children"])
-                    .forEach(child =>{ 
-                        updates[newParent+"/children/"+child]=1
-                        updates[child + "/parent"] = newParent
-                    });
-                break;
-            default:
-                break;
-        }
+                    break;
+                case "reparent":
+                    Object.keys(this.cards[id]["children"])
+                        .forEach(child => {
+                            updates[newParent + "/children/" + child] = 1
+                            updates[child + "/parent"] = newParent
+                        });
+                    break;
+                default:
+                    break;
+            }
         this.projectRef.child("nodes").update(updates)
             .then(console.log("deleted", id, "successfully")).catch(error => console.log("couldn't reparent because ", error));
     },
@@ -693,7 +692,7 @@ export var storeObject = {
             let newCardKey = projectRef.child("nodes").push().key;
             var tempPath = `root/${projectId}/${newCardKey}/`
             const customMetadata = card.content.metadata.customMetadata
-            
+
             const data = {
                 inPath: card.content.metadata.fullPath,
                 outPath: tempPath,
@@ -706,36 +705,36 @@ export var storeObject = {
                 }
             }
             convToPdf(data)
-            .then((status) => {
-                console.log(status)
-                if (status.data !== 'finished') {
-                    alert("File could not be converted")
-                }
-                else {
-                    console.log(`Path: ${newCardKey}/${card.content.metadata.name}`)
-                    requestDownload(`${newCardKey}/${card.content.metadata.name}`, (url, metadata) => {
-                        console.log("reqDownData", url, metadata)
-                        addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
-                            {
-                                height: 50,
-                                width: 250
-                            },id
-                            ,
-                            "file",
-                            (newID) => {
-                                saveContent(newID ,{
-                                    url:url,
-                                    metadata:metadata
+                .then((status) => {
+                    console.log(status)
+                    if (status.data !== 'finished') {
+                        alert("File could not be converted")
+                    }
+                    else {
+                        console.log(`Path: ${newCardKey}/${card.content.metadata.name}`)
+                        requestDownload(`${newCardKey}/${card.content.metadata.name}`, (url, metadata) => {
+                            console.log("reqDownData", url, metadata)
+                            addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
+                                {
+                                    height: 50,
+                                    width: 250
+                                }, id
+                                ,
+                                "file",
+                                (newID) => {
+                                    saveContent(newID, {
+                                        url: url,
+                                        metadata: metadata
+                                    })
                                 })
-                            })
-                    })
-                    console.log(`${tempPath}${card.content.metadata.name}`)
-                    storage().ref(`${tempPath}${card.content.metadata.name}`).delete()
-                    .then(() => console.log("deleted temp file"))
-                    .catch((e) => console.log("Deletion Error: ", e))
-                }
-                callback(true)
-            }).catch(() => callback(false))
+                        })
+                        console.log(`${tempPath}${card.content.metadata.name}`)
+                        storage().ref(`${tempPath}${card.content.metadata.name}`).delete()
+                            .then(() => console.log("deleted temp file"))
+                            .catch((e) => console.log("Deletion Error: ", e))
+                    }
+                    callback(true)
+                }).catch(() => callback(false))
         }
         function convertLinksToCitation() {
             var fullText = []
