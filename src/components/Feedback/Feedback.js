@@ -63,7 +63,7 @@ function Feedback(props) {
 
     return (
         <div className="feedback">
-            <button data-effect="solid" data-tip="feedback" className="fb-button" onClick={() => { togglePopup(); }}>
+            <button data-effect="solid" data-tip="Feedback" className="fb-button" onClick={() => { togglePopup(); }}>
                 Feedback
             </button>
             <ReactTooltip  place="bottom" />

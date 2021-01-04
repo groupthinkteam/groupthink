@@ -1,0 +1,44 @@
+import React, { useEffect, useState } from "react"
+import "../../styles/Toggle/ToggleButton.scss"
+import ReactTooltip from "react-tooltip"
+import { gsap } from "gsap/all"
+
+// props: 
+// id: a unique id
+// onToggle(bool): callback
+// default: bool (initial value) (false if not specified)
+// tooltip: "tooltip text string"
+export default function ToggleButton(props) {
+
+    // false is default is not specified
+    let [isOn, setIsOn] = useState(!!props.default)
+
+    useEffect(() => {
+        if (isOn) {
+            gsap.to("#togglebody" + props.id, { backgroundColor: "#48BB35", duration: 0.5 })
+            gsap.to("#togglenub" + props.id, { left: "20", duration: 0.2 })
+        }
+        if (!isOn) {
+            gsap.to("#togglebody" + props.id, { backgroundColor: "#A29FA5", duration: 0.5 })
+            gsap.to("#togglenub" + props.id, { left: "4", duration: 0.2 })
+        }
+    }, [isOn, props.id])
+
+    return (
+        <div id={"toggle" + props.id}
+            className="toggle-button"
+            data-effect="solid" data-tip="Show fewer arrows"
+            onClick={() => {
+                props.onToggle(!isOn)
+                setIsOn(!isOn)
+            }}>
+
+            <div className="toggle-body" id={"togglebody" + props.id}>
+                <ReactTooltip place="top" />
+                <div className="toggle-nub" id={"togglenub" + props.id}>
+
+                </div>
+            </div>
+        </div>
+    )
+}
