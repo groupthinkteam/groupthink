@@ -4,12 +4,14 @@ import ReactPlayer from "react-player/lazy";
  * @param {String} url URL Whose Extension is to be detect
  * @returns Returns Type If ReactPlayer can play then `VideoLink` OR Else `link`
  */
+function isURL(str) {
+    return /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(str);
+}
 export const getTypeFromURL = (url) => {
-    try {
-        new URL(url);
+    if(isURL(url)){
         return ReactPlayer.canPlay(url) ? "VideoLink" : "link";
     }
-    catch (_) {
+    else{
         return "NoLink";
     }
 }
@@ -53,9 +55,9 @@ export const getMetadataFromURL = (link, callback) => {
             console.error(error);
         });
 }
-export const resizeDimension = (height, width ,aspect) => {
+export const resizeDimension = (height, width) => {
     const maxDimension = Math.max(height, width);
-    const multiplier = maxDimension > (aspect || 400) ? (aspect||400) / maxDimension : 1;
+    const multiplier = maxDimension > 400 ? 400 / maxDimension : 1;
     return [Math.floor(height * multiplier), Math.floor(width * multiplier)]
 }
 /**

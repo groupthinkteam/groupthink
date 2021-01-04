@@ -689,51 +689,51 @@ export var storeObject = {
                 .catch(() => callback(false))
         }
         function convFile() {
-            var convToPdf = functions.httpsCallable('fileConvTest')
-            let newCardKey = projectRef.child("nodes").push().key;
-            var tempPath = `root/${projectId}/${newCardKey}/`
+            var convToPdf = functions.httpsCallable('fileConv')
+            //let newCardKey = projectRef.child("nodes").push().key;
+            //var tempPath = `root/${projectId}/${newCardKey}/`
             const customMetadata = card.content.metadata.customMetadata
 
             const data = {
-                inPath: card.content.metadata.fullPath,
-                outPath: tempPath,
-                fileName: card.content.metadata.name,
+                fullpath: card.content.metadata.fullPath,
+                //outPath: tempPath,
+                //fileName: card.content.metadata.name,
                 outformat: "pdf",
                 updateMetadata: {
-                    [Object.keys(customMetadata)[0]]: customMetadata[Object.keys(customMetadata)[0]],
                     metadata: {
+                        [Object.keys(customMetadata)[0]]: customMetadata[Object.keys(customMetadata)[0]],
                     }
                 }
             }
             convToPdf(data)
                 .then((status) => {
                     console.log(status)
-                    if (status.data !== 'finished') {
+                    if (status.data !== 'finished' && status.data !== null) {
                         alert("File could not be converted")
                     }
-                    else {
-                        console.log(`Path: ${newCardKey}/${card.content.metadata.name}`)
-                        requestDownload(`${newCardKey}/${card.content.metadata.name}`, (url, metadata) => {
-                            console.log("reqDownData", url, metadata)
-                            addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
-                                {
-                                    height: 50,
-                                    width: 250
-                                }, id
-                                ,
-                                "file",
-                                (newID) => {
-                                    saveContent(newID, {
-                                        url: url,
-                                        metadata: metadata
-                                    })
-                                })
-                        })
-                        console.log(`${tempPath}${card.content.metadata.name}`)
-                        storage().ref(`${tempPath}${card.content.metadata.name}`).delete()
-                            .then(() => console.log("deleted temp file"))
-                            .catch((e) => console.log("Deletion Error: ", e))
-                    }
+                    // else {
+                    //     console.log(`Path: ${newCardKey}/${card.content.metadata.name}`)
+                    //     requestDownload(`${newCardKey}/${card.content.metadata.name}`, (url, metadata) => {
+                    //         console.log("reqDownData", url, metadata)
+                    //         addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
+                    //             {
+                    //                 height: 50,
+                    //                 width: 250
+                    //             }, id
+                    //             ,
+                    //             "file",
+                    //             (newID) => {
+                    //                 saveContent(newID, {
+                    //                     url: url,
+                    //                     metadata: metadata
+                    //                 })
+                    //             })
+                    //     })
+                    //     console.log(`${tempPath}${card.content.metadata.name}`)
+                    //     storage().ref(`${tempPath}${card.content.metadata.name}`).delete()
+                    //         .then(() => console.log("deleted temp file"))
+                    //         .catch((e) => console.log("Deletion Error: ", e))
+                    // }
                     callback(true)
                 }).catch(() => callback(false))
         }
@@ -850,8 +850,8 @@ export var storeObject = {
         },
         "tripPlanning": {
             id: "tripPlanning",
-            title: "Trip Planning",
-            description: "Plan your dream vacation easily with this template."
+            title: "More templates coming soon!",
+            description: "Tell us what you want to see by giving feedback."
         }
     },
     templatesUI: {
