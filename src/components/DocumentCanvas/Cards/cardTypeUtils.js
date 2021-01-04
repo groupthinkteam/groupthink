@@ -53,9 +53,9 @@ export const getMetadataFromURL = (link, callback) => {
             console.error(error);
         });
 }
-export const resizeDimension = (height, width) => {
+export const resizeDimension = (height, width ,aspect) => {
     const maxDimension = Math.max(height, width);
-    const multiplier = maxDimension > 400 ? 400 / maxDimension : 1;
+    const multiplier = maxDimension > (aspect || 400) ? (aspect||400) / maxDimension : 1;
     return [Math.floor(height * multiplier), Math.floor(width * multiplier)]
 }
 /**

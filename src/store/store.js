@@ -397,7 +397,7 @@ export var storeObject = {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
-    updateProfilePicture() {
+    updateProfilePicture(callback) {
         const path = `root/profiles/${this.userID}/pfp/profilePic`;
         const requestedPathRef = storage().ref(path)
         requestedPathRef.getDownloadURL()
@@ -405,6 +405,7 @@ export var storeObject = {
                 auth().currentUser.updateProfile({
                     photoURL: url
                 })
+                .then(callback(true))
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },

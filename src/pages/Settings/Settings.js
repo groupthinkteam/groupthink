@@ -4,6 +4,7 @@ import UserMenu from "../../components/UserMenu/UserMenu"
 import { useHistory, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../../store/hook'
+// import { detectDimension , resizeDimension} from "../../components/DocumentCanvas/Cards/cardTypeUtils";
 
 function Settings() {
     let store = useStore();
@@ -22,7 +23,7 @@ function Settings() {
     }
 
     const upload = useCallback((files) => {
-        let file = files[0];
+        let file = files[0] ;
         console.log("triggered file upload")
         console.log(file)
         if (!file) return;
@@ -36,11 +37,16 @@ function Settings() {
                 if (typeof status === "number")
                     setUploadState(status);
                 else {
-                    store.updateProfilePicture()
+                    
+                    store.updateProfilePicture(data=>{
+                        if(data)
+                        history.go(0)
+                    });
+                    
                 }
-            }, "pfp");
+            }, "pfp"); 
 
-    }, [store]);
+    }, [store,history]);
 
     const gotoDashboard = () => {
         history.push('/dashboard', { from: location });
