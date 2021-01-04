@@ -170,7 +170,7 @@ const Arrow = (props) => {
     return (
         <>
             {
-                store.currentActive === props.id && !store.currentContext === props.id ?
+                store.currentActive === props.id && !store.currentContext ?
                     PlaceArrow("subChild")
                     : null
             }
