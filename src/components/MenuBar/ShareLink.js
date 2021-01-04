@@ -155,8 +155,9 @@ const ShareLink = (props) => {
         sharedUsers = Object.entries(store.users)
             .map(([id, user]) =>
                 <div className="users-list-item">
-                    <img src={user.photoURL} alt={user.name} className="user-profile" />
-                    {user.name}
+                    <img src={(id === store.currentUser.uid ? store.currentUser.photoURL : user.photoURL)}
+                        alt={user.name} className="user-profile" />
+                    {user.name + (id === store.currentUser.uid ? " (You)" : "")}
                 </div>
             )
     }
