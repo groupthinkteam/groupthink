@@ -46,10 +46,10 @@ const PlaceHeadArrow = (props) => {
             })
         return () => { if (PlaceHeadArrow[0]) PlaceHeadArrow[0].kill() }
     }, [head.x, head.y, id, setHeadPathDragging, store,strategy]);
-
+    
     return (
         <>
-            <div style={{ position: "absolute", overflow: "visible", zIndex: store.currentActive === props.id && !headPathDragging? 90000 : -1 }}>
+            <div  style={{ position: "absolute", overflow: "visible", zIndex: store.currentActive === props.id && !headPathDragging?Draggable.zIndex : -1 }}>
             <svg style={{ zIndex: -1, opacity: 0.4, position: "absolute", overflow: "visible" }}>
                 <defs>
                     <linearGradient id={"grad33".concat(props.id)} x1={'0%'} y1="0%" x2={"100%"} y2="0%">

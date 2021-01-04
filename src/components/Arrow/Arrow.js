@@ -56,8 +56,9 @@ const Arrow = (props) => {
             </>
         );
     }
-    if (child.parent === "root") {
+    if (child.parent === "root" ) {
         if (store.currentActive !== props.id) return null;
+        if(store.currentContext === props.id) return null
         return PlaceArrow()
     }
     var head = {
@@ -169,7 +170,7 @@ const Arrow = (props) => {
     return (
         <>
             {
-                store.currentActive === props.id ?
+                store.currentActive === props.id && !store.currentContext === props.id ?
                     PlaceArrow("subChild")
                     : null
             }
