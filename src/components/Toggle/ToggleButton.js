@@ -15,12 +15,12 @@ export default function ToggleButton(props) {
 
     useEffect(() => {
         if (isOn) {
-            gsap.to("#togglebody" + props.id, { backgroundColor: "#48BB35", duration: 0.5 })
-            gsap.to("#togglenub" + props.id, { left: "20", duration: 0.2 })
+            gsap.to("#togglebody" + props.id, { backgroundColor: "#FB7BBB", duration: 0.5 })
+            gsap.to("#togglenub" + props.id, { backgroundColor: "#ffffff", left: "12", duration: 0.2 })
         }
         if (!isOn) {
-            gsap.to("#togglebody" + props.id, { backgroundColor: "#A29FA5", duration: 0.5 })
-            gsap.to("#togglenub" + props.id, { left: "4", duration: 0.2 })
+            gsap.to("#togglebody" + props.id, { backgroundColor: "#ffffff", duration: 0.5 })
+            gsap.to("#togglenub" + props.id, { backgroundColor: "#FB7BBB", left: "4", duration: 0.2 })
         }
     }, [isOn, props.id])
 
@@ -33,7 +33,6 @@ export default function ToggleButton(props) {
                 setIsOn(!isOn)
             }}>
             <div className="toggle-body" id={"togglebody" + props.id}>
-                {props.tooltip ? <ReactTooltip place="top" /> : null}
                 <div className="toggle-nub" id={"togglenub" + props.id} />
             </div>
         </div>

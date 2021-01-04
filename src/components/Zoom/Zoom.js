@@ -22,9 +22,9 @@ function Zoom(props) {
     return (
         <div className="zoom-widget" tabIndex="-1" >
             <ToggleButton id={"toggle" + store.projectID}
-                default={false}
-                tooltip={"Show fewer arrows"}
-                onToggle={(newValue) => store.toggleArrows = !newValue} />
+                default={true}
+                tooltip={"Show all arrows. When disabled, only arrows linked to the selected card are visible."}
+                onToggle={(newValue) => store.toggleArrows = newValue} />
             <div className="vertical-separator" />
             <img className="zoom-icon" onClick={() => updateZoom((store.zoom - .10) * 100 + "%")} src={require("../../assets/zoom/minus.svg")} alt="minus" />
             <input

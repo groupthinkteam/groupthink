@@ -1,19 +1,23 @@
 .toggle-button {
     position: relative;
     .toggle-body {
-        background-color: grey;
+        background-color: white;
         padding: 4px;
         border-radius: 20px;
         opacity: 1;
-        width: 34px;
+        width: 28px;
         position: relative;
         height: 18px;
+        border: 1.5px solid black;
+        // box-sizing: content-box;
         .toggle-nub {
             width: 10px;
             height: 10px;
+            top: 2.5px;
             border-radius: 5px;
-            background-color: white;
+            background-color: #fb7bbb;
             position: absolute;
+            border: 1.5px solid black;
         }
     }
 }
