@@ -1,0 +1,19 @@
+.toggle-button {
+    position: relative;
+    .toggle-body {
+        background-color: grey;
+        padding: 4px;
+        border-radius: 20px;
+        opacity: 1;
+        width: 34px;
+        position: relative;
+        height: 18px;
+        .toggle-nub {
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: white;
+            position: absolute;
+        }
+    }
+}

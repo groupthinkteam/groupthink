@@ -44,12 +44,12 @@ function MenuBar(props) {
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
-                <div data-offset="{'top': -2, 'left': -10}" data-place="bottom" data-effect="solid"   data-tip="Go Back" className="site-title">
+                <div data-offset="{'top': -2, 'left': -10}" data-place="bottom" data-effect="solid"   data-tip="Go back" className="site-title">
                     <Link to="/dashboard">
                         <img className="logo" src={require("../../assets/menu/ealogo.svg")} alt="logo" />
                     </Link>
                 </div>
-                <ReactTooltip  place="bottom" />
+                <ReactTooltip delayShow={1000} place="bottom" />
                 <div className="menu-bar-separator" />
                 <Feedback />
                 <div className="menu-bar-separator" />

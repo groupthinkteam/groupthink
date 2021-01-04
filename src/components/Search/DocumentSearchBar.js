@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import SearchDropdown from './SearchDropdown';
-import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
 import Popup from '../PopupMenu/PopupMenu';
 
 import "../../styles/Actions/ActionsMenu.scss"
@@ -25,7 +24,13 @@ const DocumentSearchBar = (props) => {
     return (
         <div data-effect="solid" data-tip={`Search In ${projectName}`} className="menu-bar-searchbox ">
             <div className="search-input">
-                <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
+                <svg className="searchbar-search-icon" alt="magnifying glass"
+                    onClick={() => setExpanded(true)}
+                    width="27" height="27" viewBox="0 0 27 27" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.3784 21.027C17.1549 21.027 21.027 17.1549 21.027 12.3784C21.027 7.60186 17.1549 3.72973 12.3784 3.72973C7.60187 3.72973 3.72974 7.60186 3.72974 12.3784C3.72974 17.1549 7.60187 21.027 12.3784 21.027Z" stroke="#32AAFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M23.1892 23.1892L18.4865 18.4865" stroke="#32AAFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
             </div>
             {
                 expanded ?

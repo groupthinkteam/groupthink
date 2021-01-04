@@ -93,7 +93,7 @@ const Dashboard = observer(() => {
           <div className="project-section-header">
             <div className="header-left-container">
               <div className="dashboard-title">
-                <select className="select" name="permission" id="permission" onChange={e => setFilterProject(e.target.value)}>
+                <select className="select" onChange={e => setFilterProject(e.target.value)}>
                   <option value={'All Projects'}>
                     All Projects
                   </option>
@@ -105,13 +105,15 @@ const Dashboard = observer(() => {
                   </option> */}
                 </select>
               </div>
+            </div>
+            <div className="header-right-container">
               <ChooseTemplate
                 openProject={onOpen}
                 isExpanded={isTemplateExpanded}
                 setIsExpanded={(bool) => setTemplateExpanded(bool)}
               />
+              <SearchBar dashboard />
             </div>
-            <SearchBar dashboard />
           </div>
 
           <div className="project-section-content">
