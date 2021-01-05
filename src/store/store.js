@@ -646,8 +646,8 @@ export var storeObject = {
                             id,
                             "text",
                             (newID) => {
-                                let content = json.sm_api_content?.split("[BREAK]").map((line) => "<li>" + line + "</li>")
-                                saveContent(newID, { text: "<ol>" + content.join(" ") + "</ol>" })
+                                let content = json.sm_api_content?.split("[BREAK]").map((line) => "- " + line)
+                                saveContent(newID, { text: content.join(" ") })
                             })
                         console.log({
                             percentReduced: json.sm_api_content_reduced,

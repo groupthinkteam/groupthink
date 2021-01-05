@@ -11,7 +11,7 @@ import "../../styles/TreeUI/TreeUI.scss";
 
 function TreeUI(props) {
     const store = useStore();
-    let [expanded, setExpanded] = useState(true);
+    let [expanded, setExpanded] = useState(false);
 
     if (!expanded) {
         return (

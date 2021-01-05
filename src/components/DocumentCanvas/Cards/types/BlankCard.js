@@ -7,8 +7,8 @@ import { detectDimension, getTypeFromURL, getMetadataFromURL, getTypeFromMetadat
 
 const defaultSize = {
     text: {
-        height: 200,
-        width: 280
+        height: 150,
+        width: 200
     },
     todo: {
         height: 300,
