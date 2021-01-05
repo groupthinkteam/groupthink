@@ -68,10 +68,10 @@
             }
             .profile-picture .user-menu {
                 visibility: visible;
-                border: solid black 1px;
+                border: solid black 1.5px;
                 width: 150px;
                 background-color: white;
-                color: #fff;
+                // color: #fff;
                 text-align: center;
                 border-radius: 6px;
                 padding: 5px 0;
@@ -84,11 +84,13 @@
             .profile-picture .user-menu::before {
                 content: "";
                 border: 1.5px solid black;
+                border-right: none;
+                border-bottom: none;
                 bottom: 50%;
                 background-color: white;
                 box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
                 position: absolute;
-                top: -6px;
+                top: -7px;
                 left: 115px;
                 transform: rotate(45deg);
                 width: 10px;

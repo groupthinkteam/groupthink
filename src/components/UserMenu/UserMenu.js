@@ -18,7 +18,13 @@ const UserMenu = (props) => {
       <div className="options">
         <Link to="/dashboard" className="option">Dashboard</Link>
         <Link to="/settings" className="option">Settings</Link>
-        <a href="true" onClick={props.signOut} className="option danger">Logout</a>
+        <hr className="separator" />
+        <Link to="/dashboard" className="option">What's New</Link>
+        <a href="https://www.notion.so/Kite-Frequently-Asked-Questions-fd7252bf67e944a1976b150590c37ed0" target="_blank" rel="noreferrer" className="option">
+          Help and FAQ
+        </a>
+        <hr className="separator" />
+        <span onClick={props.signOut} className="option danger">Logout</span>
       </div>
     </div>
   );
