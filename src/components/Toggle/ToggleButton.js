@@ -26,17 +26,17 @@ export default function ToggleButton(props) {
 
     return (
         <>
-        <ReactTooltip id={"toggle" + props.id} effect="solid"   eventOff="click" delayShow={1000} place="top" />
+        <ReactTooltip id={"toggle" + props.id} effect="solid" delayShow={100} delayUpdate={100}  eventOff="click"  place="top" />
         <div id={"toggle" + props.id}
             className="toggle-button"
-            data-place="top"
+            data-place="top" data-delay-show='100'
             data-effect="solid" data-tip={props.tooltip}
             onClick={() => {
                 props.onToggle(!isOn)
                 setIsOn(!isOn)
             }}>
             <div className="toggle-body" id={"togglebody" + props.id}>
-                <div className="toggle-nub" data-tip={null} id={"togglenub" + props.id} />
+                <div className="toggle-nub" data-delay-show='100' data-tip={null} id={"togglenub" + props.id} />
             </div>
         </div>
         </>
