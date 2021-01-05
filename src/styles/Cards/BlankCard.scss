@@ -1,5 +1,5 @@
 .blank-uploader {
-    margin: 6px;
+    margin: 0px;
     .upload-filler {
         background-image: linear-gradient(94.79deg, #fb7bbb 2.22%, #ffce00 112.48%);
         background-color: black;
@@ -14,7 +14,7 @@
     .upload-kite {
         position: absolute;
         top: 5px;
-        left: 0;
+        left: 5px;
         height: 40px;
         max-width: 70px;
     }
