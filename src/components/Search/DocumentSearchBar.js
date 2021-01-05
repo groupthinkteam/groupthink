@@ -22,7 +22,7 @@ const DocumentSearchBar = (props) => {
     }
 
     return (
-        <div data-delay-show='100' data-effect="solid" data-tip={!expanded?`Search In ${projectName}`:null} className="menu-bar-searchbox ">
+        <div data-delay-show='200' data-effect="solid" data-tip={!expanded?`Search In ${projectName}`:null} className="menu-bar-searchbox ">
             <div className="search-input">
                 <svg className="searchbar-search-icon" alt="magnifying glass"
                     onClick={() => setExpanded(true)}
