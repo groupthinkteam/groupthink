@@ -19,7 +19,9 @@ const UserMenu = (props) => {
         <Link to="/dashboard" className="option">Dashboard</Link>
         <Link to="/settings" className="option">Settings</Link>
         <hr className="separator" />
-        <Link to="/dashboard" className="option">What's New</Link>
+        <a href="https://www.notion.so/What-s-new-092596fca8574cea99de90d4f61ef4fd" target="_blank" rel="noreferrer" className="option">
+          What's New
+        </a>
         <a href="https://www.notion.so/Kite-Frequently-Asked-Questions-fd7252bf67e944a1976b150590c37ed0" target="_blank" rel="noreferrer" className="option">
           Help and FAQ
         </a>

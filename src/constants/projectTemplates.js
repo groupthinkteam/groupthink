@@ -478,7 +478,7 @@ const projectTemplates = {
       },
       "metadata" : {
         "datecreated" : 1609525745042,
-        "name" : "Welcome Project",
+        "name" : "Welcome to Kite!",
         "thumbnailURL" : "/static/media/4.f5da83f2.webp"
       },
       "nodes" : {
