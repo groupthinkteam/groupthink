@@ -5,7 +5,6 @@ import { observer } from "mobx-react-lite"
 import { useStore } from "../../store/hook"
 import Bowser from "bowser";
 import { nanoid } from 'nanoid'
-import ReactTooltip from 'react-tooltip';
 function Feedback(props) {
     let store = useStore()
     const [isOpen, setIsOpen] = useState(false);
@@ -66,7 +65,6 @@ function Feedback(props) {
             <button data-effect="solid" data-tip="Feedback" className="fb-button" onClick={() => { togglePopup(); }}>
                 Feedback
             </button>
-            <ReactTooltip delayShow={2000} place="bottom" />
             {isOpen &&
                 <PopupMenu handleClose={togglePopup}>
                     <div className="container">

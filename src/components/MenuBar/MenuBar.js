@@ -25,10 +25,7 @@ function MenuBar(props) {
         console.log("SIGNOUT ")
         store.signout();
         history.push('/login', { from: location });
-      }
-      useEffect(() => {
-        ReactTooltip.rebuild();
-    })
+    }
     useEffect(() => {
         function handleClickOutside(event) {
             if (buttonRef.current && !buttonRef.current.contains(event.target)) {
@@ -40,25 +37,25 @@ function MenuBar(props) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [buttonRef]);
-    
+
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
-                <div data-offset="{'top': -2, 'left': -10}" data-place="bottom" data-effect="solid"   data-tip="Go back" className="site-title">
+                <div data-offset="{'top': 6, 'left': -10}" data-place="bottom" data-effect="solid" data-tip="Go back" className="site-title">
                     <Link to="/dashboard">
                         <img className="logo" src={require("../../assets/menu/ealogo.svg")} alt="logo" />
                     </Link>
                 </div>
-                <ReactTooltip delayShow={1000} place="bottom" />
+                <ReactTooltip globalEventOff="click" eventOff="click" delayShow={1000} place="bottom" />
                 <div className="menu-bar-separator" />
                 <Feedback />
                 <div className="menu-bar-separator" />
                 <ActionsMenu />
                 <SearchBar document />
             </div>
-            <div  className="menu-bar-panel menu-bar-panel-center">
+            <div className="menu-bar-panel menu-bar-panel-center" data-effect="solid" data-tip="Change Project Name">
                 {isEditingTitle ?
-                    <input data-effect="solid" data-tip="Change Project Name" className="project-title edit"
+                    <input  className="project-title edit"
                         type="text"
                         autoFocus
                         value={store.projectMetadata.name}
@@ -84,13 +81,13 @@ function MenuBar(props) {
                 />
                 <div className="menu-bar-separator" />
                 <div className="menu-bar-user-profile-picture">
-                    <img data-place="bottom" data-multiline={true} data-effect="solid"  data-tip="Your <br/> Profile" alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={(e) => {setShowMenu(!showMenu);e.stopPropagation();}} ref={buttonRef} />
+                    <img data-place="bottom" data-multiline={true} data-effect="solid" data-tip="Your <br/> Profile" alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={(e) => { setShowMenu(!showMenu); e.stopPropagation(); }} ref={buttonRef} />
 
                     {showMenu ?
                         <span className="user-menu" ref={buttonRef}>
-                            <img alt={store.currentUser.displayName} className="menu-thumbnail" src={store.currentUser.photoURL}  />
+                            <img alt={store.currentUser.displayName} className="menu-thumbnail" src={store.currentUser.photoURL} />
                             <UserMenu
-                            signOut={signOut}/>
+                                signOut={signOut} />
                         </span> : null}
                 </div>
 

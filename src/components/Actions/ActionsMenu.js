@@ -31,7 +31,7 @@ function ActionsMenu(props) {
                     : null
                 }
             </div>
-            <ReactTooltip place="bottom" />
+            <ReactTooltip globalEventOff="click" eventOff="click" place="bottom" />
             {
                 isExpanded ?
                     <Popup handleClose={() => { setIsExpanded(false) }}>

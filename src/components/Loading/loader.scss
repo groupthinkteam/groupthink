@@ -21,6 +21,8 @@
     user-select: none;
   }
   .loader-animation {
+    position:relative; 
+    left: 100px;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
