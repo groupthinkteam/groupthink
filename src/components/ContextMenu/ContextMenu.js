@@ -46,7 +46,7 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
                 label: "Resize to Large",
                 onClick: () => {
                     //aspect 400*3
-                    const [displayHeight, displayWidth] = resizeDimension(imageHeight, imageWidth,1200);
+                    const [displayHeight, displayWidth] = resizeDimension(imageHeight, imageWidth,800);
                     store.resize(id, { height: displayHeight+60, width: displayWidth+25 })
                 }
             },
