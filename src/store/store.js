@@ -795,31 +795,36 @@ export var storeObject = {
             id: "summarize",
             title: "Summarize a link",
             description: "uses AI to create a summary of a webpage or PDF",
-            types: ["link"]
+            types: ["link"],
+            icon: require("../assets/actions/icons/summarize.svg")
         },
         "getYtCaptions": {
             id: "getYtCaptions",
             title: "Extract subtitles from a Youtube video",
             description: "extracts available closed captions from a Youtube video",
-            types: ["VideoLink"]
+            types: ["VideoLink"],
+            icon: require("../assets/actions/icons/getYtCaptions.svg")
         },
         "convFile": {
             id: "convFile",
             title: "Convert file to PDF",
             description: "converts your file to pdf format",
-            types: ["file"]
+            types: ["file"],
+            icon: require("../assets/actions/icons/convFile.svg")
         },
         "convertLinksToCitation": {
             id: "convertLinksToCitation",
             title: "Generate APA style citations",
             description: "generates citations for all the research publication links in your text",
-            types: ["text"]
+            types: ["text"],
+            icon: require("../assets/actions/icons/convertLinksToCitation.svg")
         },
         "convertImageToBW": {
             id: "convertImageToBW",
             title: "Convert image to grayscale",
             description: "converts an image to grayscale",
-            types: ["image"]
+            types: ["image"],
+            icon: require("../assets/actions/icons/convertImageToBW.svg")
         }
     },
     // actions UI

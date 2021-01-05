@@ -72,7 +72,9 @@ function ActionsMenu(props) {
 function ActionItem({ action, onClick }) {
     return (
         <div className="action-item" onClick={onClick}>
-            <div className="icon"></div>
+            <div className="icon">
+                <img src={action.icon} alt="icon" />
+            </div>
             <div className="content">
                 <div className="title">
                     {action.title}
