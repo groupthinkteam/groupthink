@@ -41,7 +41,7 @@ function MenuBar(props) {
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
-                <div data-delay-show='200' data-offset="{'top': 6, 'left': -10}" data-place="bottom" data-effect="solid" data-tip="Go back" className="site-title">
+                <div data-delay-show='750' data-offset="{'top': 6, 'left': -10}" data-place="bottom" data-effect="solid" data-tip="Go back" className="site-title">
                     <Link to="/dashboard">
                         <img className="logo" src={require("../../assets/menu/ealogo.svg")} alt="logo" />
                     </Link>
@@ -53,7 +53,7 @@ function MenuBar(props) {
                 <ActionsMenu />
                 <SearchBar document />
             </div>
-            <div className="menu-bar-panel menu-bar-panel-center" data-delay-show='200' data-effect="solid" data-tip="Change Project Name">
+            <div className="menu-bar-panel menu-bar-panel-center" data-delay-show='750' data-effect="solid" data-tip="Change Project Name">
                 {isEditingTitle ?
                     <input  className="project-title edit"
                         type="text"
@@ -81,7 +81,7 @@ function MenuBar(props) {
                 />
                 <div className="menu-bar-separator" />
                 <div className="menu-bar-user-profile-picture">
-                    <img data-place="bottom" data-multiline={true} data-delay-show='200' data-effect="solid" data-tip="Your <br/> Profile" alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={(e) => { setShowMenu(!showMenu); e.stopPropagation(); }} ref={buttonRef} />
+                    <img data-place="bottom" data-multiline={true} data-delay-show='750' data-effect="solid" data-tip="Your <br/> Profile" alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={(e) => { setShowMenu(!showMenu); e.stopPropagation(); }} ref={buttonRef} />
 
                     {showMenu ?
                         <span className="user-menu" ref={buttonRef}>

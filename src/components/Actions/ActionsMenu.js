@@ -11,7 +11,7 @@ function ActionsMenu(props) {
 
     return (
         <div>
-            <div data-delay-show='200' data-effect="solid" data-tip="Select Actions" className="top-band">
+            <div data-delay-show='750' data-effect="solid" data-tip="Select Actions" className="top-band">
                 <svg className="actions-button-icon"
                     onClick={() => setIsExpanded(true)}
                     alt="actions"

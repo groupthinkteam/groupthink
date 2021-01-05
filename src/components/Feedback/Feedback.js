@@ -62,7 +62,7 @@ function Feedback(props) {
 
     return (
         <div className="feedback">
-            <button data-delay-show='200' data-effect="solid" data-tip="Feedback" className="fb-button" onClick={() => { togglePopup(); }}>
+            <button data-delay-show='750' data-effect="solid" data-tip="Feedback" className="fb-button" onClick={() => { togglePopup(); }}>
                 Feedback
             </button>
             {isOpen &&

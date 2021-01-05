@@ -33,7 +33,7 @@ const RoomConnect = (props) => {
   }, [isJoined, globalStore])
 
   return (
-    <div data-delay-show='200' data-effect="solid" data-tip="Voice Calling" className="voice-room">
+    <div data-delay-show='750' data-effect="solid" data-tip="Voice Calling" className="voice-room">
       <div className="call-ui-collapsed" onClick={() => setPopupExpanded(true)}>
         <img alt="open voice call menu" src={require("../../assets/voice/voice.svg")} />
       </div>
