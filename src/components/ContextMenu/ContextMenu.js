@@ -1,13 +1,14 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useStore } from "../../store/hook"
+import { resizeDimension } from "../DocumentCanvas/Cards/cardTypeUtils";
 import "./ContextMenu.scss";
 
 function ContextMenu({ id, loaderCallback, closeContextMenu }) {
     let store = useStore()
     const me = store.cards[id]
-    const imageHeight = me.content?.displayHeight + 60;
-    const imageWidth = me.content?.displayWidth + 25
+    const imageHeight = me.content?.height;
+    const imageWidth = me.content?.width
     let cardSpecificOptions = {
         "text": [
         ],
@@ -28,25 +29,33 @@ function ContextMenu({ id, loaderCallback, closeContextMenu }) {
             {
                 label: "Default Size",
                 onClick: () => {
-                    store.resize(id, { height: me.content.displayHeight + 60, width: me.content.displayWidth + 14 })
+                    //aspect 400
+                    
+                    store.resize(id, { height: me.content.displayHeight+60 , width: me.content.displayWidth+25  })
                 }
             },
             {
                 label: "Resize to Small",
                 onClick: () => {
-                    store.resize(id, { height: imageHeight * 0.75, width: imageWidth * 0.75 })
+                    //aspect 400*0.5
+                    const [displayHeight, displayWidth] = resizeDimension(imageHeight, imageWidth,200);
+                    store.resize(id, { height: displayHeight+60, width: displayWidth+25 })
                 }
             },
             {
                 label: "Resize to Large",
                 onClick: () => {
-                    store.resize(id, { height: imageHeight * 3, width: imageWidth * 3 })
+                    //aspect 400*3
+                    const [displayHeight, displayWidth] = resizeDimension(imageHeight, imageWidth,1200);
+                    store.resize(id, { height: displayHeight+60, width: displayWidth+25 })
                 }
             },
             {
                 label: "Resize to Medium",
                 onClick: () => {
-                    store.resize(id, { height: imageHeight * 1.5, width: imageWidth * 1.5 })
+                    //aspect 400*1.5
+                    const [displayHeight, displayWidth] = resizeDimension(imageHeight, imageWidth,600);
+                    store.resize(id, { height: displayHeight+60, width: displayWidth+25 })
                 }
             },
             {

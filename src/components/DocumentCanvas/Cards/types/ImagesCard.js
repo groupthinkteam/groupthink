@@ -20,8 +20,8 @@ const ImagesCard = (props) => {
       <div className="image-card-image"
         style={{
           height: me.size.height-60,
-          width:me.size.width-25,
-          padding:'0px 0px 0px 3px'
+          width:me.size.width-23,
+          padding:'0px 0px 0px 0px'
         }}>
         <img
           alt={props.content.caption || "none"}
