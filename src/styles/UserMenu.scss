@@ -1,4 +1,8 @@
 .user-menu-container {
+  img {
+    cursor: default !important;
+  }
+  cursor: default;
   .colorblack {
     color: #413d45;
   }
@@ -23,13 +27,34 @@
     display: flex;
     justify-content: space-around;
     img.ea-logo {
-      border: none;
-      height: 30px;
-      width: auto;
-      border-radius: 0px;
+      border: none !important;
+      height: 22px !important;
+      width: auto !important;
+      border-radius: 0px !important;
     }
   }
   .options {
-    margin-left: 2px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 5px;
+    .option {
+      padding: 5px;
+      width: 100%;
+      color: black;
+      border-radius: 6px;
+      &.danger {
+        color: #ff7e1d;
+      }
+      &:hover {
+        background-color: #32aaff;
+        color: white;
+        &.danger {
+          background-color: #ff7e1d;
+          color: white;
+        }
+      }
+    }
   }
 }
