@@ -405,7 +405,7 @@ export var storeObject = {
                 auth().currentUser.updateProfile({
                     photoURL: url
                 })
-                .then(callback(true))
+                    .then(callback(true))
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
@@ -547,6 +547,12 @@ export var storeObject = {
             this.userRef.on("child_removed", (snap) => {
                 database.ref("documents").child(snap.key).child("metadata").off();
                 delete this.projects[snap.key];
+            })
+            database.ref("users").child(this.userID).child("version").once('value').then((snap) => {
+                if(!snap.val()) {
+                    window.open("https://www.notion.so/What-s-new-092596fca8574cea99de90d4f61ef4fd", '_blank')
+                    database.ref("users").child(this.userID).child("version").set("2")
+                }
             })
         }
     },
