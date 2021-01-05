@@ -9,6 +9,15 @@ function CustomEditor(props) {
     // }, [props.id])
 
     let textareaRef = useRef(null);
+
+    useEffect(() => {
+        if(props.initialRender) {
+            let length = textareaRef.current.value.length
+            textareaRef.current.selectionStart = length
+            textareaRef.current.selectionEnd = length
+        }
+    })
+
     return (
         <div className="editor-wrapper" onBlur={props.onLeave}>
             {/* <div className={"toolbar"} id={"toolbar" + props.id}>
