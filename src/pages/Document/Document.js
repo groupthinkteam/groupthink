@@ -20,7 +20,7 @@ function Document() {
     store.addDocumentListeners()
     setTimeout(() => {
         setIsLoaded(true)
-    }, 5000);
+    }, 500000);
     return () => store.removeDocumentListeners()
   }, [store, projectID])
 

@@ -1,16 +1,5 @@
-.searchbar-search-icon {
-    height: 20px;
-    transition: 0.2s;
-    &:hover {
-        path {
-            transition: 0.2s;
-            stroke: white;
-        }
-    }
-}
-
 .menu-bar-searchbox {
-    .search-input {
+    &>.search-input {
         // padding: 5px 3px 3px 6px;
         width: 30px;
         height: 30px;
@@ -24,6 +13,17 @@
         transition: 0.2s;
         &:hover {
             background-color: #32aaff;
+            .searchbar-search-icon {
+                path {
+                    transition: 0.2s;
+                    stroke: white;
+                }
+
+            }
+        }
+        .searchbar-search-icon {
+            height: 20px;
+            transition: 0.2s;
         }
     }
     .search-container {
@@ -63,6 +63,8 @@
             justify-content: flex-start;
             align-items: center;
             line-height: 24px !important;
+            border: 1.5px solid black;
+            border-radius: 6px;
             .input-text {
                 border: none;
                 font-family: Overpass;

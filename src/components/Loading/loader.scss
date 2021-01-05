@@ -6,6 +6,7 @@
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  position: relative;
   .graphic-left {
     position: absolute;
     left: 0px;
@@ -20,17 +21,38 @@
     z-index: 0;
     user-select: none;
   }
-  .loader-animation {
-    position:relative; 
-    left: 100px;
+  .loader-kite {
+    position: relative;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
+    left: -200px;
+    z-index: 10000;
   }
   .loader-text {
+    position: relative;
     font-family: "Overpass", sans-serif;
     font-size: 26px;
     font-weight: 600;
+    margin-top: 50px;
+  }
+  .progressbar {
+    position: relative;
+    width: 350px;
+    height: 20px;
+    background-color: #faf7f2;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: left;
+    align-items: center;
+    border-radius: 15px;
+    overflow: hidden;
+    .colorbar {
+      width: 0px;
+      height: 100%;
+      background: linear-gradient(-94.79deg, #fb7bbb 2.22%, #ffce00 112.48%);
+      border-radius: 15px;
+    }
   }
 }

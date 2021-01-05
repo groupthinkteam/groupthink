@@ -44,7 +44,7 @@ const DocumentSearchBar = (props) => {
                                 Search intelligently extracts important keywords from your cards to help you find things easily.
                             </div>
                             <div className="search-input">
-                                <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search-icon.svg")} />
+                                <img onClick={() => setExpanded(true)} className="searchbar-search-icon" alt="magnifying glass" src={require("../../assets/search/search-icon.svg")} />
                                 <input className="input-text"
                                     placeholder="type in a name, keyword, or description"
                                     onChange={(e) => searchValues(e.target.value)}
