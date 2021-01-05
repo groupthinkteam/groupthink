@@ -7,12 +7,12 @@ import '../../styles/UserMenu.scss'
 const UserMenu = (props) => {
   let store = useStore();
     return (
-        <div>
+        <div className="user-menu-container">
               <div className="colorblack">
                 <h4>{store.currentUser.displayName}</h4>
               </div>
               <div className="info">
-                <p className="colororange">Early Access</p>
+                <img className="ea-logo" src={require("../../assets/menu/ealogo.svg")} alt="early access"/>
               </div>
               <hr className="separator" />
               <div className="options">

@@ -1,27 +1,35 @@
-.colorblack {
-  color: #413D45;
-}
-.colororange {
-  color: #FF7E1D;
-}
-.separator {
-  border: 0.5px solid rgb(197, 191, 191);
-  margin: 8px 2px 8px 2px;
-}
-.photo{
-  display: flex;
-  justify-content: space-around;
-  .profimage {
-    border-radius: 50%;
-    margin: 8px 2px 8px 2px;
-    height: 95px;
-    width: 95px;
+.user-menu-container {
+  .colorblack {
+    color: #413d45;
   }
-}
-.info {
-  display: flex;
-  justify-content: space-around;
-}
-.options {
-  margin-left: 2px; 
+  .colororange {
+    color: #ff7e1d;
+  }
+  .separator {
+    border: 0.5px solid rgb(197, 191, 191);
+    margin: 8px 2px 8px 2px;
+  }
+  .photo {
+    display: flex;
+    justify-content: space-around;
+    .profimage {
+      border-radius: 50%;
+      margin: 8px 2px 8px 2px;
+      height: 95px;
+      width: 95px;
+    }
+  }
+  .info {
+    display: flex;
+    justify-content: space-around;
+    img.ea-logo {
+      border: none;
+      height: 30px;
+      width: auto;
+      border-radius: 0px;
+    }
+  }
+  .options {
+    margin-left: 2px;
+  }
 }
