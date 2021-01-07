@@ -687,8 +687,8 @@ export var storeObject = {
                         id,
                         "text",
                         (newID) => {
-                            let content = fullCap?.split("[BREAK]").map((line) => "<li>" + line + "</li>")
-                            saveContent(newID, { text: "<ol>" + content.join(" ") + "</ol>" })
+                            let content = fullCap?.split("[BREAK]").map((line) => line)
+                            saveContent(newID, { text: content.join(" ") })
                         })
                 })
                 .then(() => callback(true))
@@ -743,9 +743,9 @@ export var storeObject = {
                     callback(true)
                 }).catch(() => callback(false))
         }
-        function convertLinksToCitation() {
+        function convertLinksToCitation(citestyle) {
             var fullText = []
-            var convToCite = functions.httpsCallable('linkToCitation')
+            var convToCite = functions.httpsCallable('linkToCitationTest')
             fullText = card.content.text
             console.log("full text: ", fullText);
             var linksArr = linksFromText(fullText);
@@ -757,10 +757,22 @@ export var storeObject = {
                 cardId: id,
                 link: linksArr,
                 fullText: fullText,
-                style: "apa"
+                style: citestyle
             }
             console.log("links data: ", linksData)
-            return convToCite(linksData).then(() => callback(true)).catch(() => callback(false))
+            convToCite(linksData)
+            .then((output) => {
+                console.log("cite out: ", output)
+                addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
+                    { height: 200, width: 400 },
+                    id,
+                    "text",
+                    (newID) => {
+                        saveContent(newID, { text: output.data })
+                    })
+                callback(true)
+            })
+            .catch(() => callback(false))
         }
         function linksFromText(stri) {
             const regexp = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
@@ -789,8 +801,14 @@ export var storeObject = {
         if (name === "convFile") {
             convFile()
         }
-        if (name === "convertLinksToCitation") {
-            convertLinksToCitation()
+        if (name === "convToApaCitation") {
+            convertLinksToCitation("apa")
+        }
+        if (name === "convToHarCitation") {
+            convertLinksToCitation("harvard1")
+        }
+        if (name === "convToVanCitation") {
+            convertLinksToCitation("vancouver")
         }
         if (name === "convertImageToBW") {
             convertImageToBW()
@@ -818,9 +836,23 @@ export var storeObject = {
             types: ["file"],
             icon: require("../assets/actions/icons/convFile.svg")
         },
-        "convertLinksToCitation": {
-            id: "convertLinksToCitation",
+        "convToApaCitation": {
+            id: "convToApaCitation",
             title: "Generate APA style citations",
+            description: "generates citations for all the research publication links in your text",
+            types: ["text"],
+            icon: require("../assets/actions/icons/convertLinksToCitation.svg")
+        },
+        "convToHarCitation": {
+            id: "convToHarCitation",
+            title: "Generate Harvard style citations",
+            description: "generates citations for all the research publication links in your text",
+            types: ["text"],
+            icon: require("../assets/actions/icons/convertLinksToCitation.svg")
+        },
+        "convToVanCitation": {
+            id: "convToVanCitation",
+            title: "Generate Vancouver style citations",
             description: "generates citations for all the research publication links in your text",
             types: ["text"],
             icon: require("../assets/actions/icons/convertLinksToCitation.svg")
