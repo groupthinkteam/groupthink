@@ -8,10 +8,12 @@ import CardsList from "../Card/CardsList";
 
 import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
+
 function CardContainer(props) {
     const store = useStore();
 
     return (
+        <>
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
             <Zoom />
@@ -67,11 +69,14 @@ function CardContainer(props) {
                     );
                 }}
             >
+                 
                 <ArrowList />
                 <CursorsList />
+                
                 <CardsList />
             </div>
         </div>
+        </>
     )
 }
 

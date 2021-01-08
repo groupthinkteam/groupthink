@@ -6,7 +6,6 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/hook";
 import { useHistory, useParams, useLocation } from "react-router-dom";
 import TreeUI from "../../components/TreeUI/TreeUI";
-
 function Document() {
   let store = useStore();
   const history = useHistory();
@@ -19,7 +18,7 @@ function Document() {
     store.projectID = projectID
     store.addDocumentListeners()
     setTimeout(() => {
-        setIsLoaded(true)
+      setIsLoaded(true)
     }, 5000);
     return () => store.removeDocumentListeners()
   }, [store, projectID])
