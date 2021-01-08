@@ -11,7 +11,7 @@ function CardsList() {
     return(
         
         <div className="cards">
-            <Minimap selector=".generic-card" >
+            {/* <Minimap selector=".generic-card" > */}
             {
                 Object.entries(store.cards)
                     .filter(([id, value]) => id && id !== "root" && !value?.isCollapse)
@@ -22,7 +22,7 @@ function CardsList() {
                         return(<GenericCard key={id} id={id} />)
                     })
             }
-            </Minimap>
+            {/* </Minimap> */}
         </div>
         
     )

@@ -8,7 +8,8 @@ import CardsList from "../Card/CardsList";
 
 import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
-
+import '../Card/minimap.scss'
+import Minimap from 'react-minimap';
 function CardContainer(props) {
     const store = useStore();
 
@@ -24,6 +25,7 @@ function CardContainer(props) {
                         </div>
                     : null
             }
+            <Minimap selector=".generic-card" >
             <div className="container-filler" id="container-filler"
                 style={{
                     ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0,
@@ -75,6 +77,7 @@ function CardContainer(props) {
                 
                 <CardsList />
             </div>
+            </Minimap>
         </div>
         </>
     )

@@ -11,8 +11,8 @@
 .minimap {
     float: right;
     position: fixed;
-    top:0;
-    right: 0;
+    top:45px;
+    // right: 0;
     z-index: 99999999999999999;
     margin: 10px;
     background-color: rgba(0, 0, 0, .29);
