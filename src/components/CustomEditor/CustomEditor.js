@@ -11,24 +11,43 @@ function CustomEditor(props) {
     let textareaRef = useRef(null);
 
     useEffect(() => {
-        if(props.initialRender) {
+        if (props.initialRender) {
             let length = textareaRef.current.value.length
             textareaRef.current.selectionStart = length
             textareaRef.current.selectionEnd = length
         }
     })
-
+    const formatText = (event) => {
+        let start = textareaRef.current.selectionStart;
+        let end = textareaRef.current.selectionEnd;
+        let newText;
+        switch (event) {
+            case 'bold':
+                newText = props.text.substring(0, start) + "**" + props.text.substring(start, end) + "**" + props.text.substring(end, props.text.length);
+                break;
+            case 'head':
+                newText = props.text.substring(0, start) + " # " + props.text.substring(start, props.text.length);
+                break;
+            case "italic":
+                newText = props.text.substring(0, start) + "*" + props.text.substring(start, end) + "*" + props.text.substring(end, props.text.length);
+                break;
+                case "underline":
+                newText = props.text.substring(0, start) + "<u>" + props.text.substring(start, end) + "</u>" + props.text.substring(end, props.text.length);
+                break;
+            default: break;
+        }
+        props.onChange({ target: { value: newText } });
+        textareaRef.current.focus();
+        textareaRef.current.selectionEnd = end - 2;
+    }
     return (
         <div className="editor-wrapper" onBlur={props.onLeave}>
-            {/* <div className={"toolbar"} id={"toolbar" + props.id}>
-                <button onClick={() => {
-                    let start = textareaRef.current.selectionStart
-                    let end = textareaRef.current.selectionEnd
-                    let newText = props.text.substring(0, start) + "**" + props.text.substring(start, end) + "**" + props.text.substring(end, props.text.length);
-                    console.log(start, end, newText)
-                    props.onChange({ target: { value: newText} })
-                }}>bold</button>
-            </div> */}
+            <div className={"toolbar"} id={"toolbar" + props.id}>
+                <button onClick={() => formatText('bold')}>bold</button>
+                <button onClick={()=>formatText('italic')}>Italic</button>
+                <button onClick={() => formatText('head')}>head1</button>
+                <button onClick={() => formatText('underline')}>underline</button>
+            </div>
             <textarea
                 ref={textareaRef}
                 style={props.style}

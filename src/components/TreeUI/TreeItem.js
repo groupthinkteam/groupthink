@@ -17,6 +17,7 @@ function TreeItem(props) {
     const me = store.cards[id];
     const scrollToID = () => {
         let height = document.getElementById("card-container").style.height;
+        let width = parseInt(document.getElementById("card-container").style.width);
         let x = store.cards[id].position.x - window.innerWidth - 100;
         let y = store.cards[id].position.y - height - 100;
         x = x < 0 ? 0 : x;

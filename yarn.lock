@@ -11774,6 +11774,11 @@ react-markdown@^5.0.3:
     unist-util-visit "^2.0.0"
     xtend "^4.0.1"
 
+react-mde@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/react-mde/-/react-mde-11.0.0.tgz#78b4d85c7d3508efef59cfc9e7b1432b8b72d2f0"
+  integrity sha512-U3k/ITPXklEjXkKhR7rgI3Y7ii5V62slSmG+/rYDQaCAabNwX+5dULKpIxWWSyqi+PvsuRVEYx6vV4sECMMbCw==
+
 react-minimap@^0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/react-minimap/-/react-minimap-0.7.4.tgz#8ba3b21629fd4c954adcd91570e3c798d835126f"
