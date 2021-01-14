@@ -23,8 +23,8 @@ const SearchBar = (props) => {
 
     const scrollToID = (id) => {
         let height = document.getElementById("card-container").style.height;
-        let x = store.cards[id].position.x - window.innerWidth - 100;
-        let y = store.cards[id].position.y - height - 100;
+        let x = store.cards[id].position.x - parseInt(document.getElementById("card-container").style.width )*6 -50;
+        let y = store.cards[id].position.y - height -window.innerHeight/3;
         x = x < 0 ? 0 : x;
         y = y < 0 ? 0 : y;
         let tl = gsap.timeline();
