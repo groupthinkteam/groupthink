@@ -134,6 +134,10 @@ const GenericCard = props => {
                     onClick: (e) => {
                         if (store.currentActive !== props.id) {
                             store.currentActive = props.id;
+                            //Color Coding
+                            store.cardGrouped = [];
+                            store.groupCardsParent(props.id)
+                            store.groupCardsChildren(props.id)
                             store.addUserEditing(props.id, 'editing')
                         }
                         e.stopPropagation();
@@ -168,7 +172,7 @@ const GenericCard = props => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
-
+    
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
     let showCompatibleOverlay = (store.isSelectingCard && store.actionsList[store.selectedAction]["types"].includes(me.type))
@@ -178,7 +182,9 @@ const GenericCard = props => {
             <div id={props.id}
                 className={"generic-card" +
                     (showCompatibleOverlay ? " compat-cursor" : "") +
-                    (store.currentActive === props.id ? " active-card" : "")}
+                    (store.cardGrouped.includes(props.id) ?" grouped-card ":"")+
+                    (store.currentActive === props.id ? " active-card" : "")
+                    }
                 ref={cardRef}
                 onContextMenu={(event) => {
                     event.preventDefault();
@@ -200,7 +206,7 @@ const GenericCard = props => {
                 }}
                 onKeyDown={(e) => {
                     if (e.key === "Delete" && me.type !== "text") {
-                        store.removeCard(props.id, "reparent",me.parent)
+                        store.removeCard(props.id, "reparent", me.parent)
                     }
                 }}
                 style={{

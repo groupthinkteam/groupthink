@@ -21,7 +21,10 @@
         /* Background / backgroundPrimary */
         border: 1.5px solid #32aaff;
     }
-
+    &.grouped-card {
+        /* Background / backgroundPrimary */
+        border: 1.5px solid #FF7E1D;
+    }
     &.searched-card {
         border: 1.5px solid green;
     }

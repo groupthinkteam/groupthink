@@ -22,6 +22,7 @@ export var storeObject = {
     recentSearches: {},
     clickTargetGeneric: '',
     toggleCollapse: false,
+    cardGrouped:[],
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -316,6 +317,24 @@ export var storeObject = {
     changeContainerSizeLocal(size) {
         this.container = size
     },
+    groupCardsParent(id){
+        const currentCard=this.cards[id];
+        if(currentCard.parent !== 'root')
+        {
+            this.cardGrouped.push(currentCard.parent);
+            this.groupCardsParent(currentCard.parent);
+        }
+    },
+    groupCardsChildren(id){
+        const currentCard=this.cards[id];
+        if(currentCard?.children){
+            Object.keys(currentCard.children)
+            .forEach(id=>{
+                this.cardGrouped.push(id);
+                this.groupCardsChildren(id);
+            })
+        }
+    },
     makeCardChild(id, newParent, strategy) {
         this.updateLastActive()
         console.log("reparent requested for", id, "newparent", newParent);
@@ -341,7 +360,10 @@ export var storeObject = {
         console.log("didn't reparent because it was just not a valid request. do better next time.")
     },
     reparentCard(id, newParent, strategy) {
-        this.updateLastActive()
+        this.updateLastActive();
+        if(this.cardGrouped.length){
+            this.cardGrouped.pop(id);
+        }
         const updates = {}
         let currentParent = this.cards[id]["parent"];
         updates[id + "/parent"] = newParent;
