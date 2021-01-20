@@ -13,7 +13,7 @@ function CardContainer(props) {
     
     return (
         <div className="card-container" id="card-container"
-            style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" }}>
+            style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" ,backgroundColor:store.followAUser?"yellow":'' }}>
             <Zoom />
             {
                 Object.keys(store.cards).length < 2 ?
@@ -68,6 +68,9 @@ function CardContainer(props) {
                     );
                 }}
             >
+                {
+                    store.followAUser ? <div className="follow-user" /> : null
+                }
                 <ArrowList />
                 <CursorsList />
                 <CardsList />

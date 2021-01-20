@@ -6,7 +6,31 @@ import { observer } from "mobx-react-lite";
 const MENUBAR_HEIGHT = 0;
 
 const Cursor = observer((props) => {
-    let store = useStore()
+    const store = useStore();
+    const scrollToID = (id) => {
+        let height = document.getElementById("card-container").style.height;
+        let width = parseInt(document.getElementById("card-container").style.width);
+        var cardContainerElement = document.querySelector("#cursor".concat(props.id));
+        console.log(cardContainerElement?.scrollLeft)
+        let x = store.cursors[id].x - window.innerWidth + width * 6;
+        let y = store.cursors[id].y - window.innerHeight / 2 - height;
+        x = x < 0 ? 0 : x;
+        y = y < 0 ? 0 : y;
+        let tl = gsap.timeline();
+        tl.to("#card-container", { duration: 0.3, scrollTo: { x: x, y: y } });
+        tl.play()
+    }
+    useEffect(() => {
+        const follower = store.users[props.id].following
+        console.log("users followed", follower ? store.users[follower].email : 'not following')
+
+        if (follower && store.userID === follower) {
+            if (!store.followAUser) {
+                store.removeUserFollow(props.id);
+            }
+            scrollToID(props.id)
+        }
+    })
 
     useEffect(() => {
         gsap.to("#cursor".concat(props.id), {

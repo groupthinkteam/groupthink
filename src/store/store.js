@@ -23,6 +23,7 @@ export var storeObject = {
     clickTargetGeneric: '',
     toggleCollapse: false,
     cardGrouped:[],
+    followAUser :false,
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -334,6 +335,26 @@ export var storeObject = {
                 this.groupCardsChildren(id);
             })
         }
+    },
+    addUserFollow(userId){
+        console.log("ADDED USER FOLLOW",userId)
+        // this.users[userId] = {
+        //     ...this.users[userId] ,following: this.userID
+        // }
+        this.projectRef.child("users").child(userId)
+        .update({following:this.userID})
+        .then(console.log(this.userID," User Following ",userId))
+        .catch(reason=>console.log("Couldn;t follow because ",reason));
+    },
+    removeUserFollow(userId){
+        console.log("REMOVED USER FOLLOW",userId)
+        // this.users[userId] = {
+        //     ...this.users[userId] ,following: null
+        // }
+        this.projectRef.child("users").child(userId)
+        .update({following:null})
+        .then(console.log(this.userID," User Following ",userId))
+        .catch(reason=>console.log("Couldn;t follow because ",reason));
     },
     makeCardChild(id, newParent, strategy) {
         this.updateLastActive()
