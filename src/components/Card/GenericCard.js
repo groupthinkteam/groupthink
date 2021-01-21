@@ -115,8 +115,8 @@ const GenericCard = props => {
                 //container size
                 store.saveContainerSize();
                 store.savePosition(props.id, newPosition);
-
-                if (Object.entries(childArray).length) {
+                //Selected card Drag
+                if (store.selectedCards.length && Object.entries(childArray).length) {
                     Object.entries(childArray).forEach(([cardId, value]) => {
                         store.savePosition(cardId, { x: this.x + value.x, y: this.y + value.y });
                     })
@@ -128,12 +128,12 @@ const GenericCard = props => {
                     duration: 0.5
                 });
                 if (store.selectedCards.length && store.selectedCards.includes(props.id)) {
+                    // console.log("SELECTED CARD DRAG START ", store.selectedCards,childArray)
+                    childArray = {};
                     store.selectedCards.forEach(cardID => {
-                        const collapsedCard = store.cards[cardID];
-                        //Cards Will be relative to the collapsed top parent (props.id)
-                        const x_DIff = collapsedCard.position.x - me.position.x;
-                        const y_Diff = collapsedCard.position.y - me.position.y;
-                        // This Records all Childs and SubChilds Counts And Position DIfference
+                        const draggedCard = store.cards[cardID];
+                        const x_DIff = draggedCard.position.x - me.position.x;
+                        const y_Diff = draggedCard.position.y - me.position.y;
                         childArray[cardID] = { x: x_DIff, y: y_Diff };
                     });
                 }
@@ -148,6 +148,7 @@ const GenericCard = props => {
                     dragClickables: store.currentActive !== props.id,
                     // dragClickables: true, //me.type === 'text',//false,
                     onClick: (e) => {
+                        childArray = {};
                         if (e.shiftKey) {
                             console.log("SELECTED CARD ", store.selectedCards)
                             if (store.selectedCards.includes(props.id)) {
@@ -165,11 +166,9 @@ const GenericCard = props => {
                             store.groupCardsChildren(props.id)
                             store.addUserEditing(props.id, 'editing');
                             store.selectedCards = [];
-                            childArray = {};
                         }
                         else {
                             store.selectedCards = [];
-                            childArray = {}
                         };
                         e.stopPropagation();
                     },
@@ -184,12 +183,13 @@ const GenericCard = props => {
                         else {
                             store.changeContainerSizeLocal({ width: `10000px`, height: '10000px' })
                         }
-                        store.changePosition(props.id, { x: this.x, y: this.y });
-                        if (Object.entries(childArray).length) {
+                        //Selected Card Drag
+                        if (store.selectedCards.length && Object.entries(childArray).length) {
                             Object.entries(childArray).forEach(([cardId, value]) => {
                                 store.changePosition(cardId, { x: this.x + value.x, y: this.y + value.y });
                             })
                         }
+                        store.changePosition(props.id, { x: this.x, y: this.y });
                         y[0].update(true)
                     },
                     onDragEnd: dragStop,

@@ -45,12 +45,12 @@ function CardContainer(props) {
                         if (store.currentActive) {
                             store.removeUserEditing(store.currentActive, 'editing');
                             store.currentActive = null;
+                            store.editingCard = null;
+                            store.cardGrouped = [];
                         }
                         // leaving room for other side effects
                         store.currentContext = null;
-                        store.editingCard = null;
                         store.selectedCards = [];
-                        store.cardGrouped = [];
                     }
                     // TODO - handle closing things when the user clicks on any regular card instead 
                     // of the bare canvas
