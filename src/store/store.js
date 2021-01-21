@@ -22,8 +22,8 @@ export var storeObject = {
     recentSearches: {},
     clickTargetGeneric: '',
     toggleCollapse: false,
-    cardGrouped:[],
-    followAUser :false,
+    cardGrouped: [],
+    followAUser: false,
     get userID() {
         return this.currentUser && this.currentUser.uid
     },
@@ -32,7 +32,7 @@ export var storeObject = {
     zoom: 1,
     validproject: '',
     toggleArrows: true,
-    selectedCards:[],
+    selectedCards: [],
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },
@@ -319,43 +319,42 @@ export var storeObject = {
     changeContainerSizeLocal(size) {
         this.container = size
     },
-    groupCardsParent(id){
-        const currentCard=this.cards[id];
-        if(currentCard.parent !== 'root')
-        {
+    groupCardsParent(id) {
+        const currentCard = this.cards[id];
+        if (currentCard.parent !== 'root') {
             this.cardGrouped.push(currentCard.parent);
             this.groupCardsParent(currentCard.parent);
         }
     },
-    groupCardsChildren(id){
-        const currentCard=this.cards[id];
-        if(currentCard?.children){
+    groupCardsChildren(id) {
+        const currentCard = this.cards[id];
+        if (currentCard?.children) {
             Object.keys(currentCard.children)
-            .forEach(id=>{
-                this.cardGrouped.push(id);
-                this.groupCardsChildren(id);
-            })
+                .forEach(id => {
+                    this.cardGrouped.push(id);
+                    this.groupCardsChildren(id);
+                })
         }
     },
-    addUserFollow(userId){
-        console.log("ADDED USER FOLLOW",userId)
+    addUserFollow(userId) {
+        console.log("ADDED USER FOLLOW", userId)
         // this.users[userId] = {
         //     ...this.users[userId] ,following: this.userID
         // }
         this.projectRef.child("users").child(userId)
-        .update({following:this.userID})
-        .then(console.log(this.userID," User Following ",userId))
-        .catch(reason=>console.log("Couldn;t follow because ",reason));
+            .update({ following: this.userID })
+            .then(console.log(this.userID, " User Following ", userId))
+            .catch(reason => console.log("Couldn;t follow because ", reason));
     },
-    removeUserFollow(userId){
-        console.log("REMOVED USER FOLLOW",userId)
+    removeUserFollow(userId) {
+        console.log("REMOVED USER FOLLOW", userId)
         // this.users[userId] = {
         //     ...this.users[userId] ,following: null
         // }
         this.projectRef.child("users").child(userId)
-        .update({following:null})
-        .then(console.log(this.userID," User Following ",userId))
-        .catch(reason=>console.log("Couldn;t follow because ",reason));
+            .update({ following: null })
+            .then(console.log(this.userID, " User Following ", userId))
+            .catch(reason => console.log("Couldn;t follow because ", reason));
     },
     makeCardChild(id, newParent, strategy) {
         this.updateLastActive()
@@ -383,8 +382,9 @@ export var storeObject = {
     },
     reparentCard(id, newParent, strategy) {
         this.updateLastActive();
-        if(this.cardGrouped.length){
-            this.cardGrouped.pop(id);
+        if (this.cardGrouped.length) {
+            const indexOf = this.cardGrouped.indexOf(id);
+            this.cardGrouped.splice(indexOf, 1);
         }
         const updates = {}
         let currentParent = this.cards[id]["parent"];
@@ -593,7 +593,7 @@ export var storeObject = {
                 delete this.projects[snap.key];
             })
             database.ref("users").child(this.userID).child("version").once('value').then((snap) => {
-                if(!snap.val()) {
+                if (!snap.val()) {
                     window.open("https://www.notion.so/What-s-new-092596fca8574cea99de90d4f61ef4fd", '_blank')
                     database.ref("users").child(this.userID).child("version").set("2")
                 }
@@ -805,18 +805,18 @@ export var storeObject = {
             }
             console.log("links data: ", linksData)
             convToCite(linksData)
-            .then((output) => {
-                console.log("cite out: ", output)
-                addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
-                    { height: 200, width: 400 },
-                    id,
-                    "text",
-                    (newID) => {
-                        saveContent(newID, { text: output.data })
-                    })
-                callback(true)
-            })
-            .catch(() => callback(false))
+                .then((output) => {
+                    console.log("cite out: ", output)
+                    addCard({ x: card.position.x + 50, y: card.position.y + card.size.height + 100 },
+                        { height: 200, width: 400 },
+                        id,
+                        "text",
+                        (newID) => {
+                            saveContent(newID, { text: output.data })
+                        })
+                    callback(true)
+                })
+                .catch(() => callback(false))
         }
         function linksFromText(stri) {
             const regexp = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
