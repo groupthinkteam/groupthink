@@ -55,7 +55,7 @@ function MenuBar(props) {
             </div>
             <div className="menu-bar-panel menu-bar-panel-center" data-delay-show='750' data-effect="solid" data-tip="Change Project Name">
                 {isEditingTitle ?
-                    <input  className="project-title edit"
+                    <input className="project-title edit"
                         type="text"
                         autoFocus
                         value={store.projectMetadata.name}
@@ -74,12 +74,20 @@ function MenuBar(props) {
                 <RoomConnect projectID={store.projectID} currentUser={store.currentUser} />
                 <PersonaList />
                 <div className="menu-bar-separator" />
-                <ShareLink
-                    projectID={store.projectID}
-                    buttonClassName="menu-action-button highlight"
-                    currentUser={store.currentUser}
-                />
-                <div className="menu-bar-separator" />
+                {
+                    !store.users[store.userID].welcome || store.projectMetadata.name !== "Welcome! Start Here..." ?
+                        <>
+                            <ShareLink
+                                projectID={store.projectID}
+                                buttonClassName="menu-action-button highlight"
+                                currentUser={store.currentUser}
+                            />
+                            <div className="menu-bar-separator" />
+                        </>
+                        : null
+                }
+
+
                 <div className="menu-bar-user-profile-picture">
                     <img data-place="bottom" data-multiline={true} data-delay-show='750' data-effect="solid" data-tip="Your <br/> Profile" alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={(e) => { setShowMenu(!showMenu); e.stopPropagation(); }} ref={buttonRef} />
 
