@@ -32,6 +32,7 @@ export var storeObject = {
     zoom: 1,
     validproject: '',
     toggleArrows: true,
+    selectedCards:[],
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },

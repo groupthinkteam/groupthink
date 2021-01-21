@@ -10,10 +10,10 @@ import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
 function CardContainer(props) {
     const store = useStore();
-    
+
     return (
         <div className="card-container" id="card-container"
-            style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw" ,backgroundColor:store.followAUser?"yellow":'' }}>
+            style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw", backgroundColor: store.followAUser ? "yellow" : '' }}>
             <Zoom />
             {
                 Object.keys(store.cards).length < 2 ?
@@ -45,11 +45,12 @@ function CardContainer(props) {
                         if (store.currentActive) {
                             store.removeUserEditing(store.currentActive, 'editing');
                             store.currentActive = null;
-                            store.cardGrouped=[];
                         }
                         // leaving room for other side effects
                         store.currentContext = null;
                         store.editingCard = null;
+                        store.selectedCards = [];
+                        store.cardGrouped = [];
                     }
                     // TODO - handle closing things when the user clicks on any regular card instead 
                     // of the bare canvas

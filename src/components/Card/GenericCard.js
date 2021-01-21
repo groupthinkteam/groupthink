@@ -95,7 +95,7 @@ const GenericCard = props => {
                 rightLastX = this.x;
                 store.changeSize(props.id, calculateSize());
             }
-
+            var childArray = {};
             // warning: can't use arrow functions here since that messes up the "this" binding
             function dragStop() {
                 setDragging(false);
@@ -115,12 +115,28 @@ const GenericCard = props => {
                 //container size
                 store.saveContainerSize();
                 store.savePosition(props.id, newPosition);
+
+                if (Object.entries(childArray).length) {
+                    Object.entries(childArray).forEach(([cardId, value]) => {
+                        store.savePosition(cardId, { x: this.x + value.x, y: this.y + value.y });
+                    })
+                }
             }
             function dragStart() {
                 gsap.to("#".concat(props.id), {
                     boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
                     duration: 0.5
-                })
+                });
+                if (store.selectedCards.length && store.selectedCards.includes(props.id)) {
+                    store.selectedCards.forEach(cardID => {
+                        const collapsedCard = store.cards[cardID];
+                        //Cards Will be relative to the collapsed top parent (props.id)
+                        const x_DIff = collapsedCard.position.x - me.position.x;
+                        const y_Diff = collapsedCard.position.y - me.position.y;
+                        // This Records all Childs and SubChilds Counts And Position DIfference
+                        childArray[cardID] = { x: x_DIff, y: y_Diff };
+                    });
+                }
                 setDragging(true);
             }
             let y = Draggable.create(
@@ -132,14 +148,29 @@ const GenericCard = props => {
                     dragClickables: store.currentActive !== props.id,
                     // dragClickables: true, //me.type === 'text',//false,
                     onClick: (e) => {
-                        if (store.currentActive !== props.id) {
+                        if (e.shiftKey) {
+                            console.log("SELECTED CARD ", store.selectedCards)
+                            if (store.selectedCards.includes(props.id)) {
+                                const indexOf = store.selectedCards.indexOf(props.id);
+                                store.selectedCards.splice(indexOf, 1);
+                            }
+                            else
+                                store.selectedCards.push(props.id);
+                        }
+                        else if (store.currentActive !== props.id) {
                             store.currentActive = props.id;
                             //Color Coding
                             store.cardGrouped = [];
                             store.groupCardsParent(props.id)
                             store.groupCardsChildren(props.id)
-                            store.addUserEditing(props.id, 'editing')
+                            store.addUserEditing(props.id, 'editing');
+                            store.selectedCards = [];
+                            childArray = {};
                         }
+                        else {
+                            store.selectedCards = [];
+                            childArray = {}
+                        };
                         e.stopPropagation();
                     },
                     onDragStart: dragStart,
@@ -154,6 +185,11 @@ const GenericCard = props => {
                             store.changeContainerSizeLocal({ width: `10000px`, height: '10000px' })
                         }
                         store.changePosition(props.id, { x: this.x, y: this.y });
+                        if (Object.entries(childArray).length) {
+                            Object.entries(childArray).forEach(([cardId, value]) => {
+                                store.changePosition(cardId, { x: this.x + value.x, y: this.y + value.y });
+                            })
+                        }
                         y[0].update(true)
                     },
                     onDragEnd: dragStop,
@@ -172,7 +208,7 @@ const GenericCard = props => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
-    
+
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
     let showCompatibleOverlay = (store.isSelectingCard && store.actionsList[store.selectedAction]["types"].includes(me.type))
@@ -182,9 +218,9 @@ const GenericCard = props => {
             <div id={props.id}
                 className={"generic-card" +
                     (showCompatibleOverlay ? " compat-cursor" : "") +
-                    (store.cardGrouped.includes(props.id) ?" grouped-card ":"")+
+                    (store.cardGrouped.includes(props.id) ? " grouped-card " : "") +
                     (store.currentActive === props.id ? " active-card" : "")
-                    }
+                }
                 ref={cardRef}
                 onContextMenu={(event) => {
                     event.preventDefault();
@@ -228,7 +264,15 @@ const GenericCard = props => {
                         <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)} />
                         : null
                 }
-
+                {
+                    store.selectedCards.includes(props.id) ?
+                        <div className="action-loader">
+                            <div className="loader-text">
+                                This Card is Selected
+                            </div>
+                        </div>
+                        : null
+                }
                 {
                     me.type === 'text' && me.editing && !me.editing[store.userID] ?
                         <div className="action-loader">
