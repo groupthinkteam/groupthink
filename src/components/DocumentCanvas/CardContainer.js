@@ -1,16 +1,55 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { useStore } from "../../store/hook";
 import { observer } from "mobx-react-lite"
 
 import ArrowList from "../Arrow/ArrowsList";
 import CursorsList from "../Cursor/CursorsList";
 import CardsList from "../Card/CardsList";
-
+import { gsap, Draggable } from "gsap/all";
 import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
+import CustomDragSelect from "./CustomDragSelect";
 function CardContainer(props) {
     const store = useStore();
+    useEffect(
+        () => {
+            var $bottom = document.createElement("div");
+            
+            var rightLastX = 0;
+            var bottomLastY = 0;
+            var bottomDraggable = new Draggable($bottom, {
+                trigger: "#customDragSelect",//"#bottom-drag",
+                cursor: "nwse-resize",
+                activeCursor: "nwse-resize",
+                autoScroll: 1,
+                onDrag: updateBottom,
+                onPress: function () {
+                    rightLastX = this.x;
+                    bottomLastY = this.y;
+                    gsap.set("#customDragSelect", { x:this.x,y:this.y });
+                    // y[0].disable();
+                    // bottomDraggable.disable();
+                },
+                onRelease: function () {
+                    // bottomDraggable.enable();
+                    // y[0].enable();
+                }
+            });
 
+            function updateBottom() {
+                var diffY = this.y - bottomLastY;
+                var diffX = this.x - rightLastX;
+                gsap.set("#customDragSelect", { height: "+=" + diffY, width: "+=" + diffX });
+                bottomLastY = this.y;
+                rightLastX = this.x;
+            }
+            return () =>{
+                bottomDraggable.kill();
+                $bottom.remove();
+            }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []
+    );
     return (
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw", backgroundColor: store.followAUser ? "yellow" : '' }}>
@@ -69,6 +108,7 @@ function CardContainer(props) {
                     );
                 }}
             >
+                <CustomDragSelect/>
                 {
                     store.followAUser ? <div className="follow-user" /> : null
                 }
