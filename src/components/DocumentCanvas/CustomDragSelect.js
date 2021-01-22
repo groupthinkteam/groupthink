@@ -2,20 +2,24 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useStore } from '../../store/hook';
 import { gsap, Draggable } from "gsap/all";
-import  './CustomDragSelect.scss';
-const CustomDragSelect = () =>{
+import './CustomDragSelect.scss';
+const CustomDragSelect = () => {
     const store = useStore();
-    useEffect(() => { gsap.set("#customDragSelect", {height:12,width:12}) },[])
+    useEffect(() => {
+        gsap.set("#customDragSelect", { height: 12, width: 12 })
+        // gsap.set("#customDragSelectBottom", { height: 12, width: 12 })
+    }, [])
     
     return (
         <>
-        <div
-            className="disabledcard"
-            id="customDragSelect"
-        >
-            <div id="bottom-drag"></div>
-        </div>
+            <div
+                className="disabledcard"
+                id="customDragSelect"
+            >
+                <div id="bottom-drag"></div>
+            </div>
+            {/* <div className="disabledcard" id="customDragSelectBottom" ></div> */}
         </>
     )
 }
-export default observer( CustomDragSelect)
+export default observer(CustomDragSelect)

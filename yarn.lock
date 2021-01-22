@@ -12043,6 +12043,11 @@ react-select@^3.1.0:
     react-input-autosize "^2.2.2"
     react-transition-group "^4.3.0"
 
+react-selectable@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-selectable/-/react-selectable-2.1.1.tgz#21272e613929991e248570cc98a9266aa10eeecb"
+  integrity sha512-5W7WrC+TCchIwE8wDQhV5F1iJXNZJN09RsIa7kgl8P8tcG7UOYSkK6M3Jundec90mB7iN+KOLeLivSRdf9WrxQ==
+
 react-share@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/react-share/-/react-share-4.3.0.tgz#9455436a917c431ec96fbfb90359e595148a9e15"
