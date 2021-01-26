@@ -13,12 +13,13 @@ import ActionsMenu from "../Actions/ActionsMenu"
 import Feedback from "../Feedback/Feedback"
 import '../../styles/ShareLink.scss'
 import ReactTooltip from 'react-tooltip'
-
+import { SketchPicker, GithubPicker } from 'react-color'
 function MenuBar(props) {
     const store = useStore()
     let [isEditingTitle, setEditingTitle] = useState(false);
     const buttonRef = useRef(null);
     const [showMenu, setShowMenu] = useState(false);
+    const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const history = useHistory();
     const location = useLocation();
     const signOut = () => {
@@ -37,7 +38,7 @@ function MenuBar(props) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [buttonRef]);
-
+    
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -53,21 +54,57 @@ function MenuBar(props) {
                 <ActionsMenu />
                 <SearchBar document />
             </div>
-            <div className="menu-bar-panel menu-bar-panel-center" data-delay-show='750' data-effect="solid" data-tip="Change Project Name">
+            <div className="menu-bar-panel menu-bar-panel-center" data-delay-show='750' data-effect="solid" data-tip={store.cardGrouped.length > 0 ? "Change Card Color" : "Change Project Name"}>
+                {
+                    store.currentActive && store.cards[store.currentActive].type === 'text' ?
+                        <div className={"toolbar"} id={"toolbar" + props.id}>
+                            <button className="toolbar-button" onClick={() => store.formatText('bold')}>bold</button>
+                            <button className="toolbar-button" onClick={() => store.formatText('italic')}>Italic</button>
+                            <button className="toolbar-button" onClick={() => store.formatText('head')}>head1</button>
+                            <button className="toolbar-button" onClick={() => store.formatText('underline')}>underline</button>
+                        </div>
+                        : null
+                }
                 {isEditingTitle ?
                     <input className="project-title edit"
                         type="text"
                         autoFocus
                         value={store.projectMetadata.name}
                         onChange={(e) => store.localRenameProject(e.target.value)}
+
                         onBlur={(e) => {
                             store.renameProject(store.projectID, e.target.value);
                             setEditingTitle(false);
                         }} />
-                    : <span data-effect="solid" data-tip="Change Project Name" className="project-title display" onClick={() => setEditingTitle(true)}>
-                        {store.projectMetadata.name}
-                    </span>
+                    :
+                    store.cardGrouped.length > 0 ?
+                        <div>
+                            <button onClick={() => setDisplayColorPicker(!displayColorPicker)}>
+                                Pick Color
+                            <div className="colorPreview" style={{ background: store.cards[store.currentActive]?.color || "#32aaff" }} />
+                            </button>
+                            {
+                                displayColorPicker ?
+                                    <div className="colorPicker-popover" >
+                                        <div className="colorPicker-cover" onClick={() => setDisplayColorPicker(false)} />
+                                        <SketchPicker
+                                            // <GithubPicker
+                                            color={store.cards[store.currentActive]?.color || "#32aaff"}//{colorPick.hex}
+                                            onChange={(color) => { store.saveCardColors(color.hex); }}
+                                            onSwatchHover={(color, _) => {
+                                                store.addColorsToCards(color.hex);
+                                            }}
+                                        />
+                                    </div>
+                                    : null
+                            }
+                        </div>
+                        :
+                        <span data-effect="solid" data-tip="Change Project Name" className="project-title display" onClick={() => setEditingTitle(true)}>
+                            {store.projectMetadata.name}
+                        </span>
                 }
+
             </div>
 
             <div className="menu-bar-panel menu-bar-panel-right">

@@ -35,8 +35,10 @@
         width: 33%;
         height: 100%;
         overflow: visible;
+
         .site-title {
             margin-left: 5px;
+
             // min-width: 30px;
             // min-height: 30px;
             .logo {
@@ -51,6 +53,7 @@
         flex-flow: column nowrap;
         justify-content: center;
         align-items: center;
+
         .project-title {
             background-color: rgba(255, 255, 255, 0.808);
             padding: 3px 12px 3px 12px;
@@ -66,12 +69,14 @@
             text-overflow: ellipsis;
             width: fit-content;
             max-width: 100%;
+
             &.display {
                 &:hover {
                     border: 1.5px solid #939393;
                     border-radius: 6px;
                 }
             }
+
             &.edit {
                 &:focus {
                     outline: none;
@@ -98,13 +103,16 @@
         box-sizing: border-box;
         border-radius: 6px;
         height: 30px;
+
         &:hover {
             background: #ff6b43;
             color: white;
         }
+
         &:focus {
             outline: none;
         }
+
         &:active {
             outline: none;
         }
@@ -113,19 +121,23 @@
     .menu-bar-user-profile-picture {
         position: relative;
         top: 5px;
+
         img {
-        height: 36px;
-        width: 36px;
-        border: 1.5px solid black;
-        border-radius: 25px;
+            height: 36px;
+            width: 36px;
+            border: 1.5px solid black;
+            border-radius: 25px;
         }
+
         cursor: pointer;
+
         .menu-thumbnail {
             height: 80px;
             width: 80px;
             border-radius: 40px;
         }
     }
+
     .menu-bar-user-profile-picture .user-menu {
         visibility: visible;
         border: solid black 1.5px;
@@ -140,6 +152,7 @@
         left: -155%;
         margin-left: -60px;
     }
+
     .menu-bar-user-profile-picture .user-menu::before {
         content: "";
         border: 1.5px solid black;
@@ -168,7 +181,33 @@
         margin-right: 10px;
     }
 }
-.tooltip-position{
-    top:30px;
-    display:none
+
+.tooltip-position {
+    top: 30px;
+    display: none
+}
+
+.colorPicker-popover {
+    position: absolute;
+    z-index: 2;
+}
+
+.colorPicker-cover {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+.toolbar {
+    width:100%;
+    text-align: center;
+    .toolbar-button{
+        display: inline-block;
+    }
+}
+.colorPreview {
+    width: 65px;
+    height: 14px;
+    border-radius: 2px;
 }

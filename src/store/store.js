@@ -33,6 +33,7 @@ export var storeObject = {
     validproject: '',
     toggleArrows: true,
     selectedCards: [],
+    textareaRef:null,
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },
@@ -66,6 +67,21 @@ export var storeObject = {
     },
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
+    },
+    saveCardColors(hex){
+        this.cardGrouped.forEach(Id=>{
+            this.projectRef.child("nodes").child(Id).child('color')
+            .set(hex)
+            .then(() => {
+                console.log("Added " , hex , "COLOR to ",Id)
+            })
+            .catch(err=>console.log("Error in Saving Card Color ",err));
+        }) 
+    },
+    addColorsToCards(hex){
+        this.cardGrouped.forEach(Id=>{
+            this.cards[Id]["color"]=hex
+        })
     },
     addToRecentSearch(id) {
         console.log("Check recent search ID", id, this.projectID);
@@ -304,6 +320,33 @@ export var storeObject = {
         this.cards[id]["content"] = newContent;
         this.saveContent(id, newContent);
     },
+    formatText (event) {
+        console.log("event ", event)
+        const store = this;
+        let text = store.cards[store.currentActive].content.text;
+        let start = store.textareaRef.current.selectionStart;
+        let end = store.textareaRef.current.selectionEnd;
+        let newText;
+        switch (event) {
+            case 'bold':
+                newText = text.substring(0, start) + "**" + text.substring(start, end) + "**" + text.substring(end, text.length);
+                break;
+            case 'head':
+                newText = text.substring(0, start) + " # " + text.substring(start, text.length);
+                break;
+            case "italic":
+                newText = text.substring(0, start) + "*" + text.substring(start, end) + "*" + text.substring(end, text.length);
+                break;
+            case "underline":
+                newText = text.substring(0, start) + "<u>" + text.substring(start, end) + "</u>" + text.substring(end, text.length);
+                break;
+            default: break;
+        }
+        console.log("NEW TEXT ",newText)
+        store.changeContent(store.currentActive,{  text: newText  });
+        store.textareaRef.current.focus();
+        store.textareaRef.current.selectionEnd = end - 2;
+    },
     changeType(id, newType, size, content, callback) {
         this.updateLastActive();
         const newCardDefaults = {
@@ -358,6 +401,7 @@ export var storeObject = {
     },
     makeCardChild(id, newParent, strategy) {
         this.updateLastActive()
+        const updates = {};
         console.log("reparent requested for", id, "newparent", newParent);
         const throwParent = (ancestor) => { return this.cards[ancestor]?.parent }
         function checkValidity(ancestor) {
@@ -366,15 +410,28 @@ export var storeObject = {
             const parent = throwParent(ancestor);
             return checkValidity(parent)
         }
+        const updateColorToChildrens = (color , child) =>{
+            let childCard = this.cards[child];
+            updates[child+"/color"] = color;
+            if(childCard?.children){
+                Object.keys(childCard.children).forEach(Id=>{
+                    updates[Id+"/color"] = color;
+                    updateColorToChildrens(color,Id);
+                })
+            }
+        }
         if (checkValidity(id)) {
-            const updates = {};
+            
             let currentParent = this.cards[newParent]["parent"];
+            let parentColor = this.cards[id]["color"];
             updates[newParent + "/parent"] = id;
             updates[currentParent + "/children/" + newParent] = null;
             updates[id + "/children/" + newParent] = 1;
+            // updates[newParent+"/color"] = parentColor;
+            updateColorToChildrens(parentColor,id)
             this.projectRef.child("nodes")
                 .update(updates)
-                .then(console.log("successfully changed the parent of", id, "from", currentParent, "to", newParent))
+                .then(console.log(updates,"successfully changed the parent of", id, "from", currentParent, "to", newParent , "& COLOR ",parentColor))
                 .catch((reason) => console.log("error reparenting because", reason));
             return;
         }
@@ -391,6 +448,7 @@ export var storeObject = {
         updates[id + "/parent"] = newParent;
         updates[currentParent + "/children/" + id] = null;
         updates[newParent + "/children/" + id] = 1;
+        updates[id+"/color"]="#32aaff";
         this.projectRef.child("nodes")
             .update(updates)
             .then(console.log("successfully changed the parent of", id, "from", currentParent, "to", newParent))

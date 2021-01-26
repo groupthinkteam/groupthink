@@ -127,16 +127,7 @@ const GenericCard = props => {
                     boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
                     duration: 0.5
                 });
-                if (store.selectedCards.length && store.selectedCards.includes(props.id)) {
-                    // console.log("SELECTED CARD DRAG START ", store.selectedCards,childArray)
-                    childArray = {};
-                    store.selectedCards.forEach(cardID => {
-                        const draggedCard = store.cards[cardID];
-                        const x_DIff = draggedCard.position.x - me.position.x;
-                        const y_Diff = draggedCard.position.y - me.position.y;
-                        childArray[cardID] = { x: x_DIff, y: y_Diff };
-                    });
-                }
+                
                 setDragging(true);
             }
             let y = Draggable.create(
@@ -147,6 +138,18 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     dragClickables: store.currentActive !== props.id,
                     // dragClickables: true, //me.type === 'text',//false,
+                    onPress:()=>{
+                        if (store.selectedCards.length && store.selectedCards.includes(props.id)) {
+                            // console.log("SELECTED CARD DRAG START ", store.selectedCards,childArray)
+                            childArray = {};
+                            store.selectedCards.forEach(cardID => {
+                                const draggedCard = store.cards[cardID];
+                                const x_DIff = draggedCard.position.x - me.position.x;
+                                const y_Diff = draggedCard.position.y - me.position.y;
+                                childArray[cardID] = { x: x_DIff, y: y_Diff };
+                            });
+                        }
+                    },
                     onClick: (e) => {
                         childArray = {};
                         if (e.shiftKey) {
@@ -162,6 +165,7 @@ const GenericCard = props => {
                             store.currentActive = props.id;
                             //Color Coding
                             store.cardGrouped = [];
+                            store.cardGrouped.push(store.currentActive);
                             store.groupCardsParent(props.id)
                             store.groupCardsChildren(props.id)
                             store.addUserEditing(props.id, 'editing');
@@ -217,10 +221,10 @@ const GenericCard = props => {
         <>
             <div id={props.id}
                 className={"generic-card" +
-                    (showCompatibleOverlay ? " compat-cursor" : "") +
-                    (store.cardGrouped.includes(props.id) ? " grouped-card " : "") +
-                    (store.currentActive === props.id ? " active-card" : "")
-                }
+                    (showCompatibleOverlay ? " compat-cursor" : "") 
+                    // (store.cardGrouped.includes(props.id) ? " grouped-card " : "") +
+                    // (store.currentActive === props.id ? " active-card" : "")
+                }//grouped-card classNAme for Grouping
                 ref={cardRef}
                 onContextMenu={(event) => {
                     event.preventDefault();
@@ -256,9 +260,30 @@ const GenericCard = props => {
                     maxWidth: cardSizeConstant[me.type].maxWidth,
                     borderTopLeftRadius: me.editingUser ? "0px" : "6px",
                     tabIndex: -1,
+                    //Color coding( Border Color)
+                    border: store.currentActive === props.id ? `1.5px solid ${me.color || '#32aaff'}` : null,
                     zIndex: 1
                 }}
             >
+                {/* FOR CARD GROUPING HEAD */}
+                {
+                    store.cardGrouped.includes(props.id) || store.currentActive === props.id ?
+                        <div
+                        style={{
+                            position: 'absolute',
+                            width: me.size.width,
+                            height: '6px',
+                            left: '-1px',
+                            top: '-1px',
+
+                            /* Color/BLUE */
+
+                            background: me.color || '#32aaff'
+                        }}
+                        />
+                        : null
+                }
+
                 {
                     me.type === 'text' ?
                         <div className="bottom-right-generic" id={"bottom-right-generic".concat(props.id)} />
