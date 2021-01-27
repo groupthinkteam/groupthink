@@ -45,6 +45,7 @@
     "react-google-docs-viewer": "^1.0.1",
     "react-h5-audio-player": "^3.4.1",
     "react-hls-player": "^1.1.0",
+    "react-hot-keys": "^2.6.2",
     "react-iframe": "^1.8.0",
     "react-images": "^1.1.7",
     "react-markdown": "^5.0.3",

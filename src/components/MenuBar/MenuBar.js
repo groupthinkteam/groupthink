@@ -56,7 +56,7 @@ function MenuBar(props) {
             </div>
             <div className="menu-bar-panel menu-bar-panel-center" data-delay-show='750' data-effect="solid" data-tip={store.cardGrouped.length > 0 ? "Change Card Color" : "Change Project Name"}>
                 {
-                    store.currentActive && store.cards[store.currentActive].type === 'text' ?
+                    store.currentActive && store.cards[store.currentActive]?.type === 'text' ?
                         <div className={"toolbar"} id={"toolbar" + props.id}>
                             <button className="toolbar-button" onClick={() => store.formatText('bold')}>bold</button>
                             <button className="toolbar-button" onClick={() => store.formatText('italic')}>Italic</button>

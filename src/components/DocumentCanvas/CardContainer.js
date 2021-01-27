@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite"
 import ArrowList from "../Arrow/ArrowsList";
 import CursorsList from "../Cursor/CursorsList";
 import CardsList from "../Card/CardsList";
-
+// import Hotkeys from 'react-hot-keys';
 import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
 function CardContainer(props) {
@@ -22,6 +22,7 @@ function CardContainer(props) {
                         </div>
                     : null
             }
+
             <div className="container-filler" id="container-filler"
                 style={{
                     ...store.container, position: "absolute", zIndex: 999, top: 0, left: 0,
