@@ -33,7 +33,7 @@ export var storeObject = {
     validproject: '',
     toggleArrows: true,
     selectedCards: [],
-    textareaRef:null,
+    textareaRef: null,
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },
@@ -68,19 +68,32 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
-    saveCardColors(hex){
-        this.cardGrouped.forEach(Id=>{
-            this.projectRef.child("nodes").child(Id).child('color')
-            .set(hex)
+    addCardProperty(Id, property) {
+        // Object.entries(property)
+        // .forEach(([props , val])=>{
+        //     console.log("PROPS> ",props , val)
+        //     this.cards[Id][props]=val
+        // })
+        this.projectRef.child("nodes").child(Id)
+            .update(property)
             .then(() => {
-                console.log("Added " , hex , "COLOR to ",Id)
+                console.log(property, " Added to Card ID ", Id);
             })
-            .catch(err=>console.log("Error in Saving Card Color ",err));
-        }) 
+            .catch(err => console.log("Error in Saving Card Color ", err));
     },
-    addColorsToCards(hex){
-        this.cardGrouped.forEach(Id=>{
-            this.cards[Id]["color"]=hex
+    saveCardColors(hex) {
+        this.cardGrouped.forEach(Id => {
+            this.projectRef.child("nodes").child(Id).child('color')
+                .set(hex)
+                .then(() => {
+                    console.log("Added ", hex, "COLOR to ", Id)
+                })
+                .catch(err => console.log("Error in Saving Card Color ", err));
+        })
+    },
+    addColorsToCards(hex) {
+        this.cardGrouped.forEach(Id => {
+            this.cards[Id]["color"] = hex
         })
     },
     addToRecentSearch(id) {
@@ -180,7 +193,7 @@ export var storeObject = {
         else this.removeDocumentListeners();
     },
     // card related actions
-    addCard(position, size, newparent, newtype, getIDCallback) {
+    addCard(position, size, newparent, newtype, getIDCallback, optionalID) {
         // schema for new card
         let parent = newparent || "root"
         let type = newtype || "blank"
@@ -195,7 +208,7 @@ export var storeObject = {
         }
 
         // create new key for child in ".../nodes"
-        let newCardKey = this.projectRef.child("nodes").push().key;
+        let newCardKey = optionalID || this.projectRef.child("nodes").push().key;
 
         // use that key to 
         // a) push the new card schema 
@@ -216,7 +229,9 @@ export var storeObject = {
         const updates = {};
         updates[id] = null;
         updates[this.cards[id]["parent"] + "/children/" + id] = null;
-
+        if (this.cards[id]?.duplicate) {
+            updates[this.cards[id]?.duplicate + "/originalOf"] = null;
+        }
         /**
          * do a depth-first traversal of the subtree rooted at `id` and add
          * every element to updates{} for removal
@@ -320,7 +335,7 @@ export var storeObject = {
         this.cards[id]["content"] = newContent;
         this.saveContent(id, newContent);
     },
-    formatText (event) {
+    formatText(event) {
         console.log("event ", event)
         const store = this;
         let text = store.cards[store.currentActive].content.text;
@@ -342,8 +357,8 @@ export var storeObject = {
                 break;
             default: break;
         }
-        console.log("NEW TEXT ",newText)
-        store.changeContent(store.currentActive,{  text: newText  });
+        console.log("NEW TEXT ", newText)
+        store.changeContent(store.currentActive, { text: newText });
         store.textareaRef.current.focus();
         store.textareaRef.current.selectionEnd = end - 2;
     },
@@ -410,28 +425,28 @@ export var storeObject = {
             const parent = throwParent(ancestor);
             return checkValidity(parent)
         }
-        const updateColorToChildrens = (color , child) =>{
+        const updateColorToChildrens = (color, child) => {
             let childCard = this.cards[child];
-            updates[child+"/color"] = color;
-            if(childCard?.children){
-                Object.keys(childCard.children).forEach(Id=>{
-                    updates[Id+"/color"] = color;
-                    updateColorToChildrens(color,Id);
+            updates[child + "/color"] = color;
+            if (childCard?.children) {
+                Object.keys(childCard.children).forEach(Id => {
+                    updates[Id + "/color"] = color;
+                    updateColorToChildrens(color, Id);
                 })
             }
         }
         if (checkValidity(id)) {
-            
+
             let currentParent = this.cards[newParent]["parent"];
             let parentColor = this.cards[id]["color"];
             updates[newParent + "/parent"] = id;
             updates[currentParent + "/children/" + newParent] = null;
             updates[id + "/children/" + newParent] = 1;
             // updates[newParent+"/color"] = parentColor;
-            updateColorToChildrens(parentColor,id)
+            updateColorToChildrens(parentColor || '#32aaff', newParent)
             this.projectRef.child("nodes")
                 .update(updates)
-                .then(console.log(updates,"successfully changed the parent of", id, "from", currentParent, "to", newParent , "& COLOR ",parentColor))
+                .then(console.log(updates, "successfully changed the parent of", id, "from", currentParent, "to", newParent, "& COLOR ", parentColor))
                 .catch((reason) => console.log("error reparenting because", reason));
             return;
         }
@@ -448,7 +463,7 @@ export var storeObject = {
         updates[id + "/parent"] = newParent;
         updates[currentParent + "/children/" + id] = null;
         updates[newParent + "/children/" + id] = 1;
-        updates[id+"/color"]="#32aaff";
+        updates[id + "/color"] = "#32aaff";
         this.projectRef.child("nodes")
             .update(updates)
             .then(console.log("successfully changed the parent of", id, "from", currentParent, "to", newParent))
@@ -634,6 +649,78 @@ export var storeObject = {
             .update({ joinedCall: null })
             .then(console.log("This User has Not Joined Call"))
             .catch(error => console.log("Error raised in removeUserCallInfo because ", error))
+    },
+    //---------------------_SHORTCUT KEYS FUNCTIONS -------------------
+    selectAllCards(strategy) {
+        Object.entries(this.cards)
+            .filter(([id, value]) => id && id !== "root" && (strategy || !value?.isCollapse))
+            .forEach(([id, value]) => {
+                if (strategy) {
+                    this.removeCard(id, "reparent", value.parent)
+                }
+                else if (!this.selectedCards.includes(id))
+                    this.selectedCards.push(id);
+            })
+    },
+    removeSelectedCards() {
+        if (this.selectedCards.length) {
+            this.selectedCards.forEach(id => {
+                this.removeCard(id, "reparent", this.cards[id].parent)
+            })
+            this.selectedCards = [];
+        }
+    },
+    duplicateCards() {
+        if (this.selectedCards.length) {
+            this.selectedCards.forEach(id => {
+                const me = this.cards[id];
+                const parent = this.cards[me.parent];
+                let newCardKey = this.projectRef.child("nodes").push().key;
+                this.addCard(
+                    { x: me.position.x + me.size.width + 80, y: me.position.y },
+                    { height: me.size.height, width: me.size.width }
+                    ,  parent?.originalOf || me.parent
+                    , me.type,
+                    (newCardId) => {
+                        console.log("COMPARE ", newCardKey === newCardId)
+                        this.saveContent(newCardId, me.content);
+                    },newCardKey
+                )
+                this.saveContent(newCardKey, me.content);
+                this.addCardProperty(id, { originalOf: newCardKey });
+                this.addCardProperty(newCardKey, { duplicate: id });
+            })
+        }
+    },
+    removeDuplicates(strategy) {
+        if (strategy) {
+            Object.entries(this.cards)
+                .filter(([id, value]) => id && id !== "root" && (value?.originalOf || !value?.duplicate))
+                .forEach(([id, value]) => {
+                    if (value.originalOf) {
+                        this.removeCard(value.originalOf, "reparent", value.parent)
+                    }
+                    else if (value.duplicate) {
+                        this.removeCard(id, "reparent", value.parent);
+                    }
+                })
+        }
+        else if (this.selectedCards.length) {
+            this.selectedCards.forEach(id => {
+                let indexOf;
+                const me = this.cards[id]
+                console.log(this.cards[id])
+                if (me?.originalOf) {
+                    this.removeCard(me?.originalOf, "reparent", me.parent)
+                }
+                else if (me?.duplicate) {
+                    this.removeCard(id, "reparent", me.parent);
+                    indexOf = this.selectedCards.indexOf(id);
+                }
+                if (indexOf)
+                    this.selectedCards.splice(indexOf, 1);
+            })
+        }
     },
     // listener manipulation
     addDashboardListeners(forceRefreshCallback) {

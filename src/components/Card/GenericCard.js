@@ -127,7 +127,6 @@ const GenericCard = props => {
                     boxShadow: "0 11px 15px -7px rgba(51, 61, 78, 0.2), 0 9px 46px 8px rgba(51, 61, 78, 0.12), 0 24px 38px 3px rgba(51, 61, 78, 0.14)",
                     duration: 0.5
                 });
-                
                 setDragging(true);
             }
             let y = Draggable.create(
@@ -139,14 +138,17 @@ const GenericCard = props => {
                     dragClickables: store.currentActive !== props.id,
                     // dragClickables: true, //me.type === 'text',//false,
                     onPress:()=>{
+                        childArray = {};
                         if (store.selectedCards.length && store.selectedCards.includes(props.id)) {
                             // console.log("SELECTED CARD DRAG START ", store.selectedCards,childArray)
-                            childArray = {};
                             store.selectedCards.forEach(cardID => {
                                 const draggedCard = store.cards[cardID];
+                                console.log("BEFORE",{[cardID]:{x: draggedCard.position.x, y:draggedCard.position.y}})
                                 const x_DIff = draggedCard.position.x - me.position.x;
                                 const y_Diff = draggedCard.position.y - me.position.y;
+                                console.log("AFTER",{cardID:{x: x_DIff, y: y_Diff}})
                                 childArray[cardID] = { x: x_DIff, y: y_Diff };
+                                // gsap.to("#".concat(cardID),{ x: x_DIff, y: y_Diff });
                             });
                         }
                     },
