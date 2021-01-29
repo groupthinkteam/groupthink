@@ -114,13 +114,15 @@ const GenericCard = props => {
                 })
                 //container size
                 store.saveContainerSize();
-                store.savePosition(props.id, newPosition);
+
                 //Selected card Drag
                 if (store.selectedCards.length && Object.entries(childArray).length) {
                     Object.entries(childArray).forEach(([cardId, value]) => {
                         store.savePosition(cardId, { x: this.x + value.x, y: this.y + value.y });
                     })
                 }
+                else
+                    store.savePosition(props.id, newPosition);
             }
             function dragStart() {
                 gsap.to("#".concat(props.id), {
@@ -137,19 +139,17 @@ const GenericCard = props => {
                     trigger: "#".concat(props.id),
                     dragClickables: store.currentActive !== props.id,
                     // dragClickables: true, //me.type === 'text',//false,
-                    onPress:()=>{
+                    onPress: () => {
                         childArray = {};
                         if (store.selectedCards.length && store.selectedCards.includes(props.id)) {
                             // console.log("SELECTED CARD DRAG START ", store.selectedCards,childArray)
                             store.selectedCards.forEach(cardID => {
                                 const draggedCard = store.cards[cardID];
-                                console.log("BEFORE",{[cardID]:{x: draggedCard.position.x, y:draggedCard.position.y}})
-                                const x_DIff = draggedCard.position.x - me.position.x;
-                                const y_Diff = draggedCard.position.y - me.position.y;
-                                console.log("AFTER",{cardID:{x: x_DIff, y: y_Diff}})
+                                const x_DIff = draggedCard.position.x - store.cards[props.id].position.x;
+                                const y_Diff = draggedCard.position.y - store.cards[props.id].position.y;
                                 childArray[cardID] = { x: x_DIff, y: y_Diff };
-                                // gsap.to("#".concat(cardID),{ x: x_DIff, y: y_Diff });
                             });
+                            console.log("CHILD ARRAY ", childArray)
                         }
                     },
                     onClick: (e) => {
@@ -164,11 +164,11 @@ const GenericCard = props => {
                                 store.selectedCards.push(props.id);
                         }
                         else if (store.currentActive !== props.id) {
-                            
-                            if(store.textareaRef)
-                            store.textareaRef=null;
 
-                            store.editingCard =null
+                            if (store.textareaRef)
+                                store.textareaRef = null;
+
+                            store.editingCard = null
                             store.currentActive = props.id;
                             //Color Coding
                             store.cardGrouped = [];
@@ -200,7 +200,8 @@ const GenericCard = props => {
                                 store.changePosition(cardId, { x: this.x + value.x, y: this.y + value.y });
                             })
                         }
-                        store.changePosition(props.id, { x: this.x, y: this.y });
+                        else
+                            store.changePosition(props.id, { x: this.x, y: this.y });
                         y[0].update(true)
                     },
                     onDragEnd: dragStop,
@@ -228,7 +229,7 @@ const GenericCard = props => {
         <>
             <div id={props.id}
                 className={"generic-card" +
-                    (showCompatibleOverlay ? " compat-cursor" : "") 
+                    (showCompatibleOverlay ? " compat-cursor" : "")
                     // (store.cardGrouped.includes(props.id) ? " grouped-card " : "") +
                     // (store.currentActive === props.id ? " active-card" : "")
                 }//grouped-card classNAme for Grouping
@@ -276,17 +277,17 @@ const GenericCard = props => {
                 {
                     store.cardGrouped.includes(props.id) || store.currentActive === props.id ?
                         <div
-                        style={{
-                            position: 'absolute',
-                            width: me.size.width,
-                            height: '6px',
-                            left: '-1px',
-                            top: '-1px',
+                            style={{
+                                position: 'absolute',
+                                width: me.size.width,
+                                height: '6px',
+                                left: '-1px',
+                                top: '-1px',
 
-                            /* Color/BLUE */
+                                /* Color/BLUE */
 
-                            background: me.color || '#32aaff'
-                        }}
+                                background: me.color || '#32aaff'
+                            }}
                         />
                         : null
                 }
