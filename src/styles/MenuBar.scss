@@ -53,6 +53,7 @@
         flex-flow: column nowrap;
         justify-content: center;
         align-items: center;
+        flex-direction: row;
 
         .project-title {
             background-color: rgba(255, 255, 255, 0.808);
@@ -199,15 +200,35 @@
     bottom: 0px;
     left: 0px;
 }
+
 .toolbar {
-    width:100%;
+    width: 211px;
     text-align: center;
-    .toolbar-button{
-        display: inline-block;
+    flex-direction: row;
+
+    .toolbar-button {
+        // display: inline-block;
+
     }
 }
+
+.color-buttuon {
+    position: absolute;
+    width: 29.7px;
+    height: 0px;
+    left: 0px;
+    top: 21px;
+
+    /* Color/Dark Orange */
+
+    border: 1px solid #FC611E;
+    transform: rotate(-45deg);
+}
+
 .colorPreview {
-    width: 65px;
-    height: 14px;
-    border-radius: 2px;
+    border: white;
+    background: white;
+    // width: 65px;
+    // height: 14px;
+    // border-radius: 2px;
 }

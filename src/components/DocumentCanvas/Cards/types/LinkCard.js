@@ -1,10 +1,12 @@
 import React from 'react';
 import LinkPreview from '@ashwamegh/react-link-preview'
 import "../../../../styles/Cards/LinkCard.scss"
+import ShrinkedCard from './ShrinkedCard';
 
 const LinkCard = (props) => {
+    const store = props.typeAPI;
     if (!props.content.url) return null;
-    if (props.content.description) return <LinkDisplay preview={props.content} url={props.content.url} />
+    if (props.content.description) return <LinkDisplay isShrinked={store.cards[props.id]?.cardShrinked} preview={props.content} url={props.content.url} />
     else {
         return (
             <LinkPreview url={props.content.url}
@@ -24,7 +26,13 @@ const LinkCard = (props) => {
     }
 }
 
-const LinkDisplay = React.memo(({ preview, url }) => {
+const LinkDisplay = React.memo(({ preview, url , isShrinked}) => {
+    if(isShrinked){
+        return(
+            <ShrinkedCard url={url} title={preview.title}/>
+        )
+    }
+    else
     return (
         <div className="link-card">
             <img className="preview-image" height="100px" width="100px" src={preview.img} alt={preview.title} onClick={() => window.open(url, "_blank")} />

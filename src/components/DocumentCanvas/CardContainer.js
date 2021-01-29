@@ -34,7 +34,7 @@ function CardContainer(props) {
                 store.removeDuplicates('removeAll');
                 break;
             case 'ctrl+alt+n':
-                if(store.cursors && store.cursors[store.userID])
+                if(!store.currentActive && store.cursors && store.cursors[store.userID])
                 store.addCard(
                     {x:store.cursors[store.userID].x , y:store.cursors[store.userID].y},
                     { width: 275, height: 45 }, "root", "blank"
@@ -91,10 +91,12 @@ function CardContainer(props) {
                                 store.currentActive = null;
                                 store.editingCard = null;
                                 store.cardGrouped = [];
+                                
                             }
                             // leaving room for other side effects
                             store.currentContext = null;
                             store.selectedCards = [];
+                            store.textareaRef = null;
                         }
                         // TODO - handle closing things when the user clicks on any regular card instead 
                         // of the bare canvas

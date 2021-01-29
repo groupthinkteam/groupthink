@@ -23,12 +23,12 @@ const cardSizeConstant = {
         minWidth: "300px"
     },
     link: {
-        minHeight: "112px",
-        minWidth: "400px"
+        minHeight: "50px",
+        minWidth: "200px"
     },
     'VideoLink': {
-        minWidth: "300px",
-        minHeight: "200px"
+        minWidth: "200px",
+        minHeight: "50px"
     },
     VideoFile :{
         minWidth: "300px",

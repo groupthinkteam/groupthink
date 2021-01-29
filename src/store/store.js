@@ -34,6 +34,7 @@ export var storeObject = {
     toggleArrows: true,
     selectedCards: [],
     textareaRef: null,
+    isCardShrinked:false,
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },

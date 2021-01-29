@@ -164,6 +164,11 @@ const GenericCard = props => {
                                 store.selectedCards.push(props.id);
                         }
                         else if (store.currentActive !== props.id) {
+                            
+                            if(store.textareaRef)
+                            store.textareaRef=null;
+
+                            store.editingCard =null
                             store.currentActive = props.id;
                             //Color Coding
                             store.cardGrouped = [];
