@@ -3,6 +3,7 @@ import "firebase/auth"
 import "firebase/database"
 import 'firebase/storage';
 import 'firebase/functions'
+import 'firebase/analytics'
 
 // const FIREBASE_CONFIG = {
 //     apiKey: "AIzaSyAjOQlUVvfpaPFKw_dsjVF-ZO9xAFFwLJc",
@@ -31,3 +32,4 @@ export const database = firebase.database();
 export const servertime = firebase.database.ServerValue.TIMESTAMP;
 export const storage = firebase.storage;
 export const functions = firebase.functions();
+export const analytics = firebase.analytics();
