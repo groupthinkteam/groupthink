@@ -1,6 +1,6 @@
 import set from "lodash.set"
 import throttle from "lodash.throttle"
-import { database, storage, auth, servertime, functions } from "../services/firebase"
+import { database, storage, auth, servertime, functions, analytics } from "../services/firebase"
 import projectTemplates from "../constants/projectTemplates"
 import "mobx-react-lite"
 import { FIREBASE_CONSTANTS } from "../constants/firebaseConstants"
@@ -416,6 +416,7 @@ export var storeObject = {
             .catch(reason => console.log("Couldn;t follow because ", reason));
     },
     makeCardChild(id, newParent, strategy) {
+        analytics.logEvent('card_child_added')
         this.updateLastActive()
         const updates = {};
         console.log("reparent requested for", id, "newparent", newParent);
@@ -822,6 +823,7 @@ export var storeObject = {
     // ------------
     // args must contain a valid card ID
     runAction(name, id, callback) {
+        analytics.logEvent('action_performed');
         let card = this.cards[id]
         let addCard = this.addCard
         let saveContent = this.saveContent
