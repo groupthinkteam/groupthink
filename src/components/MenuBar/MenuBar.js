@@ -13,7 +13,7 @@ import ActionsMenu from "../Actions/ActionsMenu"
 import Feedback from "../Feedback/Feedback"
 import '../../styles/ShareLink.scss'
 import ReactTooltip from 'react-tooltip'
-import { SketchPicker, GithubPicker } from 'react-color';
+import { SketchPicker, TwitterPicker } from 'react-color';
 import DisplayCardMenu from "./DisplayCardMenu"
 function MenuBar(props) {
     const store = useStore();
@@ -93,13 +93,12 @@ function MenuBar(props) {
                                 displayColorPicker ?
                                     <div className="colorPicker-popover" >
                                         <div className="colorPicker-cover" onClick={() => setDisplayColorPicker(false)} />
-                                        <SketchPicker
-                                            // <GithubPicker
+                                        <TwitterPicker
                                             color={store.cards[store.currentActive]?.color || "#32aaff"}//{colorPick.hex}
                                             onChange={(color) => { store.saveCardColors(color.hex); }}
-                                            onSwatchHover={(color, _) => {
-                                                store.addColorsToCards(color.hex);
-                                            }}
+                                            // onSwatchHover={(color, _) => {
+                                            //     store.addColorsToCards(color.hex);
+                                            // }}
                                         />
                                     </div>
                                     : null
