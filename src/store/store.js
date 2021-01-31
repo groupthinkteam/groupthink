@@ -34,7 +34,7 @@ export var storeObject = {
     toggleArrows: true,
     selectedCards: [],
     textareaRef: null,
-    isCardShrinked:false,
+    isCardShrinked: false,
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },
@@ -347,8 +347,17 @@ export var storeObject = {
             case 'bold':
                 newText = text.substring(0, start) + "**" + text.substring(start, end) + "**" + text.substring(end, text.length);
                 break;
-            case 'head':
+            case 'head1':
                 newText = text.substring(0, start) + " # " + text.substring(start, text.length);
+                break;
+            case 'head2':
+                newText = text.substring(0, start) + " ## " + text.substring(start, text.length);
+                break;
+            case 'head3':
+                newText = text.substring(0, start) + " ### " + text.substring(start, text.length);
+                break;
+            case 'head4':
+                newText = text.substring(0, start) + " #### " + text.substring(start, text.length);
                 break;
             case "italic":
                 newText = text.substring(0, start) + "*" + text.substring(start, end) + "*" + text.substring(end, text.length);
@@ -681,12 +690,12 @@ export var storeObject = {
                 this.addCard(
                     { x: me.position.x + me.size.width + 80, y: me.position.y },
                     { height: me.size.height, width: me.size.width }
-                    ,  parent?.originalOf || me.parent
+                    , parent?.originalOf || me.parent
                     , me.type,
                     (newCardId) => {
                         console.log("COMPARE ", newCardKey === newCardId)
                         this.saveContent(newCardId, me.content);
-                    },newCardKey
+                    }, newCardKey
                 )
                 this.saveContent(newCardKey, me.content);
                 this.addCardProperty(id, { originalOf: newCardKey });

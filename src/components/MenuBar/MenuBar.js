@@ -91,8 +91,8 @@ function MenuBar(props) {
                             </button>
                             {
                                 displayColorPicker ?
-                                    <div className="colorPicker-popover" >
-                                        <div className="colorPicker-cover" onClick={() => setDisplayColorPicker(false)} />
+                                    <div className="colorPicker popover" >
+                                        <div className="colorPicker cover" onClick={() => setDisplayColorPicker(false)} />
                                         <TwitterPicker
                                             color={store.cards[store.currentActive]?.color || "#32aaff"}//{colorPick.hex}
                                             onChange={(color) => { store.saveCardColors(color.hex); }}
