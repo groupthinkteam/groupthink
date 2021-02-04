@@ -155,13 +155,14 @@ const GenericCard = props => {
                     onClick: (e) => {
                         childArray = {};
                         if (e.shiftKey) {
-                            console.log("SELECTED CARD ", store.selectedCards)
+                            // console.log("SELECTED CARD ", store.selectedCards)
                             if (store.selectedCards.includes(props.id)) {
                                 const indexOf = store.selectedCards.indexOf(props.id);
                                 store.selectedCards.splice(indexOf, 1);
                             }
-                            else
-                                store.selectedCards.push(props.id);
+                            else {
+                                // store.selectedCards.push(props.id);}
+                            }
                         }
                         else if (store.currentActive !== props.id) {
 

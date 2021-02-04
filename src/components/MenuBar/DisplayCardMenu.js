@@ -36,7 +36,7 @@ const Toolbar = ({ store }) => {
                 </div>
                 {
                     dropDown ?
-                        <div className="dropdown-content">
+                        <div className="menu-toolbar dropdown-content">
                             <span className="head2" onClick={() => store.formatText('head2')} >Heading 2</span>
                             <span className="head3" onClick={() => store.formatText('head3')} >Heading 3</span>
                             <span className="head4" onClick={() => store.formatText('head4')} >Heading 4</span>

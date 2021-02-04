@@ -45,7 +45,9 @@ function PersonaList(props) {
                                     className="persona-item"
                                     style={{ backgroundColor: store.followAUser ? 'yellow' : '' }}
                                 >
-                                    <img onClick={() => { toggleFollowAUser(userID) }} alt={values.displayName} src={values.photoURL} />
+                                    <img //onClick={() => { toggleFollowAUser(userID) }} 
+                                        alt={values.displayName} src={values.photoURL} 
+                                    />
                                     {/* {values.name} */}
                                 </div>
                             )

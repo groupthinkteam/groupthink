@@ -662,6 +662,39 @@ export var storeObject = {
             .catch(error => console.log("Error raised in removeUserCallInfo because ", error))
     },
     //---------------------_SHORTCUT KEYS FUNCTIONS -------------------
+    runShortCutKey(shortcut){
+        switch (shortcut) {
+            case 'ctrl+a':
+                this.selectAllCards();
+                break;
+            case 'delete':
+                this.removeSelectedCards();
+                break;
+            case 'backspace':
+                this.removeSelectedCards();
+                break;
+            case 'ctrl+q':
+                //Duplicates the Selected Cards
+                this.duplicateCards();
+                break;
+            case 'alt+r':
+                //Removes Selected Duplicate
+                this.removeDuplicates();
+                break;
+            case 'ctrl+alt+r':
+                //Removes All Duplicates Without Selection
+                this.removeDuplicates('removeAll');
+                break;
+            case 'ctrl+alt+n':
+                if(!this.currentActive && this.cursors && this.cursors[this.userID])
+                this.addCard(
+                    {x:this.cursors[this.userID].x , y:this.cursors[this.userID].y},
+                    { width: 275, height: 45 }, "root", "blank"
+                )
+                break;
+            default: break;
+        }
+    },
     selectAllCards(strategy) {
         Object.entries(this.cards)
             .filter(([id, value]) => id && id !== "root" && (strategy || !value?.isCollapse))

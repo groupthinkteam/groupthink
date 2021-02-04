@@ -10,39 +10,7 @@ import "../../styles/CardContainer.scss";
 import Zoom from "../Zoom/Zoom";
 function CardContainer(props) {
     const store = useStore();
-    const onKeyUp = (shortcut) => {
-        switch (shortcut) {
-            case 'ctrl+a':
-                store.selectAllCards();
-                break;
-            case 'delete':
-                store.removeSelectedCards();
-                break;
-            case 'backspace':
-                store.removeSelectedCards();
-                break;
-            case 'ctrl+q':
-                //Duplicates the Selected Cards
-                store.duplicateCards();
-                break;
-            case 'alt+r':
-                //Removes Selected Duplicate
-                store.removeDuplicates();
-                break;
-            case 'ctrl+alt+r':
-                //Removes All Duplicates Without Selection
-                store.removeDuplicates('removeAll');
-                break;
-            case 'ctrl+alt+n':
-                if(!store.currentActive && store.cursors && store.cursors[store.userID])
-                store.addCard(
-                    {x:store.cursors[store.userID].x , y:store.cursors[store.userID].y},
-                    { width: 275, height: 45 }, "root", "blank"
-                )
-                break;
-            default: break;
-        }
-    }
+
     return (
         <div className="card-container" id="card-container"
             style={{ overflow: "scroll", position: "absolute", zIndex: 1, width: "100vw", backgroundColor: store.followAUser ? "yellow" : '' }}>
@@ -56,15 +24,15 @@ function CardContainer(props) {
             }
             <Hotkeys
                 keyName="ctrl+alt+r,alt+r , ctrl+a ,delete,backspace,ctrl+q,ctrl+alt+n"
-                onKeyDown={(shortcut, e, hand) =>{ 
-                    console.log("KEY DOWN SHORTCUT ", shortcut, e, hand);
-                    e.preventDefault();
-                }}
-                onKeyUp={(shortcut, e, hand) => {
-                    console.log("KEY UP SHORTCUT ", shortcut, e, hand);
-                    e.preventDefault();
-                    onKeyUp(shortcut);
-                }}
+                // onKeyDown={(__, e, _) =>{ 
+                //     e.preventDefault();
+                // }}
+                // onKeyUp={(shortcut, e, _) => {
+                //     // console.log("KEY UP SHORTCUT ", shortcut, e, hand);
+                //     e.preventDefault();
+                //     //---- Run ShortCuts ------
+                //     store.runShortCutKey(shortcut);
+                // }}
             >
                 <div className="container-filler" id="container-filler"
                     style={{
@@ -95,7 +63,7 @@ function CardContainer(props) {
                             }
                             // leaving room for other side effects
                             store.currentContext = null;
-                            store.selectedCards = [];
+                            // store.selectedCards = [];
                             store.textareaRef = null;
                         }
                         // TODO - handle closing things when the user clicks on any regular card instead 
