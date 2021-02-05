@@ -155,7 +155,7 @@ const ImageMenu = ({ store, me }) => {
                     />
                 </div>
                 <img
-                    onClick={() => { store.convertCardToBlank(store.currentActive, me.type); }}
+                    onClick={() => { store.convertCardToBlank(store.currentActive); }}
                     src={require("../../assets/card-menu/change-card.svg")} alt="Change Card"
                 />
             </div>

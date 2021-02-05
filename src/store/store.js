@@ -69,12 +69,12 @@ export var storeObject = {
     get userCount() {
         return this.users ? Object.keys(this.users).length : 0
     },
+    /**
+     * This Function Adds New Property to Node on Firebase
+     * @param {String} Id - Id of card / node
+     * @param {Object} property - Property to be Add in Node
+     */
     addCardProperty(Id, property) {
-        // Object.entries(property)
-        // .forEach(([props , val])=>{
-        //     console.log("PROPS> ",props , val)
-        //     this.cards[Id][props]=val
-        // })
         this.projectRef.child("nodes").child(Id)
             .update(property)
             .then(() => {
@@ -82,6 +82,10 @@ export var storeObject = {
             })
             .catch(err => console.log("Error in Saving Card Color ", err));
     },
+    /**
+     * Saves Card Color to Firebase
+     * @param {String} hex - Color in HexaDecimal
+     */
     saveCardColors(hex) {
         this.cardGrouped.forEach(Id => {
             this.projectRef.child("nodes").child(Id).child('color')
@@ -92,11 +96,19 @@ export var storeObject = {
                 .catch(err => console.log("Error in Saving Card Color ", err));
         })
     },
+    /**
+     * Locally Saves Card Color
+     * @param {String} hex - Color in HexaDecimal
+     */
     addColorsToCards(hex) {
         this.cardGrouped.forEach(Id => {
             this.cards[Id]["color"] = hex
         })
     },
+    /**
+     * Adds Selected Card if Id to Recent Searches Array
+     * @param {String} id 
+     */
     addToRecentSearch(id) {
         console.log("Check recent search ID", id, this.projectID);
         const k = this.projectID
@@ -110,6 +122,9 @@ export var storeObject = {
             .once('value').then(snap => { callback(snap.val()) })
             .catch(err => console.log("Error in GETACTION is: ", err));
     },
+    /**
+     * Authenticate LoggedIn User Info & userID
+     */
     syncUser() {
         if (auth().currentUser?.uid) {
             this.currentUser = auth().currentUser;
@@ -118,12 +133,23 @@ export var storeObject = {
             this.currentUser = false;
         }
     },
+    /**
+     * Checks Project Validity of Provided ID
+     * @param {String} id - ID of Project
+     * @param {Function} callback - Callback for validity status (T/F)
+     */
     isProjectValid(id, callback) {
         this.userRef.once('value')
             .then(snap => { callback(snap.hasChild(id)) })
             .catch(error => console.log("While Validating Project", error));
     },
-    // dashboard related actions
+    //------------------------------------ DASHBOARD RELATED ACTIONS ----------------------------------
+    /**
+     * Creates New Projects & Setup Project-BASE 
+     * @param {*} callback - Callback for project setup
+     * @param {String} tempId - ID to Which Kind of Project to setup (Blank is default)
+     * @param {*} projectName - Provide Name to project (Optional) 
+     */
     addNewProject(callback, tempId, projectName) {
         const thumbnails = [require("../assets/1.webp"), require("../assets/2.webp"), require("../assets/3.webp"), require("../assets/4.webp")]
         const thumbnailURL = thumbnails[Math.floor(Math.random() * thumbnails.length)]
@@ -156,6 +182,11 @@ export var storeObject = {
             createdAt: servertime,
         }).then(() => callback(newProjectID))
     },
+    /**
+     * Deletes Project of corresponding ID
+     * - Goes in Garbage Collection 
+     * @param {String} id 
+     */
     deleteProject(id) {
         database.ref("garbagecollection").child(id).set(servertime).then(() => {
             database.ref("documents").child(id).child("users")
@@ -168,13 +199,28 @@ export var storeObject = {
                 });
         })
     },
+    /**
+     * Rename Project Locally
+     * @param {String} title 
+     */
     localRenameProject(title) {
         this.projectMetadata.name = title
     },
+    /**
+     * Updates the updated Name of Project to Firebase
+     * @param {String} id 
+     * @param {String} title 
+     */
     renameProject(id, title) {
         database.ref("documents").child(id).child("metadata").child("name").set(title)
     },
-    // document related actions
+
+    //------------------------------------------END : dashboard related actions ----------------------------------
+
+    //------------------------------------------ START: DOCUMENT RELATED ACTIONS ---------------------------------
+    /**
+     * Saves Cursor Position of Current User to Firebase
+     */
     saveCursorPosition: throttle(function saveCursorPosition(x, y) {
         this.updateLastActive()
         this.projectRef.child("cursors").child(this.userID)
@@ -182,18 +228,45 @@ export var storeObject = {
             .then(() => { })
             .catch(err => console.log("error sending cursor position to others", err))
     }, 100),
+    /**
+     * Updates Last Active Time of Current User of Current Project
+     */
     updateLastActive: throttle(function updateLastActive() {
         this.projectRef &&
             this.projectRef.child("users").child(this.userID).child("lastUpdatedAt")
                 .set(servertime)
 
     }, 5000),
+    /**
+     * Sets Project ID to Store Object For Global Access
+     * @param {String} newProjectID 
+     */
     setProjectID(newProjectID) {
         this.projectID = newProjectID;
         if (this.projectID) this.addDocumentListeners();
         else this.removeDocumentListeners();
     },
     // card related actions
+    /**
+     * Adds New Card to Current Project
+     * - Initially Setup card as Blank Card
+     * @param {Object} position - Position Of Card 
+     * @param {Object} size - Size Of Card
+     * @param {String} newparent - New Parent (By Default it's root)
+     * @param {String} newtype - Add New Type (By default it's blank)
+     * @param {Function} getIDCallback - Callback to Get Card ID Generated
+     * @param {String} optionalID - This ID is used While Duplicating card such to make new Card along it's original
+     * 
+     * @example 
+     * addCard(
+        * {x:x,y:y}, //Position
+        * {width:10,heigth:20}, //Size In Number
+        * 'root', //New Parent
+        * 'image', //New Type 
+        * id=>console.log("GENERATED CARD ID ",id) , //Console new Card ID
+        * 'Orignal Card ID' 
+     * ) 
+     */
     addCard(position, size, newparent, newtype, getIDCallback, optionalID) {
         // schema for new card
         let parent = newparent || "root"
@@ -225,6 +298,14 @@ export var storeObject = {
             });
         this.updateLastActive()
     },
+    /**
+     * Deletes Card & Instance from FIREBASE with Strategy :
+     * - In Recursive strategy Deletes Current card along with it's children and sub-children 
+     * - In Reparent Strategy Deletes Current Card And Reparent it's to the Deleted Card Parent
+     * @param {String} id - ID of card
+     * @param {String} strategy - 'Recursive' or 'Reparent'
+     * @param {String} newParent - newParent for children
+     */
     removeCard(id, strategy, newParent) {
         this.updateLastActive();
         const updates = {};
@@ -265,6 +346,10 @@ export var storeObject = {
         this.projectRef.child("nodes").update(updates)
             .then(console.log("deleted", id, "successfully")).catch(error => console.log("couldn't reparent because ", error));
     },
+    /**
+     * Filter's the Project According to Search Result
+     * @param {Object} searchResult - Containes 'matches as property' which is array of matched Items  
+     */
     filterProject(searchResult) {
         this.filteredProjectID = []
         if (searchResult.matches.length > 0)
@@ -276,6 +361,10 @@ export var storeObject = {
         else
             this.filteredProjectID = [];
     },
+    /**
+     * Starred the Projects and Saves to Firebase
+     * @param {String} id 
+     */
     starredThisProject(id) {
         console.log(this.projects[id].users[this.userID].name)
         database.ref("documents").child(id)
@@ -283,15 +372,29 @@ export var storeObject = {
             .set(true).then(console.log(id, " This Project is starred in USERS"))
             .catch(err => console.log("Error in setting Starred ", err));
     },
+    /**
+     * Un-Starred the Projects and Saves to Firebase
+     * @param {String} id 
+    */
     unStarredThisProject(id) {
         database.ref("documents").child(id)
             .child(`users/${this.userID}/isStarred`)
             .set(null).then(console.log(id, " This Project is starred in USERS"))
             .catch(err => console.log("Error in setting Starred ", err));
     },
+    /**
+     * Locally saves Change in Position of Card
+     * @param {*} id - ID of card
+     * @param {*} newPos - New Position Of Card
+     */
     changePosition(id, newPos) {
         this.cards[id]["position"] = newPos;
     },
+    /**
+     * Saves Change in Position of Card to FIREBASE
+     * @param {*} id - ID of card
+     * @param {*} newPos - New Position Of Card
+     */
     savePosition(id, newPos) {
         this.updateLastActive()
         let updates = {};
@@ -307,18 +410,29 @@ export var storeObject = {
         this.projectRef.update(updates)
             .then(console.log("set new position for", id, "to", newPos));
     },
+    /**
+     * Updates New Size of Card to FIREBASE 
+     * @param {String} id 
+     * @param {Object} newSize 
+     */
     resize(id, newSize) {
         this.updateLastActive()
         this.projectRef.child("nodes").child(id).child("size")
             .set(newSize)
             .then(console.log("set new size for", id, "to", newSize));
     },
+    /**
+     * Saves Updated Local Container Size to FIREBASE 
+     */
     saveContainerSize() {
         this.updateLastActive()
         this.projectRef.child('container')
             .set(this.container)
             .then(console.log("set new size for container ", this.container.height, this.container.width));
     },
+    /**
+     * Saves the Change OF Content & updates to FIREBASE 
+     */
     saveContent: throttle(function saveContent(id, newContent) {
         this.updateLastActive()
         this.projectRef.child("nodes").child(id).child("content")
@@ -327,15 +441,33 @@ export var storeObject = {
             .catch(err => console.log("error saving new content for", id, err))
     },
         500),
+    /**
+     * Locally Save the change in size of Given Card ID
+     * @param {String} id 
+     * @param {Object} size 
+     */
     changeSize(id, size) {
         console.log("triggered local size change on", id);
         this.cards[id]["size"] = size;
     },
+    /**
+     * Locally Updates Content of given cardID
+     * @param {String} id 
+     * @param {Object | String} newContent 
+     */
     changeContent(id, newContent) {
         console.log("triggered local content change on", id);
         this.cards[id]["content"] = newContent;
         this.saveContent(id, newContent);
     },
+    /**
+     * Responsible For Selected Formating of Text in Text Card :
+     * - Bold
+     * - Italic
+     * - Underline
+     * - Head 1 , 2 , 3, 4
+     * @param {String} event Name Of Event that has to be in the format
+     */
     formatText(event) {
         console.log("event ", event)
         const store = this;
@@ -372,7 +504,15 @@ export var storeObject = {
         store.textareaRef.current.focus();
         store.textareaRef.current.selectionEnd = end - 2;
     },
-    changeType(id, newType, size, content, callback) {
+    /**
+     * Saves the Change in Type of Given ID With it's new Type  
+     * And Optionally Save Size & Content
+     * @param {String} id 
+     * @param {String} newType 
+     * @param {Object} size 
+     * @param {String | Object} content 
+     */
+    changeType(id, newType, size, content) {
         this.updateLastActive();
         const newCardDefaults = {
             type: newType,
@@ -384,9 +524,19 @@ export var storeObject = {
             .then(console.log("set", content, "new type for", id, "value:", newCardDefaults))
             .catch(err => err);
     },
+    /**
+     * Locally Saves Change in Size of Container
+     * @param {Object} size 
+     */
     changeContainerSizeLocal(size) {
         this.container = size
     },
+    /**
+     * Groups All the Ancestor of Given CardID :
+     * - Pushes Ancestor in an Array
+     * - Local Operation
+     * @param {String} id 
+     */
     groupCardsParent(id) {
         const currentCard = this.cards[id];
         if (currentCard.parent !== 'root') {
@@ -394,6 +544,12 @@ export var storeObject = {
             this.groupCardsParent(currentCard.parent);
         }
     },
+    /**
+     * Groups All the Childrens of Given CardID :
+     * - Pushes Childrens in an Array
+     * - Local Operation
+     * @param {String} id 
+     */
     groupCardsChildren(id) {
         const currentCard = this.cards[id];
         if (currentCard?.children) {
@@ -404,6 +560,10 @@ export var storeObject = {
                 })
         }
     },
+    /**
+     * Updates the FOLLOWING property in Given user ID from FIREBASE 
+     * @param {String} userId 
+     */
     addUserFollow(userId) {
         console.log("ADDED USER FOLLOW", userId)
         // this.users[userId] = {
@@ -414,6 +574,10 @@ export var storeObject = {
             .then(console.log(this.userID, " User Following ", userId))
             .catch(reason => console.log("Couldn;t follow because ", reason));
     },
+    /**
+     * Removes the FOLLOWING property in Given user ID from FIREBASE 
+     * @param {String} userId 
+     */
     removeUserFollow(userId) {
         console.log("REMOVED USER FOLLOW", userId)
         // this.users[userId] = {
@@ -424,6 +588,12 @@ export var storeObject = {
             .then(console.log(this.userID, " User Following ", userId))
             .catch(reason => console.log("Couldn;t follow because ", reason));
     },
+    /**
+     * Makes ID of newParent to Child of Given card ID 
+     * @param {String} id 
+     * @param {String} newParent 
+     * @param {*} strategy 
+     */
     makeCardChild(id, newParent, strategy) {
         analytics.logEvent('card_child_added')
         this.updateLastActive()
@@ -463,6 +633,12 @@ export var storeObject = {
         }
         console.log("didn't reparent because it was just not a valid request. do better next time.")
     },
+    /**
+     * Reparents the Card of id with newParent
+     * @param {String} id 
+     * @param {String} newParent 
+     * @param {*} strategy 
+     */
     reparentCard(id, newParent, strategy) {
         this.updateLastActive();
         if (this.cardGrouped.length) {
@@ -482,6 +658,14 @@ export var storeObject = {
         return;
 
     },
+    /**
+     * Uploads the File to the Given upload Path With Metadata Along with it to FIREBASE STOREAGE 
+     * @param {String} uploadPath - Path to Where upload 
+     * @param {Blob} file - File that has to be upload
+     * @param {Object} metadata - custom metadata of File
+     * @param {Function} statusCallback - Fetch Uploading Status
+     * @param {String} use - optional param to signify the use of uploaded file as
+     */
     requestUpload(uploadPath, file, metadata, statusCallback, use) {
         console.log("userID", this.users)
         var custom = {}
@@ -514,6 +698,11 @@ export var storeObject = {
             () => { statusCallback("complete"); unsubscribe(); } // on completion
         )
     },
+    /**
+     * Requests to Fetch the data of Uploaded file from the given path
+     * @param {String} downloadPath - path where file is stored 
+     * @param {Function} callback - callback of data of File
+     */
     requestDownload(downloadPath, callback) {
         const path = "root/" + this.projectID + "/" + downloadPath;
         let requestedPathRef = storage().ref(path)
@@ -525,6 +714,10 @@ export var storeObject = {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
+    /**
+     * upload the Profile Picture of Current User
+     * @param {*} callback - Status of Upload
+     */
     updateProfilePicture(callback) {
         const path = `root/profiles/${this.userID}/pfp/profilePic`;
         const requestedPathRef = storage().ref(path)
@@ -537,6 +730,12 @@ export var storeObject = {
             })
             .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
     },
+    /**
+     * Converts any card to Blank Card
+     *  - NOTE : Provide Type to STORAGE RELATED CARDS (image , video etc) OR else Leave it  
+     * @param {String} id - Card ID whose needs to be converted
+     * @param {String} type - Optional Parameter for Storage Related Files
+     */
     convertCardToBlank(id, type) {
         if (!type) {
             const pathToFile = this.cards[id].content.metadata.fullPath
@@ -545,6 +744,10 @@ export var storeObject = {
         }
         this.changeType(id, 'blank', { width: 275, height: 45 }, { text: '' });
     },
+    /**
+     * Invite Provided data of Email and Send Invitation through link
+     * @param {*} data 
+     */
     sendInviteEmail(data) {
         var sendLinkEmail = functions.httpsCallable('sendLinkEmail')
         return sendLinkEmail(data)
@@ -553,12 +756,21 @@ export var storeObject = {
     sync(property, path, value) {
         set(this[property], path, value)
     },
+    /**
+     * Sets Highlight Property to Searched Item results
+     * @param {*} result - Search Result
+     * @param {*} belongsTo 
+     */
     highlightSearched(result, belongsTo) {
         if (belongsTo === 'projects' && result.length > 0)
             Object.entries(result).forEach(([_, val]) => {
                 this.projects[val.id].highlight = true;
             })
     },
+    /**
+     * Generates Key For Sharing Project on Basis of permission in FIREBASE
+     * @param {*} permission 
+     */
     addKeyToShare(permission) {
         const newSharedKey = this.projectRef.child("sharing").push().key;
         let updates = {};
@@ -570,6 +782,10 @@ export var storeObject = {
         console.log("keys ", this.projectRef.child("sharing").once('value').then((snapshot) => snapshot.val()))
         return (newSharedKey);
     },
+    /**
+     * Checks Whether Keys For Sharing is present or not
+     * @returns {Boolean} If Key Exists
+     */
     checkKeys() {
         const check = this.projectRef.child("sharing").once('value')
             .then((snapshot) => {
@@ -580,6 +796,9 @@ export var storeObject = {
             .catch((err) => err)
         return check;
     },
+    /**
+     * Fetches the Key Generated at time of Sharing project
+     */
     fetchKeys() {
         const keys = this.projectRef.child("sharing").once('value')
             .then((snapshot) => {
@@ -588,6 +807,10 @@ export var storeObject = {
             .catch((err) => console.log(err))
         return keys
     },
+    /**
+     * Remove Current User Sharing Property from project 
+     * @returns {Boolean}
+     */
     removeKey() {
         const keys = this.projectRef.child("sharing").remove()
             .then(() => {
@@ -596,6 +819,14 @@ export var storeObject = {
             .catch((err) => console.log(err))
         return keys
     },
+    /**
+     * Creates the Project Base with Permission associated to it.
+     * By the verification of KeyID that was generated at time of Sharing 
+     * @param {String} projectID 
+     * @param {String} keyId 
+     * @param {String} permission 
+     * @param {Function} callback 
+     */
     createSharedUser(projectID, keyId, permission, callback) {
         let updates = {};
         updates[this.userID] = {
@@ -630,31 +861,58 @@ export var storeObject = {
                     })
             }).catch((error) => { console.log("failed to update because", error); callback(false) });
     },
+    /**
+     * Locally Adds 'isCollapse' Property to given card id
+     * @param {String} id 
+     * @param {String} strategy - for Main Card to show as Collapsed Card
+     */
     collapseCard(id, strategy) {
         strategy ? this.collapsedID[id] = strategy : this.cards[id]["isCollapse"] = true;
     },
+    /**
+     * Locally removes 'isCollapse' Property to given card id
+     * @param {String} id 
+     * @param {String} strategy - for Main Card to show as Expanded Card
+     */
     expandCard(id, strategy) {
         strategy ? this.collapsedID[id] = null : this.cards[id]["isCollapse"] = null;
     },
-
+    /**
+     * Adds 'editing' Property to the given card id 
+     * - Use to check which card is using by whom
+     * - FIREBASE operation
+     * @param {String} id 
+     */
     addUserEditing(id) {
         this.projectRef.child('nodes').child(id).child("editing")
             .set({ [this.userID]: servertime })
             .then(console.log("this user is editing card", id))
             .catch(error => console.log("error raised in addUserEditing because ", error))
     },
+    /**
+     * Removes 'editing' Property to the given card id
+     * @param {*} id 
+     */
     removeUserEditing(id) {
         this.projectRef.child('nodes').child(id).child("editing")
             .set(null)
             .then(console.log("This User is Now Not Editing"))
             .catch(error => console.log("Error raised in addUserEditing because ", error))
     },
+    /**
+     * Update 'joinedCall' Property in current User when Joined Call
+     * @param {Object} info 
+     */
     addUserCallInfo(info) {
         this.projectRef.child('users').child(this.userID)
             .update({ joinedCall: true }) //TODO: can add speaking Feature
             .then(console.log("This User has Joined Call"))
             .catch(error => console.log("Error raised in addUserCallInfo because ", error))
     },
+    /**
+     * Remove 'joinedCall' Property in current User when Call is Disconnected
+     * @param {Object} info 
+     */
     removeUserCallInfo(info) {
         this.projectRef.child('users').child(this.userID)
             .update({ joinedCall: null })
@@ -662,7 +920,11 @@ export var storeObject = {
             .catch(error => console.log("Error raised in removeUserCallInfo because ", error))
     },
     //---------------------_SHORTCUT KEYS FUNCTIONS -------------------
-    runShortCutKey(shortcut){
+    /**
+     * Execute Shortcut w.r.t to each Functions
+     * @param {String} shortcut 
+     */
+    runShortCutKey(shortcut) {
         switch (shortcut) {
             case 'ctrl+a':
                 this.selectAllCards();
@@ -686,15 +948,19 @@ export var storeObject = {
                 this.removeDuplicates('removeAll');
                 break;
             case 'ctrl+alt+n':
-                if(!this.currentActive && this.cursors && this.cursors[this.userID])
-                this.addCard(
-                    {x:this.cursors[this.userID].x , y:this.cursors[this.userID].y},
-                    { width: 275, height: 45 }, "root", "blank"
-                )
+                if (!this.currentActive && this.cursors && this.cursors[this.userID])
+                    this.addCard(
+                        { x: this.cursors[this.userID].x, y: this.cursors[this.userID].y },
+                        { width: 275, height: 45 }, "root", "blank"
+                    )
                 break;
             default: break;
         }
     },
+    /**
+     * Select ALL Cards 
+     * @param {*} strategy - IF a Particular Card to De-select 
+     */
     selectAllCards(strategy) {
         Object.entries(this.cards)
             .filter(([id, value]) => id && id !== "root" && (strategy || !value?.isCollapse))
@@ -706,6 +972,9 @@ export var storeObject = {
                     this.selectedCards.push(id);
             })
     },
+    /**
+     * Removes Selected Card From 'selectedCards' Array
+     */
     removeSelectedCards() {
         if (this.selectedCards.length) {
             this.selectedCards.forEach(id => {
@@ -714,6 +983,9 @@ export var storeObject = {
             this.selectedCards = [];
         }
     },
+    /**
+     * Duplicates Selected Cards with maintaining the relationship between them
+     */
     duplicateCards() {
         if (this.selectedCards.length) {
             this.selectedCards.forEach(id => {
@@ -736,6 +1008,10 @@ export var storeObject = {
             })
         }
     },
+    /**
+     * Removes Duplicate Cards
+     * @param {*} strategy 
+     */
     removeDuplicates(strategy) {
         if (strategy) {
             Object.entries(this.cards)
