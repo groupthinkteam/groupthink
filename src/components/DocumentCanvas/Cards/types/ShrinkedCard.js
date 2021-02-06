@@ -9,6 +9,7 @@ const ShrinkedCard = ({ url, title, name }) => {
                 </span>
             </a>
             <div className="shrinked-card-info">
+                <img src={require("../../../../assets/Collapsed/show-link.svg")} alt="Link-Icon"/>
                 {url}
             </div>
         </div>

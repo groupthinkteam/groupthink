@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactTooltip from 'react-tooltip';
 import { resizeDimension } from '../DocumentCanvas/Cards/cardTypeUtils';
 const DisplayCardMenu = ({ me, store }) => {
     if (me) {
@@ -22,10 +23,18 @@ const Toolbar = ({ store }) => {
     if (store.textareaRef) {
         return (
             <>
-                <img onClick={() => store.formatText('bold')} src={require("../../assets/card-menu/toolbar/bold.svg")} alt="Bold" />
-                <img onClick={() => store.formatText('italic')} src={require("../../assets/card-menu/toolbar/italics.svg")} alt="Italic" />
-                <img onClick={() => store.formatText('underline')} src={require("../../assets/card-menu/toolbar/underline.svg")} alt="Underline" />
-                <div className="menu-toolbar">
+                <ReactTooltip globalEventOff="click" eventOff="click" delayShow={200} delayUpdate={200} place="bottom" />
+
+                <img
+                    data-delay-show='750' data-effect="solid" data-tip="Bold"
+                    onClick={() => store.formatText('bold')} src={require("../../assets/card-menu/toolbar/bold.svg")} alt="Bold" />
+                <img
+                    data-delay-show='750' data-effect="solid" data-tip="Italic"
+                    onClick={() => store.formatText('italic')} src={require("../../assets/card-menu/toolbar/italics.svg")} alt="Italic" />
+                <img
+                    data-delay-show='750' data-effect="solid" data-tip="Underline"
+                    onClick={() => store.formatText('underline')} src={require("../../assets/card-menu/toolbar/underline.svg")} alt="Underline" />
+                <div data-delay-show='750' data-effect="solid" data-tip="Headings" className="menu-toolbar">
                     <img className="head1"
                         onClick={() => store.formatText('head1')} src={require("../../assets/card-menu/toolbar/heading1.svg")}
                         alt="Heading1" />
@@ -70,11 +79,13 @@ const LinksMenu = ({ link, me, store, id }) => {
             <div className={"link-menu"} id={"link-menu-" + id} >
                 {
                     me.cardShrinked ?
-                        <img onClick={resizeCard} src={require("../../assets/card-menu/resize/shrinked.svg")} alt="Shrinked" />
+                        <img data-delay-show='750' data-effect="solid" data-tip="Expand Card" onClick={resizeCard} src={require("../../assets/card-menu/resize/shrinked.svg")} alt="Shrinked" />
                         :
-                        <img onClick={resizeCard} src={require("../../assets/card-menu/resize/expand.svg")} alt="Expand" />
+                        <img data-delay-show='750' data-effect="solid" data-tip="Shrink Card" onClick={resizeCard} src={require("../../assets/card-menu/resize/expand.svg")} alt="Expand" />
                 }
                 <img
+                    data-tip="Change Link"
+                    data-delay-show='750' data-effect="solid"
                     onClick={() => { store.convertCardToBlank(store.currentActive, me.type); }}
                     src={require("../../assets/card-menu/change-card.svg")} alt="Change Card"
                 />
@@ -123,7 +134,7 @@ const ImageMenu = ({ store, me }) => {
     }
     return (
         <>
-            <div data-tip="Resize Card" className={""} style={{ display: 'flex' }} id={"image-menu-" + store.currentActive}>
+            <div className={""} style={{ display: 'flex' }} id={"image-menu-" + store.currentActive}>
                 {
                     resizeDropDown ?
                         <div className="dropdown-content">
@@ -146,7 +157,7 @@ const ImageMenu = ({ store, me }) => {
                         : null
                 }
 
-                <div className="resize-info" onClick={() => { setResizeDropDown(!resizeDropDown) }}>
+                <div data-delay-show='750' data-effect="solid" data-tip="Resize Image" className="resize-info" onClick={() => { setResizeDropDown(!resizeDropDown) }}>
                     {
                         me.resized ? me.resized : 'Default Size'
                     }
@@ -155,6 +166,8 @@ const ImageMenu = ({ store, me }) => {
                     />
                 </div>
                 <img
+                    data-delay-show='750' data-effect="solid"
+                    data-tip="Change Image"
                     onClick={() => { store.convertCardToBlank(store.currentActive); }}
                     src={require("../../assets/card-menu/change-card.svg")} alt="Change Card"
                 />

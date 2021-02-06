@@ -84,17 +84,16 @@ export var storeObject = {
     },
     /**
      * Saves Card Color to Firebase
+     * @param {string} id - Id of Card
      * @param {String} hex - Color in HexaDecimal
      */
-    saveCardColors(hex) {
-        this.cardGrouped.forEach(Id => {
-            this.projectRef.child("nodes").child(Id).child('color')
-                .set(hex)
-                .then(() => {
-                    console.log("Added ", hex, "COLOR to ", Id)
-                })
-                .catch(err => console.log("Error in Saving Card Color ", err));
-        })
+    saveCardColors(id, hex) {
+        this.projectRef.child("nodes").child(id).child('color')
+            .set(hex)
+            .then(() => {
+                console.log("Added ", hex, "COLOR to ", id)
+            })
+            .catch(err => console.log("Error in Saving Card Color ", err));
     },
     /**
      * Locally Saves Card Color
@@ -606,28 +605,15 @@ export var storeObject = {
             const parent = throwParent(ancestor);
             return checkValidity(parent)
         }
-        const updateColorToChildrens = (color, child) => {
-            let childCard = this.cards[child];
-            updates[child + "/color"] = color;
-            if (childCard?.children) {
-                Object.keys(childCard.children).forEach(Id => {
-                    updates[Id + "/color"] = color;
-                    updateColorToChildrens(color, Id);
-                })
-            }
-        }
         if (checkValidity(id)) {
 
             let currentParent = this.cards[newParent]["parent"];
-            let parentColor = this.cards[id]["color"];
             updates[newParent + "/parent"] = id;
             updates[currentParent + "/children/" + newParent] = null;
             updates[id + "/children/" + newParent] = 1;
-            // updates[newParent+"/color"] = parentColor;
-            updateColorToChildrens(parentColor || '#32aaff', newParent)
             this.projectRef.child("nodes")
                 .update(updates)
-                .then(console.log(updates, "successfully changed the parent of", id, "from", currentParent, "to", newParent, "& COLOR ", parentColor))
+                .then(console.log(updates, "successfully changed the parent of", id, "from", currentParent, "to", newParent))
                 .catch((reason) => console.log("error reparenting because", reason));
             return;
         }
@@ -650,7 +636,6 @@ export var storeObject = {
         updates[id + "/parent"] = newParent;
         updates[currentParent + "/children/" + id] = null;
         updates[newParent + "/children/" + id] = 1;
-        updates[id + "/color"] = "#32aaff";
         this.projectRef.child("nodes")
             .update(updates)
             .then(console.log("successfully changed the parent of", id, "from", currentParent, "to", newParent))

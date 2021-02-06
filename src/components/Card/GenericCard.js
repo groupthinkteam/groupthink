@@ -287,7 +287,7 @@ const GenericCard = props => {
 
                                 /* Color/BLUE */
 
-                                background: me.color || '#32aaff'
+                                background: me.color 
                             }}
                         />
                         : null
