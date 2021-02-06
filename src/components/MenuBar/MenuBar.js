@@ -72,9 +72,8 @@ function MenuBar(props) {
                     store.cardGrouped.length > 0 ?
                         <div>
                             <button className="colorPreview" onClick={() => setDisplayColorPicker(!displayColorPicker)}>
-                                {/* <div className="colorPreview" style={{ display: "inline-block", height: '25px', width: '25px', border: 'white', background: store.cards[store.currentActive]?.color || "#32aaff" }} /> */}
                                 <ReactTooltip globalEventOff="click" eventOff="click" delayShow={200} delayUpdate={200} place="bottom" />
-                                <div data-delay-show='750' data-effect="solid" data-tip="pick color">
+                                <div data-delay-show='750' data-effect="solid" data-tip="Pick Color">
                                     <svg width="57" height="41" viewBox="0 0 57 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M0.5 3.51221C0.5 1.85535 1.84315 0.512207 3.5 0.512207H53.5C55.1569 0.512207 56.5 1.85535 56.5 3.51221V37.5122C56.5 39.1691 55.1569 40.5122 53.5 40.5122H3.5C1.84314 40.5122 0.5 39.1691 0.5 37.5122V3.51221Z" fill="#F6F6F6" />
                                         <g clip-path="url(#clip0)">
