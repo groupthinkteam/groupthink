@@ -32,9 +32,9 @@ function Zoom({ toggleMinimap, minimapViewer }) {
                 data-effect="solid" data-tip={minimapViewer?"Close Minimap":"View Minimap"}
                 onClick={toggleMinimap} className={minimapViewer ? 'minimap-open' : ""}
                 width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path className="mini-mapwidget" d="M1 6V22L8 18L16 22L23 18V2L16 6L8 2L1 6Z" stroke="#413D45" stroke-linecap="round" stroke-linejoin="round" />
-                <path className="mini-mapwidget" d="M8 2V18" stroke="#413D45" stroke-linecap="round" stroke-linejoin="round" />
-                <path className="mini-mapwidget" d="M16 6V22" stroke="#413D45" stroke-linecap="round" stroke-linejoin="round" />
+                <path className="minimap-widget" d="M1 6V22L8 18L16 22L23 18V2L16 6L8 2L1 6Z" stroke="#413D45" stroke-linecap="round" stroke-linejoin="round" />
+                <path className="minimap-widget" d="M8 2V18" stroke="#413D45" stroke-linecap="round" stroke-linejoin="round" />
+                <path className="minimap-widget" d="M16 6V22" stroke="#413D45" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <div className="vertical-separator" />
             <img className="zoom-icon" onClick={() => updateZoom((store.zoom - .10) * 100 + "%")} src={require("../../assets/zoom/minus.svg")} alt="minus" />
