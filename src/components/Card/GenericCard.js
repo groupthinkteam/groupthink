@@ -276,21 +276,22 @@ const GenericCard = props => {
             >
                 {/* FOR CARD GROUPING HEAD */}
                 {
-                    store.cardGrouped.includes(props.id) || store.currentActive === props.id ?
+                    // store.cardGrouped.includes(props.id) || store.currentActive === props.id ?
                         <div
                             style={{
                                 position: 'absolute',
                                 width: me.size.width,
-                                height: '6px',
-                                left: '-1px',
+                                height: '3px',
+                                // left: '-1px',
                                 top: '-1px',
-
+                                borderTopLeftRadius:'6px',
+                                borderTopRightRadius:'6px',
                                 /* Color/BLUE */
 
                                 background: me.color 
                             }}
                         />
-                        : null
+                        // : null
                 }
 
                 {

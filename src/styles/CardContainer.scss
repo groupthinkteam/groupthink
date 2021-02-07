@@ -48,14 +48,15 @@
         }
 
         .minimap-widget {
-            fill: none;
+            // fill: none;
             &:hover {
-                fill: #32AAFF;
+                //fill: #32AAFF;
+                stroke: #32AAFF;
             }
         }
 
         .minimap-open {
-            stroke: #32AAFF;
+            fill: #32AAFF;
         }
 
         .vertical-separator {
