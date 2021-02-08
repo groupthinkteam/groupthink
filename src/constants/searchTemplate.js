@@ -30,7 +30,7 @@ export default class SearchElements {
                 switch (val.type) {
                     case "text":
                         if (val.content.title) projectArray.push({ id: key, title: val.content.title });
-                        projectArray.push({ id: key, text: val.content.text});//.replace(/<[^>]+>/g, ' ').replace(/^\s+|\s+$/g, '').split(/\s+/) });
+                        projectArray.push({ id: key, text: val.content.text });//.replace(/<[^>]+>/g, ' ').replace(/^\s+|\s+$/g, '').split(/\s+/) });
                         break;
                     case "todo":
                         projectArray.push({ id: key, title: val.content.title })
@@ -83,6 +83,21 @@ export default class SearchElements {
         })
         if (projectArray.length > 0)
             this.miniSearch.addAll(projectArray)
+
+        const results = this.miniSearch.search(text);
+        const suggestions = this.miniSearch.autoSuggest(text);
+
+        return [results, suggestions];
+    }
+    getTagResult(text, elementToBeSearchIn) {
+        const projectArray = [];
+        Object.entries(elementToBeSearchIn)
+            .forEach(([id, detail]) => {
+                projectArray.push({ id: id, name: detail.name });
+            });
+            
+        if (projectArray.length > 0)
+            this.miniSearch.addAll(projectArray);
 
         const results = this.miniSearch.search(text);
         const suggestions = this.miniSearch.autoSuggest(text);

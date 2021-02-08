@@ -40,7 +40,7 @@
     background-color: white;
     height: calc(100vh - 50px);
     overflow: auto;
-    width: 250px;
+    width: 350px;
     border-right: 1px solid #dfdcdc;
     padding: 10px;
     font-family: Overpass;
@@ -69,8 +69,14 @@
             /* Safari and Chrome */
             transform: -o-transform-rotate(180deg);
         }
-    }
 
+        
+    }
+    .horizontal-line {
+        margin-left: -10px;
+        width: 350px;
+        border: 1px solid #DFDCDC;
+    }
     .treelist {
         margin-left: 10px;
 

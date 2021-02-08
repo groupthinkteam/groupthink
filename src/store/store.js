@@ -9,6 +9,7 @@ export var storeObject = {
     filteredProjectID: [],
     projects: {},
     cards: {},
+    tasks: {},
     users: {},
     cursors: {},
     container: {},
@@ -62,6 +63,9 @@ export var storeObject = {
             return database.ref("users").child(this.userID).child("projects")
         else
             return this.userID
+    },
+    get tasksRef() {
+        return database.ref("documents").child(this.projectID).child('tasks')
     },
     get hitTestCards() {
         return Object.keys(this.cards)
@@ -1027,6 +1031,32 @@ export var storeObject = {
             })
         }
     },
+    generateTask() {
+        let newCardKey = this.tasksRef.push().key;
+        this.tasksRef.child(newCardKey)
+            .set({
+                creator:this.userID,
+                createdAt:servertime,
+                content: {
+                    // tag: [],
+                    text:''
+                }
+            })
+            .then(() => console.log('Added Task'))
+            .catch((err) => console.log("Could not created task because ", err));
+    },
+    updateTask(taskID , userID , updates){
+        this.tasksRef.child(taskID).child('content')
+            .update(updates)
+            .then(() => console.log('Task Updated',updates))
+            .catch((err) => console.log("Could not update task because ", err));
+    },
+    removeTask(id) {
+        this.tasksRef.child(id)
+            .set(null)
+            .then(console.log("Removed Task", id))
+            .catch((err) => console.log("Didn't removed because", err))
+    },
     // listener manipulation
     addDashboardListeners(forceRefreshCallback) {
         this.addWelcomeIfNotExists(forceRefreshCallback)
@@ -1081,6 +1111,9 @@ export var storeObject = {
         this.projectRef.child("nodes").on("child_added", (snap) => this.cards[snap.key] = snap.val());
         this.projectRef.child("nodes").on("child_changed", (snap) => this.cards[snap.key] = snap.val());
         this.projectRef.child("nodes").on("child_removed", (snap) => delete this.cards[snap.key]);
+        this.projectRef.child("tasks").on("child_added", (snap) => this.tasks[snap.key] = snap.val());
+        this.projectRef.child("tasks").on("child_changed", (snap) => this.tasks[snap.key] = snap.val());
+        this.projectRef.child("tasks").on("child_removed", (snap) => delete this.tasks[snap.key]);
         this.projectRef.child("container").on("value", (snap) => this.container = snap.val());
         this.projectRef.child("metadata").on("value", (snap) => {
             this.projectMetadata = snap.val();

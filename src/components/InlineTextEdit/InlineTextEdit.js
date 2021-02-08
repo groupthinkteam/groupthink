@@ -37,6 +37,7 @@ function InlineTextEdit(props, ref) {
             href={props.href}
             target={props.target}
             ref={ref}
+            onKeyDown={props.onKeyDown}
         />
     )
 }

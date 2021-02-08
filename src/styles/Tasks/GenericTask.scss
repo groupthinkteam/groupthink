@@ -1,0 +1,52 @@
+.generic-task {
+    // position: static;
+    width: 300px;
+    height: 148px;
+    left: 0px;
+    top: 0px;
+
+    /* Basics/Kite White */
+
+    background: #FCFBF9;
+    /* Basics/Gray */
+
+    border: 1px solid #DFDCDC;
+    box-sizing: border-box;
+    border-radius: 6px;
+
+    /* Inside Auto Layout */
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 12px 0px;
+    &:focus{
+       &:focus-within {
+            outline: none;
+            border: 3px solid #48BB35;
+        }
+    }
+    .creator-pic {
+        height: 36px;
+        width: 36px;
+        border: 1.5px solid black;
+        border-radius: 25px;
+    }
+    .dropdown-content {
+        position: initial;
+        background-color: white;
+        min-width: 160px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        top: 49px;
+
+        &.dropdown-content div {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+    }
+}
