@@ -14,7 +14,7 @@ function TreeUI(props) {
     const store = useStore();
     let [expanded, setExpanded] = useState(false);
     const [showTasks, setShowTasks] = useState(false);
-    
+
     if (!expanded) {
         return (
             <div className="tree-trigger" onClick={() => setExpanded(true)}>
@@ -38,23 +38,26 @@ function TreeUI(props) {
                     onClick={() => { setShowTasks(true) }}
                     style={{ color: `${!showTasks ? '#DFDCDC' : ''}` }}
                 >Tasks</span>
-                
-                {
-                    showTasks ?
-                        <img onClick={()=>{store.generateTask()}}
-                            src={require("../../assets/treeui/add-task.svg")}
-                            alt="create task"
-                        /> : null
-                }
-                <img className="tree-arrow"
-                    src={require("../../assets/treeui/arrow-blue.svg")}
-                    alt="close tree UI"
-                    onClick={() => setExpanded(false)}
-                />
+                <div>
+
+                    {
+                        showTasks ?
+                            <img style={{padding:'0px 15px'}} onClick={() => { store.generateTask() }}
+                                src={require("../../assets/treeui/add-task.svg")}
+                                alt="create task"
+                            /> : null
+                    }
+                    <img className="tree-arrow"
+                        src={require("../../assets/treeui/arrow-blue.svg")}
+                        alt="close tree UI"
+                        onClick={() => setExpanded(false)}
+                    />
+                </div>
+
             </div>
-            <div className="horizontal-line"/>
+            <div className="horizontal-line" />
             {
-                showTasks ? <TaskList/>
+                showTasks ? <TaskList />
                     : <TreeList cardID="root" />
             }
         </div>

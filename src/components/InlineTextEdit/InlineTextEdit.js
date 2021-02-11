@@ -24,7 +24,7 @@ function InlineTextEdit(props, ref) {
 
         <TextareaAutosize
             style={prevStyle}
-            className="inline-input"
+            className={props.className || "inline-input"}
             id={props.id}
             placeholder={props.placeholder || "Type something here..."}
             value={props.text}

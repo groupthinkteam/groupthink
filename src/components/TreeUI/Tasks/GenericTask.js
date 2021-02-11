@@ -14,7 +14,7 @@ const GenericTask = ({ id, detail, store }) => {
     const [results, setResults] = useState({ matches: [], suggest: [], text: "" });
     const [pickDate, setPickDate] = useState(false);
     const onChange = (event, inputID) => {
-        console.log("EVENT ", event.target.value.search('@'), event.key, event.target.value === 'Enter');
+        // console.log("EVENT ", event.target.value.search('@'), event.key, event.target.value === 'Enter');
         const input = event.target.value;
         const updates = {};
         updates[`content/${inputID}/text`] = input
@@ -76,12 +76,14 @@ const GenericTask = ({ id, detail, store }) => {
         const lastItem = Object.keys(detail.content)[taskItemLength - 1]
         const newItem = parseInt(lastItem.charAt(lastItem.length - 1)) + 1;
         updates[`content/task${newItem}/text`] = ''
-        updates[`content/task${newItem}/status`] = 'initialized'
+        updates[`content/task${newItem}/status`] = 'initialized';
+        updates['height'] = detail.height + 26
         store.updateTask(id, null, updates);
     }
     const removeSubTask = (taskItemID) => {
         const updates = {};
-        updates[`content/${taskItemID}`] = null
+        updates[`content/${taskItemID}`] = null;
+        updates['height'] = detail.height - 26
         store.updateTask(id, null, updates);
     }
     const addDueDate = (date) => {
@@ -104,21 +106,26 @@ const GenericTask = ({ id, detail, store }) => {
             alert("Add A Due Date To Task");
     }
     return (
-        <div className="generic-task" tabIndex={0} key={id}>
+        <div className="generic-task" tabIndex={0} key={id} style={{ height: detail.height }}>
             <div className="task-info-head">
-                <img className="creator-pic" src={creatorPic} alt="creator pic" />
-                {creatorName.split(" ")[0]}
-                {
-                    !pickDate && <TimeAgo date={detail.dueDate} className="due-date" />
-                }
-                {
-                    !detail.dueDate &&
-                    <span onClick={() => setPickDate(!pickDate)}>
-                        Add Due Date
+                <div className="partition">
+                    <img className="creator-pic" src={creatorPic} alt="creator pic" />
+                    <span style={{ padding: "8px" }}>{creatorName.split(" ")[0]}</span>
+                </div>
+                <div className="partition">
+                    {
+                        !pickDate && detail.dueDate && (<div className="due-date">due <TimeAgo date={detail.dueDate}  /></div>)
+                    }
+                    {
+                        !detail.dueDate &&
+                        <span style={{ padding: "8px" }} onClick={() => setPickDate(!pickDate)}>
+                            Add Due Date
                         </span>
-                }
+                    }
 
-                <span onClick={() => { store.removeTask(id) }}>Remove </span>
+                    <span onClick={() => { store.removeTask(id) }}>Remove </span>
+                </div>
+
             </div>
             {
                 pickDate ?
@@ -131,11 +138,12 @@ const GenericTask = ({ id, detail, store }) => {
                     />
                     : null
             }
-            <div className="task-provide">
+            <div >
                 {
                     !pickDate && Object.entries(detail.content)
                         .map(([taskItemID, taskItemDetail], index) =>
-                            <>
+                            <div className="task-provide">
+                                {/* <div> */}
                                 {
                                     taskItemDetail.status === 'completed' ?
                                         <img src={require("../../../assets/treeui/completed-file.svg")} alt="Pending task" />
@@ -144,41 +152,52 @@ const GenericTask = ({ id, detail, store }) => {
                                 }
                                 {
                                     taskItemLength - 1 === index ?
-                                        <span key={taskItemID} onClick={addSubTask}>+</span>
+                                        <span style={{ padding: '5px 2px 3px 11px' }} key={taskItemID} onClick={addSubTask}>+</span>
                                         :
-                                        <span key={taskItemID} onClick={() => removeSubTask(taskItemID)}>-</span>
+                                        <span style={{ padding: '5px 2px 3px 11px' }} key={taskItemID} onClick={() => removeSubTask(taskItemID)}>-</span>
                                 }
-                                <InlineTextEdit
-                                    onChange={e => onChange(e, taskItemID)}
-                                    // onSave={onSave}
-                                    text={taskItemDetail.text}
-                                    onKeyDown={(e) => { onKeyDown(e, taskItemID) }}
-                                    placeholder="Tag People "
-                                    margin="2px 10px 5px 10px"
-                                    style={{ width: '50%', textDecoration: taskItemDetail.status === 'completed' ? 'line-through' : '' }}
-                                />
-                            </>
+                                {/* </div> */}
+                                <div>
+                                    <InlineTextEdit
+                                        onChange={e => onChange(e, taskItemID)}
+                                        // onSave={onSave}
+                                        text={taskItemDetail.text}
+                                        onKeyDown={(e) => { onKeyDown(e, taskItemID) }}
+                                        placeholder="Tag People "
+                                        margin="2px 10px 5px 10px"
+                                        style={{
+                                            width: '120%',
+                                            textDecoration: taskItemDetail.status === 'completed' ? 'line-through' : '',
+                                            color: taskItemDetail.status === 'completed' ? '#A29FA5' : '',
+                                            fontWeight: 600,
+                                            fontSize: '14px',
+                                            lineHeight: "24px",
+                                        }}
+                                    />
+                                    {
+                                        showDropDown === taskItemID?
+                                            <div className="dropdown-content" id={"dropdown-content-".concat(showDropDown)}>
+                                                {
+                                                    Object.entries(store.users)
+                                                        .map(([userID, userDetail]) => {
+                                                            if (results.matches.length) {
+                                                                return results.matches
+                                                                    .filter((result) => result.id === userID)
+                                                                    .map((result) => <TagList userDetail={userDetail} userID={result} />)
+                                                            }
+                                                            else
+                                                                return (<TagList userDetail={userDetail} userID={userID} />)
+                                                        })
+                                                }
+                                            </div>
+                                            : null
+                                    }
+                                </div>
+                            </div>
                         )
                 }
             </div>
-            {
-                showDropDown ?
-                    <div className="dropdown-content" id={"dropdown-content-".concat(showDropDown)}>
-                        {
-                            Object.entries(store.users)
-                                .map(([userID, userDetail]) => {
-                                    if (results.matches.length) {
-                                        return results.matches
-                                            .filter((result) => result.id === userID)
-                                            .map((result) => <TagList userDetail={userDetail} userID={result} />)
-                                    }
-                                    else
-                                        return (<TagList userDetail={userDetail} userID={userID} />)
-                                })
-                        }
-                    </div>
-                    : null
-            }
+
 
         </div >
     )

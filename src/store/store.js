@@ -1035,6 +1035,7 @@ export var storeObject = {
         let newCardKey = this.tasksRef.push().key;
         this.tasksRef.child(newCardKey)
             .set({
+                height:124,
                 creator:this.userID,
                 content: {
                     // tag: [],
