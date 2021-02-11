@@ -14,9 +14,7 @@ function TreeUI(props) {
     const store = useStore();
     let [expanded, setExpanded] = useState(false);
     const [showTasks, setShowTasks] = useState(false);
-    // const generateTask = () =>{
-
-    // }
+    
     if (!expanded) {
         return (
             <div className="tree-trigger" onClick={() => setExpanded(true)}>

@@ -1036,21 +1036,39 @@ export var storeObject = {
         this.tasksRef.child(newCardKey)
             .set({
                 creator:this.userID,
-                createdAt:servertime,
                 content: {
                     // tag: [],
-                    text:''
+                    task1: {
+                        text:'',
+                        status:'initialized'
+                    }
                 }
             })
             .then(() => console.log('Added Task'))
             .catch((err) => console.log("Could not created task because ", err));
     },
     updateTask(taskID , userID , updates){
-        this.tasksRef.child(taskID).child('content')
+        this.tasksRef.child(taskID)
             .update(updates)
             .then(() => console.log('Task Updated',updates))
             .catch((err) => console.log("Could not update task because ", err));
     },
+    /*
+    updateTask(taskID, userID, updates) {
+        this.tasks[taskID]["content"]=updates;
+        console.log('Task Updated',taskID,updates)
+        // this.tasksRef.child(taskID).child('content')
+        //     .update(updates)
+        //     .then(() => console.log('Task Updated', updates))
+        //     .catch((err) => console.log("Could not update task because ", err));
+    },
+    saveTask(taskID,updates) {
+        this.tasksRef.child(taskID)
+            .update(this.tasks[taskID])
+            .then(() => console.log('Task Saved', this.tasks[taskID]))
+            .catch((err) => console.log("Could not update task because ", err));
+    },
+     */
     removeTask(id) {
         this.tasksRef.child(id)
             .set(null)

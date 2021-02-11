@@ -1,9 +1,7 @@
 .generic-task {
     // position: static;
-    width: 300px;
-    height: 148px;
-    left: 0px;
-    top: 0px;
+    width: 400px;
+    height: 148px;//232px;
 
     /* Basics/Kite White */
 
@@ -16,37 +14,72 @@
 
     /* Inside Auto Layout */
 
-    flex: none;
-    order: 0;
-    flex-grow: 0;
     margin: 12px 0px;
-    &:focus{
-       &:focus-within {
+
+    &:focus {
+        &:focus-within {
             outline: none;
             border: 3px solid #48BB35;
         }
     }
+
     .creator-pic {
         height: 36px;
         width: 36px;
         border: 1.5px solid black;
         border-radius: 25px;
     }
+
     .dropdown-content {
-        position: initial;
+        position: absolute;
         background-color: white;
         min-width: 160px;
         overflow: auto;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
         z-index: 1;
-        top: 49px;
+        right: 8px;
 
         &.dropdown-content div {
             color: black;
             padding: 12px 16px;
             text-decoration: none;
-            display: block;
+            display: flex;
+            align-items: center;
             cursor: pointer;
         }
+    }
+
+    .task-info-head {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 8px 10px 8px;
+    }
+
+    .task-provide {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .due-date {
+        font-family: Overpass;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 24px;
+        /* identical to box height, or 171% */
+
+
+        /* Basics/Dark Gray */
+
+        color: #A29FA5;
+    }
+    .pick-calendar{
+        position: absolute;
+        width: 300px;
+        right: 40px;
     }
 }
