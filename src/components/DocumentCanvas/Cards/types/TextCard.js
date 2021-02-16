@@ -13,11 +13,13 @@ function TextCard(props) {
     const me = store.cards[props.id];
 
     const onSave = (e) => {
+        console.log("ON Save CHANGE ",{ text: me.content.text })
         e.stopPropagation();
         store.saveContent(props.id, { text: me.content.text })
     }
     const onChangeTitle = (event) => {
-        store.changeContent(props.id, { text: event.target.value });
+        console.log("ONTITLE CHANGE ",{ text: store.textareaRef.current.innerHTML})
+        store.changeContent(props.id, { text: store.textareaRef.current.innerHTML});
         if (event.stopPropagation)
             event.stopPropagation();
     }
@@ -36,7 +38,7 @@ function TextCard(props) {
                     
                     <CustomEditor
                         id={`custom-editor-${props.id}`}
-                        onChange={(e) => onChangeTitle(e, 'text')}
+                        onChange={(e) =>{ onChangeTitle(e, 'text')}}
                         onSave={(e) => { onSave(e, 'text') }}
                         text={me.content.text}
                         placeholder="type here..."

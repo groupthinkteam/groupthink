@@ -14,25 +14,35 @@ const GenericTask = ({ id, detail, store }) => {
     const [showDropDown, setShowDropDown] = useState(false);
     const [results, setResults] = useState({ matches: [], suggest: [], text: "" });
     const [pickDate, setPickDate] = useState(false);
-    const taggedPerson = (userID) => {
+    const taggedPerson = (userID,select) => {
+        console.log(select,"SDS")
         const taggedPersonInfo = store.users[userID];
         setShowDropDown(false);
         const updates = {};
+        const oldText = detail.content[showDropDown].text
         if (userID === detail.creator) {
-            updates[`content/${showDropDown}/text`] = detail.content[showDropDown].text + 'me ';
+            // updates[`content/${showDropDown}/text`] = oldText.substring(0,select.start-1) + ' <span style="color: #48BB35;">@me</span> ' + oldText.substring(select.end,oldText.length);
+            updates[`content/${showDropDown}/text`] = oldText + '<span style="color: #48BB35;">@me</span>'
         }
         else {
-            updates[`content/${showDropDown}/text`] = detail.content[showDropDown].text + taggedPersonInfo.name.split(" ")[0] + " "
+            // updates[`content/${showDropDown}/text`] = oldText.substring(0,select.start-1) + ' <span style="color: #32AAFF;">@' + taggedPersonInfo.name.split(" ")[0] + "</span> " + oldText.substring(select.end,oldText.length) 
+            updates[`content/${showDropDown}/text`] = oldText + '<span style="color: #32AAFF;">@' + taggedPersonInfo.name.split(" ")[0] + "</span>"
         }
-        updates['tagged'] = detail.tagged ? [...detail.tagged, userID] : [userID]
+        if (detail.tagged) {
+            if (!detail.tagged.includes(userID)) 
+                updates['tagged'] = [...detail.tagged, userID];
+        }
+        else {
+            updates['tagged'] = [userID];
+        }
         store.updateTask(id, userID, updates);
         setResults({ matches: [], suggest: [], text: "" });
     }
-    const onKeyDown = (event, id) => {
+    const onKeyDown = (event, ID) => {
         console.log("Key Pressed", event.key, event.keyCode);
         switch (event.keyCode) {
             case 50://@
-                setShowDropDown(id);
+                setShowDropDown(ID);
                 break;
             case 13://Enter
                 setShowDropDown(false);
@@ -41,6 +51,7 @@ const GenericTask = ({ id, detail, store }) => {
                 setShowDropDown(false);
                 break;
             case 32://space
+                
                 setShowDropDown(false);
                 // setResults({ matches: [], suggest: [], text: "" });
                 break;

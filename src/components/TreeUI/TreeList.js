@@ -27,7 +27,7 @@ function TreeList(props) {
             </div>
             {children && expanded ?
                 <div className="children">
-                    {Object.keys(children).map((cardID) => <TreeList cardID={cardID} />)}
+                    {Object.keys(children).map((cardID) => <TreeList key={cardID} cardID={cardID} />)}
                 </div>
                 : null}
         </div>

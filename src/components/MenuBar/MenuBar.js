@@ -79,12 +79,12 @@ function MenuBar(props) {
                                         <g clip-path="url(#clip0)">
                                             <rect x="8.5" y="10.5122" width="20" height="20" rx="3" fill="#FCFBF9" />
                                             {
-                                                !me.color ?
+                                                !me?.color ?
                                                     <line x1="8.5" y1="30.8051" x2="28.7929" y2="10.5122" stroke="#FC611E" stroke-linecap="round" />
                                                     : null
                                             }
                                         </g>
-                                        <rect x="9" y="11.0122" width="19" height="19" rx="2.5" stroke={"#413D45"} fill={me.color} />
+                                        <rect x="9" y="11.0122" width="19" height="19" rx="2.5" stroke={"#413D45"} fill={me ? me.color : 'none'} />
                                         <path d="M36.5 18.5122L40.5 22.5122L44.5 18.5122" stroke="#413D45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                                         <defs>
                                             <clipPath id="clip0">

@@ -477,28 +477,32 @@ export var storeObject = {
         let text = store.cards[store.currentActive].content.text;
         let start = store.textareaRef.current.selectionStart;
         let end = store.textareaRef.current.selectionEnd;
+        console.log("TEXT ",text , "SELECTION" , start ,end , store.textareaRef.current.getSelection());
         let newText;
         switch (event) {
             case 'bold':
-                newText = text.substring(0, start) + "**" + text.substring(start, end) + "**" + text.substring(end, text.length);
+                newText = text.substring(0, start) + "<b>" + text.substring(start, end) + "</b>" + text.substring(end, text.length);
                 break;
             case 'head1':
-                newText = text.substring(0, start) + " # " + text.substring(start, text.length);
+                newText = text.substring(0, start) + " <h1> " + text.substring(start, text.length) + "</h1>";
                 break;
             case 'head2':
-                newText = text.substring(0, start) + " ## " + text.substring(start, text.length);
+                newText = text.substring(0, start) + " <h2> " + text.substring(start, text.length) + "</h2>";
                 break;
             case 'head3':
-                newText = text.substring(0, start) + " ### " + text.substring(start, text.length);
+                newText = text.substring(0, start) + " <h3> " + text.substring(start, text.length)+"</h3>";
                 break;
             case 'head4':
-                newText = text.substring(0, start) + " #### " + text.substring(start, text.length);
+                newText = text.substring(0, start) + " <h4> " + text.substring(start, text.length)+"</h4>";
                 break;
             case "italic":
-                newText = text.substring(0, start) + "*" + text.substring(start, end) + "*" + text.substring(end, text.length);
+                newText = text.substring(0, start) + "<em> " + text.substring(start, end) + " </em> " + text.substring(end, text.length);
                 break;
             case "underline":
-                newText = text.substring(0, start) + "<u>" + text.substring(start, end) + "</u>" + text.substring(end, text.length);
+                newText = text.substring(0, start) + " <u> " + text.substring(start, end) + " </u> " + text.substring(end, text.length);
+                break;
+            case 'colorRed':
+                newText = text.substring(0, start) + ` <span style="color:red">` + text.substring(start, end) + "</span>" + text.substring(end, text.length);
                 break;
             default: break;
         }

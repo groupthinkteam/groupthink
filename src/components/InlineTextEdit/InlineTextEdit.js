@@ -38,6 +38,9 @@ function InlineTextEdit(props, ref) {
             target={props.target}
             ref={ref}
             onKeyDown={props.onKeyDown}
+            // contentEditable="true"
+            // dangerouslySetInnerHTML={{__html: props.text}}
+            allowFullScreen={props.allowFullScreen}
         />
     )
 }
