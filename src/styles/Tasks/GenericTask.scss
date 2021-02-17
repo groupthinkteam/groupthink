@@ -85,6 +85,7 @@
         flex-flow: row nowrap;
         justify-content: center;
         align-items: center;
+        margin: 0px 14px;
     }
 
     .due-date {
@@ -108,5 +109,8 @@
         right: 40px;
     }
 
-    
+    .editable:empty:before {
+        content: attr(data-placeholder);
+        opacity: 0.4;
+    }
 }

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import TimeAgo from "react-timeago";
 import Calendar from 'react-calendar';
-//import ReactMarkdown from "react-markdown"
+import TaskItem from './TaskItem';
 // import SearchElements from '../../../constants/searchTemplate';
 import '../../../styles/Tasks/GenericTask.scss';
 import 'react-calendar/dist/Calendar.css';
-import TaskItem from './TaskItem';
-// import { MentionsInput, Mention } from 'react-mentions'
+
 const GenericTask = ({ id, detail, store }) => {
     const creatorPic = store.users[detail.creator].photoURL;
     const creatorName = store.users[detail.creator].name;
@@ -14,22 +13,29 @@ const GenericTask = ({ id, detail, store }) => {
     const [showDropDown, setShowDropDown] = useState(false);
     const [results, setResults] = useState({ matches: [], suggest: [], text: "" });
     const [pickDate, setPickDate] = useState(false);
-    const taggedPerson = (userID,select) => {
-        console.log(select,"SDS")
+    const taggedPerson = (userID) => {
         const taggedPersonInfo = store.users[userID];
         setShowDropDown(false);
         const updates = {};
-        const oldText = detail.content[showDropDown].text
+        const oldText = store.tasks[id]["content"][showDropDown]["text"]
+        const lastOccurance = oldText.lastIndexOf('@') - 1;
+        const occurance = oldText.match(new RegExp("@", "g") || []).length;
         if (userID === detail.creator) {
-            // updates[`content/${showDropDown}/text`] = oldText.substring(0,select.start-1) + ' <span style="color: #48BB35;">@me</span> ' + oldText.substring(select.end,oldText.length);
-            updates[`content/${showDropDown}/text`] = oldText + '<span style="color: #48BB35;">@me</span>'
+            let updatedText = oldText.substring(0, lastOccurance) + '<span class="codespacer">&nbsp;</span><span style="color: #48BB35;">@me</span><span class="codespacer">&nbsp;</span>';
+            if (occurance > 1) {
+                updatedText = updatedText + oldText.substring(lastOccurance+2, oldText.length);
+            }
+            updates[`content/${showDropDown}/text`] = updatedText;
         }
         else {
-            // updates[`content/${showDropDown}/text`] = oldText.substring(0,select.start-1) + ' <span style="color: #32AAFF;">@' + taggedPersonInfo.name.split(" ")[0] + "</span> " + oldText.substring(select.end,oldText.length) 
-            updates[`content/${showDropDown}/text`] = oldText + '<span style="color: #32AAFF;">@' + taggedPersonInfo.name.split(" ")[0] + "</span>"
+            let updatedText = oldText.substring(0, lastOccurance) + '<span class="codespacer">&nbsp;</span><span style="color: #32AAFF;">@' + taggedPersonInfo.name.split(" ")[0] + '</span><span class="codespacer">&nbsp;</span>';
+            if (occurance > 1) {
+                updatedText = updatedText + oldText.substring(lastOccurance+2, oldText.length);
+            }
+            updates[`content/${showDropDown}/text`] = updatedText;
         }
         if (detail.tagged) {
-            if (!detail.tagged.includes(userID)) 
+            if (!detail.tagged.includes(userID))
                 updates['tagged'] = [...detail.tagged, userID];
         }
         else {
@@ -51,7 +57,7 @@ const GenericTask = ({ id, detail, store }) => {
                 setShowDropDown(false);
                 break;
             case 32://space
-                
+
                 setShowDropDown(false);
                 // setResults({ matches: [], suggest: [], text: "" });
                 break;
@@ -92,7 +98,6 @@ const GenericTask = ({ id, detail, store }) => {
                             Add Due Date
                         </span>
                     }
-
                     <span onClick={() => { store.removeTask(id) }}>Remove </span>
                 </div>
 
