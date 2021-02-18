@@ -477,11 +477,11 @@ export var storeObject = {
         let text = store.cards[store.currentActive].content.text;
         let start = store.textareaRef.current.selectionStart;
         let end = store.textareaRef.current.selectionEnd;
-        console.log("TEXT ",text , "SELECTION" , start ,end , store.textareaRef.current.getSelection());
+        console.log("TEXT ",text , "SELECTION" , start ,end);
         let newText;
         switch (event) {
             case 'bold':
-                newText = text.substring(0, start) + "<b>" + text.substring(start, end) + "</b>" + text.substring(end, text.length);
+                newText = text.substring(0, start) + '<b>' + text.substring(start, end) + '</b>' + text.substring(end, text.length);
                 break;
             case 'head1':
                 newText = text.substring(0, start) + " <h1> " + text.substring(start, text.length) + "</h1>";

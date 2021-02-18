@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef } from "react";
 import { useStore } from "../../../../store/hook";
 import ReactMarkdown from "react-markdown"
 import CustomEditor from "../../../CustomEditor/CustomEditor";
@@ -13,13 +13,13 @@ function TextCard(props) {
     const me = store.cards[props.id];
 
     const onSave = (e) => {
-        console.log("ON Save CHANGE ",{ text: me.content.text })
+        console.log("ON Save CHANGE ",{ text: store.cards[props.id].content.text })
         e.stopPropagation();
-        store.saveContent(props.id, { text: me.content.text })
+        store.saveContent(props.id, { text: store.cards[props.id].content.text })
     }
     const onChangeTitle = (event) => {
-        console.log("ONTITLE CHANGE ",{ text: store.textareaRef.current.innerHTML})
-        store.changeContent(props.id, { text: store.textareaRef.current.innerHTML});
+        console.log("ONTITLE CHANGE ",{ text: event.target.value})
+        store.changeContent(props.id, { text: event.target.value});
         if (event.stopPropagation)
             event.stopPropagation();
     }

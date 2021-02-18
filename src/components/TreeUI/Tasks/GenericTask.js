@@ -129,6 +129,7 @@ const GenericTask = ({ id, detail, store }) => {
                                 taggedPerson={taggedPerson}
                                 detail={detail}
                                 id={id}
+                                closeDropDown={()=>setShowDropDown(false)}
                             />
                         )
                 }
