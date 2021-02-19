@@ -17,11 +17,15 @@
     margin: 12px 0px;
     overflow: scroll;
 
-    &:focus {
-        &:focus-within {
-            outline: none;
-            border: 3px solid #48BB35;
-        }
+    &:focus,
+    &:focus-within {
+        outline: none;
+        border: 3px solid #48BB35;
+    }
+
+    &.active-task {
+        // outline: none;
+        border: 3px solid #48BB35;
     }
 
     .creator-pic {
@@ -109,8 +113,13 @@
         right: 40px;
     }
 
-    .editable:empty:before {
-        content: attr(data-placeholder);
-        opacity: 0.4;
+    .editable {
+        overflow: auto;
+
+        &:empty:before {
+            content: attr(data-placeholder);
+            opacity: 0.4;
+
+        }
     }
 }

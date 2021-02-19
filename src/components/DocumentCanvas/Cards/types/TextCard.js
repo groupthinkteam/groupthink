@@ -13,13 +13,13 @@ function TextCard(props) {
     const me = store.cards[props.id];
 
     const onSave = (e) => {
-        console.log("ON Save CHANGE ",{ text: store.cards[props.id].content.text })
+        console.log("ON Save CHANGE ", { text: store.cards[props.id].content.text })
         e.stopPropagation();
         store.saveContent(props.id, { text: store.cards[props.id].content.text })
     }
     const onChangeTitle = (event) => {
-        console.log("ONTITLE CHANGE ",{ text: event.target.value})
-        store.changeContent(props.id, { text: event.target.value});
+        console.log("ONTITLE CHANGE ", { text: event.target.value })
+        store.changeContent(props.id, { text: event.target.value });
         if (event.stopPropagation)
             event.stopPropagation();
     }
@@ -35,20 +35,18 @@ function TextCard(props) {
         >
             {store.editingCard === props.id ?
                 <>
-                    
                     <CustomEditor
                         id={`custom-editor-${props.id}`}
-                        onChange={(e) =>{ onChangeTitle(e, 'text')}}
+                        onChange={(e) => { onChangeTitle(e, 'text') }}
                         onSave={(e) => { onSave(e, 'text') }}
                         text={me.content.text}
                         placeholder="type here..."
-                        onFocus={e=>e.stopPropagation()}
+                        onFocus={e => e.stopPropagation()}
                         initialRender={me.content.initialRender}
                     />
                 </>
                 :
                 <div className="md-container-wrapper" onDoubleClick={() => { store.editingCard = props.id }}>
-
                     <ReactMarkdown children={me.content.text} allowDangerousHtml className="md-container" />
                 </div>
             }

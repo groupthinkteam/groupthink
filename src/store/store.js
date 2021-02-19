@@ -36,6 +36,7 @@ export var storeObject = {
     selectedCards: [],
     textareaRef: null,
     isCardShrinked: false,
+    taskEditing:null,
     get projectName() {
         return this.projectMetadata && this.projectMetadata.name
     },
@@ -477,7 +478,7 @@ export var storeObject = {
         let text = store.cards[store.currentActive].content.text;
         let start = store.textareaRef.current.selectionStart;
         let end = store.textareaRef.current.selectionEnd;
-        console.log("TEXT ",text , "SELECTION" , start ,end);
+        console.log("TEXT ", text, "SELECTION", start, end);
         let newText;
         switch (event) {
             case 'bold':
@@ -490,10 +491,10 @@ export var storeObject = {
                 newText = text.substring(0, start) + " <h2> " + text.substring(start, text.length) + "</h2>";
                 break;
             case 'head3':
-                newText = text.substring(0, start) + " <h3> " + text.substring(start, text.length)+"</h3>";
+                newText = text.substring(0, start) + " <h3> " + text.substring(start, text.length) + "</h3>";
                 break;
             case 'head4':
-                newText = text.substring(0, start) + " <h4> " + text.substring(start, text.length)+"</h4>";
+                newText = text.substring(0, start) + " <h4> " + text.substring(start, text.length) + "</h4>";
                 break;
             case "italic":
                 newText = text.substring(0, start) + "<em> " + text.substring(start, end) + " </em> " + text.substring(end, text.length);
@@ -1039,23 +1040,23 @@ export var storeObject = {
         let newCardKey = this.tasksRef.push().key;
         this.tasksRef.child(newCardKey)
             .set({
-                height:124,
-                creator:this.userID,
+                height: 124,
+                creator: this.userID,
                 content: {
                     // tag: [],
                     task1: {
-                        text:'',
-                        status:'initialized'
+                        text: '',
+                        status: 'initialized'
                     }
                 }
             })
             .then(() => console.log('Added Task'))
             .catch((err) => console.log("Could not created task because ", err));
     },
-    updateTask(taskID , userID , updates){
+    updateTask(taskID, userID, updates) {
         this.tasksRef.child(taskID)
             .update(updates)
-            .then(() => console.log('Task Updated',updates))
+            .then(() => console.log('Task Updated', updates))
             .catch((err) => console.log("Could not update task because ", err));
     },
     /*
@@ -1162,11 +1163,12 @@ export var storeObject = {
         this.projectRef.child("nodes").off();
         this.projectRef.child("container").off();
         this.projectRef.child("metadata").off();
-
+        this.projectRef.child("tasks").off();
         this.cards = {}
         this.users = {}
         this.cursors = {}
         this.container = {}
+        this.tasks = {}
         this.documentLoadPercent = 0
     },
     removeCursorListener() {

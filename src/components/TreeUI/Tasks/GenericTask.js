@@ -13,7 +13,7 @@ const GenericTask = ({ id, detail, store }) => {
     const [showDropDown, setShowDropDown] = useState(false);
     const [results, setResults] = useState({ matches: [], suggest: [], text: "" });
     const [pickDate, setPickDate] = useState(false);
-    const taggedPerson = (userID) => {
+    const taggedPerson = (userID, contentEditableRef) => {
         const taggedPersonInfo = store.users[userID];
         setShowDropDown(false);
         const updates = {};
@@ -23,14 +23,14 @@ const GenericTask = ({ id, detail, store }) => {
         if (userID === detail.creator) {
             let updatedText = oldText.substring(0, lastOccurance) + '<span class="codespacer">&nbsp;</span><span style="color: #48BB35;">@me</span><span class="codespacer">&nbsp;</span>';
             if (occurance > 1) {
-                updatedText = updatedText + oldText.substring(lastOccurance+2, oldText.length);
+                updatedText = updatedText + oldText.substring(lastOccurance + 2, oldText.length);
             }
             updates[`content/${showDropDown}/text`] = updatedText;
         }
         else {
             let updatedText = oldText.substring(0, lastOccurance) + '<span class="codespacer">&nbsp;</span><span style="color: #32AAFF;">@' + taggedPersonInfo.name.split(" ")[0] + '</span><span class="codespacer">&nbsp;</span>';
             if (occurance > 1) {
-                updatedText = updatedText + oldText.substring(lastOccurance+2, oldText.length);
+                updatedText = updatedText + oldText.substring(lastOccurance + 2, oldText.length);
             }
             updates[`content/${showDropDown}/text`] = updatedText;
         }
@@ -42,7 +42,8 @@ const GenericTask = ({ id, detail, store }) => {
             updates['tagged'] = [userID];
         }
         store.updateTask(id, userID, updates);
-        setResults({ matches: [], suggest: [], text: "" });
+        contentEditableRef.current.focus();
+        //setResults({ matches: [], suggest: [], text: "" });
     }
     const onKeyDown = (event, ID) => {
         console.log("Key Pressed", event.key, event.keyCode);
@@ -82,7 +83,11 @@ const GenericTask = ({ id, detail, store }) => {
         setPickDate(!pickDate);
     }
     return (
-        <div className="generic-task" tabIndex={0} key={id} style={{ height: detail.height }}>
+        <div className={"generic-task" + (store.taskEditing === id ? " active-task":"") }
+            tabIndex={0} key={id}
+            style={{ height: detail.height }}
+            id={"generic-task".concat(id)}
+        >
             <div className="task-info-head">
                 <div className="partition">
                     <img className="creator-pic" src={creatorPic} alt="creator pic" />
@@ -129,7 +134,8 @@ const GenericTask = ({ id, detail, store }) => {
                                 taggedPerson={taggedPerson}
                                 detail={detail}
                                 id={id}
-                                closeDropDown={()=>setShowDropDown(false)}
+                                key={taskItemID}
+                                closeDropDown={() => setShowDropDown(false)}
                             />
                         )
                 }

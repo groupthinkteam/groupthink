@@ -20,9 +20,7 @@ const TaskItem = (props) => {
         const updates = {};
         updates[`content/${taskItemID}/text`] = store.tasks[id]["content"][taskItemID]["text"];
         store.updateTask(id, null, updates);
-        // closeDropDown();
-        if (e?.stopPropagation)
-            e.stopPropagation()
+        store.taskEditing = null;
     }
     const onLocalSave = (event) => {
         store.tasks[id]["content"][taskItemID]["text"] = event.target.value;
@@ -51,7 +49,7 @@ const TaskItem = (props) => {
     }
 
     return (
-        <div key={taskItemID} className="task-provide" id={taskItemID}>
+        <div className="task-provide" id={taskItemID}>
             {
                 taskItemDetail.status === 'completed' ?
                     <img src={require("../../../assets/treeui/completed-file.svg")} alt="Pending task" />
@@ -72,6 +70,9 @@ const TaskItem = (props) => {
                 html={taskItemDetail.text}
                 onChange={onLocalSave}
                 onBlur={onChange}
+                onFocus={(e) => {
+                    store.taskEditing = id;
+                }}
                 onKeyDown={(e) => { onKeyDown(e, taskItemID) }}
                 style={{
                     outline: 'none',
@@ -98,7 +99,11 @@ const TaskItem = (props) => {
                                     }
                                     else
                                         return (
-                                            <TagList store={store} taggedPerson={taggedPerson} userDetail={userDetail} userID={userID}
+                                            <TagList store={store}
+                                                taggedPerson={taggedPerson}
+                                                userDetail={userDetail}
+                                                userID={userID}
+                                                contentEditableRef={contentEditableRef}
                                             />
                                         )
                                 })
@@ -110,9 +115,9 @@ const TaskItem = (props) => {
         </div>
     )
 }
-const TagList = ({ userID, userDetail, store, taggedPerson }) => {
+const TagList = ({ userID, userDetail, store, taggedPerson, contentEditableRef }) => {
     return (
-        <div key={userID} onClick={() => { taggedPerson(userID) }}>
+        <div key={userID} onClick={() => { taggedPerson(userID, contentEditableRef) }}>
             <img className="creator-pic" src={userDetail.photoURL} alt={`${userDetail.name} Pic`} />
             {userDetail.name}
             {

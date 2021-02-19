@@ -4,6 +4,7 @@ import { useStore } from '../../../store/hook';
 import GenericTask from './GenericTask';
 const TaskList = (props) => {
     const store = useStore();
+    console.log("TASKS ",store.tasks)
     return (
         <div className="treelist">
             <div>
