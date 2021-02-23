@@ -888,7 +888,7 @@ export var storeObject = {
      * @param {*} id 
      */
     removeUserEditing(id) {
-        this.projectRef.child('nodes').child(id).child("editing")
+        this.projectRef.child('nodes').child(id).child("editing").child(this.userID)
             .set(null)
             .then(console.log("This User is Now Not Editing"))
             .catch(error => console.log("Error raised in addUserEditing because ", error))

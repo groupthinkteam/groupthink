@@ -57,7 +57,7 @@ function CardContainer(props) {
                         onClick={(e) => {
                             if (e.target.className === "container-filler") {
                                 if (store.currentActive) {
-                                    store.removeUserEditing(store.currentActive, 'editing');
+                                    store.removeUserEditing(store.currentActive);
                                     store.currentActive = null;
                                     store.editingCard = null;
                                     store.cardGrouped = [];

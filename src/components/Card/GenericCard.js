@@ -221,7 +221,18 @@ const GenericCard = props => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [me.type, store.currentActive, store.isSelectingCard]
     );
-
+    useEffect(()=>{
+        function handleClickOutside(event) {
+            const isClosest = event.target.closest(`[id=${props.id}]`);
+            if (me.editing && !isClosest) {
+                store.removeUserEditing(props.id);
+            }
+        }
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    },[me.editing,store,props.id])
     const editingUser = me.editing ? store.users[Object.keys(me.editing)[0]] : null;
     let showIncompatibleOverlay = (store.isSelectingCard && !store.actionsList[store.selectedAction]["types"].includes(me.type))
     let showCompatibleOverlay = (store.isSelectingCard && store.actionsList[store.selectedAction]["types"].includes(me.type))

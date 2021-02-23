@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import ShareLink from "./ShareLink"
 import "../../styles/MenuBar.scss"
 import { Link } from "react-router-dom"
@@ -19,7 +19,6 @@ function MenuBar(props) {
     const store = useStore();
     const me = store.currentActive && store.cards[store.currentActive];
     let [isEditingTitle, setEditingTitle] = useState(false);
-    const buttonRef = useRef(null);
     const [showMenu, setShowMenu] = useState(false);
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const history = useHistory();
@@ -31,15 +30,16 @@ function MenuBar(props) {
     }
     useEffect(() => {
         function handleClickOutside(event) {
-            if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+            const isClosest = event.target.closest(`[id=${"user-menu".concat(store.projectID)}]`);
+            if (showMenu && !isClosest) {
                 setShowMenu(false);
             }
         }
-        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("click", handleClickOutside);
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("click", handleClickOutside);
         };
-    }, [buttonRef]);
+    }, [showMenu, store.projectID]);
     return (
         <div className="menu-bar topheader" style={{ backgroundImage: `url(${require("../../assets/menu-clouds.svg")})` }}>
             <div className="menu-bar-panel menu-bar-panel-left">
@@ -56,7 +56,7 @@ function MenuBar(props) {
                 <SearchBar document />
             </div>
             <div className="menu-bar-panel menu-bar-panel-center" data-delay-show='750' data-effect="solid" data-tip={store.cardGrouped.length ? null : "Change Project Name"}>
-            <ReactTooltip globalEventOff="click" eventOff="click" delayShow={200} delayUpdate={200} place="bottom" />
+                <ReactTooltip globalEventOff="click" eventOff="click" delayShow={200} delayUpdate={200} place="bottom" />
                 <DisplayCardMenu store={store} me={me} />
                 {isEditingTitle ?
                     <input className="project-title edit"
@@ -126,10 +126,10 @@ function MenuBar(props) {
 
 
                 <div className="menu-bar-user-profile-picture">
-                    <img data-place="bottom" data-multiline={true} data-delay-show='750' data-effect="solid" data-tip="Your <br/> Profile" alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={(e) => { setShowMenu(!showMenu); e.stopPropagation(); }} ref={buttonRef} />
+                    <img data-place="bottom" data-multiline={true} data-delay-show='750' data-effect="solid" data-tip="Your <br/> Profile" alt={store.currentUser.displayName} src={store.currentUser.photoURL} onClick={(e) => { setShowMenu(!showMenu); e.stopPropagation(); }} />
 
                     {showMenu ?
-                        <span className="user-menu" ref={buttonRef}>
+                        <span id={"user-menu".concat(store.projectID)} className="user-menu">
                             <img alt={store.currentUser.displayName} className="menu-thumbnail" src={store.currentUser.photoURL} />
                             <UserMenu
                                 signOut={signOut} />
