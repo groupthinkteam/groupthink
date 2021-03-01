@@ -2,11 +2,16 @@ import React, { useState, useEffect, useRef, useReducer } from 'react'
 import DashboardCard from "./DashboardCard"
 import { observer } from 'mobx-react-lite'
 import ChooseTemplate from '../../components/ChooseTemplate/ChooseTemplate'
-import "../../styles/Dashboard.scss"
 import { useStore } from '../../store/hook'
 import { useHistory, useLocation } from 'react-router-dom'
 import SearchBar from '../../components/Search/SearchBar'
 import UserMenu from "../../components/UserMenu/UserMenu"
+
+import { ReactComponent as LogoSVG } from '../../assets/dashboard/logo.svg';
+import { ReactComponent as GraphicRightSVG } from '../../assets/login/graphic-right.svg';
+import { ReactComponent as GraphicLeftSVG } from '../../assets/login/graphic-left.svg';
+import "../../styles/Dashboard.scss";
+
 
 const Dashboard = observer(() => {
   const store = useStore();
@@ -28,8 +33,7 @@ const Dashboard = observer(() => {
     return () => store.removeDashboardListeners()
   }, [store])
 
-  const signOut = () => {
-    console.log("SIGNOUT ")
+  const signOut = () => {    
     store.signout();
     history.push('/login', { from: location });
   }
@@ -68,11 +72,11 @@ const Dashboard = observer(() => {
 
   return (
     <div className="dashboard-page">
-      <img src={require("../../assets/login/graphic-right.svg")} className="graphic-right" alt="decoration" />
-      <img src={require("../../assets/login/graphic-left.svg")} className="graphic-left" alt="decoration" />
+      <GraphicRightSVG className="graphic-right" alt="decoration" />
+      <GraphicLeftSVG className="graphic-left" alt="decoration" />      
       <div className="top-bar">
         <div className="site-title">
-          <img src={require("../../assets/dashboard/logo.svg")} alt="logo" />
+          <LogoSVG/>
         </div>
         <div className="user-welcome">
           <div className="welcome-text">

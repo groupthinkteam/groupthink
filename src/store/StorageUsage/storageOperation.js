@@ -68,7 +68,7 @@ function updateProfilePicture(callback) {
             auth().currentUser.updateProfile({
                 photoURL: url
             })
-                .then(callback(true))
+                .then(callback(url))
         })
         .catch((reason) => console.log("failed to fetch download URL for", path, "because", reason))
 }

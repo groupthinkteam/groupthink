@@ -1,65 +1,74 @@
-import React, { useRef, useState, useCallback } from "react";
-import "../../styles/Settings.scss"
+import React, { useRef, useState, useCallback, useEffect, useReducer } from 'react';
 import UserMenu from "../../components/UserMenu/UserMenu"
 import { useHistory, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../../store/hook'
-// import { detectDimension , resizeDimension} from "../../components/DocumentCanvas/Cards/cardTypeUtils";
 
-function Settings() {
+import { ReactComponent as LogoSVG } from '../../assets/dashboard/logo.svg';
+import "../../styles/Settings.scss"
+
+function reducer(state, action) {
+    switch (action.type) {
+      case 'SET_PROFILE_PICTURE':
+        return {profilePic: action.payload};
+      default:
+        throw new Error();
+    }
+}
+
+function Settings() {    
     let store = useStore();
+    const initialState = { profilePic: store.currentUser.photoURL };
+    const [state, dispatch] = useReducer(reducer, initialState);
+    
     const buttonRef = useRef(null);
     const history = useHistory();
     const location = useLocation();
     let inputFile = useRef(null);
 
     let [uploadState, setUploadState] = useState(false)
-    const [showMenu, setShowMenu] = useState(false);
-
-    const signOut = () => {
-        console.log("SIGNOUT ")
+    const [showMenu, setShowMenu] = useState(false);  
+    
+    const signOut = () => {        
         store.signout();
         history.push('/login', { from: location });
     }
 
-    const upload = useCallback((files) => {
-        let file = files[0] ;
-        console.log("triggered file upload")
-        console.log(file)
-        if (!file) return;
-        let uploadPath = file.name;
-        var typemeta = {
-            contentType: file.type,
-
-        };
-        store.requestUpload(uploadPath, file, typemeta,
-            (status) => {
-                if (typeof status === "number")
-                    setUploadState(status);
-                else {
-                    
-                    store.updateProfilePicture(data=>{
-                        if(data)
-                        history.go(0)
-                    });
-                    
-                }
-            }, "pfp"); 
-
-    }, [store,history]);
-
     const gotoDashboard = () => {
         history.push('/dashboard', { from: location });
     }
+
+    function upload(files) {
+        let file = files[0];           
+        if (!file) return;
+        
+        let typemeta = {
+            contentType: file.type,
+        };
+        store.requestUpload(file.name, file, typemeta,
+            (status) => {
+                if (typeof status === "number") {
+                    setUploadState(status);
+                } else {
+                    store.updateProfilePicture(latestProfilePicURL => {                        
+                        dispatch({
+                            type: 'SET_PROFILE_PICTURE',
+                            payload: latestProfilePicURL
+                        });
+                    });                    
+                }
+            }, "pfp"); 
+    }
+    
     if (uploadState === 100) {
         setUploadState(false)
     }
-    console.log("up state: ", uploadState)
+
     return (
         <div className="settings-page">
             <div className="top-bar">
                 <div className="site-title">
-                    <img onClick={gotoDashboard} src={require("../../assets/dashboard/logo.svg")} alt="logo" />
+                    <LogoSVG onClick={() => gotoDashboard()}/>                    
                 </div>
                 <div className="user-welcome">
                     <div className="welcome-text">
@@ -67,7 +76,7 @@ function Settings() {
                         <span className="user-name">{store.currentUser.displayName}</span>
                     </div>
                     <div className="profile-picture">
-                        <img alt='no pic' src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} ref={buttonRef} />
+                        <img alt='No Pic' src={state.profilePic} onClick={() => setShowMenu(!showMenu)} ref={buttonRef} />
                         {showMenu ?
                             <span className="user-menu">
                                 <UserMenu signOut={signOut} />
@@ -85,7 +94,7 @@ function Settings() {
                         </div>
                         :
                         <div className="picture-wrapper">
-                            <img src={store.currentUser.photoURL} alt={store.currentUser.displayName} />
+                            <img src={state.profilePic} alt={store.currentUser.displayName} />
                             <div className="upload-button" onClick={() => inputFile.current.click()}>
                                 Change
                             </div>
