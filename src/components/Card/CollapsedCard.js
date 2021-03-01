@@ -39,11 +39,7 @@ const CollapsedCard = (props) => {
         }
 
     }
-    const changeCurrentActive = () => {
-        if (store.currentActive === props.id) {
-            store.currentActive = null;
-        }
-    }
+    
     useEffect(() => {
         gsap.set("#".concat(props.id),
             {

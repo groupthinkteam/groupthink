@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef } from "react";
 import { useStore } from "../../../../store/hook";
 import ReactMarkdown from "react-markdown"
 import CustomEditor from "../../../CustomEditor/CustomEditor";

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TimeAgo from "react-timeago";
 import Calendar from 'react-calendar';
 import TaskItem from './TaskItem';
-// import SearchElements from '../../../constants/searchTemplate';
+
 import '../../../styles/Tasks/GenericTask.scss';
 import 'react-calendar/dist/Calendar.css';
 
@@ -11,7 +11,6 @@ const GenericTask = ({ id, detail, store }) => {
     const creatorName = store.users[detail.creator].name;
     const taskItemLength = Object.keys(detail.content).length;
     const [showDropDown, setShowDropDown] = useState(false);
-    const [results, setResults] = useState({ matches: [], suggest: [], text: "" });
     const [pickDate, setPickDate] = useState(false);
     const taggedPerson = (userID, contentEditableRef) => {
         const taggedPersonInfo = store.users[userID];
@@ -43,7 +42,6 @@ const GenericTask = ({ id, detail, store }) => {
         }
         store.updateTask(id, userID, updates);
         contentEditableRef.current.focus();
-        //setResults({ matches: [], suggest: [], text: "" });
     }
     const onKeyDown = (event, ID) => {
         console.log("Key Pressed", event.key, event.keyCode);
@@ -58,19 +56,10 @@ const GenericTask = ({ id, detail, store }) => {
                 setShowDropDown(false);
                 break;
             case 32://space
-
                 setShowDropDown(false);
-                // setResults({ matches: [], suggest: [], text: "" });
                 break;
             default: break;
         }
-        // if (showDropDown) {
-        //     const searchObject = new SearchElements(['name']);
-        //     const [result, suggestions] = searchObject.getTagResult(results.text + event.key, store.users);
-        //     console.log("RESULT ", event.key, result , results.text + event.key);
-        //     console.log("Suggestion", event.key, suggestions);
-        //     setResults({ matches: result, suggest: suggestions, text: results.text + event.key });
-        // }
     }
     const addDueDate = (date) => {
         const updates = {};
@@ -130,7 +119,6 @@ const GenericTask = ({ id, detail, store }) => {
                                 onKeyDown={onKeyDown}
                                 showDropDown={showDropDown}
                                 store={store}
-                                results={results}
                                 taggedPerson={taggedPerson}
                                 detail={detail}
                                 id={id}

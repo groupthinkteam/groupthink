@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import InlineTextEdit from '../../../InlineTextEdit/InlineTextEdit';
 import "../../../../styles/Cards/ImagesCard.scss";
 import { useStore } from '../../../../store/hook';
@@ -9,12 +9,7 @@ const ImagesCard = (props) => {
   const textEditRef = useRef(null);
   const store = useStore();
   const me = store.cards[props.id];
-  // useEffect(() => {
-  //   if (store.currentActive === props.id && textEditRef.current) {
-  //     textEditRef.current.focus();
-  //   }
-  // }, [props.id, store.currentActive]);
-
+  
   return (
     <div className="image-card" key={"imagecard".concat(props.id)}>
       <div className="image-card-image"

@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store/hook';
 
 import Popup from "../PopupMenu/PopupMenu"
-import { joinCall, leaveCall, removeAllMedia } from '@andyet/simplewebrtc/actions';
+import { joinCall, leaveCall } from '@andyet/simplewebrtc/actions';
 import { userIsSpeaking } from '@andyet/simplewebrtc/Selectors';
 
 const API_KEY = '120319f9263e8477a01064c0';

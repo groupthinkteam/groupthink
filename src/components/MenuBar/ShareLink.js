@@ -11,7 +11,7 @@ import '../../styles/ShareLink.scss'
 const ShareLink = (props) => {
     const store = useStore();
     const [link, setLink] = useState(false)
-    const [permission, setPermission] = useState("rw");
+    const [permission, ] = useState("rw");
     const [url, setURL] = useState();
     const buttonRef = useRef(null);
     const contentRef = useRef(null);
@@ -119,7 +119,7 @@ const ShareLink = (props) => {
 
     }
     function validateEmail(email) {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
 

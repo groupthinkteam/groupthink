@@ -9,11 +9,9 @@ const TaskItem = (props) => {
         onKeyDown,
         showDropDown,
         store,
-        results,
         taggedPerson,
         detail,
-        id,
-        closeDropDown
+        id
     } = props;
     const contentEditableRef = useRef(null);
     const onChange = (e) => {
@@ -92,20 +90,14 @@ const TaskItem = (props) => {
                         {
                             Object.entries(store.users)
                                 .map(([userID, userDetail]) => {
-                                    if (results.matches.length) {
-                                        return results.matches
-                                            .filter((result) => result.id === userID)
-                                            .map((result) => <TagList store={store} userDetail={userDetail} userID={result} />)
-                                    }
-                                    else
-                                        return (
-                                            <TagList store={store}
-                                                taggedPerson={taggedPerson}
-                                                userDetail={userDetail}
-                                                userID={userID}
-                                                contentEditableRef={contentEditableRef}
-                                            />
-                                        )
+                                    return (
+                                        <TagList store={store}
+                                            taggedPerson={taggedPerson}
+                                            userDetail={userDetail}
+                                            userID={userID}
+                                            contentEditableRef={contentEditableRef}
+                                        />
+                                    )
                                 })
                         }
                     </div>

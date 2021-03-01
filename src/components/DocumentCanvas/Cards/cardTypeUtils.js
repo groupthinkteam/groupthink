@@ -5,7 +5,7 @@ import ReactPlayer from "react-player/lazy";
  * @returns Returns Type If ReactPlayer can play then `VideoLink` OR Else `link`
  */
 function isURL(str) {
-    return /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/.test(str);
+    return /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/.test(str);
 }
 export const getTypeFromURL = (url) => {
     if(isURL(url)){

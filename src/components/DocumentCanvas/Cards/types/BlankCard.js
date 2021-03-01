@@ -109,7 +109,7 @@ function BlankCard(props) {
                     )
                 }
             });
-    }, [props.id, props.typeAPI, defaultSize])
+    }, [props.id, props.typeAPI])
 
     if (uploadState) {
         gsap.to("#uploadfiller".concat(props.id), { width: uploadState + "%" })

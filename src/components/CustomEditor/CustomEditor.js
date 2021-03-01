@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react"
-import { gsap } from "gsap/all"
-import "../../styles/CustomEditor.scss"
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/hook";
+
+import "../../styles/CustomEditor.scss"
 
 function CustomEditor(props) {
 

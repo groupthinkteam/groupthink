@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import InlineTextEdit from '../InlineTextEdit/InlineTextEdit';
+
 import "../../styles/Search/Dashboard.scss";
 import { useStore } from '../../store/hook';
 

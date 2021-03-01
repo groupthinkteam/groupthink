@@ -7,14 +7,17 @@ import "../../styles/PersonaList.scss"
 function PersonaList(props) {
     const store = useStore()
     if (!store.users) return null;
-
-    const toggleFollowAUser = (userID) => {
-        store.followAUser = !store.followAUser;
-        if (store.followAUser)
-            store.addUserFollow(userID);
-        else
-            store.removeUserFollow(userID);
-    }
+    /**
+     * Toggle User Following on Clicked
+     * @param  userID 
+     */
+    // const toggleFollowAUser = (userID) => {
+    //     store.followAUser = !store.followAUser;
+    //     if (store.followAUser)
+    //         store.addUserFollow(userID);
+    //     else
+    //         store.removeUserFollow(userID);
+    // }
     let users =
         Object.entries(store.users).filter(
             ([userID, _]) => {

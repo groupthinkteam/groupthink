@@ -80,7 +80,7 @@ const Dashboard = observer(() => {
             <span className="user-name">{store.currentUser.displayName}</span>
           </div>
           <div ref={buttonRef} className="profile-picture">
-            <img src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} />
+            <img src={store.currentUser.photoURL} onClick={() => setShowMenu(!showMenu)} alt={"dash-pfp"}/>
             {showMenu ?
               <span className="user-menu">
                 <UserMenu signOut={signOut} />

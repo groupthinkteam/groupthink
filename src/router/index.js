@@ -15,14 +15,13 @@ import Settings from "../pages/Settings/Settings";
 function AppRoutes(props) {
   const { syncUser, currentUser, createSharedUser } = useStore();
   let [pendingAuth, setPendingAuth] = useState(true);
-  let [animated, setAnimated] = useState(false);
   let isSignedIn = !!currentUser;
 
   useEffect(() => {
     console.log("login status: pending | signedIn | currentUser:\n", pendingAuth, isSignedIn, currentUser?.uid);
     let unsubscribe = auth().onAuthStateChanged(_ => { setPendingAuth(false); syncUser(); })
     return () => unsubscribe()
-  }, [])
+  })
 
 
   return (
