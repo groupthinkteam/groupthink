@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useStore } from "../../../../store/hook";
 import ReactMarkdown from "react-markdown"
 import CustomEditor from "../../../CustomEditor/CustomEditor";
@@ -13,12 +13,10 @@ function TextCard(props) {
     const me = store.cards[props.id];
 
     const onSave = (e) => {
-        console.log("ON Save CHANGE ", { text: store.cards[props.id].content.text })
         e.stopPropagation();
-        store.saveContent(props.id, { text: store.cards[props.id].content.text })
+        store.saveContent(props.id, { text: me.content.text })
     }
     const onChangeTitle = (event) => {
-        console.log("ONTITLE CHANGE ", { text: event.target.value })
         store.changeContent(props.id, { text: event.target.value });
         if (event.stopPropagation)
             event.stopPropagation();
@@ -35,18 +33,20 @@ function TextCard(props) {
         >
             {store.editingCard === props.id ?
                 <>
+                    
                     <CustomEditor
                         id={`custom-editor-${props.id}`}
-                        onChange={(e) => { onChangeTitle(e, 'text') }}
+                        onChange={(e) => onChangeTitle(e, 'text')}
                         onSave={(e) => { onSave(e, 'text') }}
                         text={me.content.text}
                         placeholder="type here..."
-                        onFocus={e => e.stopPropagation()}
+                        onFocus={e=>e.stopPropagation()}
                         initialRender={me.content.initialRender}
                     />
                 </>
                 :
                 <div className="md-container-wrapper" onDoubleClick={() => { store.editingCard = props.id }}>
+
                     <ReactMarkdown children={me.content.text} allowDangerousHtml className="md-container" />
                 </div>
             }

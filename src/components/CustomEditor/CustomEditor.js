@@ -3,52 +3,45 @@ import { gsap } from "gsap/all"
 import "../../styles/CustomEditor.scss"
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/hook";
-import ContentEditable from "react-contenteditable";
 
 function CustomEditor(props) {
 
     // useEffect(() => {
     //     gsap.to("#toolbar" + props.id, { display: "block", top: "-35px", opacity: 1, duration: 0.2 });
     // }, [props.id])
-    const store = useStore();
-    const contentEditable = useRef(null);
+    const store = useStore()
     let textareaRef = useRef(null);
 
     useEffect(() => {
         if (props.initialRender) {
-            // var length = textareaRef.current.innerHTML?.length;
-            contentEditable.current?.focus()
+            let length = textareaRef.current.value.length
+            textareaRef.current.selectionStart = length
+            textareaRef.current.selectionEnd = length
         }
-        const selection = window.getSelection();
-        if (selection.isCollapsed) {
-            contentEditable.current.selectionStart = selection.anchorOffset
-            contentEditable.current.selectionEnd = selection.anchorOffset;
-        } else {
-            contentEditable.current.selectionStart = Math.min(selection.anchorOffset, selection.focusOffset)
-            contentEditable.current.selectionEnd = Math.max(selection.anchorOffset, selection.focusOffset);
-        }
-        store.textareaRef = contentEditable;
-        console.log("TEXTAREA ", window.getSelection(), { start: contentEditable.current.selectionStart, end: contentEditable.current.selectionEnd });
+        store.textareaRef = textareaRef
     })
-
+    
     return (
-        <div className="editor-wrapper"  >
-            <button onclick={()=>contentEditable.current.contentDocument.execCommand('bold',false,null)}>Bold</button>
-            <ContentEditable
-                innerRef={contentEditable}
+        <div className="editor-wrapper" onBlur={props.onLeave}>
+            <textarea
                 ref={textareaRef}
-                html={props.text}
                 style={props.style}
                 className="custom-editor"
                 id={props.id}
-                data-placeholder={props.placeholder || "Type something here..."}
+                placeholder={props.placeholder || "Type something here..."}
+                value={props.text}
+                onClick={props.onClick}
                 onChange={props.onChange}
                 onBlur={props.onSave}
+                disabled={props.disabled}
+                spellCheck="false"
                 onFocus={props.onFocus}
-                
+                href={props.href}
+                target={props.target}
+                autoFocus
             />
         </div>
     )
 }
 
-export default observer(CustomEditor);
+export default observer( CustomEditor);
