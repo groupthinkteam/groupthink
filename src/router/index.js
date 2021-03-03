@@ -18,7 +18,7 @@ function AppRoutes(props) {
   let isSignedIn = !!currentUser;
 
   useEffect(() => {
-    console.log("login status: pending | signedIn | currentUser:\n", pendingAuth, isSignedIn, currentUser?.uid);
+    console.log("login status: pending | signedIn | currentUser:\n", pendingAuth, isSignedIn, 'currentUser', currentUser?.uid);
     let unsubscribe = auth().onAuthStateChanged(_ => { setPendingAuth(false); syncUser(); })
     return () => unsubscribe()
   })
