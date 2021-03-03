@@ -1,35 +1,26 @@
-import React, { useRef, useState, useCallback, useEffect, useReducer } from 'react';
+import React, { useRef, useState } from 'react';
 import UserMenu from "../../components/UserMenu/UserMenu"
 import { useHistory, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../../store/hook'
 
 import { ReactComponent as LogoSVG } from '../../assets/dashboard/logo.svg';
+import { ReactComponent as EarlyAccessSVG } from '../../assets/menu/ealogo.svg';
+
 import "../../styles/Settings.scss"
 
-function reducer(state, action) {
-    switch (action.type) {
-      case 'SET_PROFILE_PICTURE':
-        return {profilePic: action.payload};
-      default:
-        throw new Error();
-    }
-}
-
-function Settings() {    
+function Settings() {
     let store = useStore();
-    const initialState = { profilePic: store.currentUser.photoURL };
-    const [state, dispatch] = useReducer(reducer, initialState);
-    
+    const [profilePic, setProfilePic] = useState(store.currentUser.photoURL);
     const buttonRef = useRef(null);
     const history = useHistory();
     const location = useLocation();
     let inputFile = useRef(null);
 
     let [uploadState, setUploadState] = useState(false)
-    const [showMenu, setShowMenu] = useState(false);  
-    
-    const signOut = () => {        
+    const [showMenu, setShowMenu] = useState(false);
+
+    const signOut = () => {
         store.signout();
         history.push('/login', { from: location });
     }
@@ -39,9 +30,9 @@ function Settings() {
     }
 
     function upload(files) {
-        let file = files[0];           
+        let file = files[0];
         if (!file) return;
-        
+
         let typemeta = {
             contentType: file.type,
         };
@@ -50,16 +41,13 @@ function Settings() {
                 if (typeof status === "number") {
                     setUploadState(status);
                 } else {
-                    store.updateProfilePicture(latestProfilePicURL => {                        
-                        dispatch({
-                            type: 'SET_PROFILE_PICTURE',
-                            payload: latestProfilePicURL
-                        });
-                    });                    
+                    store.updateProfilePicture(laprofilePicProfilePicURL => {
+                        setProfilePic(laprofilePicProfilePicURL)
+                    });
                 }
-            }, "pfp"); 
+            }, "pfp");
     }
-    
+
     if (uploadState === 100) {
         setUploadState(false)
     }
@@ -68,7 +56,7 @@ function Settings() {
         <div className="settings-page">
             <div className="top-bar">
                 <div className="site-title">
-                    <LogoSVG onClick={() => gotoDashboard()}/>                    
+                    <LogoSVG onClick={() => gotoDashboard()} />
                 </div>
                 <div className="user-welcome">
                     <div className="welcome-text">
@@ -76,7 +64,7 @@ function Settings() {
                         <span className="user-name">{store.currentUser.displayName}</span>
                     </div>
                     <div className="profile-picture">
-                        <img alt='No Pic' src={state.profilePic} onClick={() => setShowMenu(!showMenu)} ref={buttonRef} />
+                        <img alt='No Pic' src={profilePic} onClick={() => setShowMenu(!showMenu)} ref={buttonRef} />
                         {showMenu ?
                             <span className="user-menu">
                                 <UserMenu signOut={signOut} />
@@ -94,7 +82,7 @@ function Settings() {
                         </div>
                         :
                         <div className="picture-wrapper">
-                            <img src={state.profilePic} alt={store.currentUser.displayName} />
+                            <img src={profilePic} alt={store.currentUser.displayName} />
                             <div className="upload-button" onClick={() => inputFile.current.click()}>
                                 Change
                             </div>
@@ -147,7 +135,7 @@ function Settings() {
                                     Plan
                                 </div>
                                 <div className="field-content">
-                                    <img src={require("../../assets/menu/ealogo.svg")} alt="Early Access" />
+                                    <EarlyAccessSVG className="field-content"/>
                                 </div>
                             </div>
                         </div>
